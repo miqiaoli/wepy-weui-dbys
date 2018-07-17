@@ -146,24 +146,24 @@ export default class Index extends wepy.page {
     },
     async loginBtnClick(e) {
       const that = this
-      if (!that.required(that.phone)) {
+      if (!that.required(e.detail.value.phone)) {
         that.$alert('温馨提示', '请填写手机号')
         return
-      } else if (!that.required(that.password)) {
+      } else if (!that.required(e.detail.value.password)) {
         that.$alert('温馨提示', '请填写密码')
         return
-      } else if (!that.required(that.checkPass)) {
+      } else if (!that.required(e.detail.value.checkPass)) {
         that.$alert('温馨提示', '请确认密码')
         return
-      } else if (!that.required(that.yzm)) {
+      } else if (!that.required(e.detail.value.yzm)) {
         that.$alert('温馨提示', '请确认验证码')
         return
       }
       const res = await http.post(__getApi._getRegistSubmit, {
         token_access: that.token_access,
-        phone: that.phone,
-        password: that.checkPass,
-        smsVeriCode: that.yzm
+        phone: e.detail.value.phone,
+        password: e.detail.value.checkPass,
+        smsVeriCode: e.detail.value.yzm
       })
       if (res.false) return
       wepy.showToast({

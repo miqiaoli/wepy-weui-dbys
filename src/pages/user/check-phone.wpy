@@ -79,11 +79,11 @@ export default class CheckPhone extends wepy.page {
     },
     loginBtnClick(e) {
       const that = this
-      if (that.required(that.phone) && that.required(that.yzm)) {
+      if (that.required(e.detail.value.phone) && that.required(e.detail.value.yzm)) {
         http.post(__getApi._getCustomMadetelBind, {
           token_access: that.token_access,
-          phone: that.phone,
-          smsVeriCode: that.yzm
+          phone: e.detail.value.phone,
+          smsVeriCode: e.detail.value.yzm
         })
         wx.showToast({
           title: '绑定成功',
