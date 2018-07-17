@@ -1,0 +1,228 @@
+<template>
+<view class="page__bd bg__white">
+  <view class="weui-tab navbar">
+    <view class="weui-tab__panel">
+      <view class="weui-tab__content">
+        <block wx:if="{{inforList.length > 0}}">
+          <view class="weui-cells weui-cells_in-small-appmsg">
+            <block wx:for="{{inforList}}" wx:key="id">
+              <view class="weui-cell weui-cell_access">
+                <view class="weui-cell__hd">
+                  <image wx:if="{{item.state === 1}}" class="icon-supply" src="/images/icon/icon-custommade_HL.png" />
+                  <image wx:else class="icon-supply" src="/images/icon/icon-custommade.png" />
+                </view>
+                <view class="weui-cell__bd weui-cell_primary">
+                  <navigator wx:if="{{item.state === 1}}" url="/pages/customize/infoList?id={{item.id}}">
+                    <view class="weui-media-box__title" hover-class="weui-cell_active">{{item.productName}} {{item.grade}} {{item.grades}}</view>
+                  </navigator>
+                  <block wx:else>
+                    <view class="weui-media-box__title">{{item.productName}} {{item.grade}} {{item.grades}}</view>
+                  </block>
+                  <view class="weui-media-box__info">
+                    <view class="weui-media-box__info__meta">{{sourceList[item.fishortradeType]}}</view>
+                    <view class="weui-media-box__info__meta weui-media-box__info__meta_extra">{{typeList[item.customMadeType]}}</view>
+                    <view class="weui-media-box__info__meta weui-media-box__info__meta_extra">{{item.lastChangeDate}}</view>
+                  </view>
+                </view>
+                <view class="weui-cell__ft" @tap='inforEdit' id='{{item.id}}' data-index='{{index}}' data-state='{{item.state}}'>
+                  <image class="icon-edit" src='/images/icon/icon-edit.png'></image>
+                </view>
+              </view>
+            </block>
+          </view>
+        </block>
+        <listStates :loading.sync="loading" :noMore.sync="noMoreList" :noList.sync="noList"></listStates>
+      </view>
+    </view>
+    <view class="weui-btn-area bg__white">
+      <button class="weui-flex__item" type="primary" @tap='checkPhone' plain data-phone="{{phone}}">
+        <image class="icon-supply" src="/images/icon/icon-phone2.png" />修改订阅手机号
+      </button>
+      <button class="weui-flex__item" type="primary" @tap='new'>
+        <image class="icon-supply" src="/images/icon/icon-new-custom.png" />添加订阅
+      </button>
+    </view>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import base from '../../mixins/base'
+import user from '../../mixins/user'
+import http from '../../utils/Http'
+import listStates from '../../components/listStates'
+
+export default class myCustomizeList extends wepy.page {
+  mixins = [base, user]
+  config = {
+    navigationBarTitleText: '我的鱼网列表',
+    enablePullDownRefresh: true,
+    onReachBottomDistance: 100
+  }
+  data = {
+    inforList: [],
+    sourceList: ['实盘挂牌', '供求信息'],
+    typeList: ['供应', '求购'],
+    start: 1,
+    limit: 15,
+    state: '',
+    noMoreList: false,
+    noList: false,
+    loading: true,
+    phone: ''
+  }
+  methods = {
+    new() {
+      wx.navigateTo({
+        url: '/pages/customize/new'
+      })
+    },
+    inforEdit(e) {
+      const id = e.currentTarget.id
+      const state = e.currentTarget.dataset.state
+      const that = this
+      const itemList = state ? ['修改', '取消'] : ['修改', '激活']
+      wx.showActionSheet({
+        itemList: itemList,
+        itemColor: '#0078dd',
+        success: function(res) {
+          if (res.tapIndex === 0) {
+            that.getMyInfroDetails(id)
+          } else {
+            that.modifyState(id, state)
+          }
+        },
+        fail: function(res) {
+          console.log(res.errMsg)
+        }
+      })
+    }
+  }
+  async modifyState(id, state) {
+    wepy.showLoading({
+      title: '加载中'
+    })
+    const res = await http.get(__getApi._updateCustomMadeState, {
+      token_access: this.token_access,
+      id: id,
+      state: state === 0 ? 1 : 0
+    })
+    if (res.false) return
+    wx.showToast({
+      title: '成功',
+      icon: 'success',
+      duration: 2000
+    })
+    this.start = 1
+    this.getList()
+  }
+  getMyInfroDetails(id) {
+    wx.navigateTo({
+      url: '/pages/customize/new?id=' + id
+    })
+  }
+  async getList() {
+    const res = await http.get(__getApi._getCustomMadeList, {
+      token_access: this.token_access,
+      page_start: this.start,
+      page_limit: this.limit,
+      state: this.state
+    })
+    this.loading = false
+    if (res.false) {
+     // if (res.state === 0) {
+     //   this.$needLogin()
+    //  }
+      return
+    }
+
+    if (res.data.list.length === 0) {
+      this.noList = true
+    }
+    if (this.start === 1) {
+      this.inforList = res.data.list
+      this.maxPage = Math.ceil(res.data.count / this.limit)
+    } else {
+      this.inforList = [
+        ...this.inforList,
+        ...res.data.list
+      ]
+    }
+    this.$apply()
+    wepy.stopPullDownRefresh()
+  }
+  checkPhone(e) {
+    wx.redirectTo({
+      url: '/pages/user/check-phone?token_access=' + this.token_access
+    })
+  }
+  async hasPhone() {
+    const res = await http.get(__getApi._getCustomMadetelHasTel, {
+      token_access: this.token_access
+    })
+    if (res.false) {
+    //  if (res.state === 0) {
+    //    this.$needLogin()
+    //  }
+      return
+    }
+    if (!res.data.phone) {
+      this.checkPhone()
+    } else {
+      this.phone = res.data.phone
+      this.getList()
+    }
+  }
+  onLoad() {
+    this.token_access = this.$parent.globalData.token_access
+    // this.getList()
+    this.hasPhone()
+  }
+  components = {
+    listStates
+  }
+  onPullDownRefresh() {
+    this.start = 1
+    this.getList()
+  }
+  onReachBottom() {
+    if (this.start < this.maxPage) {
+      ++this.start
+      this.getList()
+    } else {
+      this.noMoreList = true
+    }
+    this.$apply()
+  }
+}
+</script>
+
+<style lang="less">
+.weui-btn-area {
+    width: 96%;
+    position: fixed;
+    bottom: 0;
+    left: 2%;
+}
+.weui-tab__panel {
+    padding-bottom: 244rpx;
+}
+button {
+    border-radius: 16rpx;
+    margin: 20rpx;
+}
+.icon-supply {
+    width: 40rpx;
+    height: 40rpx;
+    margin-right: 20rpx;
+    vertical-align: middle;
+}
+.icon-edit {
+    width: 48rpx;
+    height: 48rpx;
+}
+</style>

@@ -1,0 +1,103 @@
+<template>
+<view class="weui-search-bar">
+  <view class="weui-search-bar__form">
+    <view class="weui-search-bar__box">
+      <icon class="weui-icon-search_in-box" type="search" size="14" hidden="{{!inputShowed}}"></icon>
+      <input type="text" class="weui-search-bar__input" value="{{inputVal}}" focus="{{inputShowed}}" @input="inputTyping" confirm-type="search" @confirm="goSearch" />
+      <block wx:if="{{inputVal.length > 0}}">
+        <view class="weui-icon-clear" @tap="clearInput">
+          <icon type="clear" size="14"></icon>
+        </view>
+      </block>
+    </view>
+    <label class="weui-search-bar__label" hidden="{{inputShowed}}" @tap="showInput(true)">
+        <icon class="weui-icon-search" type="search" size="14"></icon>
+        <view class="weui-search-bar__text">{{computedPlaceholder}}</view>
+      </label>
+  </view>
+  <view class="weui-search-bar__cancel-btn" hidden="{{!inputShowed}}" @tap="goSearch">搜索</view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class SearchBar extends wepy.component {
+  props = {
+    placeholder: {
+      type: String,
+      default: '搜索'
+    },
+    inputShowed: {
+      type: [Boolean, String],
+      default: false
+    }
+  }
+
+  data = {
+    // inputShowed: false,
+    inputVal: ''
+  }
+
+  computed = {
+    computedPlaceholder() {
+      return this.inputVal || this.placeholder
+    }
+  }
+
+  methods = {
+    showInput(isShow) {
+      wx.navigateTo({
+        url: '/pages/search/searchbar'
+      })
+    },
+    goSearch() {
+      const mistiness = this.inputVal || this.placeholder
+      this.historySearch.unshift(mistiness)
+      if (this.historySearch.length > 10) {
+        this.historySearch.pop()
+      }
+      wepy.$instance.$updateGlobalData('historySearch', this.historySearch)
+      this.$emit('search', mistiness)
+    },
+    clearInput(cb) {
+      setTimeout(() => {
+        this.inputVal = ''
+        this.$apply()
+      })
+    },
+    inputTyping(e) {
+      this.inputVal = e.detail.value
+    }
+  }
+
+  onLoad() {
+    this.historySearch = wepy.$instance.globalData.historySearch
+  }
+}
+</script>
+
+<style type="less">
+@import "../styles/custom/fn.less";
+
+.weui-search-bar__cancel-btn {
+  color: @weuiColorPrimary;
+}
+
+.weui-search-bar {
+  padding: 30rpx 24rpx;
+  border-width: 0;
+  background: transparent;
+}
+
+.weui-search-bar__label {
+  background-color: #f8f6fa;
+  text-align: left;
+  padding-left: 34rpx;
+  border-radius: 20px;
+}
+
+.weui-search-bar__form {
+  border-radius: 40rpx;
+}
+</style>

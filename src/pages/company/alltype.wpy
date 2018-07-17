@@ -1,0 +1,214 @@
+<template>
+<view class="alltype">
+  <view class="getvalue">
+    <text class="val-des">主采购行业</text>
+    <text class="val-button" wx:if="{{chooseValChinese.length > 0}}">
+      <text class="single-btn" wx:for="{{chooseValChinese}}" wx:for-item="btn" wx:key="d">{{btn}}</text>
+    </text>
+    <text class="val-tips" wx:else>最多可选择三个行业</text>
+    <text class="true-button" style="color: #F5A623;" bindtap="search" wx:if="{{multipleChoice}}">确定</text>
+    <text class="true-button" bindtap="multipleChoiceChange" wx:else>编辑</text>
+  </view>
+  <view class="title">全部行业</view>
+  <view class="list-flex">
+    <view class="single-list" wx:for="{{allType}}" wx:for-item="single" wx:key="id" data-index="{{index}}" bindtap="chooseTypes">
+      <image class="type-icon" src="{{ '/images/alltyps/icon_'+single.spelling+'@2x.png'}}" />
+      <image class="type-bool" wx:if="{{multipleChoice}}" src="{{ chooseBoolean[index] ? '/images/alltyps/icon_true@2x.png' : '/images/alltyps/icon_false@2x.png' }}" />
+      <view class="type-name">{{ single.chinese }}</view>
+      <view class="type-count">{{ single.count }}</view>
+    </view>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import http from '../../utils/Http'
+
+export default class allType extends wepy.page {
+  config = {
+    navigationBarTitleText: '全部分类'
+  }
+  data = {
+    allType: [],
+    chooseBoolean: [],
+    singleChooseBoolean: true,
+    multipleChoice: false,
+    chooseVal: [],
+    chooseValChinese: []
+  }
+  methods = {
+    multipleChoiceChange() {
+      this.multipleChoice = true 
+    },
+    search(e) {
+      if (this.chooseVal.length > 0) {
+        // 添加为全局变量
+        this.$parent.globalData.riceTypes = this.chooseVal
+        wx.reLaunch({
+          url: `./list`   
+        })
+      } else {
+        wx.showToast({
+          title: '至少选择一个分类',
+          icon: 'none',
+          duration: 2000
+        })
+      }
+    },
+    chooseTypes(e) {
+      const self = this
+      const chooseIndex = e.currentTarget.dataset.index
+      // 单选
+      if (!this.multipleChoice && this.singleChooseBoolean) {
+        this.chooseVal.push(this.allType[chooseIndex].spelling)
+        this.$parent.globalData.riceTypes = this.chooseVal
+        this.singleChooseBoolean = false
+        wx.showToast({
+          title: `你已选择${this.allType[chooseIndex].chinese}`,
+          icon: 'none',
+          duration: 1000
+        }) 
+        setTimeout(() => {
+          wx.reLaunch({
+            url: `./list`
+          })
+        }, 500)
+        return 
+      }
+      // 选择超过三个
+      if (this.chooseVal.length < 3) {
+        this.chooseBoolean[chooseIndex] = !this.chooseBoolean[chooseIndex]
+        // 删除已经添加的元素 
+        let chooseValIndex  = this.chooseVal.findIndex(element => element == self.allType[chooseIndex].spelling) // chinese
+        this.chooseBoolean[chooseIndex] ? this.chooseVal.push(this.allType[chooseIndex].spelling) : this.chooseVal.splice(chooseValIndex, 1)   // chinese
+        this.chooseBoolean[chooseIndex] ? this.chooseValChinese.push(this.allType[chooseIndex].chinese) : this.chooseValChinese.splice(chooseValIndex, 1)   // chinese
+      } else {
+        this.chooseBoolean[chooseIndex] = false
+        let chooseValIndex = this.chooseVal.findIndex(element => element == self.allType[chooseIndex].spelling) // chinese
+        if (chooseValIndex > -1) {
+          this.chooseVal.splice(chooseValIndex, 1)
+          this.chooseValChinese.splice(chooseValIndex, 1)
+        } else {
+          wx.showToast({
+            title: '最多可选3个',
+            icon: 'none',
+            duration: 2000
+          })
+        }
+      } 
+    }
+  }
+  async onLoad() {
+    this.allType = wx.getStorageSync('alltype') ? wx.getStorageSync('alltype') : this.getAllType()
+    if (this.allType) {
+      for (let i = 0; i < this.allType.length; i++) {
+        this.chooseBoolean.push(false)
+      }
+    }
+  }
+  // 全部分类
+  async getAllType() {
+    const res = await http.get(__getApi._getAllType, {
+    })
+    this.allType = res.data.list
+    for (let i = 0; i < this.allType.length; i++) {
+      this.chooseBoolean.push(false)
+    }
+    wx.setStorageSync('alltype', res.data.list)
+    this.$apply()
+  }
+}
+</script>
+
+<style lang="less">
+.alltype {
+  // margin: 0 24rpx;
+  padding: 0 24rpx;
+  background: #ffffff;
+}
+.getvalue {
+  // margin-top: 12rpx;
+  padding-top: 12rpx;
+  margin-bottom: 20rpx;
+  display: flex;
+  height: 68rpx;
+  line-height: 58rpx;
+  border-bottom: 1px solid #E4E7F0;
+  justify-content: space-between;
+  .val-des {
+    width: 180rpx;
+    font-size: 26rpx;
+    color: #A1A6BB;
+  }
+  .val-button {
+    flex: 1;
+    border-radius: 4rpx;
+    font-size: 12px;
+    color: #1E1E1E;
+    .single-btn {
+      margin-right: 18rpx;
+      padding: 0 12rpx;
+      background: #E4E7F0;
+    }
+  }
+  .val-tips {
+    flex: 1;
+    font-size: 24rpx;
+    color: #1E1E1E;
+  }
+  .true-button {
+    font-size: 28rpx;
+    color: #6A7EEE;
+  }
+}
+.title {
+  margin-top: 66rpx;
+  margin-bottom: 20rpx;
+  font-size: 26rpx;
+  color: #A1A6BB;
+}
+.list-flex {
+  // margin-top: 80rpx;
+  display: flex;
+  flex-wrap: wrap;
+  .single-list {
+    position: relative;
+    margin: 26rpx 0; 
+    width: 25%;
+    height: 120rpx;
+    .type-icon {
+      margin-left: 16rpx;
+      width: 66rpx;
+      height: 66rpx
+    }
+    .type-name {
+      font-size: 22rpx;
+      width: 100rpx;
+      text-align: center;
+      color: #1E1E1E;
+    }
+    .type-bool {
+      position: absolute;
+      left: 98rpx;
+      top: -10rpx;
+      width: 20rpx;
+      height: 20rpx;
+    }
+    .type-count {
+      position: absolute;
+      right: 16rpx;
+      bottom: -6rpx;
+      width: 60rpx;
+      background: #f4f6f9;
+      border-radius: 8rpx;
+      font-size: 20rpx;
+      text-align: center;
+      color: #EB4E35;
+    }
+  }
+}
+</style>

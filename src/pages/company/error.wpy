@@ -1,0 +1,172 @@
+<template>
+<view class="err">
+  <view class="title">
+    请选择错误类型
+  </view>
+  <view class="list-flex">
+    <view class="single-list" wx:for="{{allErrorMsg}}" wx:for-item="single" wx:key="id" data-index="{{index}}" bindtap="chooseTypes">
+      <image class="type-icon" src="{{ '/images/alltyps/err_'+index+'@2x.png'}}" />
+      <image class="type-bool" wx:if="{{chooseBoolean[index]}}" src="/images/alltyps/err_true@2x.png" />
+      <view class="type-name">{{ single.chinese }}</view>
+    </view>
+  </view>
+  <view class="msg">
+    <textarea bindinput="getTextMsg" disabled="{{textDisabled}}" value="{{textMsg}}" adjust-position="true" class="text" maxlength="150" placeholder="请描述具体错误信息" />
+  </view>
+  <button bindtap="submitMsg" class="submit" disabled="{{disabledBoolean}}" style="{{ disabledBoolean ? 'background: #E4E7F0;' : 'background: linear-gradient(137deg, #6A7EEE 0%, #C86DD7 100%);' }}">提交</button>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import http from '../../utils/Http'
+
+export default class error extends wepy.page {
+  config = {
+    navigationBarTitleText: '纠正错误'
+  }
+  data = {
+    disabledBoolean: true,
+    detailID: '',
+    allErrorMsg: [{
+      chinese: '企业名称',
+      english: '1'
+    },{
+      chinese: '企业类型',
+      english: '2' 
+    },{
+      chinese: '企业模式',
+      english: '3' 
+    },{
+      chinese: '注册地址',
+      english: '4' 
+    },{
+      chinese: '主营产品',
+      english: '5' 
+    },{
+      chinese: '主营行业',
+      english: '6' 
+    },{
+      chinese: '联系电话',
+      english: '7' 
+    },{
+      chinese: '地址',
+      english: '8' 
+    },{
+      chinese: '其他',
+      english: '9' 
+    }],
+    chooseBoolean: [false, false, false, false, false, false, false, false, false],
+    chooseValEnglish: [],
+    chooseValChinese: [],
+    textMsg: '',
+    textDisabled: true
+  }
+  methods = {
+    getTextMsg(e) {
+      this.textMsg = e.detail.value
+      this.disabledBoolean = this.textMsg ? false : true
+    },
+    async submitMsg() {
+      const res = await http.get(__getApi._getFeedBack, {
+        id: this.detailID,
+        type: this.chooseValEnglish,
+        content: this.textMsg
+      }) 
+      console.log(res)
+      if (res.meta.success) {
+        wx.showToast({
+          title: '感谢你的反馈',
+          icon: 'none',
+          duration: 1000
+        })
+        setTimeout(() => {
+          wx.redirectTo({
+            url: './details?id=' + this.detailID
+          })
+        }, 1000)
+      }
+    },
+    chooseTypes(e) {
+      const chooseIndex =  e.currentTarget.dataset.index
+      this.chooseBoolean[chooseIndex] = !this.chooseBoolean[chooseIndex]
+      let chooseValIndex  = this.chooseValChinese.findIndex(element => element == this.allErrorMsg[chooseIndex].english) // chinese
+      this.chooseBoolean[chooseIndex] ? 
+        this.chooseValChinese.push(this.allErrorMsg[chooseIndex].chinese) : 
+        this.chooseValChinese.splice(chooseValIndex, 1)   // chinese
+        
+      this.chooseBoolean[chooseIndex] ? 
+        this.chooseValEnglish.push(this.allErrorMsg[chooseIndex].english) : 
+        this.chooseValEnglish.splice(chooseValIndex, 1)  
+      this.textDisabled = this.chooseValEnglish.length > 0 ? false : true
+      this.textMsg = this.chooseValEnglish.length > 0 ? this.textMsg  : '' 
+      this.disabledBoolean = this.textMsg ? false : true
+    }
+  }
+  async onLoad(e) {
+    this.detailID = e.detailID
+  }  
+}
+</script>
+
+<style lang="less">
+.err {
+  margin: 0 30rpx;
+  .title {
+    margin-top: 40rpx;
+    font-size: 36rpx;
+    // font-weight: 600;
+    color: #1E1E1E;
+  }
+  .list-flex {
+    margin-top: 24rpx;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .single-list {
+    position: relative;
+    margin: 26rpx 0;
+    width: 25%;
+    text-align: center;
+  }
+
+}
+.type-bool {
+  position: absolute;
+  top: -10rpx;
+  left: 130rpx;
+  width: 20rpx;
+  height: 20rpx;
+}
+.type-icon {
+  display: block;
+  margin: 0 auto;
+  width: 60rpx;
+  height: 60rpx;
+}
+.type-name {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  color: #1E1E1E;
+}
+.msg {
+  margin-top: 14rpx;
+  margin-right: 44rpx;
+}
+.text{ 
+  padding: 20rpx;
+  width: 100%;
+  height: 200rpx;
+  background: rgba(228,231,240,0.70);
+  font-size: 28rpx;
+}
+.submit {
+  margin-top: 80rpx;
+  color: #fff;
+  font-size: 36rpx;
+  background: linear-gradient(137deg, #6A7EEE 0%, #C86DD7 100%);
+}
+</style>

@@ -1,0 +1,89 @@
+<template>
+<block wx:if="{{inforList.length > 0}}">
+  <view class="weui-panel">
+    <view class="weui-media-box weui-media-box_text" wx:for="{{inforList}}" wx:key="id">
+      <navigator url="/pages/database/details?id={{item.id}}" hover-class="weui-cell_active">
+        <view class="weui-media-box__title weui-media-box__title_in-text">{{item.variety}}／{{item.product}}／{{item.shopSign}}／{{item.manufacturingEnterprises }}</view>
+        <view class="weui-media-box__info">
+          <view class="weui-media-box__info__meta">熔体流动速率：{{item.mfrV}} {{item.mfrU}}
+            <!-- <htmlParser1 :parserContent.sync="item.mfrU"></htmlParser1> -->
+          </view>
+          <view class="weui-media-box__info__meta weui-media-box__info__meta_extra">弯曲模量：{{item.flexuralModulusV}} {{item.flexuralModulusU}}
+            <!-- <htmlParser2 :parserContent.sync="item.flexuralModulusU"></htmlParser2> -->
+          </view>
+          <view class="weui-media-box__info__meta">密度：{{item.densityV}}
+            <!-- <htmlParser1 :parserContent.sync="item.densityU"></htmlParser1> -->
+            <rich-text nodes="{{item.densityU}}"></rich-text>
+          </view>
+        </view>
+      </navigator>
+    </view>
+  </view>
+</block>
+<listStates :loading.sync="loading" :noMore.sync="noMoreList" :noList.sync="noList"></listStates>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import base from '../../mixins/base'
+import http from '../../utils/Http'
+import listStates from '../../components/listStates'
+
+export default class InformationList extends wepy.page {
+  mixins = [base]
+  config = {
+    navigationBarTitleText: '材料数据库列表',
+    enablePullDownRefresh: true,
+    onReachBottomDistance: 100
+  }
+  data = {
+    inforList: [],
+    name: '',
+    start: 1,
+    limit: 15,
+    noMoreList: false,
+    noList: false,
+    loading: true
+  }
+  async getList() {
+    const res = await http.get(__getApi._getMaterialList, {
+      name: this.name,
+      page_id: this.start,
+      page_limit: this.limit
+    })
+    this.loading = false
+    if (res.false) {
+      // if (res.state === 0) {
+      //   this.$needLogin()
+      // }
+      return
+    }
+
+    if (res.data.list.length === 0) {
+      this.noList = true
+    }
+    if (this.start === 1) {
+      this.inforList = res.data.list
+      this.maxPage = Math.ceil(res.data.count / this.limit)
+    } else {
+      this.inforList = [
+        ...this.inforList,
+        ...res.data.list
+      ]
+    }
+    this.$apply()
+  }
+  onLoad() {
+    this.getList()
+  }
+  components = {
+    listStates
+  }
+}
+</script>
+
+<style lang="less">
+</style>

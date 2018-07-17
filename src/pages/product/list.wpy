@@ -1,0 +1,538 @@
+<template>
+<view class="page bg__white" style="{{isFilter ? '': 'height:100vh'}}">
+  <view class="page__bd">
+    <view class="weui-flex searchbar">
+      <view class="weui-flex__item">
+        <SearchBar :placeholder="searchText"></SearchBar>
+      </view>
+      <view class="icon-switch" @tap='changeListType'>
+        <block wx:if="{{listType}}">
+          <image src='/images/icon/icon-switch-pic.png'></image>
+        </block>
+        <block wx:else>
+          <image src='/images/icon/icon-switch-list.png'></image>
+        </block>
+      </view>
+    </view>
+    <view class="weui-flex priduct-filter page__bd_spacing">
+      <view class="weui-flex__item active">
+        <picker class="inline-block" bindchange="changePriceType" value="{{advFilter.orderbysort}}" range="{{orderByArray}}">
+          <view class="picker">
+            {{orderByArray[advFilter.orderbysort]}}
+          </view>
+        </picker>
+        <view class="arrow-down"></view>
+      </view>
+      <view class="weui-flex__item active" bindtap="risePicker">发货地 {{cityText}}
+      </view>
+      <view class="weui-flex__item active" bindtap="riseFilter">
+        筛选
+        <image src='/images/icon/filter_HL.png'></image>
+      </view>
+    </view>
+    <ProductsList :list.sync="itemsList" :listType.sync="listType" :loading.sync="loading" :noMore.sync="noMoreList" :noList.sync="noList"></ProductsList>
+  </view>
+  <view hidden='{{isFilter}}' class="selector" catchtouchmove='preventTouchMove'>
+    <form bindsubmit="formSubmit" bindreset="formReset">
+      <view class="inner_box">
+        <view class="module-box">
+          <view class="top">价格区间</view>
+          <view class="content weui-flex">
+            <input name="price_s" type="digit" class="input" placeholder="最低价" />
+            <text class="interval-line weui-flex__item">-</text>
+            <input name="price_e" type="digit" class="input" placeholder="最高价" />
+          </view>
+        </view>
+        <view class="module-box">
+          <view class="top">品种</view>
+          <view class="content">
+            <view class="weui-flex">
+              <view class="input {{goods_class_id==1 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='1'>塑料原料</view>
+              <view class="weui-flex__item"></view>
+              <view class="input {{goods_class_id==2 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='2'>再生塑料</view>
+            </view>
+            <view class="weui-flex">
+              <view class="input {{goods_class_id==3 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='3'>改性塑料</view>
+              <view class="weui-flex__item"></view>
+              <view class="input {{goods_class_id==6 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='6'>助剂</view>
+            </view>
+          </view>
+        </view>
+        <view class="module-box">
+          <view class="weui-cells">
+            <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" @tap='chooseNext' data-type='1'>
+              <view class="weui-cell__bd">品名</view>
+              <view class="weui-cell__ft weui-cell__ft_in-access font-primary">{{chooseProduct.name}}</view>
+            </view>
+          </view>
+          <view class="weui-cells">
+            <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" @tap='chooseNext' data-type='2'>
+              <view class="weui-cell__bd">牌号</view>
+              <view class="weui-cell__ft weui-cell__ft_in-access font-primary">{{chooseGrade.name}}</view>
+            </view>
+          </view>
+          <view class="weui-cells">
+            <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" @tap='chooseNext' data-type='3'>
+              <view class="weui-cell__bd">厂商</view>
+              <view class="weui-cell__ft weui-cell__ft_in-access font-primary">{{chooseVendor.name}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="inner_btn weui-flex">
+        <button class="weui-flex__item" type="default" formType="reset">重置</button>
+        <button class="weui-flex__item" type="primary" formType="submit">确定</button>
+      </view>
+    </form>
+    <view class="layer" catchtouchstart="removeLayer" data-type='isFilter'></view>
+  </view>
+
+  <view wx:if="{{!isCity}}" class="citys" catchtouchmove='preventTouchMove'>
+    <view class="inner_box">
+      <view class="header_box">
+        <view class="item l" data-act="cancel" data-mold="city" bindtap="ideChoice">取消</view>
+        <view class="item c">请选择</view>
+        <view class="item r" data-act="confirm" data-mold="city" bindtap="ideChoice">确定</view>
+      </view>
+      <picker-view class="picker_box" indicator-class="selected" value="{{cityValue}}" bindchange="cityChange">
+        <picker-view-column>
+          <view wx:for="{{provinces}}" wx:key='*this'>{{item}}</view>
+        </picker-view-column>
+        <picker-view-column>
+          <view wx:for="{{citys}}" wx:key='*this'>{{item}}</view>
+        </picker-view-column>
+      </picker-view>
+    </view>
+    <view class="layer" catchtouchstart="removeLayer" data-type='isCity'></view>
+  </view>
+</view>
+</template>
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import base from '../../mixins/base'
+import SearchBar from '../../components/searchbar'
+import ProductsList from '../../components/productsList'
+import http from '../../utils/Http'
+
+export default class ProductList extends wepy.page {
+  mixins = [base]
+  components = {
+    SearchBar: SearchBar,
+    ProductsList: ProductsList
+  }
+  config = {
+    navigationBarTitleText: '现货商城列表页',
+    enablePullDownRefresh: true,
+    onReachBottomDistance: 100
+  }
+  data = {
+    itemsList: [],
+    start: 1,
+    limit: 15,
+    maxPage: null,
+    noMoreList: false,
+    noList: false,
+    loading: true,
+    listType: true,
+    /* ture表示大图模式，false表示列表模式 */
+    orderByArray: ['综合', '价格降序', '价格升序'],
+    advFilter: {
+      orderbysort: 0,
+      /* 0表示默认，1表示降序,2表示升序 */
+      province_id: '',
+      city_id: ''
+    },
+    isCity: true,
+    cityList: [{
+      value: '',
+      label: '全部',
+      children: [{
+        value: '',
+        label: '全部'
+      }]
+    }],
+    provinces: [],
+    citys: [],
+    cityValue: [0, 0],
+
+    isFilter: true,
+    chooseType: null,
+    /* 1表示选择品名，2表示选择牌号，3表示选择厂商 */
+    chooseProduct: {
+      name: '',
+      id: ''
+    },
+    /* 选中的品名 */
+    chooseGrade: {
+      name: '',
+      id: ''
+    },
+    /* 选中的牌号 */
+    chooseVendor: {
+      name: '',
+      id: ''
+    },
+    /* 选中的厂商 */
+    goods_class_id: 1,
+
+    filterParam: {
+      price_s: '',
+      price_e: '',
+      goods_id: '',
+      att2_id: '',
+      att1_id: ''
+    }
+  }
+  async getProductList() {
+    this.loading = true
+    if (this.start === 1) {
+      this.itemsList = []
+    }
+
+    let params = {
+      service_name: 'TRADE_ORDERLIST',
+      goods_class_id: this.goods_class_id,
+      start: this.start,
+      limit: this.limit
+    }
+    params = Object.assign(params, this.advFilter, this.filterParam)
+
+    const res = await http.get(__getApi._getProductList, params, true)
+    this.loading = false
+    if (res.false) return
+    if (res.data[1].length === 0) {
+      this.noList = true
+    }
+    if (params.start === 1) {
+      this.itemsList = res.data[1]
+      this.maxPage = Math.ceil(res.data[2] / this.limit)
+    } else {
+      this.itemsList = [
+        ...this.itemsList,
+        ...res.data[1]
+      ]
+    }
+    this.$apply()
+    wepy.stopPullDownRefresh()
+  }
+  async getCityList() {
+    const res = await http.get(__getApi._getAreas)
+    if (res.false) return
+    this.cityList = [
+      ...this.cityList,
+      ...res.data
+    ]
+    const cityList = this.cityList
+    let provinces = []
+    let citys = []
+
+    for (let i = 0; i < cityList.length; i++) {
+      provinces.push(cityList[i].label)
+    }
+
+    for (let i = 0; i < cityList[0].children.length; i++) {
+      citys.push(cityList[0].children[i].label)
+    }
+
+    this.provinces = provinces
+    this.citys = citys
+
+    this.$apply()
+  }
+  methods = {
+    preventTouchMove(e) {
+
+    },
+    chooseNext(e) {
+      this.chooseType = e.currentTarget.dataset.type
+      let chooseString = ''
+      if (this.chooseType === '1') {
+        chooseString = '&goods_class_id=' + this.goods_class_id
+      } else if (this.chooseType !== '1' && this.chooseProduct.id === '') {
+        this.$alert('温馨提示', '请先选择品名')
+        return
+      } else {
+        chooseString = '&goods_class_id=' + this.goods_class_id + '&goods_id=' + this.chooseProduct.id
+      }
+      wx.navigateTo({
+        url: './filter?type=' + e.currentTarget.dataset.type + chooseString
+      })
+    },
+    chooseGoodsClassId(e) {
+      this.goods_class_id = e.currentTarget.dataset.type
+      this.chooseProduct = {}
+      this.chooseGrade = {}
+      this.chooseVendor = {}
+      this.$apply()
+    },
+    changeListType() {
+      this.listType = !this.listType
+      this.$apply()
+    },
+    changePriceType(e) {
+      this.advFilter.orderbysort = e.detail.value
+      this.start = 1
+      this.$apply()
+      this.getProductList(this.advFilter)
+    },
+    formSubmit(e) {
+      this.start = 1
+      this.filterParam.price_s = e.detail.value.price_s
+      this.filterParam.price_e = e.detail.value.price_e
+      this.filterParam.goods_id = this.chooseProduct.id ? this.chooseProduct.id : ''
+      this.filterParam.att2_id = this.chooseGrade.id ? this.chooseGrade.id : ''
+      this.filterParam.att1_id = this.chooseVendor.id ? this.chooseVendor.id : ''
+      this.isFilter = true
+      this.getProductList()
+    },
+    formReset() {
+      this.goods_class_id = 1
+      this.chooseProduct = {}
+      this.chooseGrade = {}
+      this.chooseVendor = {}
+      this.$apply()
+    },
+    riseFilter() {
+      this.isFilter = false
+      this.$apply()
+    },
+    risePicker(e) {
+      this.start = 1
+      this.isCity = false
+      this.$apply()
+    },
+    cityChange(e) {
+      var val = e.detail.value
+      var t = this.data.cityValue
+      const cityList = this.cityList
+      if (val[0] !== t[0]) {
+        let citys = []
+        for (let i = 0; i < cityList[val[0]].children.length; i++) {
+          citys.push(cityList[val[0]].children[i].label)
+        }
+        this.citys = citys
+        this.cityValue = [val[0], 0]
+        this.provinceName = cityList[val[0]].label
+        this.advFilter.province_id = cityList[val[0]].value
+        this.cityName = cityList[val[0]].children[0].label
+        this.advFilter.city_id = cityList[val[0]].children[0].value
+        this.$apply()
+        return
+      }
+      if (val[1] !== t[1]) {
+        this.cityValue = [val[0], val[1]]
+        this.cityName = cityList[val[0]].children[val[1]].label
+        this.advFilter.city_id = cityList[val[0]].children[val[1]].value
+        this.$apply()
+      }
+    },
+    /* 确定选择 */
+    ideChoice(e) {
+      this.cityText = this.provinceName + ' ' + this.cityName
+      this.isCity = true
+      this.getProductList(this.advFilter)
+    },
+    removeLayer(e) {
+      const type = e.currentTarget.dataset.type
+      this[type] = !this[type]
+    }
+  }
+
+  onLoad(options) {
+    if (options.lists) {
+      const resJson = JSON.parse(options.lists)
+      this.itemsList = resJson.result
+      this.maxPage = Math.ceil(resJson.count / this.limit)
+      this.$apply()
+    } else {
+      this.goods_class_id = options.goods_class_id ? options.goods_class_id : this.goods_class_id
+      this.getProductList()
+    }
+
+    this.getCityList()
+  }
+  onShow() {
+    const pages = getCurrentPages()
+    const currPage = pages[pages.length - 1] /* 当前页面 */
+
+    this.chooseProduct.id = currPage.data.chooseProduct.id
+    this.chooseProduct.name = currPage.data.chooseProduct.name
+    this.chooseGrade.id = currPage.data.chooseGrade.id
+    this.chooseGrade.name = currPage.data.chooseGrade.name
+    this.chooseVendor.id = currPage.data.chooseVendor.id
+    this.chooseVendor.name = currPage.data.chooseVendor.name
+    this.$apply()
+  }
+  onPullDownRefresh() {
+    this.start = 1
+    this.getProductList()
+  }
+
+  onReachBottom() {
+    if (this.start < this.maxPage) {
+      ++this.start
+      this.getProductList(this.advFilter)
+    } else {
+      this.noMoreList = true
+    }
+    this.$apply()
+  }
+}
+</script>
+<style lang="less">
+.searchbar {
+    border-bottom: 2rpx solid #e9e7e7;
+}
+.icon-switch {
+    width: 76rpx;
+    text-align: right;
+    padding-right: 24rpx;
+    image {
+        width: 44rpx;
+        height: 44rpx;
+        margin-top: 38rpx;
+    }
+}
+.priduct-filter {
+    text-align: center;
+    padding: 20rpx 0;
+    image {
+        width: 28rpx;
+        height: 28rpx;
+    }
+}
+.arrow-down {
+    display: inline-block;
+    vertical-align: top;
+    border-top: 4px solid #353535;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+    content: "";
+    margin-top: 20rpx;
+    margin-left: 20rpx;
+}
+.active .arrow-down {
+    border-top: 4px solid #115bed;
+}
+.inline-block {
+    display: inline-block;
+}
+
+/*选择器*/
+.citys {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 999999;
+}
+.citys .inner_box {
+    position: relative;
+    z-index: 999999;
+}
+.citys .header_box {
+    padding: 25rpx 0;
+    overflow: hidden;
+    box-sizing: border-box;
+    background: #FBF9FE;
+}
+.citys .header_box .item {
+    float: left;
+    font-size: 34rpx;
+    color: #586C94;
+    box-sizing: border-box;
+}
+.citys .header_box .l {
+    width: 25%;
+    padding-left: 25rpx;
+}
+.citys .header_box .c {
+    width: 50%;
+    text-align: center;
+}
+.citys .header_box .r {
+    width: 25%;
+    text-align: right;
+    padding-right: 25rpx;
+}
+.citys .selected {
+    height: 90rpx;
+}
+.citys .picker_box {
+    width: 100%;
+    height: 485rpx;
+    background: #fff;
+}
+.citys .picker_box picker-view-column {
+    text-align: center;
+}
+.citys .picker_box picker-view-column view {
+    line-height: 90rpx;
+}
+.layer {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    background: rgba(0,0,0,0.5);
+}
+.selector {
+    width: 640rpx;
+    height: 100%;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 99;
+    .inner_box {
+        height: 100%;
+        background: #ffffff;
+        position: relative;
+        padding: 40rpx 60rpx;
+        z-index: 99;
+    }
+    .inner_btn {
+        width: 100%;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        z-index: 99;
+    }
+    .top {
+        font-size: 32rpx;
+        color: #3d3d3d;
+        margin-bottom: 20rpx;
+    }
+    .input {
+        display: inline-block;
+        background: #ffffff;
+        border: 2rpx solid #9b9b9b;
+        border-radius: 8rpx;
+        width: 216rpx;
+        height: 52rpx;
+        line-height: 52rpx;
+        text-align: center;
+        font-size: 28rpx;
+        margin-bottom: 20rpx;
+    }
+    .input.active {
+        border-color: #115bed;
+        color: #115bed;
+    }
+    .interval-line {
+        height: 52rpx;
+        vertical-align: top;
+        margin: 0 20rpx;
+    }
+    .module-box {
+        margin-bottom: 30rpx;
+    }
+    button {
+        border-radius: 0;
+    }
+}
+</style>

@@ -1,0 +1,121 @@
+<template>
+<view class="page bg__white">
+  <view class="page__bd">
+    <view class="weui-tab navbar">
+      <view class="weui-tab__panel">
+        <view class="weui-tab__content">
+          <InforList :list.sync="inforList" idType='0' listType="true" :loading.sync="loading" :noMore.sync="noMoreList" :noList.sync="noList">
+            <view slot="icon">
+              <image class="icon-supply" src="/images/icon/icon-supply.png" />
+            </view>
+          </InforList>
+        </view>
+      </view>
+      <view class="weui-btn-area">
+        <button class="weui-flex__item" type="primary" @tap='new'>
+        <image class="icon-supply" src="/images/icon/icon-add.png" />添加
+      </button>
+      </view>
+    </view>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import base from '../../mixins/base'
+import user from '../../mixins/user'
+import http from '../../utils/Http'
+import InforList from '../../components/inforList'
+
+export default class myInforList extends wepy.page {
+  mixins = [base, user]
+  config = {
+    navigationBarTitleText: '我的供求信息列表',
+    enablePullDownRefresh: true,
+    onReachBottomDistance: 100
+  }
+  data = {
+    inforList: [],
+    start: 1,
+    limit: 15,
+    noMoreList: false,
+    noList: false,
+    loading: true
+  }
+  methods = {
+    new() {
+      wx.redirectTo({
+        url: '/pages/mine/new'
+      })
+    }
+  }
+  async getList() {
+    const res = await http.get(__getApi._getMyInfroList, {
+      token_access: this.token_access,
+      page_id: this.start,
+      page_limit: this.limit
+    })
+
+    this.loading = false
+    if (res.false) {
+    //  if (res.state === 0) {
+    //    this.$needLogin()
+    //  }
+      return
+    }
+    if (res.data.list.length === 0) {
+      this.noList = true
+    }
+    if (this.start === 1) {
+      this.inforList = res.data.list
+      this.maxPage = Math.ceil(res.data.counts / this.limit)
+    } else {
+      this.inforList = [
+        ...this.inforList,
+        ...res.data.list
+      ]
+    }
+    this.$apply()
+    wepy.stopPullDownRefresh()
+  }
+  onLoad() {
+    this.token_access = this.$parent.globalData.token_access
+    this.getList()
+  }
+  onPullDownRefresh() {
+    this.start = 1
+    this.getList()
+  }
+  onReachBottom() {
+    if (this.start < this.maxPage) {
+      ++this.start
+      this.getList()
+    } else {
+      this.noMoreList = true
+    }
+    this.$apply()
+  }
+  components = {
+    InforList: InforList
+  }
+}
+</script>
+
+<style lang="less">
+.weui-btn-area {
+    width: 96%;
+    position: fixed;
+    bottom: 0;
+    left: 2%;
+}
+.weui-tab__panel {
+    padding-bottom: 100rpx;
+}
+.weui-navbar__title {
+  text-align: center;
+}
+</style>

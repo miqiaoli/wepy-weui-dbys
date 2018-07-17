@@ -1,0 +1,415 @@
+<template>
+  <view class="page">
+    <view class="searchbar">
+      <SearchBar :placeholder="searchText"></SearchBar>
+    </view>
+    <bannerSwiper :list.sync="swipers" name='image_url' hostUrl="true" height="360"></bannerSwiper>
+    <view class="bg__white">
+      <view class="page__bd_spacing broadcast weui-flex">
+        <image class="image" mode="widthFix" src="../images/icon-broadcast.png"></image>
+        <view class="weui-flex__item content">
+          <verticalSwiper :list.sync="tradeList" height="76" dots="false" vertical="ture"></verticalSwiper>
+        </view>
+      </view>
+    </view>
+    <view class="module-box weui-flex center_tab">
+      <view class="weui-flex__item">
+        <navigator url="./product/list" hover-class="navigator-hover">
+          <view class="tab-image">
+            <image class="image" src="../images/tabbars/center_tab_01.png"></image>
+          </view>
+          <text class="tab-text">现货商城</text>
+        </navigator>
+      </view>
+      <view class="weui-flex__item">
+        <navigator url="/pages/other/lab-share" hover-class="navigator-hover">
+          <view class="tab-image">
+            <image class="image" src="../images/tabbars/center_tab_02.png"></image>
+          </view>
+          <text class="tab-text">共享实验室</text>
+        </navigator>
+      </view>
+      <!-- <view class="weui-flex__item">
+      <view class="tab-image">
+        <image class="image" src="../images/tabbars/center_tab_03.png"></image>
+      </view>
+      <text class="tab-text">材料数据库</text>
+    </view> -->
+      <view class="weui-flex__item">
+        <navigator url="/pages/information/list" hover-class="navigator-hover">
+          <view class="tab-image">
+            <image class="image" src="../images/tabbars/center_tab_04.png"></image>
+          </view>
+          <text class="tab-text">供求信息</text>
+        </navigator>
+      </view>
+    </view>
+    <view class="module-box">
+      <view class="list">
+        <view class="weui-flex product-top page__bd_spacing">
+          <view class="product-title">小八塑价</view>
+          <view class="weui-flex__item"></view>
+          <navigator class="font-desc" url="/pages/other/chart-list?type={{activeIndex}}" hover-class="navigator-hover">更多品种 &gt;</navigator>
+        </view>
+        <view class="mychart">
+          <view class="weui-tab">
+            <view class="weui-navbar">
+              <view wx:for="{{tabs}}" wx:key="*this" id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" @tap="tabClick">
+                <text class="weui-navbar__title">{{item}}</text>
+              </view>
+              <view class="weui-navbar__slider" style="left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
+            </view>
+            <view class="weui-tab__panel">
+              <view class="weui-tab__content" wx:for="{{sheetNameList}}" wx:for-index="i" wx:for-item="itemI" wx:key="id" hidden="{{activeIndex != i}}">
+                <view class="weui-cell" wx:for="{{itemI.list}}" wx:for-index="j" wx:for-item="itemJ" wx:key="id">
+                  <view class="weui-cell__hd tabs-name">{{itemJ.name}}</view>
+                  <view class="weui-cell__bd text-center {{itemJ.comparePrice>=0?'font-rise':'font-decline'}}">{{itemJ.price}}{{itemJ.unit}}</view>
+                  <view class="weui-cell__ft {{itemJ.comparePrice>=0?'font-rise':'font-decline'}}">{{itemJ.comparePrice}}%</view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="module-box">
+      <view class="list">
+        <view class="weui-flex product-top page__bd_spacing">
+          <view class="product-title">环球塑讯</view>
+          <image class="title-icon" src='/images/icon/icon-news.png' />
+          <view class="weui-flex__item"></view>
+          <navigator class="font-desc" url="/pages/news/list?id=13" hover-class="navigator-hover">更多 &gt;</navigator>
+        </view>
+        <view class="list-cont">
+          <view class="item" wx:for="{{plasticsNewsList}}" wx:key="id">
+            <navigator url="/pages/news-details?id={{item.id}}" hover-class="navigator-hover">
+              <view class="title weui-media-box__title">{{item.title}}</view>
+              <view class="content weui-flex">
+                <view class="tag blue">最新</view>
+                <view class="weui-flex__item">
+                  <view class="font-desc">{{item.date}}</view>
+                </view>
+              </view>
+            </navigator>
+          </view>
+          <view class='picture'>
+            <image class="pic-cont" mode="widthFix" src='/images/index-prodect1.jpg' />
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="bg__white">
+      <PlasticRawMaterials :list.sync="plasticRawMaterials" idType='1' listType="false">
+        <view class="product-title" slot="product-title">塑料原料</view>
+        <view class="picture" slot="pic-cont">
+          <image class="pic-cont" mode="widthFix" src='/images/index-prodect2.jpg' />
+        </view>
+      </PlasticRawMaterials>
+    </view>
+    <view class="bg__white">
+      <RecycledPlasticList :list.sync="recycledPlasticList" idType='2' listType="false">
+        <view class="product-title" slot="product-title">再生塑料</view>
+        <view class="picture" slot="pic-cont">
+          <image class="pic-cont" mode="widthFix" src='/images/index-prodect3.jpg' />
+        </view>
+      </RecycledPlasticList>
+    </view>
+    <view class="bg__white">
+      <SupplyIndexList :list.sync="supplyList" idType='1' listType="true">
+        <view class="product-title" slot="title">供应信息</view>
+        <view class="tips supply" slot="pic-cont" slot="tips">供应</view>
+      </SupplyIndexList>
+    </view>
+    <view class="module-box">
+      <DemandIndexList :list.sync="demandList" idType='0' listType="true">
+        <view class="product-title" slot="title">求购信息</view>
+        <view class="tips demand" slot="tips">求购</view>
+      </DemandIndexList>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from "wepy";
+import { __getApi } from "../config.js";
+import base from "../mixins/base";
+import Swiper from "../components/swiper";
+import SearchBar from "../components/searchbar";
+import IndexList from "../components/indexList";
+import http from "../utils/Http";
+
+const sliderWidth = 75;
+export default class pageIndex extends wepy.page {
+  mixins = [base];
+  config = {
+    navigationBarTitleText: "第八元素"
+  };
+  data = {
+    searchText: "搜索",
+    swipers: [],
+    supplyList: [],
+    demandList: [],
+    tradeList: [],
+    /* 成交播报 */
+    recycledPlasticList: [],
+    /* 再生塑料 */
+    plasticRawMaterials: [],
+    /* 塑料原料 */
+    plasticsNewsList: [],
+    /* 环球塑讯 */
+    sheetNameList: [],
+    sheetList: [],
+    sheetNameIndex: 0,
+    startDate: "",
+    endDate: "",
+    sheetName: "",
+    lineChart: null,
+    categorie: [],
+    date: [],
+    tabs: ["单  体", "原  油", "塑料原料", "再生塑料", "助  剂"],
+    activeIndex: 0,
+    sliderOffset: 0,
+    sliderLeft: 0
+  };
+
+  methods = {
+    tabClick(e) {
+      this.sliderOffset = e.currentTarget.offsetLeft;
+      this.activeIndex = e.currentTarget.id;
+    }
+  };
+
+  onReady() {
+    this.initPageData();
+    try {
+      this.windowWidth = wepy.getSystemInfoSync().windowWidth || 320;
+    } catch (e) {
+      console.error("getSystemInfoSync failed!");
+    }
+    this.sliderLeft =
+      ((this.windowWidth - 30) / this.tabs.length - sliderWidth) / 2;
+    this.sliderOffset =
+      (this.windowWidth - 30) / this.tabs.length * this.activeIndex;
+  }
+  // 初始化页面数据
+  async initPageData() {
+    // 处理轮播图
+    this.getADList();
+    this.getList("tradeList", __getApi._getTradeList);
+
+    this.getList("supplyList", __getApi._getInfoList, {
+      type: 1
+    });
+    this.getList("demandList", __getApi._getInfoList, {
+      type: 0
+    });
+    this.getList("plasticsNewsList", __getApi._getNewsList, {
+      type_id: 13
+    });
+    this.getProductList();
+    const historySearch = wepy.getStorageSync("historySearch") || [];
+    this.$parent.$updateGlobalData("historySearch", historySearch);
+
+    await this.getSheetNames();
+    this.sheetName = this.sheetNameList[this.sheetNameIndex];
+    console.log(this.sheetName);
+
+    // let data = new Date()
+    // let startDate = new Date(data)
+    // startDate.setDate(data.getDate() - 30)
+    // this.startDate = this.formatTime(startDate)
+    // this.endDate = this.formatTime(data)
+    // await this.getSheetList()
+    // if (this.categorie && this.date) {
+    //   await this.initChart()
+    // }
+  }
+  bindPickerChange(e) {
+    if (e.detail.value) {
+      this.sheetNameIndex = e.detail.value;
+      this.sheetName = this.sheetNameList[this.sheetNameIndex];
+    } else {
+      this.sheetName = e.currentTarget.dataset.name;
+      this.sheetNameIndex = e.currentTarget.dataset.index - 1;
+    }
+    this.updateChart();
+  }
+  bindDateChange(e) {
+    this[e.currentTarget.dataset.name] = e.detail.value;
+  }
+  async getADList() {
+    const res = await http.get(__getApi._getADList, {
+      ad_Model_id: 11
+    });
+    if (res.false) return;
+    this.swipers = res.data;
+    this.$apply();
+  }
+  async getSheetNames() {
+    const res = await http.get(__getApi._getSheetNames);
+    if (res.false) return;
+    this.sheetNameList = res.data;
+    this.$apply();
+  }
+  async getList(fields, url, params) {
+    const res = await http.get(
+      url,
+      Object.assign({}, this.getObject(params), {
+        page_id: 1,
+        page_limit: 4
+      })
+    );
+    if (res.false) return;
+    this[fields] = res.data.list;
+    this.$apply();
+  }
+  async getProductList(limit) {
+    const params = {
+      service_name: "TRADE_ORDERLIST",
+      goods_class_id: "1,2",
+      limit: limit || 5
+    };
+    const res = await http.get(__getApi._getSYProductList, params);
+    if (res.false) return;
+    this.recycledPlasticList = res.data[2];
+    this.plasticRawMaterials = res.data[1];
+    this.$apply();
+  }
+
+  components = {
+    SearchBar,
+    bannerSwiper: Swiper,
+    verticalSwiper: Swiper,
+    SupplyIndexList: IndexList,
+    DemandIndexList: IndexList,
+    RecycledPlasticList: IndexList,
+    PlasticRawMaterials: IndexList
+  };
+}
+</script>
+
+<style lang="less">
+.weui-tab__panel {
+  padding-top: 42px;
+  font-size: 30rpx;
+}
+.weui-navbar {
+  border-bottom: none;
+  justify-content:space-around
+}
+.weui-navbar__item {
+  padding: 12px 0 4px;
+  flex: none;
+}
+.weui-navbar__title {
+  font-size: 32rpx;
+}
+.weui-navbar__slider {
+  width: 0;
+}
+.weui-navbar__item.weui-bar__item_on {
+  color: #323972;
+}
+.weui-navbar__item.weui-bar__item_on .weui-navbar__title {
+  font-size: 34rpx;
+  font-weight: bold;
+}
+.font-rise {
+  color: #eb4e35;
+}
+.font-decline {
+  color: #00d946;
+}
+.tabs-name {
+  width: 300rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filter {
+  padding: 10rpx 0 20rpx;
+  font-size: 30rpx;
+}
+.li-cicle {
+  width: 4rpx;
+  height: 4rpx;
+  background: #555;
+  border-radius: 50%;
+  margin-right: 12rpx;
+  vertical-align: middle;
+}
+.input-data {
+  height: 50rpx;
+  line-height: 50rpx;
+  border: 1px solid #9b9b9b;
+  border-radius: 8rpx;
+  margin: 0 14rpx;
+}
+.button-data button {
+  height: 50rpx;
+  line-height: 50rpx;
+  margin: 0 14rpx;
+  font-size: 30rpx;
+}
+.page {
+  position: relative;
+}
+.searchbar {
+  width: 100%;
+  height: 100rpx;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.weui-search-bar__label {
+  opacity: 0.8;
+}
+.center_tab {
+  background-color: #fff;
+  text-align: center;
+  font-size: 32rpx;
+  padding-top: 20rpx;
+  .tab-image {
+    font-size: 0;
+    .image {
+      width: 100rpx;
+      height: 100rpx;
+    }
+  }
+  .tab-text {
+    padding: 10rpx 0 20rpx;
+    font-size: 30rpx;
+  }
+}
+.module-box {
+  background-color: #fff;
+  margin-top: 20rpx;
+}
+.broadcast {
+  .image {
+    width: 93rpx;
+  }
+  .content {
+    padding-left: 30rpx;
+    padding-top: 15rpx;
+  }
+}
+.list .content .tag {
+  height: 28rpx;
+  line-height: 28rpx;
+}
+canvas {
+  width: 100%;
+}
+.title-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-left: 10rpx;
+  margin-top: 6rpx;
+}
+
+.cur {
+  color: #115bed;
+}
+</style>

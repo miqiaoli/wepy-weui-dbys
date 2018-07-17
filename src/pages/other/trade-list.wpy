@@ -1,0 +1,100 @@
+<template>
+<view class="page bg__white">
+  <block wx:if="{{tradeList.length > 0}}">
+    <view class="weui-panel">
+      <view class="weui-media-box weui-media-box_text" wx:for="{{tradeList}}" wx:key="id">
+        <view class="weui-media-box__title weui-media-box__title_in-text">{{item.buyer}}和{{item.seller}}达成一笔{{item.tradeCount}}KG的交易</view>
+        <view class="weui-media-box__desc">买方 {{item.buyer}} 和卖方 {{item.seller}} 达成一笔总价****元，成交量 {{item.tradeCount}} KG的 {{item.variet}} {{item.productName}} {{item.tradestyle}}</view>
+        <view class="weui-media-box__info">
+          <view class="weui-media-box__info__meta">{{item.relesaseTime}}</view>
+        </view>
+      </view>
+    </view>
+  </block>
+  <listStates :loading.sync="loading" :noMore.sync="noMoreList" :noList.sync="noList"></listStates>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import base from '../../mixins/base'
+import http from '../../utils/Http'
+import listStates from '../../components/listStates'
+
+export default class TradeList extends wepy.page {
+  mixins = [base]
+  config = {
+    navigationBarTitleText: '第八元素成交播报',
+    enablePullDownRefresh: true,
+    onReachBottomDistance: 100
+  }
+  data = {
+    tradeList: [],
+    start: 1,
+    limit: 15,
+    maxPage: null,
+    noMoreList: false,
+    noList: false,
+    loading: true
+  }
+  components = {
+    listStates
+  }
+  async getList() {
+    this.loading = true
+    if (this.start === 1) {
+      this.tradeList = []
+    }
+
+    const res = await http.get(__getApi._getTradeList, {
+      page_id: this.start,
+      page_limit: this.limit
+    })
+    this.loading = false
+    if (res.false) return
+    if (res.data.list.length === 0) {
+      this.noList = true
+    }
+    if (this.start === 1) {
+      this.tradeList = res.data.list
+      this.maxPage = Math.ceil(res.data.count / this.limit)
+    } else {
+      this.tradeList = [
+        ...this.tradeList,
+        ...res.data.list
+      ]
+    }
+    this.$apply()
+    wepy.stopPullDownRefresh()
+  }
+  onLoad() {
+    this.getList()
+  }
+  onPullDownRefresh() {
+    this.start = 1
+    this.getList()
+  }
+  onReachBottom() {
+    if (this.start < this.maxPage) {
+      ++this.start
+      this.getList()
+    } else {
+      this.noMoreList = true
+    }
+    this.$apply()
+  }
+}
+</script>
+
+<style lang="less">
+.weui-media-box__info__meta {
+    float: right;
+    padding-right: 0;
+}
+.weui-media-box {
+  padding-bottom: 10rpx;
+}
+</style>

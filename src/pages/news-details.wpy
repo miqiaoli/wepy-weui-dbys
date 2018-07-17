@@ -1,0 +1,102 @@
+<template>
+<view class="page__bd bg__white">
+  <view class="weui-article">
+    <view class="weui-article__h1">{{productDetails.article_title.title}}</view>
+    <view class="weui-media-box__info">
+      <view class="weui-media-box__info__meta">作者：{{productDetails.article_title.author}}</view>
+      <view class="weui-media-box__info__meta">{{productDetails.article_title.date}}</view>
+    </view>
+    <view class="weui-article__section">
+      <view class="weui-article__p">
+        <html2wxml :parserName="name" :parserContent.sync="textContent"></html2wxml>
+      </view>
+    </view>
+    <view class="gohome bg__primary">
+      <navigator url="/pages/index" open-type="switchTab">
+        <image class="gohome-image" src="/images/icon/home.png"></image>
+        <text class="gohome-text">返回首页</text>
+      </navigator>
+    </view>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../config.js'
+import base from '../mixins/base'
+import http from '../utils/Http'
+import html2wxml from '../components/html2wxml'
+
+export default class NewsList extends wepy.page {
+  mixins = [base]
+  config = {
+    navigationBarTitleText: '信息详情页'
+  }
+  data = {
+    id: '',
+    productDetails: {},
+    name: 'myHtmlParserKiner',
+    textContent: ''
+  }
+  methods = {
+    wxParseImgTap() {
+      // this.$broadcast('wxParseImgTap')
+    }
+  }
+  async getNewsDetails() {
+    const res = await http.get(__getApi._getNewsDetails, {
+      content_id: this.id
+    })
+    if (res.false) return
+    this.productDetails = res.data
+    this.textContent = res.data.article_content
+    this.$apply()
+    this.$invoke('html2wxml', 'htmlParserNotice')
+  }
+  onLoad(options) {
+    this.id = options.id
+    this.getNewsDetails()
+  }
+  onShareAppMessage(res) {
+    return {
+      title: '第八元素，环球塑讯 ' + this.productDetails.article_title.title + '/ 作者：' + this.productDetails.article_title.author + '/ 时间：' + this.productDetails.article_title.date,
+      path: '/pages/news-details?id=' + this.id,
+      success: function(res) {
+        // 转发成功
+        console.log('转发成功')
+      },
+      fail: function(res) {
+        // 转发失败
+        console.log('转发失败')
+      }
+    }
+  }
+  components = {
+    html2wxml: html2wxml
+  }
+}
+</script>
+
+<style lang="css">
+@import '../wxparse/wxParse.wxss';
+.gohome {
+  position: fixed;
+  bottom: 40rpx;
+  right: 0;
+  color: #fff;
+  border-radius: 50rpx 0 0 50rpx;
+  padding: 10rpx 30rpx;
+}
+.gohome-image {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 10rpx;
+  vertical-align: middle;
+}
+.gohome-text {
+  vertical-align: middle;
+}
+</style>

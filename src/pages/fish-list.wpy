@@ -1,0 +1,320 @@
+<template>
+<view class="page__bd bg__white page__bd_spacing">
+  
+  <!-- <block wx:if="{{plasticsNewsList.length > 0}}"> -->
+  <scroll-view id="chatScrollView" scroll-y style="height: {{height}}px;" bindscroll="scroll" bindscrolltoupper="upper" scroll-top="{{scrollTop}}" scroll-into-view="{{toView}}">
+    <listStates :loading.sync="loading" :noMore.sync="noMoreList" :noList.sync="noList"></listStates>
+    <view class="margin20" wx:for="{{historyList}}" wx:key="index" id="history{{index}}">
+      <view class="text-center" wx:if="{{item.dateTime}}"> <text class="time">{{item.dateTime}}</text> </view>
+      <view class="weui-flex">
+        <view class="avatar">
+          <image class="avatar" mode="widthFix" src="{{ item.heardImgUrl ? item.heardImgUrl : '/images/icon/icon-fish-avatar.png'}}" />
+        </view>
+        <view class="weui-flex__item">
+          <view class="content weui-flex">
+            <view class="triangle-left"></view>
+            <view class="msg">
+              <view class="name">{{ item.nickName }}</view>
+              <view class="box">
+                <text>{{item.textMessage}}</text>
+                <image mode="aspectFit" style="width: 200rpx;"  wx:if="{{item.contentgifUrl}}" src="{{item.contentgifUrl}}" />
+                <image mode="aspectFill" style="width: 300rpx;" bindtap="imagepreview" data-src="{{item.contentImgUrl}}"  wx:if="{{item.contentImgUrl}}" src="{{item.contentImgUrl}}" />
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="margin20" wx:for="{{list}}" wx:key="index" id="item{{index}}">
+      <view class="weui-flex">
+        <view class="avatar">
+          <image class="avatar" mode="widthFix" src="{{ item.heardImgUrl ? item.heardImgUrl : '/images/icon/icon-fish-avatar.png'}}" />
+        </view>
+        <view class="weui-flex__item">
+          <view class="content weui-flex">
+            <view class="triangle-left"></view>
+            <view class="msg">
+              <view class="name">{{item.nickName}}</view>
+              <view class="box">
+                <text>{{item.textMessage}}</text>
+                <image style="width: 400rpx; height: 300rpx;"  wx:if="{{item.contentgifUrl}}" src="{{item.contentgifUrl}}" />
+                <image mode="aspectFill" style="width: 300rpx;"  bindtap="imagepreview" data-src="{{item.contentImgUrl}}"  wx:if="{{item.contentImgUrl}}" src="{{item.contentImgUrl}}" />
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+  <!-- </block> -->
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../config.js'
+import base from '../mixins/base'
+import http from '../utils/Http'
+import listStates from '../components/listStates'
+
+export default class FishList extends wepy.page {
+  mixins = [base]
+  config = {
+    navigationBarTitleText: '鱼塘信息',
+    enablePullDownRefresh: true,
+    onReachBottomDistance: 100
+  }
+  data = {
+    start: 1,
+    limit: 5,
+    historyList: [],
+    list: [],
+    count: 100000,
+    scrollTop: '',
+    toView: '',
+    height: '',
+    noMoreList: false,
+    noList: false,
+    loading: true,
+    rehandshake: true,
+    maxConnectNum: 0
+  }
+  components = {
+    listStates
+  }
+  methods = {
+    imagepreview(e) {
+    }
+  }
+  getScrollOffset() {
+    const self = this
+    let query = wx.createSelectorQuery()
+
+    query.select('#chatScrollView').boundingClientRect(function(rects) {
+      self.scrollTop = self.scrollTop + rects.height
+      self.$apply()
+    }).exec()
+  }
+  getHistoryScrollOffset() {
+    const self = this
+    let query = wx.createSelectorQuery()
+
+    query.select('#history4').boundingClientRect(function(rects) {
+      if (rects) {
+        self.scrollTop = rects.bottom
+      }
+      self.$apply()
+    }).exec()
+  }
+  // 加载历史数据
+  async getList() {
+    if (this.start * this.limit - this.limit > this.count) {
+      wx.showToast({
+        title: '没有更多了',
+        icon: 'none',
+        duration: 2000
+      })
+      return
+    }
+    const res = await http.get(__getApi._getFishPondList, {
+      firsTime: this.firsTime,
+      page_id: this.start,
+      page_limit: this.limit
+    })
+    this.loading = false
+    if (res.false) return
+    this.count = res.data.count
+    if (res.data.list.length === 0) {
+      this.noList = true
+    }
+    const self = this
+    if (this.start === 1) {
+      // this.historyList = res.data.list.reverse()
+      for (let i = 0; i < res.data.list.length; i++) {
+        this.historyList.unshift(res.data.list[i])
+      }
+      this.maxPage = Math.ceil(res.data.count / this.limit)
+    } else {
+      for (let i = 0; i < res.data.list.length; i++) {
+        setTimeout(() => {
+          self.historyList.unshift(res.data.list[i])
+        }, 50)
+      }
+    }
+    this.$apply()
+  }
+  scroll(e) {
+    // console.log(e)
+  }
+  // 加载历史消息
+  onPullDownRefresh() {
+    this.upper()
+    setTimeout(() => {
+      wx.stopPullDownRefresh()
+    }, 200)
+  }
+  upper(e) {
+    if (this.start < this.maxPage) {
+      ++this.start
+      this.getList()
+    } else {
+      this.noMoreList = true
+    }
+    // this.toView = 'history' + (this.limit - 1)
+    this.getHistoryScrollOffset()
+    this.$apply()
+  }
+  setIntervalSendMsg() {
+    setInterval(function() {
+      wx.sendSocketMessage({
+        data: "{'send_heart':'心跳连接--发哥是个帅哥'}"
+      })
+    }, 50000)
+  }
+  // 接受发送的消息
+  onSocketMessage(data) {
+    this.list = [...this.list, data]
+    this.toView = 'item' + (this.list.length - 1)
+    this.$apply()
+  }
+  async connectAndOpenSocket() {
+    const that = this
+    await wx.connectSocket({
+      url: __getApi._getsocketList,
+      success() {
+        wx.onSocketOpen(function(res) {
+          console.log('onLoad == cWebSocket连接成功')
+          wx.sendSocketMessage({
+            data: "{'reply_start':''}"
+          })
+        })     
+        that.setIntervalSendMsg()
+      },
+      fail(err) {
+        console.log('%cWebSocket连接失败', 'color:red', err)
+      }
+    })
+  }
+  async getSocket() {
+    const that = this
+    await wx.connectSocket({
+      url: __getApi._getsocketList,
+      success() {
+        wx.onSocketOpen(function(res) {
+          console.log('onLoad == cWebSocket连接成功')
+          wx.sendSocketMessage({
+            data: "{'reply_start':''}"
+          })
+        })     
+        that.setIntervalSendMsg()
+      },
+      fail(err) {
+        console.log('%cWebSocket连接失败', 'color:red', err)
+      }
+    })
+    // wx.sendSocketMessage({
+    //   data: "{'reply_start':''}"
+    // })
+    wx.onSocketMessage(function(res) {
+      console.log('收到服务器内容：' + res.data)
+      if (JSON.parse(res.data)) {
+        that.onSocketMessage(JSON.parse(res.data))
+      }
+    })
+    wx.onSocketError(function(res) {
+      console.log('WebSocket连接打开失败，请检查！')
+      that.maxConnectNum ++
+      if (that.maxConnectNum > 3) {
+        return
+      } else {
+        wx.connectSocket({
+          url: __getApi._getsocketList,
+          success() {
+            wx.onSocketOpen(function(res) {
+              console.log('%cWebSocket连接成功')
+              wx.sendSocketMessage({
+                data: "{'reply_start':''}"
+              })
+            })  
+            that.setIntervalSendMsg()
+          },
+          fail(err) {
+            console.log('%cWebSocket连接失败', 'color:red', err)
+          }
+        })
+      }
+    })
+    wepy.onSocketClose(function(res) {
+      console.log('WebSocket 已关闭！')
+    })
+  }  
+  async onLoad() {
+  }
+  async onShow() {
+    this.list = []
+    this.historyList = []
+    this.start = 1
+    this.firsTime = Date.parse(new Date())   //  / 1000
+    await this.getList()
+    let system = await wepy.getSystemInfo()
+    this.height = system.windowHeight - 10
+    this.getScrollOffset()
+    await this.getSocket()
+    this.$apply()
+  }
+  onHide () {
+    wx.sendSocketMessage({
+      data: "{'reply_end':''}"
+    })
+    wx.closeSocket()
+    this.$apply()
+  }
+}
+</script>
+
+<style lang="css">
+.margin20 {
+  margin-bottom: 20rpx;
+}
+.avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+}
+.triangle-left {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-top: 12rpx solid transparent;
+  border-right: 24rpx;  /* solid #ecf2fe */
+  border-bottom: 12rpx solid transparent;
+  margin-top: 32rpx;
+}
+.content{
+  margin-left: 16rpx;
+}
+.name{
+  font-size:12px;
+  color:#8f8e94;
+}
+.box {
+  display: inline-block;
+  background:rgba(17,91,237,0.08);
+  border-radius:8rpx;
+  margin-top: 10rpx;
+  padding: 6rpx 22rpx;
+  font-size: 32rpx;
+}
+.time {
+  display: inline-block;
+  background: #cecece;
+  margin: 40rpx auto 28rpx;
+  color: #fff;
+  font-size: 24rpx;
+  border-radius: 6rpx;
+  padding: 0 24rpx;
+}
+</style>

@@ -1,0 +1,101 @@
+<template>
+<view class="page bg__white">
+  <view class="page__bd">
+    <view class="weui-flex searchbar">
+      <view class="weui-flex__item">
+        <SearchBar :placeholder="searchText"></SearchBar>
+      </view>
+    </view>
+    <block wx:if="{{id == 0}}">
+      <ProductsList :list.sync="itemsList" :listType.sync="listType" :loading.sync="loading" :noMore.sync="noMoreList" :noList.sync="noList"></ProductsList>
+    </block>
+    <block wx:else>
+      <InforList :list.sync="itemsList" idType='0' listType="false" :loading.sync="loading" :noMore.sync="noMoreList" :noList.sync="noList"></InforList>
+    </block>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import base from '../../mixins/base'
+import SearchBar from '../../components/searchbar'
+import ProductsList from '../../components/productsList'
+import InforList from '../../components/inforList'
+import http from '../../utils/Http'
+
+export default class SearchList extends wepy.page {
+  mixins = [base]
+  components = {
+    SearchBar: SearchBar,
+    ProductsList: ProductsList,
+    InforList: InforList
+  }
+  config = {
+    navigationBarTitleText: '搜索列表',
+    enablePullDownRefresh: true,
+    onReachBottomDistance: 100
+  }
+  data = {
+    itemsList: [],
+    page_id: 1,
+    page_limit: 15,
+    maxPage: null,
+    id: 0,
+    mistiness: '',
+    noMoreList: false,
+    noList: false,
+    loading: true
+  }
+
+  async getSearch() {
+    const res = await http.get(__getApi._getSearch, {
+      mistiness: this.mistiness,
+      page_id: this.page_id,
+      page_limit: this.page_limit,
+      id: this.id
+    })
+    this.loading = false
+    if (res.false) return
+    if (res.data.list.length === 0) {
+      this.noList = true
+    }
+    if (this.page_id === 1) {
+      this.itemsList = res.data.list
+      this.maxPage = Math.ceil(res.data.count / this.page_limit)
+    } else {
+      this.itemsList = [
+        ...this.itemsList,
+        ...res.data.list
+      ]
+    }
+    this.$apply()
+    wepy.stopPullDownRefresh()
+  }
+  onLoad(options) {
+    this.mistiness = options.mistiness
+    this.id = options.id
+    this.getSearch()
+  }
+  onPullDownRefresh() {
+    this.page_id = 1
+    this.getSearch()
+  }
+
+  onReachBottom() {
+    if (this.page_id < this.maxPage) {
+      ++this.page_id
+      this.getSearch()
+    } else {
+      this.noMoreList = true
+    }
+    this.$apply()
+  }
+}
+</script>
+
+<style lang="css">
+</style>

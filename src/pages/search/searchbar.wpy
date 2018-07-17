@@ -1,0 +1,92 @@
+<template>
+<view class="">
+  <SearchBar :placeholder="searchText" inputShowed="ture" @search.user="getSearch"></SearchBar>
+  <view class="search-tab page__bd_spacing">
+    <view class="weui-tab">
+      <view class="weui-navbar weui-flex">
+        <view wx:for="{{tabs}}" wx:key="*this" id="{{index}}" class="weui-flex__item weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" @tap="tabClick">
+          <view class="weui-navbar__title">{{item}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="search module-box page__bd_spacing">
+    <view class="title">历史搜索</view>
+    <view class="search-list module-box">
+      <view class="weui-badge" wx:for="{{historySearch}}"  wx:key="id">
+        <navigator open-type="redirect" url="/pages/search/list?id={{activeIndex}}&mistiness={{item}}" hover-class="weui-cell_active">{{item}}</navigator>
+      </view>
+    </view>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import base from '../../mixins/base'
+import SearchBar from '../../components/searchbar'
+
+export default class searchBar extends wepy.page {
+  mixins = [base]
+  config = {
+    navigationBarTitleText: '第八元素'
+  }
+  data = {
+    searchText: '',
+    tabs: ['现货商城', '供求信息'],
+    activeIndex: 0,
+    page_id: 1,
+    page_limit: 15,
+    historySearch: []
+  }
+  methods = {
+    tabClick(e) {
+      this.activeIndex = e.currentTarget.id
+    },
+    async getSearch(mistiness, evt) {
+      wx.redirectTo({
+        url: '/pages/search/list?mistiness=' + mistiness + '&id=' + this.activeIndex
+      })
+    }
+  }
+  onLoad() {
+    this.historySearch = this.$parent.globalData.historySearch
+  }
+  components = {
+    SearchBar
+  }
+}
+</script>
+
+<style lang="less">
+.weui-flex .weui-navbar__title {
+    margin: 0 10rpx;
+    padding: 0 20rpx;
+    height: 2.3em;
+    line-height: 2.3em;
+    text-align: center;
+    font-size: 36rpx;
+}
+.weui-flex__item.weui-bar__item_on {
+    color: #0078dd;
+    border-bottom: 4rpx solid #0078dd;
+}
+.module-box {
+    margin-top: 20rpx;
+}
+.weui-badge {
+    display: inline-block;
+    padding: 20rpx 30rpx;
+    min-width: 8px;
+    border-radius: 36rpx;
+    background-color: #e5e5e5;
+    color: #2f2f2f;
+    line-height: 1;
+    text-align: center;
+    font-size: 28rpx;
+    vertical-align: middle;
+    text-decoration: underline;
+    margin-right: 20rpx;
+    margin-bottom: 30rpx;
+}
+</style>

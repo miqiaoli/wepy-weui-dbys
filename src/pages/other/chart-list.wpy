@@ -1,0 +1,376 @@
+<template>
+  <view class="container bg__white">
+    <view class="page__bd_spacing">
+      <view class="total">{{firstName}}</view>
+      <view class="weui-flex">
+        <view class="weui-flex__item">
+          <text class="second-name">{{secondName}}</text>
+        </view>
+        <view class="more" @tap="isFilter">显示更多</view>
+        <view class="arrow_down"></view>
+      </view>
+    </view>
+    <view hidden="{{nolist}}" class="mychart">
+      <!-- <ecCanvas :ec.sync="ec" height="200px" bind:init="echartInit"></ecCanvas> -->
+      <!-- <ec-canvas id="mychart" canvas-id="mychart-line" ec="{{ ec }}" bind:init="echartInit"></ec-canvas> -->
+      <ec-canvas id="mychart" canvas-id="mychart-line" ec="{{ ec }}"></ec-canvas>
+
+    </view>
+    <view class="image" wx:if="{{nolist}}">
+      <image style="width: 200px; height: 237px;" src="/images/nolist.png"></image>
+    </view>
+    <pickerView :list.sync="sheetNameList" :firstLevel.sync="firstLevel" :secondLevel.sync="secondLevel" :thirdLevel.sync='thirdLevel' :isFilter.sync="isFilter" :nolist.sync="nolist"></pickerView>
+    <view class="weui-flex date-choose">
+      <view class="weui-flex__item text-center {{dateIndex === 0 ? 'cur' : ''}}" data-index=0 @tap="changeDate">
+        <view class="placeholder">近1周</view>
+      </view>
+      <view class="weui-flex__item text-center {{dateIndex === 1 ? 'cur' : ''}}" data-index=1 @tap="changeDate">
+        <view class="placeholder">近1月</view>
+      </view>
+      <view class="weui-flex__item text-center {{dateIndex === 2 ? 'cur' : ''}}" data-index=2 @tap="changeDate">
+        <view class="placeholder">近3月</view>
+      </view>
+      <view class="weui-flex__item text-center {{dateIndex === 3 ? 'cur' : ''}}" data-index=3 @tap="changeDate">
+        <view class="placeholder">近6月</view>
+      </view>
+      <view class="weui-flex__item text-center {{dateIndex === 4 ? 'cur' : ''}}" data-index=4 @tap="changeDate">
+        <view class="placeholder">近1年</view>
+      </view>
+    </view>
+    <view class="compare page__bd_spacing">
+      <button class="weui-btn" type="primary" @tap="goCompare">趋势对比</button>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from "wepy";
+import { __getApi } from "../../config.js";
+import base from "../../mixins/base";
+import http from "../../utils/Http";
+import pickerView from "../../components/pickerView";
+import * as echarts from "../../ec-canvas/echarts";
+
+let chart = null;
+function initChart(canvas, width, height) {
+  chart = echarts.init(canvas, null, {
+    width: width,
+    height: height
+  });
+  canvas.setChart(chart);
+
+  var option = {
+    color: ["#99A5EA", "#EB4E35"],
+    tooltip: {
+      trigger: "none",
+      axisPointer: {
+        type: "cross"
+      }
+    },
+    legend: {
+      data: [],
+      top: 270,
+      left: "center",
+      backgroundColor: "white",
+      z: 2
+    },
+    grid: {
+      containLabel: true
+    },
+
+    xAxis: {
+      type: "category",
+      boundaryGap: false,
+      axisLine: {
+        onZero: false
+      },
+      axisPointer: {
+        label: {
+          formatter: function(params) {
+            return (
+              params.value +
+              "\n" +
+              (params.seriesData[0]
+                ? params.seriesData[0].seriesName +
+                  "：" +
+                  params.seriesData[0].data
+                : "") +
+              "\n" +
+              (params.seriesData[1]
+                ? params.seriesData[1].seriesName +
+                  "：" +
+                  params.seriesData[1].data
+                : "")
+            );
+          }
+        }
+      },
+      data: []
+      // show: false
+    },
+    yAxis: {
+      axisLine: {
+        lineStyle: {
+          color: "#4A5675"
+          // width:2
+        }
+      },
+      type: "value",
+      splitLine: {
+        show: false
+      },
+      scale: true
+    },
+    series: []
+  };
+  chart.setOption(option);
+  return chart;
+}
+export default class ChartCompare extends wepy.page {
+  mixins = [base];
+  components = {
+    pickerView
+  };
+  config = {
+    navigationBarTitleText: "小八塑价对比",
+    usingComponents: {
+      "ec-canvas": "../../ec-canvas/ec-canvas"
+    }
+  };
+  data = {
+    windowWidth: "",
+    basisData: null,
+    startDate: [],
+    endDate: [],
+    chartData: [],
+    sheetNameList: [],
+    sheetName: [],
+    isFilter: true,
+    type: 0,
+    firstLevel: [],
+    secondLevel: [],
+    thirdLevel: [],
+    firstName: "",
+    secondName: "",
+    dateIndex: 0,
+    chartState: false,
+    nolist: false,
+    ec: {
+      onInit: initChart,
+      lazyLoad: true
+    },
+    firstcompareName: ""
+  };
+  events = {
+    eventName: (p1, $event) => {
+      const firstName = this.sheetNameList[p1[0]].label;
+      const secondName = this.sheetNameList[p1[0]].children[p1[1]].label;
+      const thirdName = this.sheetNameList[p1[0]].children[p1[1]].children[
+        p1[2]
+      ].label;
+      this.sheetName = firstName + "/" + secondName + "/" + thirdName;
+      this.firstName = firstName;
+      this.secondName = secondName + "/" + thirdName;
+      this.getSheetList();
+      this.$apply();
+    }
+  };
+  methods = {
+    changeDate(e) {
+      this.dateIndex = this.getNumber(e.currentTarget.dataset.index);
+      let data = new Date();
+      let startDate = new Date(data);
+      switch (this.dateIndex) {
+        case 0:
+          startDate.setDate(data.getDate() - 7);
+          break;
+        case 1:
+          startDate.setDate(data.getDate() - 30);
+          break;
+        case 2:
+          startDate.setDate(data.getDate() - 90);
+          break;
+        case 3:
+          startDate.setDate(data.getDate() - 180);
+          break;
+        case 4:
+          startDate.setDate(data.getDate() - 365);
+          break;
+        default:
+          break;
+      }
+      this.startDate = this.formatTime(startDate);
+      this.getSheetList();
+      this.$apply();
+    },
+    isFilter() {
+      this.isFilter = false;
+      this.nolist = true;
+      this.$apply();
+    },
+    goCompare() {
+      wepy.navigateTo({
+        url: "./chart-compare?name=" + encodeURIComponent(this.sheetName)
+      });
+    }
+  };
+  async getSheetNames() {
+    const res = await http.get(__getApi.getLabel);
+    if (res.false) return;
+    this.sheetNameList = res.data;
+    const list = res.data;
+
+    let firstLevel = [];
+    let secondLevel = [];
+    let thirdLevel = [];
+
+    for (let i = 0; i < list.length; i++) {
+      firstLevel.push(list[i].label);
+    }
+
+    for (let i = 0; i < list[0].children.length; i++) {
+      secondLevel.push(list[0].children[i].label);
+    }
+
+    for (let i = 0; i < list[0].children[0].children.length; i++) {
+      thirdLevel.push(list[0].children[0].children[i].label);
+    }
+
+    this.firstLevel = firstLevel;
+    this.secondLevel = secondLevel;
+    this.thirdLevel = thirdLevel;
+    this.sheetName =
+      firstLevel[this.type] +
+      "/" +
+      list[this.type].children[0].label +
+      "/" +
+      list[this.type].children[0].children[0].label;
+    this.firstName = firstLevel[this.type];
+    this.secondName =
+      list[this.type].children[0].label +
+      "/" +
+      list[this.type].children[0].children[0].label;
+    this.$apply();
+  }
+  async getSheetList() {
+    wepy.showLoading({
+      title: "加载中"
+    });
+    const res = await http.get(__getApi.getDatas, {
+      sheetName: this.sheetName,
+      start: this.startDate,
+      end: this.endDate
+    });
+    if (res.false) return;
+    this.chartData = res.data;
+    if (res.data.price.length > 0) {
+      this.nolist = false;
+      chart.setOption({
+        legend: {
+          data: [res.data.name, "5日均价"]
+        },
+        xAxis: {
+          data: res.data.date
+        },
+        yAxis: {
+          name: "销售单价 " + res.data.unit
+        },
+        series: [
+          {
+            name: res.data.name,
+            type: "line",
+            smooth: true,
+            data: res.data.price
+          },
+          {
+            name: "5日均价",
+            type: "line",
+            smooth: true,
+            data: res.data.five_ave
+          }
+        ]
+      });
+    } else {
+      this.nolist = true;
+    }
+    wepy.hideLoading();
+    this.$apply();
+  }
+  async onLoad(options) {
+    try {
+      this.windowWidth = wepy.getSystemInfoSync().windowWidth || 320;
+    } catch (e) {
+      console.error("getSystemInfoSync failed!");
+    }
+    this.$wxpage.selectComponent("#mychart").data.ec.onInit = initChart;
+    this.$wxpage.selectComponent("#mychart").init();
+    this.type = options.type || this.type;
+
+    let data = new Date();
+    let startDate = new Date(data);
+    startDate.setDate(data.getDate() - 7);
+    this.startDate = this.formatTime(startDate);
+    this.endDate = this.formatTime(data);
+
+    await this.getSheetNames();
+    await this.getSheetList();
+    this.$apply();
+  }
+}
+</script>
+
+<style lang="css">
+.container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+#mychart {
+  width: 375px;
+  height: 320px;
+}
+.total {
+  font-size: 40rpx;
+  color: #1e1e1e;
+  padding-bottom: 20rpx;
+}
+.second-name {
+  font-size: 18px;
+  color: #323972;
+  background: #a1a6bb;
+  border-radius: 2px;
+  padding: 6rpx 30rpx;
+}
+.date-choose {
+  height: 80rpx;
+  background: #e4e7f0;
+}
+.date-choose .weui-flex__item {
+  height: 62rpx;
+  line-height: 62rpx;
+}
+.date-choose .weui-flex__item.cur {
+  background: #fff;
+}
+.compare {
+  margin-top: 80rpx;
+}
+.image {
+  text-align: center;
+}
+.more {
+  font-size: 28rpx;
+  color: #8f8e94;
+  line-height: 68rpx;
+}
+.arrow_down {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid #8f8e94;
+  margin-top: 30rpx;
+}
+</style>

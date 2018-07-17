@@ -1,0 +1,188 @@
+<template>
+<view class="list" wx:if="{{listType}}">
+  <view class="weui-flex product-top page__bd_spacing">
+    <slot name="title">供应信息</slot>
+    <view class="weui-flex__item"></view>
+    <view class="font-desc" bindtap="getMore">更多 &gt;
+      <!-- <navigator url="/pages/information/list?index={{idType}}" open-type="switchTab" hover-class="navigator-hover">更多 &gt;</navigator> -->
+    </view>
+  </view>
+  <view class="list-cont">
+    <navigator wx:for="{{list}}" wx:key="id" url="/pages/information/details?id={{item.id}}" hover-class="navigator-hover">
+      <view class="item weui-flex">
+        <slot name="tips">供应</slot>
+        <view class="content weui-flex__item">
+          <view class="weui-flex title">
+            <view wx:if='{{item.variety === 1}}'>塑料原料/{{item.productName}}</view>
+            <view wx:else>再生塑料/{{item.productName}}</view>
+            <view class="weui-flex__item"></view>
+            <view>{{item.phone}}</view>
+          </view>
+          <view class="weui-flex desc" @tap='click' data-index='{{index}}' id="{{item.id}}">
+            <view class="font-desc">{{item.place}}</view>
+            <view class="weui-flex__item"></view>
+            <view class="font-desc">{{item.date}}</view>
+          </view>
+        </view>
+      </view>
+    </navigator>
+  </view>
+</view>
+<view class="list" wx:else>
+  <view class="weui-flex product-top page__bd_spacing">
+    <slot name="product-title">塑料原料</slot>
+    <view class="tips real-listing">实盘挂牌</view>
+    <view class="weui-flex__item"></view>
+    <view class="font-desc">
+      <navigator url="/pages/product/list?goods_class_id={{idType}}" hover-class="navigator-hover">更多 &gt;</navigator>
+    </view>
+  </view>
+  <view class="list-cont">
+    <view class="item" wx:for="{{list}}" wx:key="id">
+      <navigator url="/pages/product/details?id={{item.order_id}}" hover-class="navigator-hover">
+        <view class="title">{{item.goods_class}}/{{item.goods_name}}/{{item.att2}}/{{item.att1}}</view>
+        <view class="content weui-flex">
+          <view class="weui-flex__item">
+            <view class="font-desc">{{item.address}}</view>
+            <view class="else">
+              <view class="tag blue">起批量：大于{{item.min_batch_qtt}}KG</view>
+              <view class="tag origin">可供量：{{item.amount}}KG</view>
+            </view>
+          </view>
+          <view class="price-cont font-red">
+            <view class='price'>￥</view>{{item.order_price}}
+            <view class='price'>元/KG</view>
+          </view>
+        </view>
+      </navigator>
+    </view>
+  </view>
+  <slot name="pic-cont">
+    <image class="pic-cont" mode="widthFix" src='/images/index-prodect1.jpg'></image>
+  </slot>
+</view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class indexList extends wepy.component {
+  props = {
+    list: {
+      type: Object,
+      default: []
+    },
+    idType: {
+      type: [Number, String],
+      default: 1
+    },
+    listType: {
+      type: [Boolean, String],
+      coerce(v) {
+        return typeof v === 'string' ? JSON.parse(v) : v
+      }
+    }
+  }
+  methods = {
+    getMore() {
+      wepy.$instance.$updateGlobalData('inforType', this.idType)
+      wx.navigateTo({
+        url: '/pages/information/list'
+      })
+    }
+  }
+}
+</script>
+<style type="less">
+.list {
+  .supply-demand-title {
+    font-size: 32rpx;
+    color: #282828;
+    font-weight: bold;
+  }
+  .product-title {
+    font-size: 40rpx;
+    font-weight: bold;
+    /* border-left: 6rpx solid #0078dd; */
+    /* padding-left: 18rpx; */
+  }
+  .supply-demand-top {
+    border-bottom: 1rpx solid #c7c7cc;
+    line-height: 80rpx;
+  }
+  .product-top {
+    padding: 30rpx 24rpx 15rpx;
+    line-height: 50rpx;
+  }
+  .pic-cont {
+    width: 100%;
+  }
+  .tips {
+    background: #fff2dc;
+    color: #ffac24;
+    border-radius: 10rpx;
+    line-height: 26rpx;
+    height: 26rpx;
+    padding: 4rpx 8rpx;
+    font-size: 24rpx;
+    margin-top: 12rpx;
+    margin-right: 20rpx;
+  }
+  .tips.demand {
+    background: #ffe3e8;
+    color: #ff153c;
+  }
+  .tips.real-listing {
+    background: #cfdefb;
+    color: #115BED;
+    margin-left: 10rpx;
+    border-radius: 4rpx;
+  }
+  .list-cont {
+    /* margin-left: 24rpx; */
+    padding-bottom: 30rpx;
+    .item {
+      padding: 18rpx 24rpx 18rpx 24rpx;
+      border-bottom: 1rpx solid #E8E7E7;
+    }
+  }
+  .tag {
+    display: inline-block;
+    line-height: 30rpx;
+    border-radius: 4rpx;
+    font-size: 20rpx;
+    color: #fff;
+    padding: 2rpx 6rpx;
+    margin-right: 20rpx;
+  }
+  .blue {
+    background: #ffffff;
+    border: 1px solid #115bed;
+    border-radius: 8rpx;
+    color: #115bed;
+  }
+  .origin {
+    background: #ffffff;
+    border: 1px solid #ffac24;
+    border-radius: 8rpx;
+    color: #ffac24;
+  }
+  .price-cont {
+    position: relative;
+    text-align: right;
+  }
+  .icon-price {
+    width: 72rpx;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  .price {
+    font-size: 26rpx;
+    display: inline-block;
+  }
+}
+
+.picture {
+  font-size: 0
+}
+</style>

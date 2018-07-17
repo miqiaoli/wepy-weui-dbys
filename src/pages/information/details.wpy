@@ -1,0 +1,199 @@
+<template>
+<view class="page__bd">
+  <view class="weui-cells">
+    <block wx:if='{{swipers.length > 0}}'>
+      <Swiper :list.sync="swipers" height="360" hostUrl="true"></Swiper>
+    </block>
+    <view class="weui-cell">
+      <view class="weui-cell__bd font-primary">
+        <block wx:if='{{items.type === 0}}'>【求购】</block>
+        <block wx:else>【供应】</block>
+      </view>
+      <view class="weui-cell__ft font-desc">{{items.date}}</view>
+    </view>
+    <view class="weui-cell">
+      <view class="weui-cell__bd">品种</view>
+      <view class="weui-cell__ft">{{varietyName}}</view>
+    </view>
+    <view class="weui-cell">
+      <view class="weui-cell__bd">品名</view>
+      <view class="weui-cell__ft">{{items.productName}}</view>
+    </view>
+    <view class="weui-cell">
+      <view class="weui-cell__bd">牌号</view>
+      <view class="weui-cell__ft">{{items.grade}}</view>
+    </view>
+    <view class="weui-cell">
+      <view class="weui-cell__bd">厂商</view>
+      <view class="weui-cell__ft">{{items.grades}}</view>
+    </view>
+    <view class="weui-cell">
+      <view class="weui-cell__bd">颜色</view>
+      <view class="weui-cell__ft">{{items.colour}}</view>
+    </view>
+    <view class="weui-cell">
+      <view class="weui-cell__bd">数量</view>
+      <view class="weui-cell__ft">{{items.count}} KG</view>
+    </view>
+    <view class="weui-cell">
+      <view class="weui-cell__bd">联系人</view>
+      <view class="weui-cell__ft">{{items.linkman}}</view>
+    </view>
+    <view class="weui-cell">
+      <view class="weui-cell__bd">电话</view>
+      <view class="weui-cell__ft font-primary" bindtap='makePhoneCall' data-phone='{{items.phone}}'>{{items.phone}}</view>
+    </view>
+    <view class="weui-cell">
+      <view class="weui-cell__bd">存货地</view>
+      <view class="weui-cell__ft">{{items.place}}</view>
+    </view>
+    <view class="weui-panel weui-panel_access">
+      <view class="weui-panel__bd">
+        <view class="weui-media-box weui-media-box_text">
+          <view class="weui-media-box__title weui-media-box__title_in-text">描述</view>
+          <view class="weui-media-box__desc">{{items.describe}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="tips bg__white">
+    <view class="tips-box font-desc"> 提示：以上信息由会员自行发布，为防止欺诈，保障货/款安全，建议您使用在线交易。 </view>
+  </view>
+  <view class="gohome bg__primary">
+    <navigator url="/pages/index" open-type="switchTab">
+      <image class="gohome-image" src="/images/icon/home.png"></image>
+      <text class="gohome-text">返回首页</text>
+    </navigator>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import base from '../../mixins/base'
+import http from '../../utils/Http'
+import Swiper from '../../components/swiper'
+
+export default class InformationDetails extends wepy.page {
+  mixins = [base]
+  config = {
+    navigationBarTitleText: '供求信息详情页'
+  }
+  data = {
+    varietyList: [],
+    items: {},
+    swipers: []
+  }
+  async getVarietyList() {
+    const res = await http.get(__getApi._getVarietyList, {
+      service_name: 'TRADE_GOODSCLASSLIST'
+    }, true)
+    if (res.false) return
+    this.varietyList = res.data
+    this.$apply()
+  }
+  async getInfromationDetails(id) {
+    const res = await http.get(__getApi._getInfromationDetails, {
+      id: id
+    })
+    if (res.false) return
+    this.items = res.data
+    this.swipers = res.data.imgPaths
+    this.$apply()
+  }
+  computed = {
+    varietyName() {
+      const id = this.items.variety
+      let descrip = ''
+      this.varietyList.find(function(item) {
+        if (item.id === id) {
+          descrip = item.descrip
+        }
+      })
+      return descrip
+    }
+  }
+  methods = {
+    makePhoneCall(e) {
+      wx.makePhoneCall({
+        phoneNumber: e.currentTarget.dataset.phone
+      })
+    }
+  }
+  onLoad(options) {
+    this.id = options.id
+    this.getVarietyList()
+    this.getInfromationDetails(this.id)
+    wepy.showShareMenu({
+      withShareTicket: true
+    })
+  }
+  onShareAppMessage(res) {
+    const type = +(this.items.type === 0) ? '【求购】 ' : '【供应】 '
+    return {
+      title: type + '第八元素，供求信息 ' + this.varietyName + '/' + this.items.productName + '/电话：' + this.items.phone + '/存货地：' + this.items.place,
+      path: '/pages/information/details?id=' + this.items.id,
+      success: function(res) {
+        // 转发成功
+        console.log('转发成功')
+      },
+      fail: function(res) {
+        // 转发失败
+        console.log('转发失败')
+      }
+    }
+  }
+
+  components = {
+    Swiper: Swiper
+  }
+}
+</script>
+
+<style lang="less">
+.page__bd {
+    padding-bottom: 100rpx;
+}
+.tips {
+    width: 96%;
+    position: absolute;
+    top: 0;
+    padding: 0 2%;
+}
+.tips-box {
+    padding: 0 24rpx;
+    border: 2rpx solid #0078dd;
+    color: #0078dd;
+    font-weight: bold;
+}
+.weui-cells {
+    margin-top: 110rpx;
+}
+.weui-cell__bd {
+    color: #999999;
+}
+.weui-cell__ft {
+    color: #3d3d3d;
+}
+.gohome {
+    position: fixed;
+    bottom: 40rpx;
+    right: 0;
+    color: #fff;
+    border-radius: 50rpx 0 0 50rpx;
+    padding: 10rpx 30rpx;
+    font-size: 30rpx;
+}
+.gohome-image {
+    width: 40rpx;
+    height: 40rpx;
+    margin-right: 10rpx;
+    vertical-align: middle;
+}
+.gohome-text {
+    vertical-align: middle;
+}
+</style>

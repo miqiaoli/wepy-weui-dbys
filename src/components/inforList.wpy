@@ -1,0 +1,225 @@
+<template>
+<block wx:if="{{list.length > 0}}">
+  <view class="weui-cells weui-cells_in-small-appmsg" wx:if="{{listType}}">
+    <view class="weui-cell weui-cell_access" wx:for="{{list}}" wx:key="id" animation='{{item.wrapAnimation}}'>
+      <view class="weui-cell__hd">{{variety}}
+        <!-- <image wx:if='{{item.type===0}}' class="icon-supply" src="/images/icon/icon-supply.png" />
+        <image wx:else class="icon-supply" src="/images/icon/icon-buy.png" /> -->
+        <view wx:if='{{item.type===0}}' class="tips">供应</view>
+        <view wx:else class="tips demand">求购</view>
+      </view>
+      <view class="weui-cell__bd weui-cell_primary">
+        <navigator url="/pages/information/details?id={{item.id}}" hover-class="weui-cell_active">
+          <view class="weui-media-box__title">
+            <block wx:if='{{item.variety === 1}}'>塑料原料</block>
+            <block wx:elif='{{item.variety === 2}}'>再生塑料</block>
+            <block wx:elif='{{item.variety === 4}}'>改性塑料</block>
+            <block wx:else='{{item.variety === 6}}'>助剂</block>
+            {{item.productName}} {{item.grade}} {{item.grades}}</view>
+          <view class="weui-media-box__desc">{{item.date}}</view>
+        </navigator>
+      </view>
+      <view class="weui-cell__ft status">
+        <view class="weui-media-box__title">{{item.status}}</view>
+      </view>
+      <view class="weui-cell__ft" @tap='inforEdit' id='{{item.id}}' data-index='{{index}}' data-status='{{item.status}}'>
+        <image class="icon-edit" src='/images/icon/icon-edit.png'></image>
+      </view>
+    </view>
+  </view>
+  <view class="weui-cells weui-cells_in-small-appmsg" wx:else>
+    <block wx:for="{{list}}" wx:key="id">
+      <navigator url="/pages/information/details?id={{item.id}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+        <view class="weui-cell__hd">
+          <block wx:if='{{item.type==0}}'>
+            <!-- <image class="icon-supply" src="/images/icon/icon-supply.png" /> -->
+            <view class="tips">供应</view>
+          </block>
+          <block wx:elif="{{item.type==1}}">
+            <!-- <image class="icon-supply" src="/images/icon/icon-buy.png" /> -->
+            <view class="tips demand">求购</view>
+          </block>
+          <block wx:else>
+            <slot name="icon">
+              <!-- <image class="icon-supply" src="/images/icon/icon-supply.png" /> -->
+              <view class="tips">供应</view>
+            </slot>
+          </block>
+        </view>
+        <view class="weui-cell__bd weui-cell_primary">
+          <view class="weui-media-box__title">
+            <block wx:if='{{item.variety === 1}}'>塑料原料</block>
+            <block wx:elif='{{item.variety === 2}}'>再生塑料</block>
+            <block wx:elif='{{item.variety === 4}}'>改性塑料</block>
+            <block wx:else='{{item.variety === 6}}'>助剂</block>
+            {{item.productName}} {{item.grade}} {{item.grades}}</view>
+          <view class="weui-media-box__desc">{{item.place}}</view>
+        </view>
+        <view class="weui-cell__ft weui-cell_primary">
+          <view class="weui-media-box__title font-primary" catchtap='makePhoneCall' data-phone='{{item.phone}}'>{{item.phone}}</view>
+          <view class="weui-media-box__desc">{{item.date}}</view>
+        </view>
+      </navigator>
+    </block>
+  </view>
+</block>
+<block wx:elif="{{noList}}">
+  <view class="loadmore-placeholder"></view>
+  <view class="weui-loadmore weui-loadmore_line">
+    <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无商品</view>
+  </view>
+</block>
+<block wx:if="{{loading}}">
+  <view class="weui-loadmore">
+    <view class="weui-loading"></view>
+    <view class="weui-loadmore__tips">正在加载</view>
+  </view>
+</block>
+<block wx:if="{{noMore}}">
+  <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+    <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
+  </view>
+</block>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class InfoList extends wepy.component {
+  props = {
+    list: {
+      type: Object,
+      default: []
+    },
+    idType: {
+      type: [Number, String],
+      default: 1
+    },
+    listType: {
+      type: [Boolean, String],
+      coerce(v) {
+        return typeof v === 'string' ? JSON.parse(v) : v
+      }
+    },
+    loading: {
+      type: Boolean,
+      default: true
+    },
+    noMore: {
+      type: Boolean,
+      default: false
+    },
+    noList: {
+      type: Boolean,
+      default: false
+    }
+  }
+
+  getMyInfroDetails(id) {
+    wx.navigateTo({
+      url: '/pages/mine/new?id=' + id
+    })
+  }
+  async getMyInfroDelete(id, index) {
+    wx.showToast({
+      title: '删除成功',
+      icon: 'success',
+      duration: 1000
+    })
+    this.deleteMsgItem(id, index)
+  }
+  deleteMsgItem(id, index) {
+    let animation = wx.createAnimation({
+      duration: 200
+    })
+    animation.height(0).opacity(0).step()
+    this.list[index].wrapAnimation = animation.export()
+    this.$apply()
+    let that = this
+    setTimeout(function() {
+      that.list.splice(index, 1)
+      that.$apply()
+    }, 200)
+  }
+  methods = {
+    makePhoneCall(e) {
+      wx.makePhoneCall({
+        phoneNumber: e.currentTarget.dataset.phone
+      })
+    },
+    inforEdit(e) {
+      const id = e.currentTarget.id
+      const index = e.currentTarget.dataset.index
+      const that = this
+      if (e.currentTarget.dataset.status !== '审核已通过') {
+        wx.showActionSheet({
+          itemList: ['修改', '删除'],
+          itemColor: '#0078dd',
+          success: function(res) {
+            if (res.tapIndex === 0) {
+              that.getMyInfroDetails(id)
+            } else {
+              that.getMyInfroDelete(id, index)
+            }
+          },
+          fail: function(res) {
+            console.log(res.errMsg)
+          }
+        })
+      } else {
+        wx.showActionSheet({
+          itemList: ['删除'],
+          itemColor: '#0078dd',
+          success: function(res) {
+            that.getMyInfroDelete(id, index)
+          },
+          fail: function(res) {
+            console.log(res.errMsg)
+          }
+        })
+      }
+    }
+  }
+  onLoad() {
+    this.token_access = wepy.$instance.globalData.token_access
+  }
+}
+</script>
+
+<style lang="css">
+.icon-edit {
+    width: 48rpx;
+    height: 48rpx;
+}
+.icon-supply{
+  width: 44rpx;
+  height: 44rpx;
+  margin-right: 20rpx;
+  vertical-align: middle;
+}
+.weui-cell_primary {
+  overflow:hidden;
+}
+.status {
+  margin-right: 20rpx;
+  margin-left: 10rpx;
+}
+.weui-cell__hd {
+  align-self: flex-start;
+}
+.tips {
+  background: #fff2dc;
+  color: #ffac24;
+  border-radius: 10rpx;
+  line-height: 26rpx;
+  height: 26rpx;
+  padding: 4rpx 8rpx;
+  font-size: 24rpx;
+  margin-top: 8rpx;
+  margin-right: 20rpx;
+}
+.tips.demand {
+  background: #ffe3e8;
+  color: #ff153c;
+}
+</style>

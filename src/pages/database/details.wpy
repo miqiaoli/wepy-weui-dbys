@@ -1,0 +1,107 @@
+<template>
+<view class="module-box bg__white">
+  <view class="top">
+    <text class="title">材料基本属性</text>
+    <text class="sub">PRODUCT DETAILS</text>
+  </view>
+  <view class="weui-cells weui-cells-no-spacing">
+    <view class="weui-cell">
+      <view class="weui-cell__bd">品种</view>
+      <view class="weui-cell__ft">{{itemData.variety}}</view>
+    </view>
+    <view class="weui-cell">
+      <view class="weui-cell__bd">品名</view>
+      <view class="weui-cell__ft">{{itemData.product}}</view>
+    </view>
+    <view class="weui-cell">
+      <view class="weui-cell__bd">牌号</view>
+      <view class="weui-cell__ft">{{itemData.shopSign}}</view>
+    </view>
+    <view class="weui-cell">
+      <view class="weui-cell__bd">厂商</view>
+      <view class="weui-cell__ft">{{itemData.manufacturingEnterprises}}</view>
+    </view>
+    <view class="weui-cell">
+      <view class="weui-cell__bd">规格级别</view>
+      <view class="weui-cell__ft">{{itemData.specificationLevel}}</view>
+    </view>
+    <view class="weui-cell">
+      <view class="weui-cell__bd">外观颜色</view>
+      <view class="weui-cell__ft">{{itemData.appearanceColour}}</view>
+    </view>
+    <view class="weui-cell">
+      <view class="weui-cell__bd">材料用途</view>
+      <view class="weui-cell__ft">{{itemData.use}}</view>
+    </view>
+    <view class="weui-cell">
+      <view class="weui-cell__bd">备注说明</view>
+      <view class="weui-cell__ft">{{itemData.descr}}</view>
+    </view>
+    <view class="weui-cell">
+      <view class="weui-cell__bd">加工条件</view>
+      <view class="weui-cell__ft">{{itemData.processingConditions}}</view>
+    </view>
+  </view>
+</view>
+<view class="module-box bg__white">
+  <view class="top">
+    <text class="title">材料物性属性</text>
+    <text class="sub">PRODUCT DETAILS</text>
+  </view>
+  <view class="weui-cells weui-cells-no-spacing">
+    <!-- <htmlParser :parserContent.sync="item.detail"></htmlParser> -->
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import base from '../../mixins/base'
+import http from '../../utils/Http'
+// import htmlParser from '../../components/htmlParser'
+
+export default class InformationList extends wepy.page {
+  mixins = [base]
+  data = {
+    itemData: {}
+  }
+  async getProductDetails(id) {
+    const res = await http.get(__getApi._getMaterialDetails, {
+      order_id: id
+    })
+    if (res.false) return
+    this.itemData = res.data
+
+    // this.$invoke('htmlParser', 'htmlParserNotice')
+    this.$apply()
+  }
+  onLoad(options) {
+    this.getProductDetails(1)
+  }
+  components = {
+    // htmlParser
+  }
+}
+</script>
+
+<style lang="less">
+.module-box {
+    margin-top: 20rpx;
+    padding: 20rpx 0 50rpx;
+    .top {
+        border-left: 12rpx solid #115bed;
+        padding: 12rpx;
+        height: 68rpx;
+        line-height: 68rpx;
+        font-size: 36rpx;
+    }
+    .sub {
+        font-size: 20rpx;
+        color: #3d3d3d;
+        margin-left: 20rpx;
+    }
+}
+</style>

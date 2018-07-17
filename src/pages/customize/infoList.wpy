@@ -1,0 +1,92 @@
+<template>
+<view class="page__bd bg__white">
+  <InforList :list.sync="inforList" listType="false" :loading.sync="loading" :noMore.sync="noMoreList" :noList.sync="noList">
+    <view slot="icon">
+      <image class="icon-supply" src="/images/icon/icon-custommade-info.png" />
+    </view>
+  </InforList>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import base from '../../mixins/base'
+import user from '../../mixins/user'
+import http from '../../utils/Http'
+import InforList from '../../components/inforList'
+
+export default class myInfoList extends wepy.page {
+  mixins = [base, user]
+  config = {
+    navigationBarTitleText: '我的鱼网列表详情'
+  }
+  data = {
+    inforList: [],
+    id: '',
+    start: 1,
+    limit: 15,
+    maxPage: '',
+    noMoreList: false,
+    noList: false,
+    loading: true,
+    enablePullDownRefresh: true,
+    onReachBottomDistance: 100
+  }
+  async getDetail() {
+    const res = await http.get(__getApi._getCustomMadeInfoList, {
+      token_access: this.token_access,
+      id: this.id,
+      page_start: this.start,
+      page_limit: this.limit
+    })
+    this.loading = false
+    if (res.false) {
+      // if (res.state === 0) {
+      //   this.$needLogin()
+      // }
+      // return
+    }
+    if (res.data.list.length === 0) {
+      this.noList = true
+    }
+    if (this.start === 1) {
+      this.inforList = res.data.list
+      this.maxPage = Math.ceil(res.data.counts / this.limit)
+    } else {
+      this.inforList = [
+        ...this.inforList,
+        ...res.data.list
+      ]
+    }
+    this.$apply()
+    wepy.stopPullDownRefresh()
+  }
+  onLoad(options) {
+    this.token_access = this.$parent.globalData.token_access
+    this.id = options.id
+    this.getDetail()
+  }
+  components = {
+    InforList
+  }
+  onPullDownRefresh() {
+    this.start = 1
+    this.getDetail()
+  }
+  onReachBottom() {
+    if (this.start < this.maxPage) {
+      ++this.start
+      this.maxPage()
+    } else {
+      this.noMoreList = true
+    }
+    this.$apply()
+  }
+}
+</script>
+
+<style lang="css">
+</style>

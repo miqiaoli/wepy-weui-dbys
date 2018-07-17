@@ -1,0 +1,251 @@
+<template>
+<view class="page-index">
+  <view class="banner">
+    <image class="banner" mode="widthFix" src="/images/lab/lab01.png"></image>
+  </view>
+  <view class="weui-cell weui-cell_access bg__white">
+    <view class="weui-cell__hd">
+      <image src="/images/lab/icon-list.png" class="icon-list" />
+    </view>
+    <view class="weui-cell__bd weui-cell_primary">
+      <view>目前第八元素共享实验室拥有注塑机、万能试验机、熔体流动速率试验机、悬臂梁冲击试验机、马弗炉、密度仪等设备；并依托合作实验室资源进行红外分析、阻燃、环保等性能测试；</view>
+    </view>
+  </view>
+  <view class='lab-box module-box'>
+    <image src="/images/lab/lab-bg_02.jpg" mode="widthFix" class="lab-cont" />
+    <image src="/images/lab/lab-bg_03.jpg" mode="widthFix" class="lab-cont" />
+    <image src="/images/lab/lab-bg_04.jpg" mode="widthFix" class="lab-cont" />
+    <image src="/images/lab/lab-bg_05.jpg" mode="widthFix" class="lab-cont" />
+    <image src="/images/lab/lab-bg_06.jpg" mode="widthFix" class="lab-cont" />
+    <image src="/images/lab/lab-bg_07.jpg" mode="widthFix" class="lab-cont" />
+    <image src="/images/lab/lab-bg_08.jpg" mode="widthFix" class="lab-cont" />
+    <image src="/images/lab/lab-bg_09.jpg" mode="widthFix" class="lab-cont" />
+    <image src="/images/lab/lab-bg_10.jpg" mode="widthFix" class="lab-cont" />
+    <image src="/images/lab/lab-bg_11.jpg" mode="widthFix" class="lab-cont" />
+  </view>
+  <view class='module-box'>
+    <view class='top'>
+      <view class='hr'></view>
+      <view class='top-title'>送样要求</view>
+    </view>
+    <view class="weui-cells__title">样品范围：</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell">
+        <view class="weui-cell__bd">材料状态 </view>
+        <view class="weui-cell__ft">塑料颗粒</view>
+      </view>
+      <view class="weui-cell">
+        <view class="weui-cell__bd">材料类型 </view>
+        <view class="weui-cell__ft">PP、PE、ABS、PS、PC/ABS</view>
+      </view>
+      <view class="weui-cell">
+        <view class="weui-cell__bd">样品数量 </view>
+        <view class="weui-cell__ft">单个样品数量不低于2kg</view>
+      </view>
+    </view>
+    <view class="weui-cells__title">信息填写要求：</view>
+    <view class="weui-cells__tips">送样检测必须填写检测委托书，信息应该包括：</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell">
+        <view class="weui-cell__bd">a.样品名称 </view>
+      </view>
+      <view class="weui-cell">
+        <view class="weui-cell__bd">b.样品提供人及样品提供单位 </view>
+      </view>
+      <view class="weui-cell">
+        <view class="weui-cell__bd">c.送样人及送样单位 </view>
+      </view>
+      <view class="weui-cell">
+        <view class="weui-cell__bd">d.材料基本状态信息(颜色、状态、气味等)</view>
+      </view>
+    </view>
+    <view class="weui-cells__title">样料邮寄地址：</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell">
+        <view class="weui-cell__bd">收件人：章文龙 </view>
+        <view class="weui-cell__ft font-primary" bindtap='makePhoneCall' data-phone='18356095286'>18356095286</view>
+      </view>
+      <view class="weui-cell">
+        <view class="weui-cell__bd">安徽省合肥市高新区明珠大道与香樟大道交口西北200米厂房内 </view>
+      </view>
+    </view>
+  </view>
+  <view class='module-box'>
+    <view class="weui-cell weui-cell_access bg__white">
+      <view class="weui-cell__hd">
+        <image src="/images/lab/icon-list.png" class="icon-list" />
+      </view>
+      <view class="weui-cell__bd weui-cell_primary">
+        <view>实验室始终严格按照“专业、规范、严谨、公正”的方针，并作出以下承诺: 1.依据国家有关技术规范、规程、规定,进行检测与试验。 2.提供准确真实可靠的数据与报告、实事求是、对客户负责。 3.报告采用统一格式, 报告自接收样品日起48小时内提供。</view>
+      </view>
+    </view>
+  </view>
+  <view class='module-box'>
+    <view class='top'>
+      <view class='hr'></view>
+      <view class='top-title'>实验室部分设备展示</view>
+    </view>
+    <view class="equipment">
+      <Swiper :list.sync="swipers" name='image' height="280"></Swiper>
+    </view>
+  </view>
+  <view class='module-box'>
+    <view class='top'>
+      <view class='hr'></view>
+      <view class='top-title'>资料下载</view>
+    </view>
+    <view class='box'>
+      <view class="weui-flex">
+        <view class="weui-flex__item">
+          <view class="placeholder" @tap='fileDownload' data-filename='inspection-orders'>检测委托书</view>
+        </view>
+        <view class="weui-flex__item">
+          <view class="placeholder" @tap='fileDownload' data-filename='sample-testing-process'>来样检测流程</view>
+        </view>
+        <view class="weui-flex__item">
+          <view class="placeholder" @tap='fileDownload' data-filename='test-items-and-costs'>检测项目及费用</view>
+        </view>
+        <view class="weui-flex__item">
+          <view class="placeholder" @tap='fileDownload' data-filename='retest-application-instructions'>复测申请说明</view>
+        </view>
+        <view class="weui-flex__item">
+          <view class="placeholder" @tap='fileDownload' data-filename='melt-refers-to-the-detection-conditions'>熔指检测条件</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class='module-box page__bd_spacing'>
+    <button class="button" type="primary" @tap='checkReport'>查看检测报告</button>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import base from '../../mixins/base'
+import Swiper from '../../components/swiper'
+
+export default class LabShare extends wepy.page {
+  mixins = [base]
+  config = {
+    navigationBarTitleText: '共享实验室'
+  }
+  data = {
+    swipers: [],
+    imgHost: ''
+  }
+  methods = {
+    makePhoneCall(e) {
+      wx.makePhoneCall({
+        phoneNumber: e.currentTarget.dataset.phone
+      })
+    },
+    async fileDownload(e) {
+      wepy.showLoading({
+        title: '加载中'
+      })
+      const name = e.currentTarget.dataset.filename
+
+      const res = await wepy.downloadFile({
+        url: this.imgHost + '/u/cms/' + name + '.pdf'
+      })
+      const filePath = res.tempFilePath
+      setTimeout(() => wepy.openDocument({
+        filePath: filePath,
+        success: function(res) {
+          console.log('打开文档成功')
+          console.log(res)
+        }
+      }), 1000)
+      wepy.hideLoading()
+    },
+    checkReport() {
+      wx.redirectTo({
+        url: '/pages/mine/report'
+      })
+    }
+  }
+  onLoad() {
+    this.swipers.push({
+      image: '/images/lab/lab-equipment_01.jpg',
+      text: '冲击试验机'
+    }, {
+      image: '/images/lab/lab-equipment_02.jpg',
+      text: '高温烘箱'
+    }, {
+      image: '/images/lab/lab-equipment_03.jpg',
+      text: '恒温恒湿箱'
+    }, {
+      image: '/images/lab/lab-equipment_04.jpg',
+      text: '密度仪与分析天平'
+    }, {
+      image: '/images/lab/lab-equipment_05.jpg',
+      text: '熔指仪'
+    })
+    this.imgHost = __getApi.imgHost
+  }
+  components = {
+    Swiper
+  }
+}
+</script>
+
+<style lang="less">
+.banner {
+    width: 100%;
+}
+.icon-list {
+    width: 30rpx;
+    height: 24rpx;
+    margin-right: 10rpx;
+}
+.lab-box {
+    font-size: 0;
+}
+.lab-cont {
+    width: 100%;
+}
+.module-box {
+    background-color: #fff;
+    margin-top: 20rpx;
+    padding: 20rpx 0;
+}
+.top {
+    text-align: center;
+}
+.hr {
+    background: #63bcff;
+    width: 100rpx;
+    height: 10rpx;
+    margin: 0 auto 20rpx;
+}
+.top-title {
+    font-size: 40rpx;
+}
+.weui-cells__title {
+    font-size: 34rpx;
+    color: #3d3d3d;
+    font-weight: bold;
+}
+.equipment {
+    width: 460rpx;
+    margin: 40rpx auto;
+}
+.weui-flex {
+    flex-wrap: wrap;
+}
+.placeholder {
+    background: #ffffff;
+    border: 2rpx solid #115bed;
+    border-radius: 4px;
+    font-size: 36rpx;
+    color: #115bed;
+    padding: 16rpx 0;
+    width: 316rpx;
+    text-align: center;
+    margin: 0 auto 20rpx;
+}
+</style>

@@ -1,0 +1,138 @@
+<template>
+<view class="priduct-lists page__bd_spacing">
+  <block wx:if="{{list.length > 0}}">
+    <block wx:if="{{listType}}">
+      <navigator wx:for="{{list}}" wx:key="id" url="/pages/product/details?id={{item.order_id}}" hover-class="navigator-hover">
+        <view class="weui-flex item">
+          <block wx:if='{{item.image_url}}'>
+            <image class="product-img" src='{{baseHrefUrl + item.image_url}}'></image>
+          </block>
+          <block wx:else>
+            <image class="product-img" src='/images/icon/dbys-default.jpg'></image>
+          </block>
+          <view class="weui-flex__item cont">
+            <view class="title">
+              {{item.goods_class}}/{{item.goods_name}}/{{item.att2}}/{{item.att1}}
+            </view>
+            <view class="decs">
+              <text class="text">可供量：{{item.amount}}KG</text>
+              <text class="text">起批量：>{{item.min_batch_qtt}}KG</text>
+            </view>
+            <view class="decs">{{item.address}}</view>
+            <view class="red">¥
+              <text class="price">{{item.order_price}}</text>元/kg
+            </view>
+          </view>
+        </view>
+      </navigator>
+    </block>
+    <block wx:else>
+      <navigator wx:for="{{list}}" wx:key="id" url="/pages/product/details?id={{item.order_id}}" hover-class="navigator-hover">
+        <view class="weui-flex item cont">
+          <view class="weui-flex__item">
+            <view class="title">{{item.goods_class}}/{{item.goods_name}}/{{item.att2}}/{{item.att1}}</view>
+            <view class="decs">
+              <text class="text">可供量：{{item.amount}}KG</text>
+              <text class="text">起批量：大于{{item.min_batch_qtt}}KG</text>
+            </view>
+            <view class="decs">{{item.address}}</view>
+          </view>
+          <view class="red">¥
+            <text class="price">{{item.order_price}}</text>元/kg
+          </view>
+        </view>
+      </navigator>
+    </block>
+  </block>
+  <block wx:elif="{{noList}}">
+    <view class="loadmore-placeholder"></view>
+    <view class="weui-loadmore weui-loadmore_line">
+      <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无商品</view>
+    </view>
+  </block>
+  <block wx:if="{{loading}}">
+    <view class="weui-loadmore">
+      <view class="weui-loading"></view>
+      <view class="weui-loadmore__tips">正在加载</view>
+    </view>
+  </block>
+  <block wx:if="{{noMore}}">
+    <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+      <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
+    </view>
+  </block>
+</view>
+</template>
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../config.js'
+export default class ProductsList extends wepy.component {
+  props = {
+    list: {
+      type: Object,
+      default: []
+    },
+    listType: {
+      type: [Boolean, String],
+      default: true
+    },
+    loading: {
+      type: Boolean,
+      default: true
+    },
+    noMore: {
+      type: Boolean,
+      default: false
+    },
+    noList: {
+      type: Boolean,
+      default: false
+    }
+  }
+  data = {
+    baseHrefUrl: ''
+  }
+  onLoad() {
+    this.baseHrefUrl = __getApi.baseHrefUrl
+  }
+}
+</script>
+<style lang="less">
+.item {
+    padding: 10rpx 0;
+}
+.product-img {
+    width: 160rpx;
+    height: 160rpx;
+    margin-right: 40rpx;
+    margin-top: 20rpx;
+}
+.cont {
+    border-bottom: 2rpx solid #e9e7e7;
+}
+.text {
+    padding-right: 10rpx;
+    line-height: 1;
+}
+.text+.text {
+    border-left: 2rpx solid #9b9b9b;
+    padding-left: 10rpx;
+}
+.decs {
+    font-size: 26rpx;
+    color: #9b9b9b;
+    margin: 6rpx 0;
+    padding-left: 10rpx;
+}
+.red {
+    color: #ff5759;
+}
+.active {
+    color: #115bed;
+}
+.price {
+    font-size: 42rpx;
+}
+</style>
