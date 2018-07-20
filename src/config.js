@@ -1,12 +1,12 @@
 // const host = 'http://192.168.3.121/front' // 王思亮
 // const host = 'http://192.168.3.41/front' //  李成  黄页
-const host = 'https://www.otimes.info/front' //测试环境
-    // const host = 'https://www.otimes.com/front'
+// const host = 'https://www.otimes.info/front' //测试环境
+const host = 'https://www.otimes.com/front'
 
-// const imgHost = 'https://www.otimes.com' // 测试图片地址
-const imgHost = 'https://www.otimes.info'
-const socketHost = 'wss://www.otimes.info' // websocket地址
-    // const socketHost = 'wss://www.otimes.com'
+const imgHost = 'https://www.otimes.com' // 测试图片地址
+    // const imgHost = 'https://www.otimes.info'
+    // const socketHost = 'wss://www.otimes.info' // websocket地址
+const socketHost = 'wss://www.otimes.com'
     // const socketHost = 'ws://192.168.3.121'
 
 export const __getApi = {

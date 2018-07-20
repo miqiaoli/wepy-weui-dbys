@@ -71,7 +71,7 @@ function initChart(canvas, width, height) {
     },
     legend: {
       data: [],
-      top: 270,
+      top: 0, //270
       left: "center",
       backgroundColor: "white",
       z: 2
@@ -266,7 +266,9 @@ export default class ChartCompare extends wepy.page {
               : res.data.date1
         },
         yAxis: {
-          name: "销售单价 " + res.data.unit
+          name: "销售单价 " + res.data.unit,
+          nameLocation: "center",
+          nameGap: 40
         },
         series: [
           {
@@ -291,7 +293,7 @@ export default class ChartCompare extends wepy.page {
   }
   async onLoad(options) {
     try {
-      this.windowWidth = wepy.getSystemInfoSync().windowWidth || 320;
+      this.windowWidth = wepy.getSystemInfoSync().windowWidth || 300;
     } catch (e) {
       console.error("getSystemInfoSync failed!");
     }
@@ -328,7 +330,7 @@ export default class ChartCompare extends wepy.page {
 }
 #mychart {
   width: 375px;
-  height: 320px;
+  height: 300px;
 }
 .total {
   font-size: 40rpx;

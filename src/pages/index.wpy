@@ -166,7 +166,7 @@ export default class pageIndex extends wepy.page {
     lineChart: null,
     categorie: [],
     date: [],
-    tabs: ["单  体", "原  油", "塑料原料", "再生塑料", "助  剂"],
+    tabs: ["原  油", "单  体", "塑料原料", "再生塑料", "助  剂"],
     activeIndex: 0,
     sliderOffset: 0,
     sliderLeft: 0

@@ -10,30 +10,29 @@
         <view class="arrow_down"></view>
       </view>
     </view>
-    <view hidden="{{nolist}}" class="mychart">
-      <!-- <ecCanvas :ec.sync="ec" height="200px" bind:init="echartInit"></ecCanvas> -->
-      <!-- <ec-canvas id="mychart" canvas-id="mychart-line" ec="{{ ec }}" bind:init="echartInit"></ec-canvas> -->
-      <ec-canvas id="mychart" canvas-id="mychart-line" ec="{{ ec }}"></ec-canvas>
-
-    </view>
-    <view class="image" wx:if="{{nolist}}">
-      <image style="width: 200px; height: 237px;" src="/images/nolist.png"></image>
+    <view hidden="{{pickerStatus}}">
+      <view hidden="{{nolist}}" class="mychart">
+        <ec-canvas id="mychart" canvas-id="mychart-line" ec="{{ ec }}"></ec-canvas>
+      </view>
+      <view class="image" wx:if="{{nolist}}">
+        <image style="width: 154px; height: 237px;" src="/images/nolist.png"></image>
+      </view>
     </view>
     <pickerView :list.sync="sheetNameList" :firstLevel.sync="firstLevel" :secondLevel.sync="secondLevel" :thirdLevel.sync='thirdLevel' :isFilter.sync="isFilter" :nolist.sync="nolist"></pickerView>
     <view class="weui-flex date-choose">
-      <view class="weui-flex__item text-center {{dateIndex === 0 ? 'cur' : ''}}" data-index=0 @tap="changeDate">
+      <view class="weui-flex__item text-center {{dateIndex == '0' ? 'cur' : ''}}" data-index=0 @tap="changeDate">
         <view class="placeholder">近1周</view>
       </view>
-      <view class="weui-flex__item text-center {{dateIndex === 1 ? 'cur' : ''}}" data-index=1 @tap="changeDate">
+      <view class="weui-flex__item text-center {{dateIndex == '1' ? 'cur' : ''}}" data-index=1 @tap="changeDate">
         <view class="placeholder">近1月</view>
       </view>
-      <view class="weui-flex__item text-center {{dateIndex === 2 ? 'cur' : ''}}" data-index=2 @tap="changeDate">
+      <view class="weui-flex__item text-center {{dateIndex == '2' ? 'cur' : ''}}" data-index=2 @tap="changeDate">
         <view class="placeholder">近3月</view>
       </view>
-      <view class="weui-flex__item text-center {{dateIndex === 3 ? 'cur' : ''}}" data-index=3 @tap="changeDate">
+      <view class="weui-flex__item text-center {{dateIndex == '3' ? 'cur' : ''}}" data-index=3 @tap="changeDate">
         <view class="placeholder">近6月</view>
       </view>
-      <view class="weui-flex__item text-center {{dateIndex === 4 ? 'cur' : ''}}" data-index=4 @tap="changeDate">
+      <view class="weui-flex__item text-center {{dateIndex == '4' ? 'cur' : ''}}" data-index=4 @tap="changeDate">
         <view class="placeholder">近1年</view>
       </view>
     </view>
@@ -69,7 +68,7 @@ function initChart(canvas, width, height) {
     },
     legend: {
       data: [],
-      top: 270,
+      top: 0,
       left: "center",
       backgroundColor: "white",
       z: 2
@@ -155,6 +154,7 @@ export default class ChartCompare extends wepy.page {
     dateIndex: 0,
     chartState: false,
     nolist: false,
+    pickerStatus: false,
     ec: {
       onInit: initChart,
       lazyLoad: true
@@ -177,23 +177,23 @@ export default class ChartCompare extends wepy.page {
   };
   methods = {
     changeDate(e) {
-      this.dateIndex = this.getNumber(e.currentTarget.dataset.index);
+      this.dateIndex = e.currentTarget.dataset.index;
       let data = new Date();
       let startDate = new Date(data);
       switch (this.dateIndex) {
-        case 0:
+        case "0":
           startDate.setDate(data.getDate() - 7);
           break;
-        case 1:
+        case "1":
           startDate.setDate(data.getDate() - 30);
           break;
-        case 2:
+        case "2":
           startDate.setDate(data.getDate() - 90);
           break;
-        case 3:
+        case "3":
           startDate.setDate(data.getDate() - 180);
           break;
-        case 4:
+        case "4":
           startDate.setDate(data.getDate() - 365);
           break;
         default:
@@ -273,7 +273,9 @@ export default class ChartCompare extends wepy.page {
           data: res.data.date
         },
         yAxis: {
-          name: "销售单价 " + res.data.unit
+          name: "销售单价 " + res.data.unit,
+          nameLocation: "center",
+          nameGap: 40
         },
         series: [
           {
@@ -298,7 +300,7 @@ export default class ChartCompare extends wepy.page {
   }
   async onLoad(options) {
     try {
-      this.windowWidth = wepy.getSystemInfoSync().windowWidth || 320;
+      this.windowWidth = wepy.getSystemInfoSync().windowWidth || 300;
     } catch (e) {
       console.error("getSystemInfoSync failed!");
     }
@@ -329,7 +331,7 @@ export default class ChartCompare extends wepy.page {
 }
 #mychart {
   width: 375px;
-  height: 320px;
+  height: 300px;
 }
 .total {
   font-size: 40rpx;
