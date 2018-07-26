@@ -3,8 +3,8 @@
 const host = 'https://www.otimes.info/front' //测试环境
     // const host = 'https://www.otimes.com/front'
 
-const imgHost = 'https://www.otimes.com' // 测试图片地址
-    // const imgHost = 'https://www.otimes.info'
+// const imgHost = 'https://www.otimes.com' // 测试图片地址
+const imgHost = 'https://www.otimes.info'
     // const socketHost = 'wss://www.otimes.info' // websocket地址
 const socketHost = 'wss://www.otimes.com'
     // const socketHost = 'ws://192.168.3.121'
@@ -181,7 +181,13 @@ export const __getApi = {
 
     // 鱼塘历史接口
     _getFishPondList: `${host}/wechat/polist.dbys`,
-    _getsocketList: `${socketHost}/weixin_haslogin.dbys`
+    _getsocketList: `${socketHost}/weixin_haslogin.dbys`,
+
+    // 环球资源
+    _getOverseasList: `${host}/resourcemap/selectlist.dbys`,
+    _getOverseasSingleList: `${host}/resourcemap/selectlistAll.dbys`,
+    _getOverseasDetails: `${host}/resourcemap/mapresourceDetail.dbys`,
+    _getUserMsg: `${host}/resourcemap/mapresourceUpxuqiu.dbys`,
 }
 
 export default {

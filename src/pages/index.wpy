@@ -29,6 +29,14 @@
           <text class="tab-text">共享实验室</text>
         </navigator>
       </view>
+      <view class="weui-flex__item">
+        <navigator url="/pages/overseas/list" hover-class="navigator-hover">
+          <view class="tab-image">
+            <image class="image" src="../images/tabbars/center_tab_05.png"></image>
+          </view>
+          <text class="tab-text">环球资源</text>
+        </navigator>
+      </view>
       <!-- <view class="weui-flex__item">
       <view class="tab-image">
         <image class="image" src="../images/tabbars/center_tab_03.png"></image>

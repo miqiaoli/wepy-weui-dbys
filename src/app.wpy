@@ -42,6 +42,9 @@ export default class extends wepy.app {
       'pages/company/details',
       'pages/company/alltype',
       'pages/company/error',
+      'pages/overseas/list',
+      'pages/overseas/single',
+      'pages/overseas/details',
       'pages/user/getUserInfo',
       
     ],
