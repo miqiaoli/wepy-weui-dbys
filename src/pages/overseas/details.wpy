@@ -1,0 +1,258 @@
+<template>
+<view class='overseas-details'>
+  <view wx:for="{{list}}" wx:for-item="single" wx:key="id">
+    <view class='details'>
+      <view class='name'>{{single.productName}}-{{single.providerName}}</view>
+      <view class='flex-pos'>
+        <view class='des'>数量(吨/月)</view>
+        <view class='des-answer'>{{single.countOfMonth}}</view>
+      </view>
+      <view class='flex-pos'>
+        <view class='des'>拉伸</view>
+        <view class='des-answer'>{{single.lashen}}</view>
+      </view>
+      <view class='flex-pos'>
+        <view class='des'>断裂伸长率</view>
+        <view class='des-answer'>{{single.duanlieshenchanglv}}</view>
+      </view>
+      <view class='flex-pos'>
+        <view class='des'>冲击</view>
+        <view class='des-answer'>{{single.chongji}}</view>
+      </view>
+      <view class='flex-pos'>
+        <view class='des'>弯曲模量</view>
+        <view class='des-answer'>{{single.wanqumoliang}}</view>
+      </view>
+      <view class='flex-pos'>
+        <view class='des'>弯曲强度</view>
+        <view class='des-answer'>{{single.wanquqiangdu}}</view>
+      </view>
+      <view class='flex-pos'>
+        <view class='des'>溶脂</view>
+        <view class='des-answer'>{{single.rongzhi}}</view>
+      </view>
+      <view class='flex-pos'>
+        <view class='des'>密度</view>
+        <view class='des-answer'>{{single.midu}}</view>
+      </view>
+    </view>
+    <view class='br-h'></view>
+  </view>
+  <view class='call'>
+    <view class='call-pos'>
+      
+      <view class='call-text'><image style="vertical-align: middle; width: 40rpx; height: 40rpx;" src='/images/icon_call.png' />  咨询客服</view>
+      <view class='phone'>400-888-9383</view>
+    </view>
+    <button bindtap='makePhoneCall' class='btn'>我要订货</button>
+  </view>
+  <view class='br-h'></view>
+  <view class='contant'>
+    <view class='tips'>温馨提示：如果您对该商品有兴趣，请在此留言！我们会第一时间给您回复。</view>
+    <view class='form'>
+    <form class=''  bindsubmit='submitBtnClick'>
+      <view class='input-flex'>
+        <view class='input-des'>姓名</view><input class='input-val' type='text' name='username' value='{{name}}' placeholder='请输入您的姓名' bindinput='getName' />
+      </view>
+      <view class='input-flex'>
+        <view class='input-des'>手机</view><input class='input-val' type='number' name='tel' value='{{phone}}' placeholder='请输入手机号码' bindinput='getTel' />
+      </view>
+      <textarea  adjust-position='true' class='text-msg' maxlength='150' value='{{des}}' placeholder='请添加您的订货需求' bindinput='getDes' />
+      <button class='btn' formType='submit'>确定</button>
+    </form>
+    </view>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import base from '../../mixins/base'
+import {
+  __getApi
+} from '../../config.js'
+import http from '../../utils/Http'
+// import user from '../../mixins/user'
+
+export default class overseasSingleDetails extends wepy.page {
+  // mixins = [user]
+  mixins = [base]
+  config = {
+    navigationBarTitleText: '海外资源详情'
+  }
+  data = {
+    list: '',
+    token_access: '',
+    phone: '',
+    name: '',
+    des: '',
+    country: '',
+    productName: '',
+    providerName: ''
+  }
+  methods = {
+    makePhoneCall(e) {
+      wx.makePhoneCall({
+        phoneNumber: '400-888-9383'
+      })
+    },
+    getName(e) {
+      this.name = e.detail.value
+    },
+    getTel(e) {
+      this.phone = e.detail.value
+    },
+    getDes(e) {
+      this.des = e.detail.value
+    },
+    async submitBtnClick(e) {
+      if (!this.required(this.name)) {
+        this.$alert('温馨提示', '请输入您的姓名');
+        return;
+      }
+      if (!this.required(this.phone)) {
+        this.$alert('温馨提示', '请输入手机号码');
+        return;
+      }
+      if (!this.isPhone(this.phone)) {
+        this.$alert('温馨提示', '请先填写正确的手机号')
+        return
+      }
+      if (!this.required(this.des)) {
+        this.$alert('温馨提示', '请添加您的订货需求');
+        return;
+      }
+      const res = await http.get(__getApi._getUserMsg, {
+        username: this.name,
+        phone: this.phone,
+        liuyan: this.des,
+        country: this.country,
+        productName: this.productName,
+        providerName: this.providerName
+      })
+      if (res.meta.success) {
+        this.name = ''
+        this.phone = ''
+        this.des = ''
+        this.$apply()
+        wx.showToast({
+          title: '留言成功，感谢您的反馈！',
+          icon: 'none',
+          duration: 2000
+        })
+      }
+    }
+  }
+  async getDatails(country, productName) {
+    const res = await http.get(__getApi._getOverseasDetails, {
+      country: country,
+      productName: productName
+    })
+    this.list = res.data
+    this.providerName = this.list[0].providerName
+    this.$apply()
+  }
+  onLoad(options) {
+    this.country = options.country
+    this.productName = options.productName
+    this.$apply()
+    this.getDatails(options.country, options.productName)
+  }
+}
+</script>
+
+
+<style lang='less'>
+.btn {
+  margin-top: 60rpx;
+  color: #fff;
+  font-size: 36rpx;
+  background: linear-gradient(137deg, #6A7EEE 0%, #C86DD7 100%);
+}
+.overseas-details {
+  background: #fff;
+  .details {
+    margin: 0 30rpx;
+    // background: #f0f;
+    .name {
+      // margin-top: 40rpx;
+      padding-top: 40rpx;
+      font-size: 18px;
+      color: #3D3D3D;
+    }
+    .flex-pos {
+      margin-top: 20rpx;
+      padding-bottom: 20rpx;
+      border-bottom: 1px solid #E4E7F0;
+      display: flex;
+      .des {
+        width: 260rpx;
+        font-size: 16px;
+        color: #8F8E94;
+      }
+      .des-answer {
+        flex: 1;
+        font-size: 16px;
+        color: #3D3D3D;
+      }
+    }
+  }
+  .br-h {
+    height: 20rpx;
+    background: #E4E7F0;
+  }
+  .call {
+    margin: 60rpx 30rpx 0 30rpx;
+    padding-bottom: 40rpx;
+    .call-pos {
+      display: flex;
+      justify-content: space-between;
+      font-size: 28rpx;
+      .call-text {
+        color: #1E1E1E;
+      }
+      .phone {
+        color: #8F8E94; 
+      }
+    }
+  }
+  .contant {
+    margin-top: 40rpx;
+    padding-bottom: 120rpx;
+    .tips {
+      padding: 8rpx 28rpx;
+      font-size: 28rpx;
+      color: #3B55E7;
+      border: 1px solid rgba(59,85,231,0.50);
+    }
+    .form {
+      margin: 0 30rpx;
+      .input-flex {
+        margin-top: 40rpx;
+        display: flex;
+        .input-des {
+          width: 90rpx;
+          height: 44rpx;
+          font-size: 28rpx;
+          text-align: center;
+          color: #EB4E35;
+          border: 1px solid rgba(235,78,53,0.65);
+          border-radius: 4rpx;
+        }
+        .input-val {
+          margin-left: 64rpx;
+          font-size: 32rpx;
+          color: #8F8E94;
+        }
+      }
+      .text-msg {
+        margin-top: 64rpx;
+        height: 200rpx;
+        width: 100%;
+        font-size: 28rpx;
+        color: #8F8E94;
+      }
+    }
+  }
+}
+</style>

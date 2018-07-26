@@ -1,0 +1,121 @@
+<template>
+  <view class="page bg__white">
+    <view class="page__bd page__bd_spacing">
+      <view class="table">
+        <view class="tr bg-w">
+          <view class="th td-hd">产品名称</view>
+          <view class="th td-fd">日期</view>
+          <view class="th td-bd">价格</view>
+        </view>
+        <block wx:for="{{tradeList}}" wx:for-item="i" wx:key="id">
+          <view class="tr bg-head" wx:if="{{i.name}}">
+            <view class="td td-head">{{i.name}}</view>
+          </view>
+          <block wx:for="{{i.list}}" wx:for-item="j" wx:key="id">
+            <view class="tr bg-b}}">
+              <view class="td td-hd">{{j.productName}}/{{j.otherOne}}
+                <block wx:if="{{j.otherTwo}}">/{{j.otherTwo}}</block>
+              </view>
+              <view class="td td-fd">{{j.priceIndex_dt}}</view>
+              <view class="td td-fd">{{j.priceMoney}}{{j.price_unit}}</view>
+            </view>
+          </block>
+        </block>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from "wepy";
+import { __getApi } from "../../config.js";
+import base from "../../mixins/base";
+import http from "../../utils/Http";
+
+export default class chartPrice extends wepy.page {
+  mixins = [base];
+  config = {
+    navigationBarTitleText: "小八塑价最新价格汇总",
+    enablePullDownRefresh: true,
+    onReachBottomDistance: 100
+  };
+  data = {
+    tradeList: [],
+    start: 1,
+    limit: 15,
+    maxPage: null,
+    noMoreList: false,
+    noList: false,
+    loading: true
+  };
+  async getList() {
+    this.loading = true;
+    const res = await http.get(__getApi._getLastinfo);
+    this.loading = false;
+    if (res.false) return;
+    this.tradeList = res.data;
+    this.$apply();
+    wepy.stopPullDownRefresh();
+  }
+  onLoad() {
+    this.getList();
+  }
+  onPullDownRefresh() {
+    this.start = 1;
+    this.getList();
+  }
+}
+</script>
+
+<style lang="less">
+.table {
+  border: 0px solid darkgray;
+  font-size: 28rpx;
+}
+.tr {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  min-height: 80rpx;
+  align-items: center;
+}
+.th {
+  // height: 80rpx;;
+  // align-items: center;
+  justify-content:center;
+  text-align: left;
+  font-weight: bold;
+}
+.td {
+  justify-content: center;
+  text-align: left;
+}
+.td-head {
+  width: 100%;
+  text-align: left;
+  font-weight: bold;
+  padding-left: 20rpx;
+}
+.td-hd {
+  width: 60%;
+  padding-left: 20rpx;
+}
+.td-bd {
+  width: 40%;
+  text-align: center;
+}
+.td-fd {
+  width: 40%;
+  text-align: center;
+}
+.bg-w {
+   background: #f8cbad;
+}
+.bg-b {
+  border-bottom: 2rpx solid #adadad;
+}
+.bg-head {
+  background: #fff9f5;
+  border-bottom: 2rpx solid #adadad;
+}
+</style>

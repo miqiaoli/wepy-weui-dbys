@@ -1,7 +1,7 @@
-// const host = 'http://192.168.3.121/front' // 王思亮
-// const host = 'http://192.168.3.41/front' //  李成  黄页
-// const host = 'https://www.otimes.info/front' //测试环境
-const host = 'https://www.otimes.com/front'
+// const host = 'http://10.0.0.2/front' //  李成  黄页
+// const host = 'http://1891z163m0.iask.in/front' 
+const host = 'https://www.otimes.info/front' //测试环境
+    // const host = 'https://www.otimes.com/front'
 
 const imgHost = 'https://www.otimes.com' // 测试图片地址
     // const imgHost = 'https://www.otimes.info'
@@ -20,6 +20,9 @@ export const __getApi = {
 
     //登录
     _getLogin: `${host}/member/login.dbys`,
+
+    // 授权登录换取 unionID
+    _getUnionID: `${host}/wxapp/toAuthorization.dbys`,
 
     //注销
     _getLogout: `${host}/wxmember/logout.dbys`,
@@ -51,6 +54,9 @@ export const __getApi = {
     //首页获取产品列表
     _getSYProductList: `${host}/outsource/syshangpinlist`,
 
+    //小八塑价最新价格汇总
+    _getLastinfo: `${host}/priceIndex/getLastinfo.dbys`,
+
     //首页价格名称列表
     _getSheetNames: `${host}/priceIndex/getSheetNames.dbys`,
 
@@ -79,7 +85,7 @@ export const __getApi = {
     _getProductNameList: `${host}/outsource/pinming`,
 
     //现货商城页获取高级选项
-    _getAdvOptionsList: `${host}//outsource/gaojisx`,
+    _getAdvOptionsList: `${host}/outsource/gaojisx`,
 
     //获取城市列表
     _getAreas: `${host}/registup/getareas.dbys`,
@@ -172,7 +178,6 @@ export const __getApi = {
     _getCollectionDo: `${host}/enter/collect.dbys`, // 收藏操作
     _getSearchCollection: `${host}/enter/collectSearch.dbys`, // 收藏搜索
     _getFeedBack: `${host}/enter/feedback.dbys`, // 反馈
-    _getUnionID: `${host}/wxapp/toAuthorization.dbys`, // 授权登录换取 unionID
 
     // 鱼塘历史接口
     _getFishPondList: `${host}/wechat/polist.dbys`,

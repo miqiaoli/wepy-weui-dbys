@@ -47,7 +47,9 @@
     <view class="module-box">
       <view class="list">
         <view class="weui-flex product-top page__bd_spacing">
-          <view class="product-title">小八塑价</view>
+          <view class="product-title">
+            <navigator url="/pages/other/chart-price" hover-class="navigator-hover">小八塑价</navigator>
+          </view>
           <view class="weui-flex__item"></view>
           <navigator class="font-desc" url="/pages/other/chart-list?type={{activeIndex}}" hover-class="navigator-hover">更多品种 &gt;</navigator>
         </view>
@@ -295,7 +297,7 @@ export default class pageIndex extends wepy.page {
 }
 .weui-navbar {
   border-bottom: none;
-  justify-content:space-around
+  justify-content: space-around;
 }
 .weui-navbar__item {
   padding: 12px 0 4px;
