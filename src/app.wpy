@@ -36,7 +36,6 @@ export default class extends wepy.app {
       'pages/other/trade-list',
       'pages/other/chart-list',
       'pages/other/chart-compare',
-      'pages/other/chart-price',
       'pages/company/list',
       'pages/company/collections',
       'pages/company/details',
@@ -46,6 +45,7 @@ export default class extends wepy.app {
       'pages/overseas/single',
       'pages/overseas/details',
       'pages/user/getUserInfo',
+      'pages/other/chart-price',
       
     ],
     window: {

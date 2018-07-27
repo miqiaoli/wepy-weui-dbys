@@ -6,7 +6,7 @@
         <view class="weui-flex__item">
           <text class="second-name">{{secondName}}</text>
         </view>
-        <view class="more" @tap="isFilter">显示更多</view>
+        <view class="more" @tap="isFilter">更多品种</view>
         <view class="arrow_down"></view>
       </view>
     </view>
@@ -90,8 +90,7 @@ function initChart(canvas, width, height) {
               params.value +
               "\n" +
               (params.seriesData[0]
-                ? params.seriesData[0].seriesName +
-                  "：" +
+                ? "出厂价：" +
                   params.seriesData[0].data
                 : "") +
               "\n" +
@@ -273,9 +272,7 @@ export default class ChartCompare extends wepy.page {
           data: res.data.date
         },
         yAxis: {
-          name: "销售单价 " + res.data.unit,
-          nameLocation: "center",
-          nameGap: 40
+          name: "销售单价 " + res.data.unit
         },
         series: [
           {
@@ -306,7 +303,6 @@ export default class ChartCompare extends wepy.page {
     }
     this.$wxpage.selectComponent("#mychart").data.ec.onInit = initChart;
     this.$wxpage.selectComponent("#mychart").init();
-    this.type = options.type || this.type;
 
     let data = new Date();
     let startDate = new Date(data);
@@ -314,8 +310,18 @@ export default class ChartCompare extends wepy.page {
     this.startDate = this.formatTime(startDate);
     this.endDate = this.formatTime(data);
 
+    this.type = options.type || this.type;
     await this.getSheetNames();
-    await this.getSheetList();
+    this.firstName = options.firstName || this.firstName;
+    this.secondName = options.secondName || this.secondName;
+    this.sheetName = this.firstName + "/" + this.secondName;
+    // await this.getSheetList();
+    wepy.showLoading({
+      title: "加载中"
+    });
+    setTimeout(() => {
+        this.getSheetList()
+      }, 200)
     this.$apply();
   }
 }

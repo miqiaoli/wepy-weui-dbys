@@ -77,6 +77,7 @@ function initChart(canvas, width, height) {
       z: 2
     },
     grid: {
+      top: '80',
       containLabel: true
     },
 
@@ -266,9 +267,7 @@ export default class ChartCompare extends wepy.page {
               : res.data.date1
         },
         yAxis: {
-          name: "销售单价 " + res.data.unit,
-          nameLocation: "center",
-          nameGap: 40
+          name: "销售单价 " + res.data.unit
         },
         series: [
           {

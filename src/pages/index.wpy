@@ -29,20 +29,14 @@
           <text class="tab-text">共享实验室</text>
         </navigator>
       </view>
-      <view class="weui-flex__item">
+      <!-- <view class="weui-flex__item">
         <navigator url="/pages/overseas/list" hover-class="navigator-hover">
           <view class="tab-image">
             <image class="image" src="../images/tabbars/center_tab_05.png"></image>
           </view>
           <text class="tab-text">环球资源</text>
         </navigator>
-      </view>
-      <!-- <view class="weui-flex__item">
-      <view class="tab-image">
-        <image class="image" src="../images/tabbars/center_tab_03.png"></image>
-      </view>
-      <text class="tab-text">材料数据库</text>
-    </view> -->
+      </view> -->
       <view class="weui-flex__item">
         <navigator url="/pages/information/list" hover-class="navigator-hover">
           <view class="tab-image">
@@ -71,11 +65,11 @@
             </view>
             <view class="weui-tab__panel">
               <view class="weui-tab__content" wx:for="{{sheetNameList}}" wx:for-index="i" wx:for-item="itemI" wx:key="id" hidden="{{activeIndex != i}}">
-                <view class="weui-cell" wx:for="{{itemI.list}}" wx:for-index="j" wx:for-item="itemJ" wx:key="id">
+                <navigator class="weui-cell" wx:for="{{itemI.list}}" wx:for-index="j" wx:for-item="itemJ" wx:key="id" url="/pages/other/chart-list?firstName={{itemI.title}}&secondName={{itemJ.name}}" hover-class="navigator-hover">
                   <view class="weui-cell__hd tabs-name">{{itemJ.name}}</view>
                   <view class="weui-cell__bd text-center {{itemJ.comparePrice>=0?'font-rise':'font-decline'}}">{{itemJ.price}}{{itemJ.unit}}</view>
                   <view class="weui-cell__ft {{itemJ.comparePrice>=0?'font-rise':'font-decline'}}">{{itemJ.comparePrice}}%</view>
-                </view>
+                </navigator>
               </view>
             </view>
           </view>

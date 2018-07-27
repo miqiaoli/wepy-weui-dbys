@@ -1,11 +1,11 @@
 <template>
-  <view class="page bg__white">
+  <view class="page bg__black">
     <view class="page__bd page__bd_spacing">
       <view class="table">
         <view class="tr bg-w">
           <view class="th td-hd">产品名称</view>
-          <view class="th td-fd">日期</view>
           <view class="th td-bd">价格</view>
+          <view class="th td-fd">涨跌幅</view>
         </view>
         <block wx:for="{{tradeList}}" wx:for-item="i" wx:key="id">
           <view class="tr bg-head" wx:if="{{i.name}}">
@@ -16,8 +16,10 @@
               <view class="td td-hd">{{j.productName}}/{{j.otherOne}}
                 <block wx:if="{{j.otherTwo}}">/{{j.otherTwo}}</block>
               </view>
-              <view class="td td-fd">{{j.priceIndex_dt}}</view>
-              <view class="td td-fd">{{j.priceMoney}}{{j.price_unit}}</view>
+              <view class="td td-fd {{j.comparePrice>=0?'font-rise':'font-decline'}}">{{j.priceMoney}}{{j.price_unit}}</view>
+              <view wx:if="{{j.comparePrice>0}}" class="td td-fd font-rise">+{{j.comparePrice}}%</view>
+              <view wx:elif="{{j.comparePrice<0}}" class="td td-fd font-decline">{{j.comparePrice}}%</view>
+              <view wx:else="{{j.comparePrice===0}}" class="td td-fd font-level">0.00</view>
             </view>
           </block>
         </block>
@@ -64,13 +66,24 @@ export default class chartPrice extends wepy.page {
     this.start = 1;
     this.getList();
   }
+    onShareAppMessage(res) {
+    return {
+      title: '小八塑价最新价格汇总',
+      path: `pages/other/chart-price`,
+    }
+  }
 }
 </script>
 
 <style lang="less">
+.bg__black {
+  background: #4b4f61;
+}
 .table {
   border: 0px solid darkgray;
   font-size: 28rpx;
+  background: #383d51;
+  color: #fff;
 }
 .tr {
   display: flex;
@@ -80,8 +93,6 @@ export default class chartPrice extends wepy.page {
   align-items: center;
 }
 .th {
-  // height: 80rpx;;
-  // align-items: center;
   justify-content:center;
   text-align: left;
   font-weight: bold;
@@ -109,13 +120,22 @@ export default class chartPrice extends wepy.page {
   text-align: center;
 }
 .bg-w {
-   background: #f8cbad;
+   background: #0092ff;
 }
 .bg-b {
-  border-bottom: 2rpx solid #adadad;
+  border-bottom: 2rpx solid #5c6070;
 }
 .bg-head {
-  background: #fff9f5;
-  border-bottom: 2rpx solid #adadad;
+  background: #334562;
+  border-bottom: 2rpx solid #5c6070;
+}
+.font-rise {
+  color: #e64340;
+}
+.font-decline {
+  color: #33e751;
+}
+.font-level {
+  color: #999;
 }
 </style>
