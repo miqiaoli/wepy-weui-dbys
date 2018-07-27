@@ -11,7 +11,7 @@
           <view class="tr bg-head" wx:if="{{i.name}}">
             <view class="td td-head">{{i.name}}</view>
           </view>
-          <block wx:for="{{i.list}}" wx:for-item="j" wx:key="id">
+          <navigator wx:for="{{i.list}}" wx:for-item="j" wx:key="id" url="/pages/other/chart-list?firstName={{i.name}}&secondName={{j.productName}}/{{j.otherOne}}/{{j.otherTwo}}" hover-class="navigator-hover">
             <view class="tr bg-b}}">
               <view class="td td-hd">{{j.productName}}/{{j.otherOne}}
                 <block wx:if="{{j.otherTwo}}">/{{j.otherTwo}}</block>
@@ -21,7 +21,7 @@
               <view wx:elif="{{j.comparePrice<0}}" class="td td-fd font-decline">{{j.comparePrice}}%</view>
               <view wx:else="{{j.comparePrice===0}}" class="td td-fd font-level">0.00</view>
             </view>
-          </block>
+          </navigator>
         </block>
       </view>
     </view>
