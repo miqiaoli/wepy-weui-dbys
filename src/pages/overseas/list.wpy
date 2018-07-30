@@ -1,133 +1,160 @@
 <template>
-<view class="overseas">
-  <view class="bgImg">
-    <image class="country-img" src="{{imgHost}}{{bannerImg}}" />
-    <!-- <image src={{}} /> -->
-  </view>
-  <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id">
-    <view class="more">
-      <navigator url="{{'./single?country='+single.country}}">
-        <image style="position: absolute; top: 8rpx; right: 4rpx; width: 32rpx; height: 8rpx;" src="/images/icon_more.png" />
-      </navigator>
+  <view class="overseas">
+    <view class="bgImg">
+      <image class="country-img" src="{{imgHost}}{{bannerImg}}" />
     </view>
-    <view class="list-flex">
-      <navigator url="{{'./single?country='+single.country}}">
-        <image class="country-img" src="{{imgHost}}{{single.country_img}}" />
-      </navigator>
-      <view class="name">
-        <navigator url="{{'./details?country='+single.country+'&productName='+single.productName[0]}}">
-          <view class="title" wx:if="{{single.productName[0]}}">{{single.productName[0]}}</view><view class="weui-cell__ft weui-cell__ft_in-access pos"></view>
-        </navigator>
-        <navigator url="{{'./details?country='+single.country+'&productName='+single.productName[1]}}">
-          <view class="title"  wx:if="{{single.productName[1]}}">{{single.productName[1]}}</view><view class="weui-cell__ft weui-cell__ft_in-access pos"></view>
-        </navigator>
+    <view class="tips">- 合肥圆融再生资源全球分布图 -</view>
+    <view style="border-top: 1px solid #E4E7F0;">
+      <view class="list">
+        <view class="country">
+          <view class="none-body" style="{{ index === order ? 'background: #F9F9F9' : 'background: #fff' }}" wx:for="{{list}}" wx:for-item="single" wx:key="id" data-index="{{index}}" bindtap="getSingle">
+            <view wx:if="{{index === order}}" class="line"></view>
+            <image class="country-flag" src="{{imgHost}}{{single.country_img}}" />
+            <text class="country-name" style="{{ index === order ? 'font-weight: bold;' : 'font-weight:normal' }}">{{single.country}}</text>
+          </view>
+        </view>
+        <view style="flex: 1; display: flex; align-content: flex-start; flex-wrap: wrap;">
+          <view class="product" wx:for="{{item}}" wx:for-item="name" wx:key="id">
+            <navigator url="{{'./details?country='+country+'&productName='+name}}">
+              <view class="product-name">
+                <text class="item-icon"></text>{{name}}</view>
+            </navigator>
+          </view>
+        </view>
       </view>
     </view>
-    <view class="country-name">{{ single.country }}</view>
   </view>
-</view>
 </template>
-
-<script>
-import wepy from 'wepy'
-import {
-  __getApi
-} from '../../config.js'
-import http from '../../utils/Http'
-import user from '../../mixins/user'
-
-export default class overseasList extends wepy.page {
-  mixins = [user]
-  config = {
-    navigationBarTitleText: '海外资源'
-  }
-  data = {
-    list: [],
-    imgHost: '',
-    token_access: '',
-    bannerImg: ''
-  }
-  methods = {
-    
-  }
-  async getList() {
-    const res = await http.get(__getApi._getOverseasList, {
-      
-    })
-    this.list = res.data
-    this.$apply()
-    console.log(this.list)
-  }
-  async getBanner() {
-    const res = await http.get(__getApi._getADList, {
-      ad_Model_id: 13
-    })
-    this.bannerImg = res.data[0].image_url 
-    this.$apply()
-  }
-  async onLoad() {
-    this.imgHost = __getApi.imgHost
-    this.$apply()
-    this.getList()
-    this.getBanner()
-  }
-}
-</script>
-
 <style lang="less">
 .overseas {
   background: #fff;
   padding-bottom: 20rpx;
   .bgImg {
-    margin-bottom: 40rpx;
+    // margin-bottom: 40rpx;
     height: 310rpx;
-    // background-color: #f0f;
     .country-img {
       width: 100%;
       height: 100%;
     }
   }
-  .single {
-    margin-left: 30rpx;
-    margin-right: 30rpx;
+  .tips {
+    margin-top: 10rpx;
     margin-bottom: 20rpx;
-    height: 206rpx;
-    background: #fff;
-    .more {
+    font-size: 22rpx;
+    color: #3d3d3d;
+    text-align: center;
+  }
+  .list {
+    display: flex;
+    .country {
       position: relative;
-      margin-bottom: 40rpx;
-      height: 8rpx;
-    }
-    .list-flex {
-      display: flex;
-      .country-img {
-        margin-right: 20rpx;
-        width: 160rpx;
-        height: 120rpx;
-      }
-      .name {
-        flex: 1;
+      border-right: 1px solid #e4e7f0;
+      .none-body {
         position: relative;
-        font-size: 14px;
-        color: #3D3D3D;
-        .pos {
-          position: relative;
-          top: -28rpx;
-          right: 5rpx;
+        background: #ffffff;
+        width: 222rpx;
+        height: 132rpx;
+        .line {
+          position: absolute;
+          top: 42rpx;
+          left: 0;
+          width: 0;
+          height: 48rpx;
+          border-right: 8rpx solid #323972;
         }
-        .title {
-          padding: 8rpx 0;
-          border-bottom: 2rpx solid #E4E7F0;;
-          
+        .country-flag {
+          margin-top: 42rpx;
+          margin-left: 30rpx;
+          width: 64rpx;
+          height: 48rpx;
+        }
+        .country-name {
+          margin-top: 42rpx;
+          padding-left: 4rpx;
+          display: inline-block;
+          vertical-align: top;
+          line-height: 48rpx;
+          font-size: 28rpx;
+          color: #3d3d3d;
         }
       }
     }
-    .country-name {
-      width: 160rpx;
-      font-size: 22rpx;
-      color: #3D3D3D;
-      text-align: center;
+    .product {
+      font-size: 28rpx;
+      color: #3d3d3d;
+      width: 50%;
+      .product-name {
+        padding-top: 60rpx;
+        margin-left: 30rpx;
+        .item-icon {
+          margin-right: 4rpx;
+          width: 10rpx;
+          height: 10rpx;
+          background: #323972;
+          border-radius: 50%;
+          vertical-align: middle;
+          line-height: 28rpx;
+        }
+      }
     }
   }
 }
 </style>
+
+<script>
+import wepy from "wepy";
+import { __getApi } from "../../config.js";
+import http from "../../utils/Http";
+import user from "../../mixins/user";
+
+export default class overseasList extends wepy.page {
+  mixins = [user];
+  config = {
+    navigationBarTitleText: "海外资源"
+  };
+  data = {
+    list: [],
+    item: [],
+    imgHost: "",
+    token_access: "",
+    bannerImg: "",
+    bgColor: "#f0f",
+    order: 0,
+    country: ""
+  };
+  methods = {
+    getSingle(e) {
+      this.order = e.currentTarget.dataset.index;
+      this.item = this.list[e.currentTarget.dataset.index].productName;
+      this.country = this.list[e.currentTarget.dataset.index].country;
+      this.$apply();
+    }
+  };
+  async getList() {
+    const res = await http.get(__getApi._getOverseasList, {});
+    this.list = res.data;
+    this.item = res.data[0].productName;
+    this.country = res.data[0].country;
+    this.$apply();
+  }
+  async getBanner() {
+    const res = await http.get(__getApi._getADList, {
+      ad_Model_id: 13
+    });
+    this.bannerImg = res.data[0].image_url;
+    this.$apply();
+  }
+  async onLoad() {
+    this.imgHost = __getApi.imgHost;
+    this.$apply();
+    this.getList();
+    this.getBanner();
+  }
+  onShareAppMessage(res) {
+    return {
+      title: "海外资源列表页",
+      path: `pages/overseas/list`
+    };
+  }
+}
+</script>

@@ -42,7 +42,6 @@ export default class extends wepy.app {
       'pages/company/alltype',
       'pages/company/error',
       'pages/overseas/list',
-      'pages/overseas/single',
       'pages/overseas/details',
       'pages/user/getUserInfo',
       'pages/other/chart-price',
@@ -107,7 +106,6 @@ export default class extends wepy.app {
     
   }
   onShow(options) {
-    const that = this
     this.$updateGlobalData('token_access',wepy.getStorageSync('token_access') || '')
   }
   onHide(options) {

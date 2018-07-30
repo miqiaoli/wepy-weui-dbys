@@ -89,4 +89,7 @@ export default class searchBar extends wepy.page {
     margin-right: 20rpx;
     margin-bottom: 30rpx;
 }
+.weui-navbar {
+  position: relative;
+}
 </style>

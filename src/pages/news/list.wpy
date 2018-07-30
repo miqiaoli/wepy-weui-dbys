@@ -24,7 +24,7 @@
                     <view class="weui-media-box__info">
                       <view class="weui-media-box__info__meta weui-media-box__info__meta_extra">{{itemI.date}}</view>
                       <view class="weui-media-box__info__meta">{{itemI.author}}</view>
-                      <view class="tag blue" wx:if="{{idx === 0}}">最新</view>
+                      <!-- <view class="tag blue" wx:if="{{idx === 0}}">最新</view> -->
                     </view>
                   </view>
                 </navigator>
@@ -43,7 +43,7 @@
                     <view class="weui-media-box__info text-right">
                       <view class="weui-media-box__info__meta weui-media-box__info__meta_extra">{{itemI.date}}</view>
                       <view class="weui-media-box__info__meta">{{itemI.author}}</view>
-                      <view class="tag blue" wx:if="{{idx === 0}}">最新</view>
+                      <!-- <view class="tag blue" wx:if="{{idx === 0}}">最新</view> -->
                     </view>
                   </navigator>
                 </view>
@@ -175,6 +175,9 @@ export default class NewsList extends wepy.page {
 .weui-navbar__item.weui-bar__item_on {
     color:#323972;
 }
+.weui-media-box_appmsg {
+  align-items:flex-start;
+}
 .weui-bar__item_on .weui-navbar__title {
     font-weight: bold;
     font-size: 32rpx
@@ -197,12 +200,15 @@ export default class NewsList extends wepy.page {
 }
 .weui-media-box__hd_in-appmsg  {
     width: 180rpx;
+    padding-top: 10rpx;
 }
 .tag.blue{
     color: #6A7EEE;
-    margin-right: 50rpx;
-    background: rgba(106,126,238,0.15);
+    margin-right: 10rpx;
+    background: #fff;
     border: 2rpx solid rgba(106,126,238,0.65);
     border-radius: 4rpx;
+    font-size: 22rpx;
+    padding: 0;
 }
 </style>

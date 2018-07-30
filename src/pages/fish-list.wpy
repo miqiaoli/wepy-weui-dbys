@@ -272,6 +272,12 @@ export default class FishList extends wepy.page {
     wx.closeSocket()
     this.$apply()
   }
+  onShareAppMessage(res) {
+    return {
+      title: "鱼塘信息",
+      path: `pages/fish-list`
+    };
+  }
 }
 </script>
 

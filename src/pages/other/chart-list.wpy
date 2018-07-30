@@ -324,6 +324,13 @@ export default class ChartCompare extends wepy.page {
       }, 200)
     this.$apply();
   }
+  
+  onShareAppMessage(res) {
+    return {
+      title: "小八塑价",
+      path: '/pages/other/chart-list?firstName='+this.firstName+'&secondName='+this.secondName
+    };
+  }
 }
 </script>
 
