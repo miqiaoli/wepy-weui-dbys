@@ -61,8 +61,8 @@ export default class Filter extends wepy.page {
   async getProductNameList() {
     const res = await http.get(__getApi._getProductNameList, {
       service_name: 'TRADE_GOODSLIST',
-      goods_class_id: this.goods_class_id,
-      key:1
+      goods_class_id: this.goods_class_id
+      // key:1
     })
     if (res.false) return
     this.productNameList = res.data
