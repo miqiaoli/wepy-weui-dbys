@@ -1,27 +1,23 @@
 <template>
-<view class="page-index bg__white">
-  <view class="weui-cells weui-cells_after-title">
-    <radio-group @change="radioChange">
-      <label class="weui-cell weui-check__label">
-          <radio class="weui-check" value=",全部"/>
-          <view class="weui-cell__bd">全部</view>
-      </label>
-      <label class="weui-cell weui-check__label" wx:for="{{productNameList}}" wx:key="id">
-
-        <!-- <view class="weui-cell__ft weui-cell__ft_in-radio" wx:else>
-            <view class="weui-icon-radio circle"></view>
-        </view> -->
-          <radio class="weui-check" value="{{item.id + ',' + item.descrip}}" checked="{{item.checked}}"/>
-          <view class="weui-cell__bd">{{item.descrip}}</view>
-          <view class="weui-cell__ft weui-cell__ft_in-radio" wx:if="{{item.checked}}">
-              <icon class="weui-icon-radio" color="#0078dd" type="success" size="20"></icon>
-          </view>
-      </label>
-    </radio-group>
+<view class="page bg__white weui-flex">
+  <view class="left">
+    <scroll-view scroll-y bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
+      <view class="items">
+        <block wx:for="{{productNameList}}" wx:key="id">
+          <view class="item text-center {{goods_id==item.id ? 'active': ''}}" id="{{item.id}}" data-name="{{item.descrip}}" @tap="changeGoodId">{{item.descrip}}</view>
+        </block>
+      </view>
+    </scroll-view>
   </view>
-  <!-- <view class="weui-btn-area">
-    <button class="weui-btn" type="primary" @tap="showTopTips">确定</button>
-  </view> -->
+  <view class="weui-flex__item">
+    <scroll-view scroll-y bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
+      <view class="items">
+        <block wx:for="{{productList}}" wx:key="id">
+          <view class="item text-center" id="{{item.id}}" data-name="{{item.descrip}}" @tap="goChoose">{{item.descrip}}</view>
+        </block>
+      </view>
+    </scroll-view>
+  </view>
 </view>
 </template>
 <script>
@@ -35,110 +31,82 @@ import http from '../../utils/Http'
 export default class Filter extends wepy.page {
   mixins = [base]
   config = {
-    navigationBarTitleText: '刷选'
+    navigationBarTitleText: '品名牌号筛选'
   }
   data = {
     type: null,
     goods_class_id: '',
-    productNameList: []
+    goods_id: '',
+    goods_name: '',
+    productNameList: [],
+    productList: []
   }
   methods = {
-    radioChange(e) {
-      this.productNameList.forEach(v => {
-        v.checked = v.id == e.detail.value.split(',')[0]
-      })
-
+    changeGoodId(e) {
+      this.goods_id = e.currentTarget.id
+      this.goods_name = e.currentTarget.dataset.name
+      console.log(this.goods_name);
+      this.getAdvOptionsList()
+    },
+    goChoose(e) {
       const pages = getCurrentPages()
-      const prevPage = pages[pages.length - 2] /* 上一个页面 */
-      let chooseType = ''
-
-      switch (this.getNumber(this.type)) {
-        case 1:
-          chooseType = 'chooseProduct'
-          break
-        case 2:
-          chooseType = 'chooseGrade'
-          break
-        case 3:
-          chooseType = 'chooseVendor'
-          break
-        default:
-          break
-      }
-
-      prevPage.data[chooseType].name = e.detail.value.split(',')[1]
-      prevPage.data[chooseType].id = e.detail.value.split(',')[0]
-      wx.navigateBack()
+      const prevPage = pages[pages.length - 2]
+      prevPage.data.chooseProduct.id = this.goods_id
+      prevPage.data.chooseProduct.name = this.goods_name
+      prevPage.data.chooseGrade.id = e.currentTarget.id
+      prevPage.data.chooseGrade.name = e.currentTarget.dataset.name
+      wepy.navigateBack()
     }
   }
   async getProductNameList() {
     const res = await http.get(__getApi._getProductNameList, {
       service_name: 'TRADE_GOODSLIST',
-      goods_class_id: this.goods_class_id
+      goods_class_id: this.goods_class_id,
+      key:1
     })
     if (res.false) return
     this.productNameList = res.data
     this.$apply()
   }
   async getAdvOptionsList() {
+    wepy.showLoading({
+      title: '加载中',
+    })
     const res = await http.get(__getApi._getAdvOptionsList, {
       service_name: 'TRADE_ATTSERACH',
       goods_class_id: this.goods_class_id,
       goods_id: this.goods_id
     })
     if (res.false) return
-    if (this.type === '2') {
-      this.productNameList = res.data.att2s
-    } else {
-      this.productNameList = res.data.att1s
-    }
+    this.productList = res.data.att2s
+    wx.hideLoading()
     this.$apply()
   }
-  onLoad(options) {
-    this.type = options.type
+  async onLoad(options) {
     this.goods_class_id = options.goods_class_id
-    this.goods_id = options.goods_id ? options.goods_id : ''
-    if (this.type === '1') {
-      this.getProductNameList()
-    } else {
-      this.getAdvOptionsList()
-    }
+    await this.getProductNameList()
+    this.goods_id = this.productNameList[0].id
+    this.goods_name = this.productNameList[0].descrip
+    await this.getAdvOptionsList()
   }
 }
 </script>
 
 <style lang="less">
-.user .item {
-    height: 88rpx;
-    line-height: 88rpx;
+.left {
+    width: 240rpx;
+    height: 100%;
+    background: #F9F9F9;
 }
-.user + .user .item {
-    border-top: 2rpx solid #e9e7e7;
+.item {
+    padding: 14rpx 40rpx;
+    position: relative;
+    border-bottom: 2rpx solid #E4E7F0;
 }
-
-.weui-check {
-    position: absolute;
-    left: -9999px;
+.left .item {
+    padding: 10rpx 40rpx;
 }
-.weui-cell__ft_in-radio {
-    padding-right: 0.35em;
-}
-.circle {
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    border: 2rpx solid #ccc;
-    border-radius: 50%;
-    background: #ffffff;
-    vertical-align: middle;
-}
-.weui-cells {
-    padding-bottom: 90rpx;
-}
-.weui-btn-area {
-    position: fixed;
-    width: 96%;
-    left: 2%;
-    bottom: 0;
+.item.active {
+    background: #FFFFFF;
 }
 </style>

@@ -2,7 +2,59 @@
 <view class="login page bg__white">
   <view class="page__bd page__bd_spacing">
     <form bindsubmit="loginBtnClick">
-      <view class="item-input">
+      <view class="weui-cells__title">手机号</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input h4">
+          <view class="weui-cell__bd">
+            <input type="number" placeholder="请输入手机号" name="phone" bindinput="getNameInput" />
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells__title">验证码</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input weui-cell_vcode h4">
+          <view class="weui-cell__bd">
+            <input type="number" placeholder="请输入短信验证码" name="yzm" bindinput="getYzmInput" />
+          </view>
+          <view class="weui-cell__ft">
+            <button class="weui-btn h4 yzm-btn" type="primary" disabled="{{yzmBtn.isShow}}" @tap="yzmClick">{{yzmBtn.msg}}</button>
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells__title">密码</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input h4">
+          <view class="weui-cell__bd">
+            <input type="password" name="password" placeholder="请输入密码" bindblur="getPasswordInput" />
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells__title">确认密码</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input h4">
+          <view class="weui-cell__bd">
+            <input type="password" name="checkPass" placeholder="请确认输入密码" bindblur="getCheckPasswordInput" />
+          </view>
+        </view>
+      </view>
+      <checkbox-group @change="bindAgreeChange">
+        <label class="weui-agree" for="weuiAgree">
+               <view class="weui-agree__text">
+                   <checkbox class="weui-agree__checkbox" id="weuiAgree" value="agree" checked="{{isAgree}}" />
+                   <view class="weui-agree__checkbox-icon">
+                       <icon class="weui-agree__checkbox-icon-check" type="success_no_circle" size="9" wx:if="{{isAgree}}"></icon>
+                   </view>
+                   我已阅读并同意<navigator url="./registration-agreement" class="text font-primary" hover-class="navigator-hover">《商城用户注册协议》</navigator>
+               </view>
+           </label>
+      </checkbox-group>
+      <view class="weui-btn-area">
+        <button class="weui-btn" disabled="{{!isAgree}}" type="primary" formType="submit">注册</button>
+      </view>
+      <view class="weui-other text-center">
+        <navigator class="font-primary" url="./login?token_access={{token_access}}" open-type="reLaunch" hover-class="navigator-hover">已有账号，马上登陆</navigator>
+      </view>
+      <!-- <view class="item-input">
         <input type="number" placeholder="请输入手机号" name="phone" bindinput="getNameInput" />
       </view>
       <view class="weui-flex item-input">
@@ -17,28 +69,26 @@
       </view>
       <view class="item-input">
         <button class="weui-btn" disabled="{{!isAgree}}" type="primary" formType="submit">注册</button>
-      </view>
+      </view> -->
 
-      <view class="weui-flex">
+      <!-- <view class="weui-flex">
         <view class="weui-flex__item"></view>
         <view class="font-primary">
           <navigator url="./login?token_access={{token_access}}" open-type="reLaunch" hover-class="navigator-hover">我已有账号</navigator>
         </view>
-      </view>
+      </view> -->
     </form>
   </view>
   <view class="page__ft">
-    <checkbox-group @change="bindAgreeChange">
-      <label class="weui-agree" for="weuiAgree">
-           <view class="weui-agree__text">
-               <checkbox class="weui-agree__checkbox" id="weuiAgree" value="agree" checked="{{isAgree}}" />
-               <view class="weui-agree__checkbox-icon">
-                   <icon class="weui-agree__checkbox-icon-check" type="success_no_circle" size="9" wx:if="{{isAgree}}"></icon>
-               </view>
-               我已阅读并同意<navigator url="./registration-agreement" class="text font-primary" hover-class="navigator-hover">《商城用户注册协议》</navigator>
-           </view>
-       </label>
-    </checkbox-group>
+    <view class="weui-phone text-center">
+      <image class="phone" src="/images/icon/phone.png"></image>
+      <text class="font-primary h4" bindtap='makePhoneCall' data-phone='400-888-9383'>客服热线：400-888-9383</text>
+    </view>
+    <view class="weui-index">
+      <navigator url="/pages/index" open-type="reLaunch" hover-class="navigator-hover">
+        <image class="" src="/images/back_index.png"></image>
+      </navigator>
+    </view>
   </view>
 </view>
 </template>
@@ -104,6 +154,11 @@ export default class Index extends wepy.page {
     }, 1000)
   }
   methods = {
+    makePhoneCall(e) {
+      wx.makePhoneCall({
+        phoneNumber: e.currentTarget.dataset.phone
+      })
+    },
     bindAgreeChange(e) {
       this.isAgree = !!e.detail.value.length
       this.$apply()
@@ -180,30 +235,56 @@ export default class Index extends wepy.page {
 }
 </script>
 <style lang="less">
-.item-input {
-    position: relative;
-    margin-bottom: 30rpx;
-    input {
-        padding: 20rpx;
-        height: 44rpx;
-        line-height: 44rpx;
-        background-color: #efefe;
-        flex: 1;
-        border-bottom: 2rpx solid #e9e7e7;
-    }
-    .yzm-btn {
-        min-width: 240rpx;
-        margin: 0 0 0 20rpx;
-    }
+.page {
+    height: 100vh;
 }
-.page__ft {
-    position: fixed;
-    bottom: 20rpx;
+.weui-cell {
+    background: #F9F9F9;
+    border-radius: 4px;
+}
+.weui-cells__title {
+    margin-top: 0;
+    padding-top: 0.77em;
+    color: #1E1E1E;
+    font-size: 32rpx;
+}
+.weui-btn-area {
+    margin-top: 40rpx;
+}
+.weui-other {
+    margin-top: 40rpx;
+}
+.weui-cells:after,
+.weui-cells:before {
+    border: none;
+}
+.weui-phone {
     width: 100%;
-    font-size: 28rpx;
-    text-align: center;
-    .text {
-        display: inline-block;
-    }
+    position: fixed;
+    left: 0;
+    bottom: 20rpx;
+}
+.weui-index image {
+    width: 100rpx;
+    height: 100rpx;
+    position: fixed;
+    right: 80rpx;
+    bottom: 80rpx;
+}
+.yzm-btn {
+    width: 196rpx;
+    line-height: 60rpx;
+}
+.text {
+    display: inline-block;
+}
+.weui-agree {
+    padding: 0.5em 0;
+}
+.phone {
+    width: 18px;
+    height: 14px;
+    vertical-align: middle;
+    margin-right: 10rpx;
 }
 </style>

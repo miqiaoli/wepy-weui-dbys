@@ -39,19 +39,25 @@
         </picker>
       </view>
     </view>
-    <navigator url="/pages/product/filter?type=1&goods_class_id={{variety}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+    <view class="weui-cell weui-cell_input">
       <view class="weui-cell__hd weui-cell__hd_in-select-after">
-        <view class="weui-label">品名</view>
+        <view class="weui-label">
+            <view class="red-box">品名</view>
+        </view>
       </view>
-      <view class="weui-cell__bd"><text class="font-red">*</text> {{chooseProduct.name}}</view>
+      <view class="weui-cell__bd">
+          <input class="weui-input" name="productName" value="{{productName}}" placeholder="请输入品名" />
+      </view>
       <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-    </navigator>
+    </view>
     <view class="weui-cell weui-cell_input">
       <view class="weui-cell__hd">
-        <view class="weui-label">牌号</view>
+        <view class="weui-label">
+            <view class="red-box">牌号</view>
+        </view>
       </view>
       <!-- <block wx:if="{{varietyList.id===2 || varietyList.id===6}}"> -->
-      <view class="weui-cell__ft font-red">*</view>
+      <!-- <view class="weui-cell__ft font-red">*</view> -->
       <!-- </block> -->
       <view class="weui-cell__bd">
         <input class="weui-input" name="grade" value="{{grade}}" placeholder="请输入牌号" />
@@ -118,6 +124,7 @@ export default class NewCustomizeInfo extends wepy.page {
       id: ''
     },
     tipsMessage: '',
+    productName:'',
     grade: '',
     grades: '',
     describe: ''
@@ -149,7 +156,7 @@ export default class NewCustomizeInfo extends wepy.page {
     this.typeIndex = res.data.type
     this.fishortradeType = res.data.fishortradeType
     this.customMadeType = res.data.customMadeType
-    this.chooseProduct.name = res.data.productName
+    this.productName = res.data.productName
     this.grade = res.data.grade ? res.data.grade : this.grade
     this.grades = res.data.grades ? res.data.grades : this.grades
     this.describe = res.data.defineMade ? res.data.defineMade : this.defineMade
@@ -210,7 +217,7 @@ export default class NewCustomizeInfo extends wepy.page {
     bindVarietyChange(e) {
       this.varietyIndex = e.detail.value
       this.variety = this.varietyList[e.detail.value].id
-      this.chooseProduct = {}
+      this.productName = ''
       this.$apply()
     },
     bindSrouceChange(e) {
@@ -226,8 +233,8 @@ export default class NewCustomizeInfo extends wepy.page {
     },
     formReset(e) {},
     formSubmit(e) {
-      if (!this.required(this.chooseProduct.name)) {
-        this.tipsMessage = '请选择品名项'
+      if (!this.required(e.detail.value.productName)) {
+        this.tipsMessage = '请输入品名项'
         this.showTopTips()
         return
       }
@@ -237,7 +244,7 @@ export default class NewCustomizeInfo extends wepy.page {
         customMadeType: this.customMadeType,
         made_type: this.made_type,
         variety: this.variety,
-        productName: this.chooseProduct.name,
+        productName: this.productName,
         grade: e.detail.value.grade ? e.detail.value.grade : '',
         grades: e.detail.value.grades ? e.detail.value.grades : '',
         defineMade: e.detail.value.describe ? e.detail.value.describe : ''
@@ -259,12 +266,12 @@ export default class NewCustomizeInfo extends wepy.page {
     }
   }
   onShow() {
-    const pages = getCurrentPages()
-    const currPage = pages[pages.length - 1] /* 当前页面 */
-
-    this.chooseProduct.id = currPage.data.chooseProduct.id
-    this.chooseProduct.name = currPage.data.chooseProduct.name
-    this.$apply()
+    // const pages = getCurrentPages()
+    // const currPage = pages[pages.length - 1] /* 当前页面 */
+    //
+    // this.chooseProduct.id = currPage.data.chooseProduct.id
+    // this.chooseProduct.name = currPage.data.chooseProduct.name
+    // this.$apply()
   }
 }
 </script>
@@ -351,5 +358,15 @@ button {
     top: -10rpx;
     right: -10rpx;
     z-index: 2;
+}
+
+.red-box {
+    width: 110rpx;
+    color: #EB4E35;
+    background: rgba(235,78,53,0.15);
+    border: 1px solid rgba(235,78,53,0.65);
+    border-radius: 2px;
+    text-align: center;
+    font-size: 28rpx;
 }
 </style>

@@ -41,7 +41,7 @@ import base from '../../mixins/base'
 import http from '../../utils/Http'
 import InforList from '../../components/inforList'
 
-const sliderWidth = 96 // 需要设置slider的宽度，用于计算中间位置
+const sliderWidth = 187 // 需要设置slider的宽度，用于计算中间位置
 export default class InformationList extends wepy.page {
   mixins = [base]
   config = {
@@ -138,25 +138,30 @@ export default class InformationList extends wepy.page {
     border-bottom: 2rpx solid #e9e7e7;
     text-align: center;
 }
-.weui-tab__panel {
-    margin-top: 86rpx;
+// .weui-tab__panel {
+//     margin-top: 86rpx;
+// }
+.weui-navbar__slider {
+    width: 187px;
+    background-color: #323972;
 }
 .weui-navbar__item {
     display: inline-block;
     width: 200rpx;
+    padding: 0;
 }
 .icon-new-edit {
     position: absolute;
-    top: 0;
+    top: -20rpx;
     right: 30rpx;
     .icon-edit {
-        width: 48rpx;
-        height: 48rpx;
+        width: 40rpx;
+        height: 40rpx;
         vertical-align: middle;
     }
 }
-.weui-bar__item_on {
-    color: #115bed;
-    border-bottom: 4rpx solid #115bed;
+.weui-navbar__item.weui-bar__item_on .weui-navbar__title {
+    color: #323972;
+    font-weight: bold;
 }
 </style>

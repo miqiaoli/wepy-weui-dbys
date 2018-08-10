@@ -1,52 +1,94 @@
 <template>
-<view class="page">
+<view class="page bg__white">
   <view class="image">
-    <image class="image" mode="widthFix" src="/images/about-us.png"></image>
-  </view>
-  <view class="weui-article bg__white">
-    <view class="weui-article__p">
-      元素周期表中的第八号元素——氧，代表绿色和环保，孕育生命与希望，"第八元素-OTIMES"由此而来。
-    </view>
-    <view class="weui-article__p">
-      经国家工商总局核准，第八元素于2016年正式成立。平台依托行业背景和资源优势，以塑料原料、改性塑料、助剂、再生塑料等大宗商品为主要交易品种，向广大中小企业提供在线交易、金融服务、仓储物流、技术检测、信息资讯、特色云等综合服务。
-    </view>
-  </view>
-  <view class="module-box bg__white">
-    <view class="top">
-      <text class="title">我们的使命</text>
-      <text class="sub">COMPANG MISSION</text>
-    </view>
-    <view class="weui-article box">
-      <view class="weui-article__title">持续为人类创造美好生活</view>
-      <view class="weui-article__p">
-        我们旨在为从业者提供互动平台，为中小企业创造商业价值，持续推进循环经济发展，为人类创造美好生活。
+    <image class="img" src="/images/about-us.png"></image>
+    <view class="img-box bg__white">
+      <view class="head weui-flex">
+        <image class="weui-media-box__thumb" src="/images/about-us1.png" />
+        <view class="weui-flex__item">
+          <view class="weui-media-box__title">欢迎来到我们的平台</view>
+          <view class="weui-media-box__desc">“下一个时代是氧气的时代”——硅谷精神教父 凯文·凯利</view>
+        </view>
+      </view>
+      <view class="box no-border">
+        <view>元素周期表中的第八号元素——氧，代表绿色和环保，孕育生命与希望，"第八元素-OTIMES"由此而来。经国家工商总局核准，第八元素于2016年正式成立。平台依托行业背景和资源优势，以塑料原料、改性塑料、助剂、再生塑料等大宗商品为主要交易品种，向广大中小企业提供在线交易、金融服务、仓储物流、技术检测、信息资讯、特色云等综合服务。</view>
       </view>
     </view>
   </view>
-  <view class="module-box bg__white">
-    <view class="top">
-      <text class="title">我们的愿景</text>
-      <text class="sub">COMPANG VISION</text>
+  <view class="module-box">
+    <view class="item">
+      <view class="weui-panel_access">
+        <view class="weui-media-box_appmsg">
+          <view class="weui-media-box__hd">
+            <image class="weui-media-box__thumb2" src="/images/about-us2.png" />
+          </view>
+          <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+            <view class="weui-media-box__title">我们的使命</view>
+            <view class="weui-media-box__desc">持续为人类创造美好生活</view>
+          </view>
+        </view>
+      </view>
+      <view class="box">
+        我们旨在为从业者提供互动平台，为中小企业创造商业价值，持续推进循环经济发展，为人类创造美好生活。
+      </view>
     </view>
-    <view class="weui-article box">
-      <view class="weui-article__p">打通价值链，搭建全球化流通开放平台；</view>
-      <view class="weui-article__p">构建生态圈，提供供应链整体解决方案！</view>
+    <view class="item">
+      <view class="weui-panel_access">
+        <view class="weui-media-box_appmsg">
+          <view class="weui-media-box__hd">
+            <image class="weui-media-box__thumb2" src="/images/about-us2.png" />
+          </view>
+          <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+            <view class="weui-media-box__title">我们的愿景</view>
+          </view>
+        </view>
+      </view>
+      <view class="box">
+        <view>打通价值链，搭建全球化流通开放平台；</view>
+        <view>构建生态圈，提供供应链整体解决方案！</view>
+      </view>
     </view>
-  </view>
-  <view class="module-box bg__white">
-    <view class="top">
-      <text class="title">核心价值观</text>
-      <text class="sub">CORE VALUES</text>
+    <view class="item">
+      <view class="weui-panel_access">
+        <view class="weui-media-box_appmsg">
+          <view class="weui-media-box__hd">
+            <image class="weui-media-box__thumb2" src="/images/about-us2.png" />
+          </view>
+          <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+            <view class="weui-media-box__title">核心价值观</view>
+          </view>
+        </view>
+      </view>
+      <view class="box">
+        责任、创新、开放、共享、绿色
+      </view>
     </view>
-    <view class="weui-article box">
-      <view class="weui-article__p">责任、创新、开放、共享、绿色</view>
+    <view class="item">
+      <view class="weui-panel_access">
+        <view class="weui-media-box_appmsg">
+          <view class="weui-media-box__hd">
+            <image class="weui-media-box__thumb2" src="/images/about-us2.png" />
+          </view>
+          <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+            <view class="weui-media-box__title">联系我们</view>
+          </view>
+        </view>
+      </view>
+      <view class="box">
+        <view class="bold">广东深圳总部</view>
+        <view>电话：400-888-9383</view>
+        <view>地址：深圳市福田区沙头街道天安社区泰然五路天安数码城天祥大厦9楼</view>
+        <view class="bold">安徽运营中心</view>
+        <view>电话：400-888-9383</view>
+        <view>地址：安徽省合肥市高新技术开发区明珠大道198号G5栋5楼</view>
+        <view class="bold">杭州运营中心</view>
+        <view>电话：0571-87979592</view>
+        <view>地址：浙江省杭州市滨江区和瑞科技园T1栋7楼</view>
+        <view class="bold">广东佛山运营中心</view>
+        <view>电话：0757-26338202</view>
+        <view>地址：广东省佛山市顺德区北滘美的全球创新中心3楼</view>
+      </view>
     </view>
-  </view>
-  <view class="module-box bg__white">
-    <button class="button" type="primary" plain bindtap='makePhoneCall' data-phone='400-888-9383'>
-        <image class="phone" src="/images/icon/icon-phone_HL.png"></image>
-        400-888-9383
-    </button>
   </view>
 </view>
 </template>
@@ -69,38 +111,53 @@ export default class AboutUs extends wepy.page {
 </script>
 
 <style lang="less">
+.weui-media-box__thumb {
+    width: 60rpx;
+    height: 80rpx;
+    margin-right: 20rpx;
+}
+.weui-media-box__thumb2 {
+    width: 68rpx;
+    height: 48rpx;
+    margin-right: 20rpx;
+    display: block;
+}
 .image {
-  width: 100%;
-  font-size: 0;
+    width: 100%;
+    font-size: 0;
+    position: relative;
+}
+.img {
+    width: 100%;
+    height: 720rpx;
+}
+.img-box {
+    position: absolute;
+    top: 80rpx;
+    left: 32rpx;
+    width: 686rpx;
+    min-height: 360rpx;
+    padding: 40rpx;
+    box-sizing: border-box;
 }
 .module-box {
+    padding: 40rpx 70rpx;
+}
+.item {
     margin-top: 20rpx;
-    padding: 20rpx 24rpx 0;
-    .top {
-        border-left: 12rpx solid #115bed;
-        padding: 12rpx;
-        height: 46rpx;
-        line-height: 68rpx;
-        font-size: 36rpx;
-    }
-    .sub {
-        font-size: 20rpx;
-        color: #3d3d3d;
-        margin-left: 20rpx;
-    }
 }
-.weui-article.box {
-    padding: 20rpx 68rpx;
+.box {
+    font-size: 28rpx;
+    padding: 20rpx 0;
+    border-bottom: 1px solid #E4E7F0;
 }
-.weui-article__title {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 10rpx;
+.no-border {
+    border-bottom: none;
 }
-.button .phone {
-    width: 50rpx;
-    height: 50rpx;
-    margin-right: 20rpx;
-    vertical-align: middle;
+.weui-media-box__desc {
+    font-size: 20rpx;
+}
+.bold {
+    margin-top: 10rpx;
 }
 </style>

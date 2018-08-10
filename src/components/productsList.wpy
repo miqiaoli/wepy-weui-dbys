@@ -3,6 +3,9 @@
   <block wx:if="{{list.length > 0}}">
     <block wx:if="{{listType}}">
       <navigator wx:for="{{list}}" wx:key="id" url="/pages/product/details?id={{item.order_id}}" hover-class="navigator-hover">
+        <view class="title bold">
+          {{item.goods_class}}/{{item.goods_name}}/{{item.att2}}/{{item.att1}}
+        </view>
         <view class="weui-flex item">
           <block wx:if='{{item.image_url}}'>
             <image class="product-img" src='{{baseHrefUrl + item.image_url}}'></image>
@@ -11,17 +14,22 @@
             <image class="product-img" src='/images/icon/dbys-default.jpg'></image>
           </block>
           <view class="weui-flex__item cont">
-            <view class="title">
-              {{item.goods_class}}/{{item.goods_name}}/{{item.att2}}/{{item.att1}}
-            </view>
-            <view class="decs">
-              <text class="text">可供量：{{item.amount}}KG</text>
-              <text class="text">起批量：>{{item.min_batch_qtt}}KG</text>
+            <view class="weui-flex">
+              <view class="weui-flex__item">
+                <view class="decs">
+                  <image class="desc-img" src='/images/icon/gong.png'></image>
+                  <text class="desc-text">可供量：{{item.amount}}kg</text>
+                </view>
+                <view class="decs">
+                  <image class="desc-img" src='/images/icon/pi.png'></image>
+                  <text class="desc-text">起批量：≥{{item.min_batch_qtt}}kg</text>
+                </view>
+              </view>
+              <view class="red bold">¥
+                <text class="price bold">{{item.order_price}}</text>元/kg
+              </view>
             </view>
             <view class="decs">{{item.address}}</view>
-            <view class="red">¥
-              <text class="price">{{item.order_price}}</text>元/kg
-            </view>
           </view>
         </view>
       </navigator>
@@ -30,15 +38,23 @@
       <navigator wx:for="{{list}}" wx:key="id" url="/pages/product/details?id={{item.order_id}}" hover-class="navigator-hover">
         <view class="weui-flex item cont">
           <view class="weui-flex__item">
-            <view class="title">{{item.goods_class}}/{{item.goods_name}}/{{item.att2}}/{{item.att1}}</view>
-            <view class="decs">
-              <text class="text">可供量：{{item.amount}}KG</text>
-              <text class="text">起批量：大于{{item.min_batch_qtt}}KG</text>
+            <view class="title bold">{{item.goods_class}}/{{item.goods_name}}/{{item.att2}}/{{item.att1}}</view>
+            <view class="weui-flex">
+              <view class="weui-flex__item">
+                <view class="decs">
+                  <image class="desc-img" src='/images/icon/gong.png'></image>
+                  <text class="desc-text">可供量：{{item.amount}}kg</text>
+                </view>
+                <view class="decs">
+                  <image class="desc-img" src='/images/icon/pi.png'></image>
+                  <text class="desc-text">起批量：≥{{item.min_batch_qtt}}kg</text>
+                </view>
+              </view>
+              <view class="red bold">¥
+                <text class="price bold">{{item.order_price}}</text>元/kg
+              </view>
             </view>
             <view class="decs">{{item.address}}</view>
-          </view>
-          <view class="red">¥
-            <text class="price">{{item.order_price}}</text>元/kg
           </view>
         </view>
       </navigator>
@@ -109,6 +125,14 @@ export default class ProductsList extends wepy.component {
     margin-right: 40rpx;
     margin-top: 20rpx;
 }
+.desc-img {
+    width: 32rpx;
+    height: 32rpx;
+    margin-right: 10rpx;
+}
+.desc-text,.desc-img {
+    vertical-align: middle;
+}
 .cont {
     border-bottom: 2rpx solid #e9e7e7;
 }
@@ -128,6 +152,7 @@ export default class ProductsList extends wepy.component {
 }
 .red {
     color: #ff5759;
+    align-self: flex-end;
 }
 .active {
     color: #115bed;

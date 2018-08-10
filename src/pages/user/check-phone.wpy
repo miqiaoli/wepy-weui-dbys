@@ -3,16 +3,38 @@
   <view class="page__bd page__bd_spacing">
     <view class="weui-cells__tips">请绑定接收信息手机号</view>
     <form bindsubmit="loginBtnClick">
-      <view class="item-input">
+        <view class="weui-cells__title">手机号</view>
+        <view class="weui-cells weui-cells_after-title">
+          <view class="weui-cell weui-cell_input h4">
+            <view class="weui-cell__bd">
+              <input type="number" placeholder="请输入手机号" value="{{phone}}" name="phone" bindinput="getNameInput" />
+            </view>
+          </view>
+        </view>
+        <view class="weui-cells__title">验证码</view>
+        <view class="weui-cells weui-cells_after-title">
+          <view class="weui-cell weui-cell_input weui-cell_vcode h4">
+            <view class="weui-cell__bd">
+               <input type="number" placeholder="请输入短信验证码" name="yzm" bindinput="getYzmInput" />
+            </view>
+            <view class="weui-cell__ft">
+              <button class="weui-btn h4 yzm-btn" type="primary" disabled="{{yzmBtn.isShow}}" @tap="yzmClick">{{yzmBtn.msg}}</button>
+            </view>
+          </view>
+        </view>
+      <!-- <view class="item-input">
         <input type="number" placeholder="请输入手机号" value="{{phone}}" name="phone" bindinput="getNameInput" />
       </view>
       <view class="weui-flex item-input">
         <input type="number" placeholder="请输入短信验证码" name="yzm" bindinput="getYzmInput" />
         <button class="weui-btn yzm-btn" type="primary" plain="true" disabled="{{yzmBtn.isShow}}" @tap="yzmClick">{{yzmBtn.msg}}</button>
-      </view>
-      <view class="item-input">
+      </view> -->
+      <view class="weui-btn-area">
         <button class="weui-btn" type="primary" formType="submit">绑定</button>
       </view>
+      <!-- <view class="item-input">
+        <button class="weui-btn" type="primary" formType="submit">绑定</button>
+      </view> -->
 
     </form>
   </view>
@@ -105,20 +127,50 @@ export default class CheckPhone extends wepy.page {
 }
 </script>
 <style lang="less">
-.item-input {
-    position: relative;
-    margin-bottom: 30rpx;
-    input {
-        padding: 20rpx;
-        height: 44rpx;
-        line-height: 44rpx;
-        background-color: #efefe;
-        flex: 1;
-        border-radius: 10rpx;
-    }
-    .yzm-btn {
-        // width: 240rpx;
-        margin: 0 0 0 20rpx;
-    }
+.page {
+    height: 100vh;
+}
+.weui-cell {
+    background: #F9F9F9;
+    border-radius: 4px;
+}
+.weui-cells__title {
+    margin-top: 0;
+    padding-top: 0.77em;
+    color: #1E1E1E;
+    font-size: 32rpx;
+}
+.weui-btn-area {
+    margin-top: 80rpx;
+}
+.weui-other {
+    margin-top: 40rpx;
+}
+.weui-cells:after,
+.weui-cells:before {
+    border: none;
+}
+.weui-phone {
+    width: 100%;
+    position: fixed;
+    left: 0;
+    bottom: 80rpx;
+}
+.weui-index image {
+    width: 100rpx;
+    height: 100rpx;
+    position: fixed;
+    right: 80rpx;
+    bottom: 160rpx;
+}
+.yzm-btn {
+    width: 196rpx;
+    line-height: 60rpx;
+}
+.phone {
+    width: 18px;
+    height: 14px;
+    vertical-align: middle;
+    margin-right: 10rpx;
 }
 </style>

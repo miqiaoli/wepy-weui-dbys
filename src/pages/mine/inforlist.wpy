@@ -1,15 +1,15 @@
 <template>
 <view class="page bg__white">
-  <view class="page__bd">
+  <view class="page__bd page__bd_spacing">
     <view class="weui-tab navbar">
-      <view class="weui-tab__panel">
+      <!-- <view class="weui-tab__panel"> -->
         <view class="weui-tab__content">
           <InforList :list.sync="inforList" idType='0' listType="true" :loading.sync="loading" :noMore.sync="noMoreList" :noList.sync="noList">
             <view slot="icon">
               <image class="icon-supply" src="/images/icon/icon-supply.png" />
             </view>
           </InforList>
-        </view>
+        <!-- </view> -->
       </view>
       <view class="weui-btn-area">
         <button class="weui-flex__item" type="primary" @tap='new'>
