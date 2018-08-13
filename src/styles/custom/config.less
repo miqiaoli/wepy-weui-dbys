@@ -7,7 +7,10 @@
 
 button[type=primary] {
   color: @color-white;
-  background-color: @color-primary;
+  // background-color: @color-primary;
+background: -webkit-linear-gradient(left, #6A7EEE, #C86DD7);
+background: -o-linear-gradient(left, #6A7EEE, #C86DD7);
+background: linear-gradient(to right, #6A7EEE, #C86DD7); /* 标准的语法 */
 }
 
 .button-hover[type=primary] {
@@ -15,10 +18,15 @@ button[type=primary] {
   background-color: @color-primary-hover;
 }
 
+button[disabled][type=primary] {
+  color: @color-white;
+  background: #AFADE3;
+}
+
 button[type=primary][plain] {
   color: @color-primary;
   border: 1px solid @color-primary;
-  background-color: transparent;
+  background: transparent;
 }
 
 .button-hover[type=primary][plain] {
@@ -27,10 +35,6 @@ button[type=primary][plain] {
   background-color: transparent;
 }
 
-button[disabled][type=primary] {
-  color: @color-primary-font-hover;
-  background-color: @color-primary-hover;
-}
 
 button[disabled][type=primary][plain] {
   color: @color-primary-font-hover;

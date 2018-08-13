@@ -5,10 +5,12 @@
     </view>
     <view wx:for="{{list}}" wx:for-item="single" wx:key="id">
       <view class='details'>
-        <view class='name'>{{single.productName}}-{{single.providerName}}</view>
+        <view class='name'>{{single.productName}}
+          <!-- -{{single.providerName}} -->
+        </view>
         <view class='flex-pos'>
           <view class='des'>供应商</view>
-          <view class='des-answer'>合肥圆融</view>
+          <view class='des-answer'>第八元素 / 合肥圆融 </view>
         </view>
         <view class='flex-pos'>
           <view class='des'>数量（吨/月）</view>
@@ -42,20 +44,9 @@
           <view class='des'>密度（g/cm³）</view>
           <view class='des-answer'>{{single.midu}}</view>
         </view>
+          <image wx:if="{{single.meterialImg}}" class="" style="width: 100%;" mode="aspectFill"  src="{{imgHost}}{{single.meterialImg}}" />
       </view>
-      <!-- <view class='call'>
-      <button bindtap='makePhoneCall' type="primary">电话订购</button>
-    </view> -->
-      <!-- <view class='br-h'></view> -->
     </view>
-    <!-- <view class='call'>
-    <view class='call-pos'>
-      
-      <view class='call-text'><image style="vertical-align: middle; width: 40rpx; height: 40rpx;" src='/images/icon_call.png' />  咨询客服</view>
-      <view class='phone'>400-888-9383</view>
-    </view>
-    <button bindtap='makePhoneCall' class='btn'>我要订货</button>
-  </view> -->
     <view class='call'>
       <button bindtap='makePhoneCall' type="primary">电话订购</button>
     </view>
@@ -89,7 +80,7 @@ export default class overseasSingleDetails extends wepy.page {
   // mixins = [user]
   mixins = [base];
   config = {
-    navigationBarTitleText: "海外资源详情"
+    navigationBarTitleText: "环球资源详情"
   };
   data = {
     list: "",
@@ -274,6 +265,7 @@ export default class overseasSingleDetails extends wepy.page {
       padding: 8rpx 28rpx;
       font-size: 28rpx;
       color: #3b55e7;
+      background: rgba(59,85,231,0.05);
       border: 1px solid rgba(59, 85, 231, 0.5);
     }
     .form {

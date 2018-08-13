@@ -5,9 +5,8 @@
       <navigator url="/pages/other/trade-list">
         <view class="weui-flex trade">
           <view class="weui-flex__item">
-            <view class="title">恭喜{{item.buyer}}和{{item.seller}}成交 {{item.variet}}{{item.productName}}{{item.tradestyle}}</view>
+            <view class="title">恭喜{{item.buyer}}和{{item.seller}}成交 {{item.variet}}{{item.productName}}{{item.tradestyle}}{{item.tradeCount}}KG</view>
           </view>
-          <view class="color-blue">{{item.tradeCount}}KG</view>
         </view>
       </navigator>
     </swiper-item>

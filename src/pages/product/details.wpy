@@ -1,10 +1,18 @@
 <template>
 <Swiper :list.sync="swipers" name='image' height="360"></Swiper>
-<view class="weui-media-box__title font-red bg__white page__bd_spacing">¥ <text class="font-50">{{itemData.order_price}}</text> 元/kg</view>
-<view class="weui-panel weui-panel_access">
+<view class="weui-cells weui-cells_after-title">
+  <view class="weui-cell">
+    <view class="weui-cell__hd">
+      <view class="weui-media-box__title">{{itemData.goods_name}} {{itemData.att2}}/{{itemData.att1}}</view>
+    </view>
+    <view class="weui-flex__item text-right">
+      <view class="font-red">¥ <text class="font-50">{{itemData.order_price}}</text> 元/kg</view>
+    </view>
+  </view>
+</view>
+<!-- <view class="weui-panel weui-panel_access">
   <view class="weui-panel__bd">
     <view class="weui-media-box weui-media-box_text">
-      <view class="weui-media-box__title weui-media-box__title_in-text">{{itemData.goods_name}} {{itemData.att2}}/{{itemData.att1}}</view>
       <view class="weui-media-box__desc">
         <view>
           <text class="text">起批量：>{{itemData.min_batch_qtt}}KG</text>
@@ -15,128 +23,157 @@
       </view>
     </view>
   </view>
+</view> -->
+<view class="module-box bg__white">
+  <view class="desc-box weui-flex">
+    <view class="item weui-flex">
+      <view class="weui-cell__hd">
+        <image class="icon" src="/images/icon/product.png"></image>
+      </view>
+      <view class="weui-cell__bd">起批量：≥{{itemData.min_batch_qtt}}kg</view>
+    </view>
+    <view class="item weui-flex">
+      <view class="weui-cell__hd">
+        <image class="icon" src="/images/icon/product.png"></image>
+      </view>
+      <view class="weui-cell__bd">可供量：{{itemData.amount}}kg</view>
+    </view>
+    <view class="item weui-flex">
+      <view class="weui-cell__hd">
+        <image class="icon" src="/images/icon/product.png"></image>
+      </view>
+      <view class="weui-cell__bd">厂商：{{itemData.att1}}</view>
+    </view>
+    <view class="weui-flex page__bd_spacing">
+      <view class="weui-cell__bd">存货地：</view>
+      <view class="weui-cell__ft">{{itemData.address}}</view>
+    </view>
+  </view>
 </view>
 <view class="module-box bg__white">
-  <view class="top">
+  <!-- <view class="top">
     <text class="title">店铺信息</text>
     <text class="sub">INFORMATION</text>
-  </view>
+  </view> -->
+  <view class="weui-cells__title">店铺信息</view>
   <view class="weui-cells weui-cells-no-spacing">
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">联系卖家</view>
       <view class="weui-cell__ft">{{itemData.linkman}}</view>
     </view>
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">联系方式</view>
       <view class="weui-cell__ft font-primary" bindtap='makePhoneCall' data-phone='{{itemData.mbphone}}'>{{itemData.mbphone}}</view>
     </view>
-    <view class="weui-cell" wx:if="{{itemData.cr_image.length > 0}}">
+    <view class="weui-flex" wx:if="{{itemData.cr_image.length > 0}}">
       <view class="weui-cell__bd">企业征信</view>
       <view class="weui-cell__ft">
         <image style="width: 30rpx; height: 30rpx;" mode="widthFix" src="{{baseHrefUrl + itemData.cr_image}}"></image>
       </view>
     </view>
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">所在区域</view>
       <view class="weui-cell__ft">{{itemData.company_addr}}</view>
     </view>
   </view>
 </view>
 <view class="module-box bg__white">
-  <view class="top">
+  <!-- <view class="top">
     <text class="title">商品详情</text>
     <text class="sub">PRODUCT DETAILS</text>
-  </view>
+  </view> -->
+  <view class="weui-cells__title">商品详情</view>
   <view class="weui-cells weui-cells-no-spacing">
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">品种</view>
       <view class="weui-cell__ft">{{itemData.goods_class}}</view>
     </view>
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">品名</view>
       <view class="weui-cell__ft">{{itemData.goods_name}}</view>
     </view>
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">牌号</view>
       <view class="weui-cell__ft">{{itemData.att2}}</view>
     </view>
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">厂商</view>
       <view class="weui-cell__ft">{{itemData.att1}}</view>
     </view>
   </view>
 </view>
 <view class="module-box bg__white">
-  <view class="top">
+  <!-- <view class="top">
     <text class="title">交易信息</text>
     <text class="sub">INFORMATION</text>
-  </view>
+  </view> -->
+  <view class="weui-cells__title">交易信息</view>
   <view class="weui-cells weui-cells-no-spacing">
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">配送方式</view>
       <view class="weui-cell__ft">{{itemData.csg_way}}</view>
     </view>
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">结算方式</view>
       <view class="weui-cell__ft">{{itemData.att21}}</view>
     </view>
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">交收方式</view>
       <view class="weui-cell__ft">{{itemData.jsfs}}</view>
     </view>
-    <view class="weui-cell" wx:if="{{itemData.goods_class_id === 1}}">
+    <view class="weui-flex" wx:if="{{itemData.goods_class_id === 1}}">
       <view class="weui-cell__bd">装卸费(仓库收取)</view>
       <view class="weui-cell__ft" wx:if="{{itemData.att50 ===1}}">挂牌价不含装卸 {{itemData.att51}}元/吨</view>
       <view class="weui-cell__ft" wx:elif="{{itemData.att50 ===2}}">挂牌价含装卸 {{itemData.att51}}元/吨</view>
     </view>
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">存货地</view>
       <view class="weui-cell__ft">{{itemData.address}}</view>
     </view>
-    <view class="weui-cell" wx:if="{{itemData.att65===1}}">
+    <view class="weui-flex" wx:if="{{itemData.att65===1}}">
       <view class="weui-cell__bd">配送范围</view>
       <view class="weui-cell__ft">{{itemData.att40}}</view>
     </view>
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">备注描述</view>
-      <view class="weui-cell__ft" wx:if="itemData.remark">{{itemData.remark }}</view>
+      <view class="weui-cell__ft" wx:if="{{itemData.remark}}">{{itemData.remark }}</view>
       <view class="weui-cell__ft" wx-else>暂无</view>
     </view>
   </view>
   <view class="weui-cells">
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">买方支付保证金</view>
       <view class="weui-cell__ft">{{itemData.other_value}}%</view>
     </view>
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">卖方支付保证金</view>
       <view class="weui-cell__ft">{{itemData.deposit_value}}%</view>
     </view>
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">买方验货后付款</view>
       <view class="weui-cell__ft">{{itemData.att62}}%</view>
     </view>
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">买方验票后付款</view>
       <view class="weui-cell__ft">{{itemData.att63}}%</view>
     </view>
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">保证金截止日</view>
       <view class="weui-cell__ft">订单生成后 {{itemData.att41/100}} 小时</view>
     </view>
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">付款截止日</view>
       <view class="weui-cell__ft">合同生成后 {{itemData.att42}} 天</view>
     </view>
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">发货截止日</view>
       <view class="weui-cell__ft">合同生成后 {{itemData.att45}} 天</view>
     </view>
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">验货截止日</view>
       <view class="weui-cell__ft">合同生成后 {{itemData.att43}} 天</view>
     </view>
-    <view class="weui-cell">
+    <view class="weui-flex">
       <view class="weui-cell__bd">验票截止日</view>
       <view class="weui-cell__ft">合同生成后 {{itemData.att44}} 天</view>
     </view>
@@ -144,96 +181,98 @@
 </view>
 <block wx:if="{{itemData.goods_class_id===2}}">
   <view class="module-box bg__white">
-    <view class="top">
+    <!-- <view class="top">
       <text class="title">商品基本属性</text>
       <text class="sub">BASIC ATTRIBUTES</text>
-    </view>
+    </view> -->
+    <view class="weui-cells__title">商品基本属性</view>
     <view class="weui-cells weui-cells-no-spacing">
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">产品形态</view>
         <view class="weui-cell__ft">{{itemData.attlist[0].cpxt}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">产品颜色</view>
         <view class="weui-cell__ft">{{itemData.attlist[0].cpys}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">冲击方法</view>
         <view class="weui-cell__ft">{{itemData.attlist[0].cjff}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">冲击强度(KJ/m²)</view>
         <view class="weui-cell__ft">{{itemData.attlist[0].cjqd_s}} - {{itemData.attlist[0].cjqd_e}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">包装净重</view>
         <view class="weui-cell__ft">{{itemData.attlist[0].bzjz}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">环保级别</view>
         <view class="weui-cell__ft">{{itemData.attlist[0].hbjb}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">熔体流动速率(g/10min)</view>
         <view class="weui-cell__ft">{{itemData.attlist[0].rtldsl_s}} - {{itemData.attlist[0].rtldsl_e}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">灰分(%)</view>
         <view class="weui-cell__ft">{{itemData.attlist[0].huifen_s}} - {{itemData.attlist[0].huifen_e}}</view>
       </view>
     </view>
   </view>
   <view class="module-box bg__white">
-    <view class="top">
+    <!-- <view class="top">
       <text class="title">商品扩展属性</text>
       <text class="sub">BASIC ATTRIBUTES</text>
-    </view>
+    </view> -->
+    <view class="weui-cells__title">商品扩展属性</view>
     <view class="weui-cells weui-cells-no-spacing">
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">上游产品(g/10min)</view>
         <view class="weui-cell__ft">{{itemData.attlist[1].sycp}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">推荐用途</view>
         <view class="weui-cell__ft">{{itemData.attlist[1].tjyt}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">含水量(%)</view>
         <view class="weui-cell__ft">{{m1.getNumber(itemData.attlist[1].hsl_s)}} - {{m1.getNumber(itemData.attlist[1].hsl_e)}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">弯曲强度(MPa)</view>
         <view class="weui-cell__ft">{{m1.getNumber(itemData.attlist[1].wqqd_s)}} - {{m1.getNumber(itemData.attlist[1].wqqd_e)}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">弯曲模量(MPa)</view>
         <view class="weui-cell__ft">{{m1.getNumber(itemData.attlist[1].wqml_s)}} - {{m1.getNumber(itemData.attlist[1].wqml_e)}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">拉伸强度(MPa)</view>
         <view class="weui-cell__ft">{{m1.getNumber(itemData.attlist[1].lsqd_s)}} - {{m1.getNumber(itemData.attlist[1].lsqd_e)}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">断裂伸长率(%)</view>
         <view class="weui-cell__ft">{{m1.getNumber(itemData.attlist[1].dlscl_s)}}- {{m1.getNumber(itemData.attlist[1].dlscl_e)}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">阻燃</view>
         <view class="weui-cell__ft">{{m1.attlist[1].zuran}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">热变形温度(℃)</view>
         <view class="weui-cell__ft">{{m1.getNumber(itemData.attlist[1].rbxwd)}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">维卡软化点(℃)</view>
         <view class="weui-cell__ft">{{m1.getNumber(itemData.attlist[1].wkrhd)}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">洛氏硬度</view>
         <view class="weui-cell__ft">{{m1.getNumber(itemData.attlist[1].lsyd)}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">成型收缩率(%)</view>
         <view class="weui-cell__ft">{{m1.getNumber(itemData.attlist[1].cxssl)}}</view>
       </view>
@@ -242,92 +281,94 @@
 </block>
 <block wx:elif="{{itemData.goods_class_id===3}}">
   <view class="module-box bg__white">
-    <view class="top">
+    <!-- <view class="top">
       <text class="title">商品基本属性</text>
       <text class="sub">BASIC ATTRIBUTES</text>
-    </view>
+    </view> -->
+    <view class="weui-cells__title">商品基本属性</view>
     <view class="weui-cells weui-cells-no-spacing">
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">包装净重</view>
         <view class="weui-cell__ft">{{itemData.attlist[0].bzjz}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">推荐用途</view>
         <view class="weui-cell__ft">{{itemData.attlist[0].tjyt}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">冲击强度(KJ/m²)</view>
         <view class="weui-cell__ft">{{itemData.attlist[0].cjqd_s}} - {{itemData.attlist[0].cjqd_e}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">拉伸强度(MPa)</view>
         <view class="weui-cell__ft">{{itemData.attlist[0].lsqd_s}} - {{itemData.attlist[0].lsqd_e}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">阻燃</view>
         <view class="weui-cell__ft">{{itemData.attlist[0].zuran}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">产品颜色</view>
         <view class="weui-cell__ft">{{itemData.attlist[0].cpys}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">熔体流动速率(g/10min)</view>
         <view class="weui-cell__ft">{{itemData.attlist[0].rtldsl_s}} - {{itemData.attlist[0].rtldsl_e}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">密度(g/cm³)</view>
         <view class="weui-cell__ft">{{itemData.attlist[0].midu_s}} - {{itemData.attlist[0].midu_e}}</view>
       </view>
     </view>
   </view>
   <view class="module-box bg__white">
-    <view class="top">
+    <!-- <view class="top">
       <text class="title">商品扩展属性</text>
       <text class="sub">BASIC ATTRIBUTES</text>
-    </view>
+    </view> -->
+    <view class="weui-cells__title">商品扩展属性</view>
     <view class="weui-cells weui-cells-no-spacing">
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">灰分(%)</view>
         <view class="weui-cell__ft">{{m1.getNumber(itemData.attlist[1].huifen_s)}}- {{m1.getNumber(itemData.attlist[1].huifen_e)}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">断裂伸长率(%)</view>
         <view class="weui-cell__ft">{{m1.getNumber(itemData.attlist[1].dlscl_s)}}- {{m1.getNumber(itemData.attlist[1].dlscl_e)}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">弯曲模量(MPa)</view>
         <view class="weui-cell__ft">{{m1.getNumber(itemData.attlist[1].wqml_s)}} - {{m1.getNumber(itemData.attlist[1].wqml_e)}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">弯曲强度(MPa)</view>
         <view class="weui-cell__ft">{{m1.getNumber(itemData.attlist[1].wqqd_s)}} - {{m1.getNumber(itemData.attlist[1].wqqd_e)}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">收缩率(%)</view>
         <view class="weui-cell__ft">{{m1.getNumber(itemData.attlist[1].ssl_s)}} - {{m1.getNumber(itemData.attlist[1].ssl_e)}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">含水量(%)</view>
         <view class="weui-cell__ft">{{m1.getNumber(itemData.attlist[1].hsl_s)}} - {{m1.getNumber(itemData.attlist[1].hsl_e)}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">低温冲击方法(KJ/m²)</view>
         <view class="weui-cell__ft">{{itemData.attlist[1].dwcjff}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">低温冲击强度</view>
         <view class="weui-cell__ft">{{m1.getNumber(itemData.attlist[1].dwcjqd_s)}} - {{m1.getNumber(itemData.attlist[1].dwcjqd_e)}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">维卡软化点(℃)</view>
         <view class="weui-cell__ft">{{m1.getNumber(itemData.attlist[1].wkrhd)}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">热变形温度(℃)</view>
         <view class="weui-cell__ft">{{m1.getNumber(itemData.attlist[1].rbxwd)}}</view>
       </view>
-      <view class="weui-cell">
+      <view class="weui-flex">
         <view class="weui-cell__bd">物料说明</view>
         <view class="weui-cell__ft">{{itemData.attlist[1].wlsm}}</view>
       </view>
@@ -335,10 +376,11 @@
   </view>
 </block>
 <view class="module-box bg__white">
-  <view class="top">
+  <!-- <view class="top">
     <text class="title">商品检测报告</text>
     <text class="sub">INSPECTION REPORT</text>
-  </view>
+  </view> -->
+  <view class="weui-cells__title">商品检测报告</view>
   <view class="box text-center">
     <block wx:if="{{itemData.imagejclist.length > 0}}">
       <block wx:for="{{itemData.imagejclist}}" wx:key="*this">
@@ -349,10 +391,11 @@
   </view>
 </view>
 <view class="module-box bg__white">
-  <view class="top">
+  <!-- <view class="top">
     <text class="title">商品描述</text>
     <text class="sub">PRODUCT DESCRIPTION</text>
-  </view>
+  </view> -->
+  <view class="weui-cells__title">商品描述</view>
   <view class="box text-center">
     <block wx:if="{{itemData.intro}}">
       <view>{{itemData.intro}}</view>
@@ -364,13 +407,23 @@
   对不起！该商品目前仅支持在PC端进行交易！
 </view>
 <view class="foot-btn bg__white">
-  <button class="button" type="primary" plain @tap="goHome">
+  <view class="user-phone weui-flex" bindtap='makePhoneCall' data-phone='400-888-9383'>
+    <view class="weui-cell__hd">
+      <image class="icon" src="/images/icon/icon-phone_HL.png"></image>
+    </view>
+    <view class="weui-cell__bd bold">咨询客服</view>
+    <view class="weui-cell__ft weui-cell__ft_in-access text-right">400-888-9383</view>
+  </view>
+  <view class="logo" plain @tap="goHome">
+    <image class="logo-icon" mode="widthFix" src="/images/otimes-logo.png"></image>
+  </view>
+  <!-- <button class="button" type="primary" plain @tap="goHome">
     <image class="logo" mode="widthFix" src="/images/otimes-logo.png"></image>
-  </button>
-  <button class="button" type="primary" bindtap='makePhoneCall' data-phone='400-888-9383'>
+  </button> -->
+  <!-- <button class="button" type="primary" bindtap='makePhoneCall' data-phone='400-888-9383'>
       <image class="phone" src="/images/icon/icon-phone.png"></image>
       400-888-9383
-  </button>
+  </button> -->
 </view>
 </template>
 
@@ -464,7 +517,8 @@ export default class ProductDetails extends wepy.page {
 }
 .module-box {
     margin-top: 20rpx;
-    padding: 20rpx 0 50rpx;
+    padding: 20rpx 0 0;
+    font-size: 28rpx;
     .top {
         border-left: 12rpx solid #115bed;
         padding: 12rpx;
@@ -481,13 +535,23 @@ export default class ProductDetails extends wepy.page {
 .weui-cells.weui-cells-no-spacing {
     margin-top: 0;
 }
+.weui-cells .weui-flex {
+    padding: 10px 15px;
+    align-items: center;
+}
+.weui-cells__title {
+    color: #1E1E1E;
+    font-weight: 400;
+}
 .weui-cell__bd {
-    color: #999999;
+    min-width: 140rpx;
+    color: #8F8E94;
     flex: none;
-    margin-right: 10rpx;
+    margin-right: 44rpx;
 }
 .weui-cell__ft {
-    color: #3d3d3d;
+    color: #3D3D3D;
+    text-align: left;
     flex: 1;
 }
 .tips {
@@ -501,24 +565,44 @@ export default class ProductDetails extends wepy.page {
     text-align: center;
 }
 .foot-btn {
-    padding: 24rpx;
+    // padding: 24rpx;
 }
-.button {
-    border-radius: 8rpx;
-    margin-bottom: 20rpx;
+.logo {
+    padding: 50rpx 0;
+    background: rgba(228,231,240,0.70);
+    text-align: center;
 }
-.button .logo {
+.logo-icon {
     width: 450rpx;
     vertical-align: middle;
-}
-.button .phone {
-    width: 50rpx;
-    height: 50rpx;
-    margin-right: 20rpx;
-    vertical-align: middle;
+    margin: auto;
 }
 .image_jc {
     display: block;
     width: 750rpx;
+}
+.box {
+    font-size: 14px;
+    color: #A1A6BB;
+}
+.user-phone {
+    margin-bottom: 40rpx;
+    padding: 24rpx 24rpx 0;
+    align-items: center;
+    font-size: 28rpx;
+}
+.icon {
+    display: block;
+    width: 40rpx;
+    height: 40rpx;
+    margin-right: 20rpx;
+}
+.desc-box {
+    flex-wrap: wrap;
+}
+.desc-box .item {
+    width: 50%;
+    padding: 10rpx 24rpx;
+    box-sizing: border-box;
 }
 </style>

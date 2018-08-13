@@ -1,18 +1,37 @@
 <template>
-  <view class="login page bg__white login-bg">
-    <!-- <image class="login-bg" mode="widthFix" src="/images/login-bg.jpg"></image> -->
-    <view class="page__bd">
+  <view class="login page bg__white">
+    <image class="login-bg" src="/images/login-bg.png"></image>
+    <view class="page__bd page__bd_spacing">
       <form class="form" bindsubmit="loginBtnClick">
-        <view class="item-input">
+        <view class="weui-cells__title">用户名</view>
+        <view class="weui-cells weui-cells_after-title">
+          <view class="weui-cell weui-cell_input h4">
+            <view class="weui-cell__bd">
+              <input type="text" name='username' placeholder="请输入用户名" />
+            </view>
+          </view>
+        </view>
+          <view class="weui-cells__title">密码</view>
+          <view class="weui-cells weui-cells_after-title">
+            <view class="weui-cell weui-cell_input h4">
+              <view class="weui-cell__bd">
+                <input type="password" name="password" placeholder="请输入密码" />
+              </view>
+            </view>
+          </view>
+          <view class="weui-btn-area">
+             <button class="weui-btn" type="primary" formType="submit">登录</button>
+          </view>
+        <!-- <view class="item-input">
           <input type="text" name='username' placeholder="请输入用户名" />
         </view>
         <view class="item-input">
           <input type="password" name="password" placeholder="请输入密码" />
-        </view>
-        <view class="item-input page__bd_spacing">
+        </view> -->
+        <!-- <view class="item-input page__bd_spacing">
           <button class="weui-btn" type="primary" formType="submit">登录</button>
-        </view>
-        <view class="weui-flex page__bd_spacing">
+        </view> -->
+        <view class="weui-flex">
           <view class="font-primary">
             <navigator url="./registered?token_access={{token_access}}" open-type="reLaunch" hover-class="navigator-hover">注册新用户</navigator>
           </view>
@@ -22,9 +41,13 @@
           </view>
         </view>
       </form>
-      <view class="go-home">
+      <view class="weui-phone text-center">
+        <image class="phone" src="/images/icon/phone.png"></image>
+        <text class="font-primary h4" bindtap='makePhoneCall' data-phone='400-888-9383'>客服热线：400-888-9383</text>
+      </view>
+      <view class="weui-index">
         <navigator url="/pages/index" open-type="reLaunch" hover-class="navigator-hover">
-          <image class="icon-home" src='/images/icon/icon-home.png'></image>
+          <image class="" src="/images/back_index.png"></image>
         </navigator>
       </view>
     </view>
@@ -107,47 +130,55 @@ export default class Index extends wepy.page {
 }
 </script>
 <style lang="less">
-.go-home {
-  position: fixed;
-  right: 40rpx;
-  bottom: 60%;
-}
-.icon-home {
-  width: 100rpx;
-  height: 100rpx;
-}
-.item-input {
-  position: relative;
-  // margin-bottom: 30rpx;
-  input {
-    padding: 20rpx;
-    height: 44rpx;
-    line-height: 44rpx;
-    background-color: #fff;
-    // border-radius: 10rpx;
-    border-bottom: 2rpx solid #e9e7e7;
-  }
+.page {
+    height: 100vh;
 }
 .login-bg {
-  width: 100%;
-  height: 100%;
-  background-image: url(http://ogm9o9o2u.bkt.clouddn.com/login-bg.jpg);
-  background-size: cover;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  z-index: -1;
+    width: 750rpx;
+    height: 360rpx;
 }
-.form {
-  width: 100%;
-  position: absolute;
-  left: 0;
-  bottom: 250rpx;
-  z-index: 2;
+.weui-cell {
+    background: #F9F9F9;
+    border-radius: 4px;
 }
-.weui-btn {
-  margin: 60rpx 0;
+.weui-cells__title {
+    margin-top: 0;
+    padding-top: 0.77em;
+    color: #1E1E1E;
+    font-size: 32rpx;
+}
+.weui-btn-area {
+    margin-top: 80rpx;
+    margin-bottom: 20rpx;
+}
+.weui-other {
+    margin-top: 40rpx;
+}
+.weui-cells:after,
+.weui-cells:before {
+    border: none;
+}
+.weui-phone {
+    width: 100%;
+    position: fixed;
+    left: 0;
+    bottom: 80rpx;
+}
+.weui-index image {
+    width: 100rpx;
+    height: 100rpx;
+    position: fixed;
+    right: 40rpx;
+    bottom: 60rpx;
+}
+.yzm-btn {
+    width: 196rpx;
+    line-height: 60rpx;
+}
+.phone {
+    width: 18px;
+    height: 14px;
+    vertical-align: middle;
+    margin-right: 10rpx;
 }
 </style>

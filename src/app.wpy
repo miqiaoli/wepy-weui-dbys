@@ -5,7 +5,7 @@ import 'wepy-async-function'
 
 export default class extends wepy.app {
   config = {
-    pages: [ 
+    pages: [
       'pages/index',
       'pages/fish-list',
       'pages/product/list',
@@ -45,7 +45,7 @@ export default class extends wepy.app {
       'pages/overseas/details',
       'pages/user/getUserInfo',
       'pages/other/chart-price',
-      
+
     ],
     window: {
       navigationBarTitleText: '第八元素',
@@ -103,7 +103,7 @@ export default class extends wepy.app {
   }
 
   onLoad() {
-    
+
   }
   onShow(options) {
     this.$updateGlobalData('token_access',wepy.getStorageSync('token_access') || '')
@@ -154,7 +154,7 @@ export default class extends wepy.app {
 @import "./styles/custom/index.less";
 
 .page {
-    height: 100%;
+    min-height: 100vh;
     font-size: 34rpx;
 }
 .page__bd {

@@ -24,7 +24,7 @@ import user from '../../mixins/user'
 export default class overseasSingleList extends wepy.page {
   mixins = [user]
   config = {
-    navigationBarTitleText: '海外单个国家资源列表'
+    navigationBarTitleText: '环球资源列表'
   }
   data = {
     list: [],

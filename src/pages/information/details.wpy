@@ -12,40 +12,40 @@
       <view class="weui-cell__ft font-desc">{{items.date}}</view>
     </view>
     <view class="weui-cell">
-      <view class="weui-cell__bd">品种</view>
-      <view class="weui-cell__ft">{{varietyName}}</view>
+      <view class="weui-cell__hd">品种</view>
+      <view class="weui-cell__bd">{{varietyName}}</view>
     </view>
     <view class="weui-cell">
-      <view class="weui-cell__bd">品名</view>
-      <view class="weui-cell__ft">{{items.productName}}</view>
+      <view class="weui-cell__hd">品名</view>
+      <view class="weui-cell__bd">{{items.productName}}</view>
     </view>
     <view class="weui-cell">
-      <view class="weui-cell__bd">牌号</view>
-      <view class="weui-cell__ft">{{items.grade}}</view>
+      <view class="weui-cell__hd">牌号</view>
+      <view class="weui-cell__bd">{{items.grade}}</view>
     </view>
     <view class="weui-cell">
-      <view class="weui-cell__bd">厂商</view>
-      <view class="weui-cell__ft">{{items.grades}}</view>
+      <view class="weui-cell__hd">厂商</view>
+      <view class="weui-cell__bd">{{items.grades}}</view>
     </view>
     <view class="weui-cell">
-      <view class="weui-cell__bd">颜色</view>
-      <view class="weui-cell__ft">{{items.colour}}</view>
+      <view class="weui-cell__hd">颜色</view>
+      <view class="weui-cell__bd">{{items.colour}}</view>
     </view>
     <view class="weui-cell">
-      <view class="weui-cell__bd">数量</view>
-      <view class="weui-cell__ft">{{items.count}} KG</view>
+      <view class="weui-cell__hd">数量</view>
+      <view class="weui-cell__bd">{{items.count}} KG</view>
     </view>
     <view class="weui-cell">
-      <view class="weui-cell__bd">联系人</view>
-      <view class="weui-cell__ft">{{items.linkman}}</view>
+      <view class="weui-cell__hd">联系人</view>
+      <view class="weui-cell__bd">{{items.linkman}}</view>
     </view>
     <view class="weui-cell">
-      <view class="weui-cell__bd">电话</view>
-      <view class="weui-cell__ft font-primary" bindtap='makePhoneCall' data-phone='{{items.phone}}'>{{items.phone}}</view>
+      <view class="weui-cell__hd">电话</view>
+      <view class="weui-cell__bd font-primary" bindtap='makePhoneCall' data-phone='{{items.phone}}'>{{items.phone}}</view>
     </view>
     <view class="weui-cell">
-      <view class="weui-cell__bd">存货地</view>
-      <view class="weui-cell__ft">{{items.place}}</view>
+      <view class="weui-cell__hd">存货地</view>
+      <view class="weui-cell__bd">{{items.place}}</view>
     </view>
     <view class="weui-panel weui-panel_access">
       <view class="weui-panel__bd">
@@ -158,25 +158,27 @@ export default class InformationDetails extends wepy.page {
     padding-bottom: 100rpx;
 }
 .tips {
-    width: 96%;
+    width: 100%;
     position: absolute;
     top: 0;
-    padding: 0 2%;
+    left: 0;
+    background: #f6f7fe;
+    border: 1px solid #98a5f2;
 }
 .tips-box {
     padding: 0 24rpx;
-    border: 2rpx solid #0078dd;
     color: #0078dd;
     font-weight: bold;
 }
 .weui-cells {
     margin-top: 110rpx;
 }
-.weui-cell__bd {
-    color: #999999;
+.weui-cell__hd {
+    width: 140rpx;
+    color: #8F8E94;
 }
-.weui-cell__ft {
-    color: #3d3d3d;
+.weui-cell__bd {
+    color: #3D3D3D;
 }
 .gohome {
     position: fixed;

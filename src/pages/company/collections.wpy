@@ -8,7 +8,7 @@
     <view data-id="{{single.id}}" bindtap="toDetail">
       <view class="title-flex">
         <view class="title">{{single.custNname}}</view>
-        <view class="time"></view>
+        <view class=" weui-cell__ft weui-cell__ft_in-access"></view>
       </view>
       <view class="type margin-10">经营模式：{{single.businessModel}}</view>
       <view class="des margin-10">主营行业：{{single.mainIndustry}}</view>
@@ -93,6 +93,15 @@ export default class collection extends wepy.page {
 </script>
 
 <style lang="less">
+.arrow {
+    display: inline-block;
+    vertical-align: top;
+    border-top: 4px solid #353535;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+    content: "";
+    margin-top: 22rpx;
+}
 .collection {
   padding: 30rpx 20rpx;
   background: #ffffff;
