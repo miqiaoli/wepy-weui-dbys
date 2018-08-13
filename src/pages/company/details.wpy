@@ -1,16 +1,33 @@
 <template>
 <view class="detail">
   <view class="base-info">
-    <view class="header" style="background: url('http://ogm9o9o2u.bkt.clouddn.com/detail_bg.png') no-repeat; background-size: 100% 320rpx">
-      <view class="name">{{ detail.custNname }}</view>
-      <view class="bus-model">
-        <text class="bus-type  ">经营模式：{{ detail.businessModel }}</text>
-        <text class="bus-type  "> 注册地：{{ detail.registerArea }}</text>
+    <view class="header" style="background: url('http://ogm9o9o2u.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20180726121102.png') no-repeat; background-size: 100% 100%">
+      <navigator url="/pages/company/alltype">
+        <view class="alltype">全品类企业信息请点击前往
+          <image class="left-icon" src="/images/icon/icon_arrow.png" />
+        </view>
+      </navigator>
+      <view class="collection" bindtap="collection">
+        <image class="collection-icon" src="{{ collectionBoolean ? '/images/icon/collection_icon_HL.png' : '/images/icon/collection_icon.png' }}" />
+        <view class="collection-text">点击收藏</view>
       </view>
-      <view class="type">企业类型：{{ detail.companyType }}</view>
     </view>
-    <view class="user-choose">
-      <image  class="user-choose-icon collection-pos" src="{{ collectionBoolean ? '/images/collection_icon_HL.png' : '/images/collection_icon.png' }}" bindtap="collection" />
+    <view class="company">
+      <view class="name">{{ detail.custNname }}
+        <image class="rice-icon" src="/images/icon/icon_rice.png" />
+      </view>
+      <view class="weui-flex">
+        <view class="company-type">类型</view>
+        <view class="company-name">企业类型： {{ detail.companyType }}</view>
+      </view>
+      <view class="weui-flex">
+        <view class="company-type" style="color: #68C486;">模式</view>
+        <view class="company-name">经营模式： {{ detail.businessModel }}</view>
+      </view>
+      <view class="weui-flex">
+        <view class="company-type" style="color: #D9945B;">注册</view>
+        <view class="company-name">注册地区： {{ detail.registerArea }}</view>
+      </view>
     </view>
     <view class="details">
       <view class="display-flex">
@@ -18,82 +35,283 @@
         <view class="des">{{ detail.mainProducts }}</view>
       </view>
     </view>
-    <view style="margin-left:16rpx; margin-right:12rpx;border-bottom:1px solid #e8e7e7;"></view>
+    <!-- <view style="border-bottom:1px solid #e8e7e7;"></view> -->
     <view class="details">
       <view class="display-flex">
         <view class="des-name">主营行业</view>
         <view class="des">{{ detail.mainIndustry }}</view>
       </view>
+    </view>
+    <view class="details">
+      <view class="display-flex">
+        <view class="des-name">使用材料范围</view>
+        <view class="des">{{ detail.enMaterials }}</view>
+      </view>
     </view>  
   </view>
-  <view style="height:10px; background:#e8e7e7;"></view>
+
   <view class="more-info">
     <view class="blod-title"><text class="font-title">企业基本信息</text> <text class="en-font weui-cells__title"></text></view>
-    <view class="weui-cell" style="font-size: 16px;">
-      <view class="color-left">成立时间</view>
-      <view class="weui-cell__ft color-right">{{ detail.establishingTime }}</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 16px;">
+        <view class="color-left">成立时间</view>
+        <view class="weui-cell__ft color-right">{{ detail.establishingTime }}</view>
+      </view>
     </view>
-    <view class="weui-cell" style="font-size: 16px;">
-      <view class="color-left">注册资本</view>
-      <view class="weui-cell__ft color-right">{{ detail.registeredCapital }}</view>
+    
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 16px;">
+        <view class="color-left">注册资本</view>
+        <view class="weui-cell__ft color-right">{{ detail.registeredCapital }}</view>
+      </view>
     </view>
-    <view class="weui-cell" style="font-size: 16px;">
-      <view class=" color-left">法定代表人</view>
-      <view class="weui-cell__ft color-right">{{ detail.corporation }}</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 16px;">
+        <view class=" color-left">法定代表人</view>
+        <view class="weui-cell__ft color-right">{{ detail.corporation }}</view>
+      </view>
     </view>
-    <view class="weui-cell" style="font-size: 16px;">
-      <view class=" color-left">厂房面积</view>
-      <view class="weui-cell__ft color-right">{{ detail.plantArea }}</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 16px;">
+        <view class=" color-left">厂房面积</view>
+        <view class="weui-cell__ft color-right">{{ detail.plantArea }}</view>
+      </view>
     </view>
-    <view class="weui-cell" style="font-size: 16px;">
-      <view class=" color-left">年营业额</view>
-      <view class="weui-cell__bd color-right">{{ detail.annualTurnover }}</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 16px;">
+        <view class=" color-left">年营业额</view>
+        <view class="weui-cell__bd color-right">{{ detail.annualTurnover }}</view>
+      </view>
     </view>
-    <view class="weui-cell" style="font-size: 16px;">
-      <view class=" color-left">年出口额</view>
-      <view class="weui-cell__bd color-left">{{ detail.annualExport }}</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 16px;">
+        <view class=" color-left">年出口额</view>
+        <view class="weui-cell__bd color-left">{{ detail.annualExport }}</view>
+      </view>
     </view>
   </view>
-  <view style="height:10px; background:#e8e7e7;"></view>
-  <view class="more-info err">
+  <view class="more-info">
     <view class="blod-title"><text class="font-title">企业联系信息</text> <text class="en-font weui-cells__title"></text></view>
-    <view class="weui-cell" style="font-size: 16px;">
-      <view class=" color-left">联系人</view>
-      <view class="weui-cell__ft color-right">{{ detail.linkman }}</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 16px;">
+        <view class=" color-left">联系人</view>
+        <view class="weui-cell__ft color-right">{{ detail.linkman }}</view>
+      </view>
     </view>
-    <view class="weui-cell" style="font-size: 16px;">
-      <view class=" color-left">电话</view>
-      <view class="weui-cell__ft color-right font-primary" bindtap='makePhoneCall' data-phone='{{detail.phone}}'>{{ detail.phone }}</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 16px;">
+        <view class=" color-left">电话</view>
+        <view class="weui-cell__ft color-right font-primary" bindtap='makePhoneCall' data-phone='{{detail.phone}}'>{{ detail.phone }}</view>
+      </view>
     </view>
-    <view class="weui-cell" style="font-size: 16px;">
-      <view class=" color-left">移动电话</view>
-      <view class="weui-cell__ft color-right font-primary" bindtap='makePhoneCall' data-phone='{{detail.mobileTelephone}}'>{{ detail.mobileTelephone }}</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 16px;">
+        <view class=" color-left">移动电话</view>
+        <view class="weui-cell__ft color-right font-primary" bindtap='makePhoneCall' data-phone='{{detail.mobileTelephone}}'>{{ detail.mobileTelephone }}</view>
+      </view>
     </view>
-    <view class="weui-cell" style="font-size: 16px;">
-      <view class=" color-left">传真号</view>
-      <view class="weui-cell__ft color-right font-primary" data-phone='{{detail.facsimile}}'>{{ detail.facsimile }}</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 16px;">
+        <view class=" color-left">传真号</view>
+        <view class="weui-cell__ft color-right font-primary" data-phone='{{detail.facsimile}}'>{{ detail.facsimile }}</view>
+      </view>
     </view>
-    <view class="weui-cell" style="font-size: 16px;">
-      <view class=" color-left special">地址</view>
-      <view class="weui-cell__bd color-right">{{ detail.place }}</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 16px;">
+        <view class=" color-left special">地址</view>
+        <view class="weui-cell__bd color-right">{{ detail.place }}</view>
+      </view>
     </view>
     <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell" bindtap="toError">
-        <view class="weui-cell__bd err" style="padding-left: 60rpx;"><image class="icon-err" style="width: 18px; height: 18px ;" src="/images/alltyps/icon_err@2x.png" />我要反馈</view>
+        <view class="weui-cell__bd err"><image class="icon-err" style="width: 18px; height: 18px ;" src="/images/alltyps/icon_err@2x.png" />我要反馈</view>
         <view class="weui-cell__ft weui-cell__ft_in-access"></view>
       </view>
     </view>
     <map class="map_container" id="myMap" latitude="{{detail.lat}}" longitude="{{detail.lng}}" controls="{{controls}}" markers="{{markers}}" scale="{{scale}}" bindcontroltap="controltap"  bindmarkertap="markertap" bindregionchange="regionchange" show-location="true"> 
-      <!-- <cover-view class="err-btn" bindtap="toError"></cover-view> -->
     </map>
     
   </view>
-  <navigator url="/pages/index" open-type="switchTab">
-    <view class="back-index">
-    </view>
-  </navigator>
 </view>
 </template>
+
+<style lang="less">
+.weui-cell {
+  padding:10px 0px;
+}
+.detail{
+  padding: 0 30rpx;
+  background: #fff;
+}
+.header {
+  position: relative;
+  width: 100%;
+  height: 180rpx;
+  color:#ffffff;
+  .alltype {
+    padding-left: 10rpx;
+    position: relative;
+    top: 144rpx;
+    left: 40rpx;
+    width: 300rpx;
+    height: 32rpx;
+    line-height: 32rpx;
+    background: rgba(0,0,0,0.50);
+    border-radius: 4rpx;
+    font-size: 20rpx;
+    color: #FFFFFF;
+    .left-icon {
+      position: absolute;
+      top: 10rpx;
+      right: 16rpx;
+      width: 18rpx;
+      height: 18rpx;
+    }
+  }
+  .collection {
+    position: absolute;
+    right: 12rpx;
+    top: 132rpx;
+    text-align: center;
+    .collection-icon {
+      width: 100rpx;
+      height: 100rpx;
+    }
+    .collection-text {
+      position: relative;
+      top: -10rpx;
+      font-size: 10px;
+      color: #3D3D3D;
+    }
+  }
+  
+}
+.company {
+  margin-top: 40rpx;
+  .name {
+    position: relative;
+    font-size: 36rpx;
+    font-weight: bold;
+    margin-bottom: 36rpx;
+    .rice-icon {
+      position: relative;
+      top: 6rpx;
+      left: 4rpx;
+      width: 36rpx;
+      height: 36rpx;
+    }
+  }
+  .weui-flex {
+    margin-bottom: 8rpx;
+    vertical-align: middle;
+    line-height: 28rpx;
+    text-align: center;
+    .company-type {
+      background: #FFF3F2;
+      border: 1px solid #F9E7E5;
+      border-radius: 4rpx;
+      width: 52rpx;
+      font-size: 20rpx;
+      color: #DD918D;
+    }
+    .company-name {
+      margin-left: 16rpx;
+      flex: 1;
+      text-align: left;
+      font-size: 28rpx;
+      color: #3D3D3D;
+    }
+  }
+}
+.details{
+  .display-flex{
+    display: flex;
+    // margin-left: 16rpx;
+    margin-right: 12rpx;
+    padding-top:24rpx;
+    padding-bottom:17rpx;
+    .des-name{
+      width: 115px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #000;
+    }
+    .des{
+      font-size: 14px;
+      color: #333;
+      flex: 1;
+      text-align:left;
+      white-space:wrap;
+      overflow:hidden;
+      
+    }
+  }
+}
+.font-small{
+    font-size: 14px;
+  }
+.more-info{
+  .map_container {
+    margin-top: 40rpx;
+    height: 500rpx; 
+    width: 100%; 
+  }
+  .blod-title{
+    .font-title{
+      margin-top:16px;
+      margin-bottom:10px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #000;
+    }
+    .en-font{
+      padding-left: 10px;
+      color: #3d3d3d;
+      font-size: 10px;
+    }
+  }
+  .font-small{
+    font-size: 12px;
+  }
+}
+.color-left{
+  color: #000;
+  width: 104px;
+}
+.color-right{
+  color: #333;
+}
+.user-choose {
+  position: relative;
+  margin-top: 30rpx;
+  margin-bottom: 6rpx;
+  height: 40rpx;
+  .user-choose-icon {
+    position: absolute;
+    width: 52rpx;
+    height: 48rpx;
+  }
+  .share-pos {
+    top: 0;
+    right: 124rpx;
+  }
+  .collection-pos {
+    top: 0;
+    right: 20rpx;
+  }
+}
+.back-index {
+  position: fixed;
+  bottom: 40rpx;
+  right: 20rpx;
+  width: 120rpx;
+  height: 120rpx;
+  background: url(http://ogm9o9o2u.bkt.clouddn.com/back_index.png) no-repeat center center; 
+  background-size: 100% auto;
+  border-radius: 50%;
+  z-index: 999;
+}
+</style>
 
 <script>
 import wepy from 'wepy'
@@ -116,27 +334,6 @@ export default class companyDetails extends wepy.page {
     rgcData: {},
     mapCtx: '',
     controls: [
-    //   {
-    //   id: 1,
-    //   iconPath: '/images/alltyps/icon_error.png',
-    //   position: {
-    //     left: 10,
-    //     top: 200,
-    //     width: 40,
-    //     height: 40
-    //   },
-    //   clickable: true
-    // },{
-    //   id: 0,
-    //   iconPath: '/images/position_back_icon.png',
-    //   position: {
-    //     left: 10,
-    //     top: 100,
-    //     width: 40,
-    //     height: 40
-    //   },
-    //   clickable: true
-    // }
     ],
     scale: 14,
     collectionBoolean: false
@@ -264,160 +461,3 @@ export default class companyDetails extends wepy.page {
   }
 }
 </script>
-
-<style lang="less">
-.err {
-  position: relative;
-}
-.icon-err {
-  position: absolute;
-  top: 4rpx;
-  left: 2rpx;
-}
-.err-btn {
-  position: absolute;
-  // top: 200rpx;
-  display: block;
-  bottom: 80rpx;
-  left: 24rpx;
-  width: 96rpx;
-  height: 96rpx;
-  border-radius: 50%;
-  background: url('http://ogm9o9o2u.bkt.clouddn.com/icon_error.png');
-  z-index: 99;
-}
-.map_container{ 
-  margin-top: 30px;
-  height: 300px; 
-  width: 100%; 
-} 
-.detail{
-  background: #fff;
-}
-.header {
-  padding-top:44px;
-  width: 100%;
-  height: 116px;
-  align-items: center;
-  text-align:center;
-  color:#ffffff;
-  .name {
-    margin-bottom: 20rpx;
-    display: inline-flex;  
-    flex-direction: row;  
-    justify-content: center; 
-    align-item: center;
-    font-size: 21px;
-    font-weight: bold;
-  }
-  .bus-model {
-    display: flex;
-    margin: 0 54px;
-    font-size: 14px;
-    color: #fff;
-    .bus-type{
-      flex: 1;
-      line-height: 20px;
-      font-size: 14px;
-      color: #fff;
-      overflow:hidden;
-      white-space:nowrap;
-      text-overflow:ellipsis;
-      text-align: left;
-    }
-  }
-  .type {
-    margin-top: 10rpx;
-    font-size: 14px;
-    margin-left: 54px;
-    text-align: left;
-  }
-}
-.details{
-  .display-flex{
-    display: flex;
-    margin-left: 16rpx;
-    margin-right: 12rpx;
-    padding-top:24rpx;
-    padding-bottom:17rpx;
-    .des-name{
-      width: 115px;
-      font-size: 16px;
-      font-weight: bold;
-      color: #000;
-    }
-    .des{
-      font-size: 15px;
-      color: #333;
-      flex: 1;
-      white-space:wrap;
-      overflow:hidden;
-      
-    }
-  }
-}
-.font-small{
-    font-size: 14px;
-  }
-.more-info{
-  .blod-title{
-    .font-title{
-      margin-left: 2px;
-      margin-top:16px;
-      margin-bottom:10px;
-      border-left:6rpx solid #115bed;
-      padding-left: 20rpx;
-      font-size: 16px;
-      font-weight: bold;
-      color: #000;
-    }
-    .en-font{
-      padding-left: 10px;
-      color: #3d3d3d;
-      font-size: 10px;
-    }
-  }
-  .font-small{
-    font-size: 12px;
-  }
-}
-.color-left{
-  color: #000;
-  width: 104px;
-}
-.color-right{
-  color: #333;
-}
-
-.user-choose {
-  position: relative;
-  margin-top: 30rpx;
-  margin-bottom: 6rpx;
-  height: 40rpx;
-  .user-choose-icon {
-    position: absolute;
-    width: 52rpx;
-    height: 48rpx;
-  }
-  .share-pos {
-    top: 0;
-    right: 124rpx;
-  }
-  .collection-pos {
-    top: 0;
-    right: 20rpx;
-  }
-}
-
-.back-index {
-  position: fixed;
-  bottom: 40rpx;
-  right: 20rpx;
-  width: 120rpx;
-  height: 120rpx;
-  background: url(http://ogm9o9o2u.bkt.clouddn.com/back_index.png) no-repeat center center; 
-  background-size: 100% auto;
-  border-radius: 50%;
-  z-index: 999;
-}
-</style>

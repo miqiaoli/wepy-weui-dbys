@@ -3,7 +3,7 @@
     <view class="bgImg">
       <image class="country-img" src="{{imgHost}}{{bannerImg}}" />
     </view>
-    <view class="tips">- 合肥圆融再生资源全球分布图 -</view>
+    <view class="tips">- 第八元素再生资源全球分布图 -</view>
     <view style="border-top: 1px solid #E4E7F0;">
       <view class="list">
         <view class="country">
@@ -110,7 +110,7 @@ import user from "../../mixins/user";
 export default class overseasList extends wepy.page {
   mixins = [user];
   config = {
-    navigationBarTitleText: "海外资源"
+    navigationBarTitleText: "环球资源"
   };
   data = {
     list: [],
