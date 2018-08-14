@@ -50,11 +50,7 @@
   <view class="list-cont">
     <view class="item" wx:for="{{list}}" wx:key="id">
       <navigator class="box" url="/pages/product/details?id={{item.order_id}}" hover-class="navigator-hover">
-<<<<<<< HEAD
-        <view class="title" style="font-weight: bold;">{{item.goods_class}}/{{item.goods_name}}/{{item.att2}}/{{item.att1}}</view>
-=======
-        <view class="title">{{item.goods_class}}/{{item.goods_name}}/{{item.att2}}/{{item.att1}}</view>
->>>>>>> 71b548e4a5af6a33b76b8093104e145ed320ad92
+        <view class="title bold">{{item.goods_class}}/{{item.goods_name}}/{{item.att2}}/{{item.att1}}</view>
         <view class="font-desc">{{item.address}}</view>
         <view class="content weui-flex">
           <view class="weui-flex__item">

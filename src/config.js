@@ -1,10 +1,10 @@
 // const host = 'http://10.0.0.2/front' //  李成  黄页
 // const host = 'http://1891z163m0.iask.in/front'
-const host = 'https://www.otimes.info/front' //测试环境
-// const host = 'https://www.otimes.com/front'
+// const host = 'https://www.otimes.info/front' //测试环境
+const host = 'https://www.otimes.com/front'
 
-// const imgHost = 'https://www.otimes.com' // 测试图片地址
-const imgHost = 'https://www.otimes.info'
+const imgHost = 'https://www.otimes.com' // 测试图片地址
+// const imgHost = 'https://www.otimes.info'
 // const socketHost = 'wss://www.otimes.info' // websocket地址
 const socketHost = 'wss://www.otimes.com'
 
@@ -12,7 +12,7 @@ export const __getApi = {
   host,
   imgHost,
   socketHost,
-  baseHrefUrl: 'https://www.otimes.info',
+  baseHrefUrl: 'https://www.otimes.com',
 
   //code encryptedData iv 换取openid，unionid,session_key
   _getPrivacyToken: `${host}/wxapp/codeei.dbys`,
@@ -189,6 +189,7 @@ export const __getApi = {
   _getOverseasSingleList: `${host}/resourcemap/selectlistAll.dbys`,
   _getOverseasDetails: `${host}/resourcemap/mapresourceDetail.dbys`,
   _getUserMsg: `${host}/resourcemap/mapresourceUpxuqiu.dbys`,
+  _getUpdateMsg: `${host}/wx/isNotice.dbys`, // 更新公告
 }
 
 export default {

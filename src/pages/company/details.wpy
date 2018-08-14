@@ -47,7 +47,7 @@
         <view class="des-name">使用材料范围</view>
         <view class="des">{{ detail.enMaterials }}</view>
       </view>
-    </view>  
+    </view>
   </view>
 
   <view class="more-info">
@@ -58,7 +58,7 @@
         <view class="weui-cell__ft color-right">{{ detail.establishingTime }}</view>
       </view>
     </view>
-    
+
     <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell" style="font-size: 16px;">
         <view class="color-left">注册资本</view>
@@ -124,192 +124,193 @@
     </view>
     <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell" bindtap="toError">
-        <view class="weui-cell__bd err"><image class="icon-err" style="width: 18px; height: 18px ;" src="/images/alltyps/icon_err@2x.png" />我要反馈</view>
+        <view class="weui-cell__bd err">
+          <image class="icon-err" style="width: 18px; height: 18px ;" src="/images/alltyps/icon_err@2x.png" />我要反馈</view>
         <view class="weui-cell__ft weui-cell__ft_in-access"></view>
       </view>
     </view>
-    <map class="map_container" id="myMap" latitude="{{detail.lat}}" longitude="{{detail.lng}}" controls="{{controls}}" markers="{{markers}}" scale="{{scale}}" bindcontroltap="controltap"  bindmarkertap="markertap" bindregionchange="regionchange" show-location="true"> 
+    <map class="map_container" id="myMap" latitude="{{detail.lat}}" longitude="{{detail.lng}}" controls="{{controls}}" markers="{{markers}}" scale="{{scale}}" bindcontroltap="controltap" bindmarkertap="markertap" bindregionchange="regionchange" show-location="true">
     </map>
-    
+
   </view>
 </view>
 </template>
 
 <style lang="less">
 .weui-cell {
-  padding:10px 0px;
+    padding: 10px 0;
 }
-.detail{
-  padding: 0 30rpx;
-  background: #fff;
+.detail {
+    padding: 0 30rpx;
+    background: #fff;
 }
 .header {
-  position: relative;
-  width: 100%;
-  height: 180rpx;
-  color:#ffffff;
-  .alltype {
-    padding-left: 10rpx;
     position: relative;
-    top: 144rpx;
-    left: 40rpx;
-    width: 300rpx;
-    height: 32rpx;
-    line-height: 32rpx;
-    background: rgba(0,0,0,0.50);
-    border-radius: 4rpx;
-    font-size: 20rpx;
-    color: #FFFFFF;
-    .left-icon {
-      position: absolute;
-      top: 10rpx;
-      right: 16rpx;
-      width: 18rpx;
-      height: 18rpx;
+    width: 100%;
+    height: 180rpx;
+    color: #ffffff;
+    .alltype {
+        padding-left: 10rpx;
+        position: relative;
+        top: 144rpx;
+        left: 40rpx;
+        width: 300rpx;
+        height: 32rpx;
+        line-height: 32rpx;
+        background: rgba(0,0,0,0.50);
+        border-radius: 4rpx;
+        font-size: 20rpx;
+        color: #FFFFFF;
+        .left-icon {
+            position: absolute;
+            top: 10rpx;
+            right: 16rpx;
+            width: 18rpx;
+            height: 18rpx;
+        }
     }
-  }
-  .collection {
-    position: absolute;
-    right: 12rpx;
-    top: 132rpx;
-    text-align: center;
-    .collection-icon {
-      width: 100rpx;
-      height: 100rpx;
+    .collection {
+        position: absolute;
+        right: 12rpx;
+        top: 132rpx;
+        text-align: center;
+        .collection-icon {
+            width: 100rpx;
+            height: 100rpx;
+        }
+        .collection-text {
+            position: relative;
+            top: -10rpx;
+            font-size: 10px;
+            color: #3D3D3D;
+        }
     }
-    .collection-text {
-      position: relative;
-      top: -10rpx;
-      font-size: 10px;
-      color: #3D3D3D;
-    }
-  }
-  
+
 }
 .company {
-  margin-top: 40rpx;
-  .name {
-    position: relative;
-    font-size: 36rpx;
-    font-weight: bold;
-    margin-bottom: 36rpx;
-    .rice-icon {
-      position: relative;
-      top: 6rpx;
-      left: 4rpx;
-      width: 36rpx;
-      height: 36rpx;
-    }
-  }
-  .weui-flex {
-    margin-bottom: 8rpx;
-    vertical-align: middle;
-    line-height: 28rpx;
-    text-align: center;
-    .company-type {
-      background: #FFF3F2;
-      border: 1px solid #F9E7E5;
-      border-radius: 4rpx;
-      width: 52rpx;
-      font-size: 20rpx;
-      color: #DD918D;
-    }
-    .company-name {
-      margin-left: 16rpx;
-      flex: 1;
-      text-align: left;
-      font-size: 28rpx;
-      color: #3D3D3D;
-    }
-  }
-}
-.details{
-  .display-flex{
-    display: flex;
-    // margin-left: 16rpx;
-    margin-right: 12rpx;
-    padding-top:24rpx;
-    padding-bottom:17rpx;
-    .des-name{
-      width: 115px;
-      font-size: 16px;
-      font-weight: bold;
-      color: #000;
-    }
-    .des{
-      font-size: 14px;
-      color: #333;
-      flex: 1;
-      text-align:left;
-      white-space:wrap;
-      overflow:hidden;
-      
-    }
-  }
-}
-.font-small{
-    font-size: 14px;
-  }
-.more-info{
-  .map_container {
     margin-top: 40rpx;
-    height: 500rpx; 
-    width: 100%; 
-  }
-  .blod-title{
-    .font-title{
-      margin-top:16px;
-      margin-bottom:10px;
-      font-size: 16px;
-      font-weight: bold;
-      color: #000;
+    .name {
+        position: relative;
+        font-size: 36rpx;
+        font-weight: bold;
+        margin-bottom: 36rpx;
+        .rice-icon {
+            position: relative;
+            top: 6rpx;
+            left: 4rpx;
+            width: 36rpx;
+            height: 36rpx;
+        }
     }
-    .en-font{
-      padding-left: 10px;
-      color: #3d3d3d;
-      font-size: 10px;
+    .weui-flex {
+        margin-bottom: 8rpx;
+        vertical-align: middle;
+        line-height: 28rpx;
+        text-align: center;
+        .company-type {
+            background: #FFF3F2;
+            border: 1px solid #F9E7E5;
+            border-radius: 4rpx;
+            width: 52rpx;
+            font-size: 20rpx;
+            color: #DD918D;
+        }
+        .company-name {
+            margin-left: 16rpx;
+            flex: 1;
+            text-align: left;
+            font-size: 28rpx;
+            color: #3D3D3D;
+        }
     }
-  }
-  .font-small{
-    font-size: 12px;
-  }
 }
-.color-left{
-  color: #000;
-  width: 104px;
+.details {
+    .display-flex {
+        display: flex;
+        // margin-left: 16rpx;
+        margin-right: 12rpx;
+        padding-top: 24rpx;
+        padding-bottom: 17rpx;
+        .des-name {
+            width: 115px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+        }
+        .des {
+            font-size: 14px;
+            color: #333;
+            flex: 1;
+            text-align: left;
+            white-space: wrap;
+            overflow: hidden;
+
+        }
+    }
 }
-.color-right{
-  color: #333;
+.font-small {
+    font-size: 14px;
+}
+.more-info {
+    .map_container {
+        margin-top: 40rpx;
+        height: 500rpx;
+        width: 100%;
+    }
+    .blod-title {
+        .font-title {
+            margin-top: 16px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+        }
+        .en-font {
+            padding-left: 10px;
+            color: #3d3d3d;
+            font-size: 10px;
+        }
+    }
+    .font-small {
+        font-size: 12px;
+    }
+}
+.color-left {
+    color: #000;
+    width: 104px;
+}
+.color-right {
+    color: #333;
 }
 .user-choose {
-  position: relative;
-  margin-top: 30rpx;
-  margin-bottom: 6rpx;
-  height: 40rpx;
-  .user-choose-icon {
-    position: absolute;
-    width: 52rpx;
-    height: 48rpx;
-  }
-  .share-pos {
-    top: 0;
-    right: 124rpx;
-  }
-  .collection-pos {
-    top: 0;
-    right: 20rpx;
-  }
+    position: relative;
+    margin-top: 30rpx;
+    margin-bottom: 6rpx;
+    height: 40rpx;
+    .user-choose-icon {
+        position: absolute;
+        width: 52rpx;
+        height: 48rpx;
+    }
+    .share-pos {
+        top: 0;
+        right: 124rpx;
+    }
+    .collection-pos {
+        top: 0;
+        right: 20rpx;
+    }
 }
 .back-index {
-  position: fixed;
-  bottom: 40rpx;
-  right: 20rpx;
-  width: 120rpx;
-  height: 120rpx;
-  background: url(http://ogm9o9o2u.bkt.clouddn.com/back_index.png) no-repeat center center; 
-  background-size: 100% auto;
-  border-radius: 50%;
-  z-index: 999;
+    position: fixed;
+    bottom: 40rpx;
+    right: 20rpx;
+    width: 120rpx;
+    height: 120rpx;
+    background: url("http://ogm9o9o2u.bkt.clouddn.com/back_index.png") no-repeat center center;
+    background-size: 100% auto;
+    border-radius: 50%;
+    z-index: 999;
 }
 </style>
 
@@ -328,13 +329,12 @@ export default class companyDetails extends wepy.page {
     detailID: '',
     detail: {},
     token_access: '',
-    markers: '', 
-    latitude: '', 
-    longitude: '', 
+    markers: '',
+    latitude: '',
+    longitude: '',
     rgcData: {},
     mapCtx: '',
-    controls: [
-    ],
+    controls: [],
     scale: 14,
     collectionBoolean: false
   }
@@ -351,14 +351,14 @@ export default class companyDetails extends wepy.page {
     },
     async collection(e) {
       this.collectionBoolean = !this.collectionBoolean
+      this.$apply()
       if (this.collectionBoolean) {
         const res = await http.get(__getApi._getCollectionDo, {
           token_access: this.token_access,
           id: this.detailID,
           status: 0
-        }) 
-        console.log(res.success)
-        if (res.success) {
+        })
+        if (res.meta.success) {
           wx.showToast({
             title: '成功收藏',
             icon: 'success',
@@ -366,15 +366,16 @@ export default class companyDetails extends wepy.page {
           })
         } else {
           this.collectionBoolean = false
+          this.$apply()
         }
-        return 
+        return
       }
       const res = await http.get(__getApi._getCollectionDo, {
         token_access: this.token_access,
         id: this.detailID,
         status: 1
       })
-      if (res.success) {
+      if (res.meta.success) {
         wx.showToast({
           title: '取消收藏',
           icon: 'success',
@@ -419,14 +420,14 @@ export default class companyDetails extends wepy.page {
     const self = this
     wx.showActionSheet({
       itemList: ['去这里'],
-      success: function (res) {
+      success: function(res) {
         wx.openLocation({
           latitude: self.detail.lat,
           longitude: self.detail.lng,
           scale: 18
         })
       },
-      fail: function (res) {
+      fail: function(res) {
         console.log(res.errMsg)
       }
     })
@@ -447,7 +448,7 @@ export default class companyDetails extends wepy.page {
       id: options.id
     })
     this.detail = res.data
-    this.collectionBoolean = this.detail.collect == 0 ? false : true 
+    this.collectionBoolean = this.detail.collect == 0 ? false : true
     this.markers = [{
       id: '99',
       latitude: res.data.lat,

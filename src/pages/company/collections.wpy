@@ -68,7 +68,8 @@ export default class collection extends wepy.page {
       token_access: this.token_access,
       page_id: this.page_id,
       page_limit: this.page_limit,
-      name: this.searchText
+      name: this.searchText,
+      type: 0
     })
     wx.stopPullDownRefresh()
     this.list = [...this.list, ...res.data.list]
@@ -117,7 +118,7 @@ export default class collection extends wepy.page {
     .serach-icon {
       position: absolute;
       top: 11rpx;
-      left: 38%;  
+      left: 38%;
     }
   }
   .list {
@@ -141,7 +142,7 @@ export default class collection extends wepy.page {
       }
     }
     .type {
-      
+
     }
     .des {
 
