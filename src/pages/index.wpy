@@ -40,22 +40,22 @@
       </navigator>
     </view>
     <view class="weui-flex__item">
-      <navigator url="/pages/information/list" hover-class="navigator-hover">
+      <navigator url="/pages/news/list?id=13" hover-class="navigator-hover">
         <view class="tab-image">
           <image class="image" src="../images/tabbars/center_tab_04.png"></image>
         </view>
-        <text class="tab-text">供求信息</text>
+        <text class="tab-text">环球塑讯</text>
       </navigator>
     </view>
   </view>
   <view class="module-box">
     <view class="list">
-      <view class="product-top page__bd_spacing">
-        <view class="product-title text-center">
+      <view class="product-top page__bd_spacing weui-flex">
+        <view class="product-title weui-flex__item">
           <navigator url="/pages/other/chart-price" hover-class="navigator-hover">小八塑价</navigator>
-          <view class="desc">PLASTIC PRICE</view>
+          <!-- <view class="desc">PLASTIC PRICE</view> -->
         </view>
-        <navigator class="font-desc text-right" url="/pages/other/chart-list?type={{activeIndex}}" hover-class="navigator-hover">更多品种 &gt;</navigator>
+        <navigator class="font-desc text-right" url="/pages/other/chart-list?type={{activeIndex}}" hover-class="navigator-hover">更多品种</navigator>
       </view>
       <view class="mychart">
         <view class="weui-tab">
@@ -78,22 +78,22 @@
       </view>
     </view>
   </view>
-  <view class="module-box">
+  <view class="module-box bg__gary">
     <PlasticRawMaterials :list.sync="plasticRawMaterials" idType='1' listType="false">
       <view class="product-title" slot="product-title">塑料原料</view>
       <view class="picture page__bd_spacing" slot="pic-cont">
-        <image class="pic-cont" mode="widthFix" src='http://pcve6cxe8.bkt.clouddn.com/index-col1.png?1111' />
+        <image class="pic-cont" mode="widthFix" src='{{col1Img}}' />
       </view>
-      <image slot="pic-col" class="pic-cont" mode="widthFix" src='http://pcve6cxe8.bkt.clouddn.com/index-plastic.png' />
+      <image slot="pic-col" class="pic-cont" mode="widthFix" src='{{type1Img}}' />
     </PlasticRawMaterials>
   </view>
-  <view class="module-box">
+  <view class="module-box bg__gary">
     <RecycledPlasticList :list.sync="recycledPlasticList" idType='2' listType="false">
       <view class="product-title" slot="product-title">再生塑料</view>
       <view class="picture page__bd_spacing" slot="pic-cont">
-        <image class="pic-cont" mode="widthFix" src='http://pcve6cxe8.bkt.clouddn.com/index-col2.png' />
+        <image class="pic-cont" mode="widthFix" src='{{col1Img}}' />
       </view>
-      <image slot="pic-col" class="pic-cont" mode="widthFix" src='http://pcve6cxe8.bkt.clouddn.com/index-recycled.png' />
+      <image slot="pic-col" class="pic-cont" mode="widthFix" src='{{type2Img}}' />
     </RecycledPlasticList>
   </view>
   <!-- <view class="bg__white">
@@ -110,12 +110,12 @@
   </view> -->
   <view class="">
     <view class="list">
-      <view class="product-top page__bd_spacing">
-        <view class="product-title text-center">
+      <view class="product-top page__bd_spacing weui-flex">
+        <view class="product-title weui-flex__item">
           <navigator url="/pages/other/chart-price" hover-class="navigator-hover">环球塑讯</navigator>
-          <view class="desc">PLASTIC INFORMATION</view>
+          <!-- <view class="desc">PLASTIC INFORMATION</view> -->
         </view>
-        <navigator class="font-desc text-right" url="/pages/news/list?id=13" hover-class="navigator-hover">查看更多 &gt;</navigator>
+        <navigator class="font-desc text-right" url="/pages/news/list?id=13" hover-class="navigator-hover">查看更多</navigator>
       </view>
       <view class="list-cont page__bd_spacing">
         <view class="list-box" wx:for="{{plasticsNewsList}}" wx:key="id">
@@ -157,6 +157,10 @@ export default class pageIndex extends wepy.page {
   };
   data = {
     searchText: "搜索",
+    col1Img: '',
+    col2Img: '',
+    type1Img: '',
+    type2Img: '',
     swipers: [],
     supplyList: [],
     demandList: [],
@@ -201,6 +205,11 @@ export default class pageIndex extends wepy.page {
       ((this.windowWidth - 30) / this.tabs.length - sliderWidth) / 2;
     this.sliderOffset =
       (this.windowWidth - 30) / this.tabs.length * this.activeIndex;
+
+      this.col1Img = 'http://pcve6cxe8.bkt.clouddn.com/index-col1.png?'+Math.random()
+      this.col2Img = 'http://pcve6cxe8.bkt.clouddn.com/index-col2.png?'+Math.random()
+      this.type1Img = 'http://pcve6cxe8.bkt.clouddn.com/index-plastic.png?'+Math.random()
+      this.type2Img = 'http://pcve6cxe8.bkt.clouddn.com/index-recycled.png?'+Math.random()
   }
   // 初始化页面数据
   async initPageData() {
@@ -330,10 +339,11 @@ export default class pageIndex extends wepy.page {
     position: inherit;
 }
 .weui-navbar__item {
-    padding: 12px 0 4px;
     flex: none;
+    padding: 0;
 }
 .weui-navbar__title {
+    padding: 12px 10px 4px;
     font-size: 32rpx;
 }
 .weui-navbar__slider {
@@ -343,8 +353,8 @@ export default class pageIndex extends wepy.page {
     color: #323972;
 }
 .weui-navbar__item.weui-bar__item_on .weui-navbar__title {
-    font-size: 34rpx;
     font-weight: bold;
+    border-bottom: 8rpx solid #3B55E7;
 }
 .font-rise {
     color: #eb4e35;
@@ -402,6 +412,8 @@ export default class pageIndex extends wepy.page {
     text-align: center;
     font-size: 32rpx;
     padding-top: 20rpx;
+    margin: 0 30rpx;
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08);
     .tab-image {
         font-size: 0;
         .image {
@@ -416,7 +428,7 @@ export default class pageIndex extends wepy.page {
     }
 }
 .module-box {
-    background-color: #fff;
+    // background-color: #fff;
     margin-top: 20rpx;
 }
 .broadcast {
