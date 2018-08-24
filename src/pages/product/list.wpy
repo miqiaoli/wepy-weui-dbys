@@ -38,9 +38,9 @@
         <view class="module-box">
           <view class="top page__bd_spacing">价格区间</view>
           <view class="content weui-flex">
-            <input name="price_s" type="digit" class="input" placeholder="最低价" />
+            <input name="price_s" bindinput="bindPriceSInput" type="digit" class="input" placeholder="最低价" />
             <text class="interval-line">~</text>
-            <input name="price_e" type="digit" class="input" placeholder="最高价" />
+            <input name="price_e" bindinput="bindPriceEInput" type="digit" class="input" placeholder="最高价" />
           </view>
         </view>
         <view class="">
@@ -109,10 +109,10 @@
           </view>
         </view> -->
       </view>
-      <view class="inner_btn weui-flex">
+      <!-- <view class="inner_btn weui-flex">
         <button class="weui-flex__item" type="default" formType="reset">重置</button>
         <button class="weui-flex__item" type="primary" formType="submit">确定</button>
-      </view>
+      </view> -->
     </form>
     <view class="layer" catchtouchstart="removeLayer" data-type='isFilter'></view>
   </view>
@@ -276,6 +276,12 @@ export default class ProductList extends wepy.page {
     preventTouchMove(e) {
 
     },
+    bindPriceSInput(e) {
+      this.filterParam.price_s = e.detail.value
+    },
+    bindPriceEInput(e) {
+      this.filterParam.price_e = e.detail.value
+    },
     chooseGoodsClassId(e) {
       this.goods_class_id = e.currentTarget.dataset.type
       wx.navigateTo({
@@ -380,7 +386,10 @@ export default class ProductList extends wepy.page {
     this.chooseGrade.name = currPage.data.chooseGrade.name
     this.chooseVendor.id = currPage.data.chooseVendor.id
     this.chooseVendor.name = currPage.data.chooseVendor.name
-    this.$apply()
+
+    this.start = 1
+    this.isFilter = true
+    this.getProductList()
   }
   onPullDownRefresh() {
     this.start = 1
@@ -499,7 +508,7 @@ export default class ProductList extends wepy.page {
 }
 .selector {
     width: 100%;
-    height: 435px;
+    height: 370px;
     position: fixed;
     top: 0;
     right: 0;

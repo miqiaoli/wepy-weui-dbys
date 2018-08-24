@@ -299,7 +299,7 @@ export default class ChartCompare extends wepy.page {
     this.$wxpage.selectComponent("#mychart").data.ec.onInit = initChart;
     this.$wxpage.selectComponent("#mychart").init();
     this.firstcompareName = decodeURIComponent(options.name) || this.firstcompareName;
-    
+
     let data = new Date();
     let startDate = new Date(data);
     startDate.setDate(data.getDate() - 7);

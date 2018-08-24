@@ -33,9 +33,11 @@
     <image class="pic-cont" mode="widthFix" src='/images/index-prodect1.jpg'></image>
   </slot>
   <view class="picture-col">
-    <slot name="pic-col">
-      <image class="pic-cont" mode="widthFix" src='/images/index-prodect1.jpg'></image>
-    </slot>
+    <!-- <navigator url="/pages/product/list?goods_class_id={{idType}}" hover-class="navigator-hover"> -->
+      <slot name="pic-col">
+        <image class="pic-cont" mode="widthFix" src='/images/index-prodect1.jpg'></image>
+      </slot>
+    <!-- </navigator> -->
     <view class="weui-flex pic-box">
       <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?604:7}}" hover-class="navigator-hover"></navigator>
       <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?601:5}}" hover-class="navigator-hover"> </navigator>
@@ -43,9 +45,6 @@
       <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?602:8}}" hover-class="navigator-hover"> </navigator>
       <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?605:14}}" hover-class="navigator-hover"> </navigator>
     </view>
-  </view>
-  <view class="page__bd_spacing">
-    <navigator class="font-desc text-right" url="/pages/product/list?goods_class_id={{idType}}" hover-class="navigator-hover">查看更多</navigator>
   </view>
   <view class="list-cont bg__white">
     <view class="item" wx:for="{{list}}" wx:key="id">
@@ -55,8 +54,8 @@
         <view class="content weui-flex">
           <view class="weui-flex__item">
             <view class="else">
-              <view class="tag">起批量：≥{{item.min_batch_qtt}}KG</view>
-              <view class="tag">可供量：{{item.amount}}KG</view>
+              <view class="tag orange">起批量：≥{{item.min_batch_qtt}}KG</view>
+              <view class="tag blue">可供量：{{item.amount}}KG</view>
             </view>
           </view>
           <view class="price-cont font-red">
@@ -109,7 +108,7 @@ export default class indexList extends wepy.component {
 }
 
 .list {
-    padding: 20rpx 0;
+  padding: 20rpx 0;
   .supply-demand-title {
     font-size: 32rpx;
     color: #282828;
@@ -154,9 +153,9 @@ export default class indexList extends wepy.component {
     border-radius: 4rpx;
   }
   .list-cont {
-      margin: 10rpx 24rpx 0;
-      box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08);
-      border-radius: 8rpx;
+    margin: 10rpx 24rpx 0;
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08);
+    border-radius: 8rpx;
     /* margin-left: 24rpx; */
     /* padding-bottom: 30rpx; */
     .item {
@@ -179,6 +178,12 @@ export default class indexList extends wepy.component {
     border-radius: 4rpx;
     background: transparent;
   }
+  .tag.orange {
+    color: #FB8E1E
+  }
+  .tag.blue {
+    color: #00B9E7
+  }
   .price-cont {
     position: relative;
     text-align: right;
@@ -192,7 +197,7 @@ export default class indexList extends wepy.component {
     top: 0;
   }
   .price {
-  font-weight: bold;
+    font-weight: bold;
     display: inline-block;
     font-size: 36rpx;
   }

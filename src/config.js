@@ -1,18 +1,18 @@
-// const host = 'http://10.0.0.2/front' //  李成  黄页
+// const host = 'http://10.0.0.12/front' //  李成  黄页
 // const host = 'http://1891z163m0.iask.in/front'
-// const host = 'https://www.otimes.info/front' //测试环境
-const host = 'https://www.otimes.com/front'
+const host = 'https://www.otimes.info/front' //测试环境
+// const host = 'https://www.otimes.com/front'
 
-const imgHost = 'https://www.otimes.com' // 测试图片地址
-// const imgHost = 'https://www.otimes.info'
-// const socketHost = 'wss://www.otimes.info' // websocket地址
-const socketHost = 'wss://www.otimes.com'
+// const imgHost = 'https://www.otimes.com' // 测试图片地址
+const imgHost = 'https://www.otimes.info'
+const socketHost = 'wss://www.otimes.info' // websocket地址
+// const socketHost = 'wss://www.otimes.com'
 
 export const __getApi = {
   host,
   imgHost,
   socketHost,
-  baseHrefUrl: 'https://www.otimes.com',
+  baseHrefUrl: 'https://www.otimes.info',
 
   //code encryptedData iv 换取openid，unionid,session_key
   _getPrivacyToken: `${host}/wxapp/codeei.dbys`,
@@ -57,6 +57,9 @@ export const __getApi = {
   _getLastinfo: `${host}/priceIndex/getLastinfo.dbys`,
 
   //首页价格名称列表
+  _getSheetDataList: `${host}/priceIndex/sheetNamesList.dbys`,
+
+  //价格趋势图列表数据
   _getSheetNames: `${host}/priceIndex/getSheetNames.dbys`,
 
   //价格趋势图名称列表

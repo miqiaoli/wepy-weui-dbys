@@ -164,7 +164,7 @@ export default class list extends wepy.page {
     urbanNum: '',
     areaNum: '',
     page_id: 1,
-    page_limit: 15, 
+    page_limit: 15,
     businessModel: 1, // 经营模式
     enterplace: null, // 搜索区域
     name: '', // 搜索词
@@ -192,12 +192,12 @@ export default class list extends wepy.page {
         // 只能单选
         this.chooseIndex = e.currentTarget.dataset.index
         this.chooseBoolean[chooseIndex] = !this.chooseBoolean[chooseIndex]
-        this.chooseBoolean[chooseIndex] ? 
+        this.chooseBoolean[chooseIndex] ?
           wx.showToast({
             title: `你已选择${this.topSeven[chooseIndex].chinese}`,
             icon: 'none',
             duration: 2000
-          }) : 
+          }) :
           wx.showToast({
             title: `你已取消${this.topSeven[chooseIndex].chinese}`,
             icon: 'none',
@@ -268,17 +268,17 @@ export default class list extends wepy.page {
             'label': val.label
           })
         })
-        const addAll = []
-        // const addAll = [{value: '', label: '全部'}]
+        // const addAll = []
+        const addAll = [{value: '', label: '全部'}]
         this.urban = [...addAll, ...urban]
         this.cityValue = [e.detail.value[0], 0, 0]
         let area = []
-        allCity[val[0]].children[0].children.forEach((val, index) => {
-          area.push({
-            'value': val.value,
-            'label': val.label
-          })
-        })
+        // allCity[val[0]].children[0].children.forEach((val, index) => {
+        //   area.push({
+        //     'value': val.value,
+        //     'label': val.label
+        //   })
+        // })
         const allArea = [{
           value: '',
           label: '全部'
@@ -448,7 +448,7 @@ export default class list extends wepy.page {
     this.sorts = this.$parent.globalData.riceTypes
     wx.getLocation({
       type: 'wgs84',
-      success: function(res) {  
+      success: function(res) {
         self.lat = res.latitude
         self.lng = res.longitude
         // self.sorts.length > 0 ? self.getCompanyList() : self.getTop15()
@@ -790,4 +790,3 @@ export default class list extends wepy.page {
     background: rgba(0,0,0,0.5);
 }
 </style>
-

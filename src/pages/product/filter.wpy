@@ -1,23 +1,28 @@
 <template>
-<view class="page bg__white weui-flex">
-  <view class="left">
-    <scroll-view scroll-y bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
-      <view class="items">
-        <block wx:for="{{productNameList}}" wx:key="id">
-          <view class="item text-center {{goods_id==item.id ? 'active': ''}}" id="{{item.id}}" data-name="{{item.descrip}}" @tap="changeGoodId">{{item.descrip}}</view>
-        </block>
-      </view>
-    </scroll-view>
+<view class="page bg__white">
+  <view class="weui-flex" wx:if="{{productList.length>0}}">
+    <view class="left">
+      <scroll-view scroll-y bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
+        <view class="items">
+          <block wx:for="{{productNameList}}" wx:key="id">
+            <view class="item text-center {{goods_id==item.id ? 'active': ''}}" id="{{item.id}}" data-name="{{item.descrip}}" @tap="changeGoodId">{{item.descrip}}</view>
+          </block>
+        </view>
+      </scroll-view>
+    </view>
+    <view class="weui-flex__item">
+      <scroll-view scroll-y bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
+        <view class="items">
+          <block wx:for="{{productList}}" wx:key="id">
+            <view class="item text-center" id="{{item.id}}" data-name="{{item.descrip}}" @tap="goChoose">{{item.descrip}}</view>
+          </block>
+        </view>
+      </scroll-view>
+    </view>
   </view>
-  <view class="weui-flex__item">
-    <scroll-view scroll-y bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
-      <view class="items">
-        <block wx:for="{{productList}}" wx:key="id">
-          <view class="item text-center" id="{{item.id}}" data-name="{{item.descrip}}" @tap="goChoose">{{item.descrip}}</view>
-        </block>
-      </view>
-    </scroll-view>
-  </view>
+  <block wx:else>
+    <view class="text-center">~o~o~暂无挂牌信息~o~o~</view>
+  </block>
 </view>
 </template>
 <script>
@@ -85,9 +90,12 @@ export default class Filter extends wepy.page {
   async onLoad(options) {
     this.goods_class_id = options.goods_class_id
     await this.getProductNameList()
-    this.goods_id = this.productNameList[0].id
-    this.goods_name = this.productNameList[0].descrip
-    await this.getAdvOptionsList()
+    if (this.productNameList[0]) {
+      this.goods_id = this.productNameList[0].id
+      this.goods_name = this.productNameList[0].descrip
+      await this.getAdvOptionsList()
+    }
+
   }
 }
 </script>
