@@ -192,6 +192,11 @@ export const __getApi = {
   _getOverseasSingleList: `${host}/resourcemap/selectlistAll.dbys`,
   _getOverseasDetails: `${host}/resourcemap/mapresourceDetail.dbys`,
   _getUserMsg: `${host}/resourcemap/mapresourceUpxuqiu.dbys`,
+
+  _getNewOverseasList: `${host}/resourcemap/selectxllist.dbys`,
+  _getNewOverseasDetails: `${host}/resourcemap/xlmapresourceDetail.dbys`,
+  _getMessageUp: `${host}/resourcemap/xlmapresourceUpxuqiu.dbys`,
+
   _getUpdateMsg: `${host}/wx/isNotice.dbys`, // 更新公告
 }
 

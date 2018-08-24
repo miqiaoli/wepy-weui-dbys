@@ -3,7 +3,28 @@
     <view class="banner">
       <image class="country-img" src="{{imgHost}}{{bannerImg}}" />
     </view>
-    <view wx:for="{{list}}" wx:for-item="single" wx:key="id">
+
+    <view wx:if="{{tab && tab == 1}}" wx:for="{{list}}" wx:for-item="single" wx:key="id">
+      <view class='details'>
+        <view class='name'>{{single.productName}}
+        </view>
+        <view class='flex-pos'>
+          <view class='des'>牌号</view>
+          <view class='des-answer'>{{single.grade}}</view>
+        </view>
+        <view class='flex-pos'>
+          <view class='des'>厂商</view>
+          <view class='des-answer'>{{single.grades}}</view>
+        </view>
+        <view class='flex-pos'>
+          <view class='des'>地点</view>
+          <view class='des-answer'>{{single.provinceName}}  {{single.cityName}}</view>
+        </view>
+          <image wx:if="{{single.meterial_img}}" class="" style="width: 100%;" mode="aspectFill"  src="{{imgHost}}{{single.meterial_img}}" />
+      </view>
+    </view>
+
+    <view wx:if="{{!tab}}" wx:for="{{list}}" wx:for-item="single" wx:key="id">
       <view class='details'>
         <view class='name'>{{single.productName}}
           <!-- -{{single.providerName}} -->
@@ -47,6 +68,8 @@
           <image wx:if="{{single.meterialImg}}" class="" style="width: 100%;" mode="aspectFill"  src="{{imgHost}}{{single.meterialImg}}" />
       </view>
     </view>
+ 
+
     <view class='call'>
       <button bindtap='makePhoneCall' type="primary">电话订购</button>
     </view>
@@ -94,7 +117,8 @@ export default class overseasSingleDetails extends wepy.page {
     disabledBoolean: true,
     textDisabled: false,
     bannerImg: "",
-    imgHost: ""
+    imgHost: "",
+    tab: ''
   };
   methods = {
     makePhoneCall(e) {
@@ -138,27 +162,37 @@ export default class overseasSingleDetails extends wepy.page {
         return;
       }
       this.$apply();
-      const res = await http.get(__getApi._getUserMsg, {
-        username: this.name,
-        phone: this.phone,
-        liuyan: this.des,
-        country: this.country,
-        productName: this.productName,
-        providerName: this.providerName
-      });
-      if (res.meta.success) {
-        this.name = "";
-        this.phone = "";
-        this.des = "";
-        this.$apply();
-        wx.showToast({
-          title: "留言成功，感谢您的反馈！",
-          icon: "none",
-          duration: 2000
-        });
-      }
+      this.messageUp()
+      
     }
   };
+  async messageUp() {
+    let _url = ''
+    if (this.tab) {
+      _url = __getApi._getMessageUp
+    } else {
+      _url = __getApi._getUserMsg
+    }
+    const res = await http.get(_url, {
+      username: this.name,
+      phone: this.phone,
+      liuyan: this.des,
+      country: this.country,
+      productName: this.productName,
+      providerName: this.providerName
+    });
+    if (res.meta.success) {
+      this.name = "";
+      this.phone = "";
+      this.des = "";
+      this.$apply();
+      wx.showToast({
+        title: "留言成功，感谢您的反馈！",
+        icon: "none",
+        duration: 2000
+      });
+    }
+  }
   async getDatails(country, productName) {
     const res = await http.get(__getApi._getOverseasDetails, {
       country: country,
@@ -169,12 +203,28 @@ export default class overseasSingleDetails extends wepy.page {
     this.bannerImg = res.data[0].backgroud;
     this.$apply();
   }
+  async newGetDatails(country, productName) {
+    const res = await http.get(__getApi._getNewOverseasDetails, {
+      country: country,
+      productName: productName
+    });
+    this.list = res.data;
+    this.providerName = this.list[0].productName;
+    this.bannerImg = res.data[0].backimg;
+    this.$apply();
+  }
   onLoad(options) {
     this.imgHost = __getApi.imgHost;
     this.country = options.country;
     this.productName = options.productName;
     this.$apply();
-    this.getDatails(options.country, options.productName);
+    if (options.tab && options.tab == 1) {
+      this.tab = options.tab
+      this.$apply()
+      this.newGetDatails(options.country, options.productName)
+    } else {
+      this.getDatails(options.country, options.productName);
+    }
   }
   onShareAppMessage(res) {
     return {

@@ -4,14 +4,40 @@
       <image class="country-img" src="{{imgHost}}{{bannerImg}}" />
     </view>
     <view class="tips">- 第八元素再生资源全球分布图 -</view>
+    <view class="tab weui-flex">
+      <view class="weui-flex__item" style="border-right: 1px solid #E4E7F0; {{ tab == 0 ? 'color: #323972; font-weight: bold;' : '' }}" bindtap="changTabs" data-tab="0">塑料原料</view>
+      <view class="weui-flex__item" style="border-right: 1px solid #E4E7F0; {{ tab == 1 ? 'color: #323972; font-weight: bold;' : '' }}" bindtap="changTabs" data-tab="1">再生塑料</view>
+    </view>
     <view style="border-top: 1px solid #E4E7F0;">
-      <view class="list">
+      <view class="list" wx:if="{{tab == 1}}">
         <view class="country">
+          <scroll-view scroll-y style="height: 400px;">
+          <view class="none-body" style="{{ index === order ? 'background: #F9F9F9' : 'background: #fff' }}" wx:for="{{newList}}" wx:for-item="double" wx:key="ids" data-index="{{index}}" bindtap="getSingles">
+            <view wx:if="{{index === order}}" class="line"></view>
+            <image class="country-flag" src="{{imgHost}}{{double.countrysign}}" />
+            <text class="country-name" style="{{ index === order ? 'font-weight: bold;' : 'font-weight:normal' }}">{{double.countryName}}</text>
+          </view>
+          </scroll-view>
+        </view>
+        <view style="flex: 1; display: flex; align-content: flex-start; flex-wrap: wrap;">
+          <view class="product" wx:for="{{newItem}}" wx:for-item="name" wx:key="id">
+            <navigator url="{{'./details?country='+country+'&productName='+name+'&tab=1'}}">
+              <view class="product-name">
+                <text class="item-icon"></text>{{name}}</view>
+            </navigator>
+          </view>
+        </view>
+      </view>
+
+      <view class="list" wx:else>
+        <view class="country">
+          <!-- <scroll-view scroll-y style="height: 400px;"> -->
           <view class="none-body" style="{{ index === order ? 'background: #F9F9F9' : 'background: #fff' }}" wx:for="{{list}}" wx:for-item="single" wx:key="id" data-index="{{index}}" bindtap="getSingle">
             <view wx:if="{{index === order}}" class="line"></view>
             <image class="country-flag" src="{{imgHost}}{{single.country_img}}" />
             <text class="country-name" style="{{ index === order ? 'font-weight: bold;' : 'font-weight:normal' }}">{{single.country}}</text>
           </view>
+          <!-- </scroll-view> -->
         </view>
         <view style="flex: 1; display: flex; align-content: flex-start; flex-wrap: wrap;">
           <view class="product" wx:for="{{item}}" wx:for-item="name" wx:key="id">
@@ -22,10 +48,16 @@
           </view>
         </view>
       </view>
+      
     </view>
   </view>
 </template>
 <style lang="less">
+::-webkit-scrollbar{
+width: 0;
+height: 0;
+color: transparent;
+}
 .overseas {
   background: #fff;
   padding-bottom: 20rpx;
@@ -42,6 +74,16 @@
     margin-bottom: 20rpx;
     font-size: 22rpx;
     color: #3d3d3d;
+    text-align: center;
+  }
+  .tab {
+    margin-top: 36rpx;
+    margin-bottom: 60rpx;
+    height: 80rpx;
+    // background: #323972;
+    font-size: 18px;
+    color: #3D3D3D;
+    line-height: 80rpx;
     text-align: center;
   }
   .list {
@@ -114,15 +156,33 @@ export default class overseasList extends wepy.page {
   };
   data = {
     list: [],
+    newList: '',
     item: [],
+    newItem: [],
     imgHost: "",
     token_access: "",
     bannerImg: "",
     bgColor: "#f0f",
     order: 0,
-    country: ""
+    country: "",
+    tab: 0
   };
   methods = {
+    async changTabs(event) {
+      this.tab = event.target.dataset.tab
+      this.order = 0
+      this.$apply()
+      // _getNewOverseasDetaails
+      if (event.target.dataset.tab == 1 && !this.newList) {
+        this.getNewList()
+      }
+    },
+    getSingles(e) {
+      this.order = e.currentTarget.dataset.index;
+      this.newItem = this.newList[e.currentTarget.dataset.index].productName;
+      this.country = this.newList[e.currentTarget.dataset.index].countryName;
+      this.$apply();
+    },
     getSingle(e) {
       this.order = e.currentTarget.dataset.index;
       this.item = this.list[e.currentTarget.dataset.index].productName;
@@ -130,6 +190,14 @@ export default class overseasList extends wepy.page {
       this.$apply();
     }
   };
+  async getNewList() {
+    const res = await http.get(__getApi._getNewOverseasList, {
+    })
+    this.newList = res.data
+    this.newItem = res.data[0].productName;
+    this.country = res.data[0].countryName;
+    this.$apply()
+  }
   async getList() {
     const res = await http.get(__getApi._getOverseasList, {});
     this.list = res.data;
@@ -149,6 +217,7 @@ export default class overseasList extends wepy.page {
     this.$apply();
     this.getList();
     this.getBanner();
+    
   }
   onShareAppMessage(res) {
     return {
