@@ -6,6 +6,10 @@
     <view class="tips">- 第八元素再生资源全球分布图 -</view>
     <view class="tab weui-flex">
       <view class="weui-flex__item" style="border-right: 1px solid #E4E7F0; {{ tab == 0 ? 'color: #323972; font-weight: bold;' : '' }}" bindtap="changTabs" data-tab="0">再生塑料</view>
+<<<<<<< HEAD
+=======
+      <view style="border-left: 1px solid #E4E7F0; height: 60rpx; margin-top: 8rpx;"></view>
+>>>>>>> 555f530aec3e1aee379df7d5a9ba95a74958a08f
       <view class="weui-flex__item" style="border-right: 1px solid #E4E7F0; {{ tab == 1 ? 'color: #323972; font-weight: bold;' : '' }}" bindtap="changTabs" data-tab="1">塑料原料</view>
     </view>
     <view style="border-top: 1px solid #E4E7F0;">
@@ -77,10 +81,13 @@ color: transparent;
     text-align: center;
   }
   .tab {
+    margin-left: 30rpx;
+    margin-right: 30rpx;
+    box-shadow: 0 2px 8px 0 #EAEAEA;
+    border-radius: 8rpx;
     margin-top: 36rpx;
     margin-bottom: 60rpx;
     height: 80rpx;
-    // background: #323972;
     font-size: 18px;
     color: #3D3D3D;
     line-height: 80rpx;
@@ -193,6 +200,7 @@ export default class overseasList extends wepy.page {
   async getNewList() {
     const res = await http.get(__getApi._getNewOverseasList, {
     })
+    console.log(res.data)
     this.newList = res.data
     this.newItem = res.data[0].productName;
     this.country = res.data[0].countryName;
