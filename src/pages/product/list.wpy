@@ -83,7 +83,7 @@
         <view class="module-box">
           <view class="top page__bd_spacing">品名 牌号 厂商</view>
           <view class="content weui-flex">
-            <view class="font-primary" wx:if="{{chooseGrade.name}}">
+            <view class="font-primary" wx:if="{{chooseGrade.name}}" @tap="bindGoSearch">
               {{chooseProduct.name}}/{{chooseGrade.name}}
             </view>
           </view>
@@ -293,6 +293,11 @@ export default class ProductList extends wepy.page {
       this.listType = !this.listType
       this.$apply()
     },
+    bindGoSearch(){
+        this.start = 1
+        this.isFilter = true
+        this.getProductList()
+    },
     changePriceType(e) {
       this.advFilter.orderbysort = e.detail.value
       this.start = 1
@@ -386,6 +391,10 @@ export default class ProductList extends wepy.page {
     this.chooseGrade.name = currPage.data.chooseGrade.name
     this.chooseVendor.id = currPage.data.chooseVendor.id
     this.chooseVendor.name = currPage.data.chooseVendor.name
+
+    this.filterParam.goods_id = currPage.data.chooseProduct.id || this.filterParam.goods_id
+    this.filterParam.att2_id = currPage.data.chooseGrade.id
+    this.filterParam.att1_id = this.chooseVendor.id
 
     this.start = 1
     this.isFilter = true

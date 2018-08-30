@@ -1,0 +1,129 @@
+<template>
+  <view wx:if="{{!isFilter}}" class="weui-flex">
+    <view class="left">
+      <scroll-view scroll-y style="height: 100vh;">
+        <view class="items" wx:for="{{sheetNameList}}" wx:for-item="first" wx:key="*this" wx:for-index='idxI'>
+          <view class="title">{{first.label}}</view>
+          <block wx:for="{{first.children}}" wx:for-item="second" wx:key="*this" wx:for-index="idxJ">
+            <view class="item {{(idxI == i && idxJ == j) ? 'active' : ''}}" bindtap="chooseThird" data-first-index='{{idxI}}' data-second-index='{{idxJ}}'>
+              <view class="text">{{second.label}}</view>
+            </view>
+          </block>
+        </view>
+      </scroll-view>
+    </view>
+    <view class="right weui-flex__item">
+      <view class="item" wx:for="{{thirdLevel}}" wx:key="*this" @tap="ideChoice" data-third-name="{{item.label}}"><text class="circle"></text>{{item.label}}</view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from "wepy";
+import base from "../mixins/base.js";
+import { __getApi } from "../config.js";
+
+export default class SearchBar extends wepy.component {
+  mixins = [base];
+  props = {
+    list: {
+      type: Object,
+      default: []
+    },
+    thirdLevel: {
+      type: Object,
+      default: []
+    },
+    isFilter: {
+      type: [Boolean, String],
+      default: true,
+      twoWay: true
+    },
+    nolist: {
+      type: [Boolean, String],
+      default: true,
+      twoWay: true
+    }
+  };
+
+  data = {
+    firstName: "",
+    secondName: "",
+    i : 0,
+    j : 0
+  };
+
+  methods = {
+      chooseThird(e) {
+        this.i = e.currentTarget.dataset.firstIndex
+        this.j = e.currentTarget.dataset.secondIndex
+        this.thirdLevel = this.list[this.i].children[this.j].children
+        this.$apply()
+      },
+      ideChoice(e){
+          this.firstName = this.list[this.i].label;
+          this.secondName = this.list[this.i].children[this.j].label + "/" + e.currentTarget.dataset.thirdName;
+          // this.sheetName = this.firstName + "/" + this.secondName;
+          this.$emit('eventName', this.firstName, this.secondName);
+          // this.getSheetList();
+          // this.getList()
+          this.isFilter = true;
+          // this.$apply();
+      }
+  };
+}
+</script>
+
+<style type="less">
+.choose-pro {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 99;
+    background: #fff;
+}
+.left {
+    width: 220rpx;
+    text-align: center;
+    border-right: 2rpx solid #E4E7F0;
+    .title {
+        font-size: 18px;
+        color: #8F8E94;
+        line-height: 80rpx;
+        background: #F4F5F9;
+    }
+    .item {
+        font-size: 16px;
+        color: #3D3D3D;
+        padding: 16rpx 0;
+        .text {
+            line-height: 48rpx;
+        }
+    }
+    .item.active {
+        background: #F9F9F9;
+    }
+    .item.active .text {
+        border-left: 8rpx solid #323972;
+    }
+}
+.right {
+    padding: 0 30rpx;
+    font-size: 16px;
+    color: #3D3D3D;
+    .item {
+        padding: 20rpx 0;
+        vertical-align: middle;
+    }
+    .circle {
+        width: 10rpx;
+        height: 10rpx;
+        background: #323972;
+        border-radius: 50%;
+        margin-right: 10rpx;
+        vertical-align: middle;
+    }
+}
+</style>

@@ -1,24 +1,18 @@
 <template>
 <view class="page bg__white">
   <view class="weui-flex" wx:if="{{productList.length>0}}">
-    <view class="left">
-      <scroll-view scroll-y bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
-        <view class="items">
-          <block wx:for="{{productNameList}}" wx:key="id">
-            <view class="item text-center {{goods_id==item.id ? 'active': ''}}" id="{{item.id}}" data-name="{{item.descrip}}" @tap="changeGoodId">{{item.descrip}}</view>
-          </block>
-        </view>
-      </scroll-view>
-    </view>
-    <view class="weui-flex__item">
-      <scroll-view scroll-y bindscrolltoupper="upper" bindscrolltolower="lower" bindscroll="scroll" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
-        <view class="items">
-          <block wx:for="{{productList}}" wx:key="id">
-            <view class="item text-center" id="{{item.id}}" data-name="{{item.descrip}}" @tap="goChoose">{{item.descrip}}</view>
-          </block>
-        </view>
-      </scroll-view>
-    </view>
+      <view class="left">
+        <scroll-view scroll-y style="height: 100vh;">
+          <view class="items" wx:for="{{productNameList}}" wx:key="id">
+              <view class="item  {{goods_id==item.id ? 'active': ''}}" id="{{item.id}}" data-name="{{item.descrip}}" @tap="changeGoodId">
+                <view class="text">{{item.descrip}}</view>
+              </view>
+          </view>
+        </scroll-view>
+      </view>
+      <view class="right weui-flex__item">
+        <view class="item" wx:for="{{productList}}" wx:key="id" id="{{item.id}}" data-name="{{item.descrip}}" @tap="goChoose"><text class="circle"></text>{{item.descrip}}</view>
+      </view>
   </view>
   <block wx:else>
     <view class="text-center">~o~o~暂无挂牌信息~o~o~</view>
@@ -102,19 +96,71 @@ export default class Filter extends wepy.page {
 
 <style lang="less">
 .left {
-    width: 240rpx;
-    height: 100%;
-    background: #F9F9F9;
+    width: 220rpx;
+    text-align: center;
+    border-right: 2rpx solid #E4E7F0;
+    .title {
+        font-size: 18px;
+        color: #8F8E94;
+        line-height: 80rpx;
+        background: #F4F5F9;
+    }
+    .item {
+        font-size: 16px;
+        color: #3D3D3D;
+        padding: 16rpx 0;
+        .text {
+            line-height: 48rpx;
+        }
+    }
+    .item.active {
+        background: #F9F9F9;
+    }
+    .item.active .text {
+        border-left: 8rpx solid #323972;
+    }
 }
-.item {
-    padding: 14rpx 40rpx;
-    position: relative;
-    border-bottom: 2rpx solid #E4E7F0;
+.right {
+    padding: 0 30rpx;
+    font-size: 16px;
+    color: #3D3D3D;
+    display: flex;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    .item {
+        width: 50%;
+        padding: 20rpx 0;
+        vertical-align: middle;
+    }
+    .circle {
+        width: 10rpx;
+        height: 10rpx;
+        background: #323972;
+        border-radius: 50%;
+        margin-right: 10rpx;
+        vertical-align: middle;
+    }
 }
-.left .item {
-    padding: 10rpx 40rpx;
-}
-.item.active {
-    background: #FFFFFF;
-}
+// .left {
+//     width: 240rpx;
+//     height: 100%;
+//     background: #F9F9F9;
+// }
+// .item {
+//     padding: 14rpx 40rpx;
+//     position: relative;
+//     border-bottom: 2rpx solid #E4E7F0;
+// }
+//
+// .left .items {
+//     border-right: 2rpx solid #E4E7F0;
+// }
+// .weui-flex__item .items {
+//     // padding: 10rpx 40rpx;
+//     border-top:10px solid #F9F9F9;
+// }
+// .item.active {
+//     background: #E8E8E8;
+//     font-weight: bold;
+// }
 </style>

@@ -17,7 +17,7 @@
                 <block wx:if="{{j.otherTwo}}">/{{j.otherTwo}}</block>
               </view>
               <view class="td td-fd {{j.comparePrice>=0?'font-rise':'font-decline'}}">{{j.priceMoney}}{{j.price_unit}}</view>
-              <view wx:if="{{j.comparePrice>0}}" class="td td-fd font-rise">+{{j.comparePrice}}%</view>
+              <view wx:if="{{j.comparePrice>0}}" class="td td-fd font-rise">{{j.comparePrice}}%</view>
               <view wx:elif="{{j.comparePrice<0}}" class="td td-fd font-decline">{{j.comparePrice}}%</view>
               <view wx:else="{{j.comparePrice===0}}" class="td td-fd font-level">0.00</view>
             </view>

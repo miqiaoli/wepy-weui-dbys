@@ -179,10 +179,13 @@ export default class indexList extends wepy.component {
     background: transparent;
   }
   .tag.orange {
-    color: #FB8E1E
+    color: #FB8E1E;
+    border-color: #FB8E1E;
+
   }
   .tag.blue {
-    color: #00B9E7
+    color: #00B9E7;
+    border-color: #00B9E7;
   }
   .price-cont {
     position: relative;

@@ -10,15 +10,33 @@
       <view class="arrow_down"></view>
     </view>
   </view>
-  <view hidden="{{pickerStatus}}">
-    <view hidden="{{nolist}}" class="mychart">
+  <view>
+    <view hidden="{{noList}}" class="mychart">
       <ec-canvas id="mychart" canvas-id="mychart-line" ec="{{ ec }}"></ec-canvas>
     </view>
-    <view class="image" wx:if="{{nolist}}">
+    <view class="image" wx:if="{{noList}}">
       <image style="width: 154px; height: 237px;" src="/images/nolist.png"></image>
     </view>
   </view>
-  <pickerView :list.sync="sheetNameList" :firstLevel.sync="firstLevel" :secondLevel.sync="secondLevel" :thirdLevel.sync='thirdLevel' :isFilter.sync="isFilter" :nolist.sync="nolist"></pickerView>
+
+  <view wx:if="{{!isFilter}}" class="choose-pro weui-flex">
+    <view class="left">
+      <scroll-view scroll-y style="height: 100vh;">
+        <view class="items" wx:for="{{sheetNameList}}" wx:for-item="first" wx:key="*this" wx:for-index='idxI'>
+          <view class="title">{{first.label}}</view>
+          <block wx:for="{{first.children}}" wx:for-item="second" wx:key="*this" wx:for-index="idxJ">
+            <view class="item {{(idxI == i && idxJ == j) ? 'active' : ''}}" bindtap="chooseThird" data-first-index='{{idxI}}' data-second-index='{{idxJ}}'>
+              <view class="text">{{second.label}}</view>
+            </view>
+          </block>
+        </view>
+      </scroll-view>
+    </view>
+    <view class="right weui-flex__item">
+      <view class="item" wx:for="{{thirdLevel}}" wx:key="*this" @tap="chooseOK" data-third-name="{{item.label}}"><text class="circle"></text>{{item.label}}</view>
+    </view>
+  </view>
+  <!-- <pickerView :list.sync="sheetNameList" :firstLevel.sync="firstLevel" :secondLevel.sync="secondLevel" :thirdLevel.sync='thirdLevel' :isFilter.sync="isFilter" :nolist.sync="nolist"></pickerView> -->
   <view class="weui-flex date-choose">
     <view class="weui-flex__item text-center {{dateIndex == '0' ? 'cur' : ''}}" data-index=0 @tap="changeDate">
       <view class="placeholder">近1周</view>
@@ -47,23 +65,23 @@
         <view class="th td-fd">涨跌幅</view>
       </view>
       <!-- <scroll-view scroll-y style="height: 200px;" bindscrolltolower="lower"> -->
-        <block wx:for="{{priceList}}" wx:key="id">
-          <view class="tr bg-b">
-            <view class="td td-hd">{{item.date}}</view>
-            <block wx:if="{{item.comparePrice>0}}">
-                <view class="td td-fd font-rise">{{item.price}}{{item.unit}}</view>
-                <view class="td td-fd font-rise">{{item.comparePrice}}%</view>
-            </block>
-            <block wx:elif="{{item.comparePrice<0}}">
-                <view class="td td-fd font-decline">{{item.price}}{{item.unit}}</view>
-                <view class="td td-fd font-decline">{{item.comparePrice}}%</view>
-            </block>
-            <block wx:else="{{item.comparePrice===0}}">
-                <view class="td td-fd font-level">{{item.price}}{{item.unit}}</view>
-                <view class="td td-fd font-level">0.00</view>
-            </block>
-          </view>
-        </block>
+      <block wx:for="{{priceList}}" wx:key="id">
+        <view class="tr bg-b">
+          <view class="td td-hd">{{item.date}}</view>
+          <block wx:if="{{item.comparePrice>0}}">
+            <view class="td td-fd font-rise">{{item.price}}{{item.unit}}</view>
+            <view class="td td-fd font-rise">{{item.comparePrice}}%</view>
+          </block>
+          <block wx:elif="{{item.comparePrice<0}}">
+            <view class="td td-fd font-decline">{{item.price}}{{item.unit}}</view>
+            <view class="td td-fd font-decline">{{item.comparePrice}}%</view>
+          </block>
+          <block wx:else="{{item.comparePrice===0}}">
+            <view class="td td-fd font-level">{{item.price}}{{item.unit}}</view>
+            <view class="td td-fd font-level">0.00</view>
+          </block>
+        </view>
+      </block>
       <!-- </scroll-view> -->
     </view>
     <listStates :loading.sync="loading" :noMore.sync="noMoreList" :noList.sync="noList"></listStates>
@@ -78,7 +96,6 @@ import {
 } from "../../config.js";
 import base from "../../mixins/base";
 import http from "../../utils/Http";
-import pickerView from "../../components/pickerView";
 import * as echarts from "../../ec-canvas/echarts";
 import listStates from '../../components/listStates'
 
@@ -160,7 +177,6 @@ function initChart(canvas, width, height) {
 export default class ChartCompare extends wepy.page {
   mixins = [base]
   components = {
-    pickerView,
     listStates
   };
   config = {
@@ -187,36 +203,51 @@ export default class ChartCompare extends wepy.page {
     sheetName: [],
     isFilter: true,
     type: 0,
-    firstLevel: [],
-    secondLevel: [],
     thirdLevel: [],
     firstName: "",
     secondName: "",
     dateIndex: 0,
     chartState: false,
-    nolist: false,
-    pickerStatus: false,
+    // pickerStatus: false,
     ec: {
       onInit: initChart,
       lazyLoad: true
     },
-    firstcompareName: ""
+    firstcompareName: "",
+    i: 0,
+    j: 0
   };
   events = {
-    eventName: (p1, $event) => {
-      const firstName = this.sheetNameList[p1[0]].label;
-      const secondName = this.sheetNameList[p1[0]].children[p1[1]].label;
-      const thirdName = this.sheetNameList[p1[0]].children[p1[1]].children[
-        p1[2]
-      ].label;
-      this.sheetName = firstName + "/" + secondName + "/" + thirdName;
-      this.firstName = firstName;
-      this.secondName = secondName + "/" + thirdName;
-      this.getSheetList();
-      this.$apply();
-    }
+    // eventName: (p1, $event) => {
+    //   const firstName = this.sheetNameList[p1[0]].label;
+    //   const secondName = this.sheetNameList[p1[0]].children[p1[1]].label;
+    //   const thirdName = this.sheetNameList[p1[0]].children[p1[1]].children[
+    //     p1[2]
+    //   ].label;
+    //   this.sheetName = firstName + "/" + secondName + "/" + thirdName;
+    //   this.firstName = firstName;
+    //   this.secondName = secondName + "/" + thirdName;
+    //   this.getSheetList();
+    //   this.getList()
+    //   this.$apply();
+    // }
   };
   methods = {
+    chooseThird(e) {
+      this.i = e.currentTarget.dataset.firstIndex
+      this.j = e.currentTarget.dataset.secondIndex
+      this.thirdLevel = this.sheetNameList[this.i].children[this.j].children
+      this.$apply()
+    },
+    chooseOK(e){
+        this.firstName = this.sheetNameList[this.i].label;
+        this.secondName = this.sheetNameList[this.i].children[this.j].label + "/" + e.currentTarget.dataset.thirdName;
+        this.sheetName = this.firstName + "/" + this.secondName;
+        this.getSheetList();
+        this.getList()
+        this.isFilter = true;
+        this.$apply();
+    },
     changeDate(e) {
       this.dateIndex = e.currentTarget.dataset.index;
       let data = new Date();
@@ -246,51 +277,26 @@ export default class ChartCompare extends wepy.page {
     },
     isFilter() {
       this.isFilter = false;
-      this.nolist = true;
+      this.noList = true;
       this.$apply();
     },
     goCompare() {
+      // wepy.navigateTo({
+      //   url: "./chart-compare?name=" + encodeURIComponent(this.sheetName)
+      // });
       wepy.navigateTo({
-        url: "./chart-compare?name=" + encodeURIComponent(this.sheetName)
-      });
+          url: './chart-filter?name=' + encodeURIComponent(this.sheetName)
+      })
     }
   };
   async getSheetNames() {
     const res = await http.get(__getApi.getLabel);
     if (res.false) return;
     this.sheetNameList = res.data;
-    const list = res.data;
+    this.thirdLevel = this.sheetNameList[0].children[0].children;
 
-    let firstLevel = [];
-    let secondLevel = [];
-    let thirdLevel = [];
-
-    for (let i = 0; i < list.length; i++) {
-      firstLevel.push(list[i].label);
-    }
-
-    for (let i = 0; i < list[0].children.length; i++) {
-      secondLevel.push(list[0].children[i].label);
-    }
-
-    for (let i = 0; i < list[0].children[0].children.length; i++) {
-      thirdLevel.push(list[0].children[0].children[i].label);
-    }
-
-    this.firstLevel = firstLevel;
-    this.secondLevel = secondLevel;
-    this.thirdLevel = thirdLevel;
-    this.sheetName =
-      firstLevel[this.type] +
-      "/" +
-      list[this.type].children[0].label +
-      "/" +
-      list[this.type].children[0].children[0].label;
-    this.firstName = firstLevel[this.type];
-    this.secondName =
-      list[this.type].children[0].label +
-      "/" +
-      list[this.type].children[0].children[0].label;
+    this.firstName = this.sheetNameList[this.type].label;
+    this.secondName = this.sheetNameList[this.type].children[0].label + "/" + this.sheetNameList[this.type].children[0].children[0].label;
     this.$apply();
   }
   async getSheetList() {
@@ -305,7 +311,7 @@ export default class ChartCompare extends wepy.page {
     if (res.false) return;
     this.chartData = res.data;
     if (res.data.price.length > 0) {
-      this.nolist = false;
+      this.noList = false;
       chart.setOption({
         legend: {
           data: [res.data.name, "5日均价"]
@@ -331,7 +337,7 @@ export default class ChartCompare extends wepy.page {
         ]
       });
     } else {
-      this.nolist = true;
+      this.noList = true;
     }
     wepy.hideLoading();
     this.$apply();
@@ -392,14 +398,13 @@ export default class ChartCompare extends wepy.page {
     this.firstName = options.firstName || this.firstName;
     this.secondName = options.secondName || this.secondName;
     this.sheetName = this.firstName + "/" + this.secondName;
-    // await this.getSheetList();
     wepy.showLoading({
       title: "加载中"
     });
     setTimeout(() => {
       this.getSheetList()
       this.getList()
-  }, 500)
+    }, 500)
     this.$apply();
   }
 
@@ -412,7 +417,7 @@ export default class ChartCompare extends wepy.page {
 }
 </script>
 
-<style lang="css">
+<style lang="less">
 /* .container {
   position: absolute;
   top: 0;
@@ -424,100 +429,151 @@ export default class ChartCompare extends wepy.page {
   width: 375px;
   height: 300px;
 } */
+.choose-pro {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 99;
+    background: #fff;
+}
+.left {
+    width: 220rpx;
+    text-align: center;
+    border-right: 2rpx solid #E4E7F0;
+    .title {
+        font-size: 18px;
+        color: #8F8E94;
+        line-height: 80rpx;
+        background: #F4F5F9;
+    }
+    .item {
+        font-size: 16px;
+        color: #3D3D3D;
+        padding: 16rpx 0;
+        .text {
+            line-height: 48rpx;
+        }
+    }
+    .item.active {
+        background: #F9F9F9;
+    }
+    .item.active .text {
+        border-left: 8rpx solid #323972;
+    }
+}
+.right {
+    padding: 0 30rpx;
+    font-size: 16px;
+    color: #3D3D3D;
+    .item {
+        padding: 20rpx 0;
+        vertical-align: middle;
+    }
+    .circle {
+        width: 10rpx;
+        height: 10rpx;
+        background: #323972;
+        border-radius: 50%;
+        margin-right: 10rpx;
+        vertical-align: middle;
+    }
+}
 .total {
-  font-size: 40rpx;
-  color: #1e1e1e;
-  padding-bottom: 20rpx;
+    font-size: 40rpx;
+    color: #1e1e1e;
+    padding-bottom: 20rpx;
 }
 .second-name {
-  font-size: 18px;
-  color: #323972;
-  background: #a1a6bb;
-  border-radius: 2px;
-  padding: 6rpx 30rpx;
+    font-size: 18px;
+    color: #323972;
+    background: #a1a6bb;
+    border-radius: 2px;
+    padding: 6rpx 30rpx;
 }
 .date-choose {
-  height: 80rpx;
-  background: #e4e7f0;
+    height: 80rpx;
+    background: #e4e7f0;
 }
 .date-choose .weui-flex__item {
-  height: 62rpx;
-  line-height: 62rpx;
+    height: 62rpx;
+    line-height: 62rpx;
 }
 .date-choose .weui-flex__item.cur {
-  background: #fff;
+    background: #fff;
 }
 .compare {
-  margin: 40rpx 0;
+    margin: 40rpx 0;
 }
 .image {
-  text-align: center;
+    text-align: center;
 }
 .more {
-  font-size: 28rpx;
-  color: #8f8e94;
-  line-height: 68rpx;
+    font-size: 28rpx;
+    color: #8f8e94;
+    line-height: 68rpx;
 }
 .arrow_down {
-  width: 0;
-  height: 0;
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 4px solid #8f8e94;
-  margin-top: 30rpx;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #8f8e94;
+    margin-top: 30rpx;
 }
 .table {
-  border: 0px solid darkgray;
-  font-size: 28rpx;
+    border: 0 solid darkgray;
+    font-size: 28rpx;
 }
 .tr {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  min-height: 80rpx;
-  align-items: center;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    min-height: 80rpx;
+    align-items: center;
 }
 .th {
-  justify-content:center;
-  text-align: left;
-  font-weight: bold;
+    justify-content: center;
+    text-align: left;
+    font-weight: bold;
 }
 .td {
-  justify-content: center;
-  text-align: left;
+    justify-content: center;
+    text-align: left;
 }
 .bg-w {
-  background: #F4F5F9;
-  color: #323972;
+    background: #F4F5F9;
+    color: #323972;
 }
 .td-head {
-  width: 100%;
-  text-align: left;
-  font-weight: bold;
-  padding-left: 20rpx;
+    width: 100%;
+    text-align: left;
+    font-weight: bold;
+    padding-left: 20rpx;
 }
 .td-hd {
-  width: 33.33%;
-  text-align: center;
+    width: 33.33%;
+    text-align: center;
 }
 .td-bd {
-  width: 33.33%;
-  text-align: center;
+    width: 33.33%;
+    text-align: center;
 }
 .td-fd {
-  width: 33.33%;
-  text-align: center;
+    width: 33.33%;
+    text-align: center;
 }
 .bg-b {
     border-bottom: 2rpx solid #EDEDED;
 }
 .font-rise {
-  color: #e64340;
+    color: #e64340;
 }
 .font-decline {
-  color: #33e751;
+    color: #33e751;
 }
 .font-level {
-  color: #999;
+    color: #999;
 }
 </style>

@@ -10,15 +10,15 @@
         </view>
         <view class='flex-pos'>
           <view class='des'>牌号</view>
-          <view class='des-answer'>{{single.grade}}</view>
+          <view class='des-answer' wx:if="{{single.grade}}">{{single.grade}}</view>
         </view>
         <view class='flex-pos'>
           <view class='des'>厂商</view>
-          <view class='des-answer'>{{single.grades}}</view>
+          <view class='des-answer' wx:if="{{single.grades}}">{{single.grades}}</view>
         </view>
         <view class='flex-pos'>
           <view class='des'>地点</view>
-          <view class='des-answer'>{{single.provinceName}}  {{single.cityName}}</view>
+          <view class='des-answer'>{{single.provinceName ? single.provinceName : ''}} {{single.cityName ? single.cityName : ''}}</view>
         </view>
           <image wx:if="{{single.meterial_img}}" class="" style="width: 100%;" mode="aspectFill"  src="{{imgHost}}{{single.meterial_img}}" />
       </view>
@@ -68,7 +68,7 @@
           <image wx:if="{{single.meterialImg}}" class="" style="width: 100%;" mode="aspectFill"  src="{{imgHost}}{{single.meterialImg}}" />
       </view>
     </view>
- 
+
 
     <view class='call'>
       <button bindtap='makePhoneCall' type="primary">电话订购</button>
@@ -163,7 +163,7 @@ export default class overseasSingleDetails extends wepy.page {
       }
       this.$apply();
       this.messageUp()
-      
+
     }
   };
   async messageUp() {

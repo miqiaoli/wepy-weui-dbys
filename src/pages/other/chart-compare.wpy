@@ -1,59 +1,78 @@
 <template>
-  <view class="container bg__white">
-    <view class="page__bd_spacing">
-      <!-- <view class="total">{{firstName}}</view> -->
-      <view class="weui-flex">
-        <!-- <view class="weui-flex__item"> -->
-        <!-- <text class="second-name">{{firstcompareName}}</text> -->
-        <!-- </view>
+<view class="container bg__white">
+  <!-- <view class="page__bd_spacing"> -->
+  <!-- <view class="total">{{firstName}}</view> -->
+  <!-- <view class="weui-flex"> -->
+  <!-- <view class="weui-flex__item"> -->
+  <!-- <text class="second-name">{{firstcompareName}}</text> -->
+  <!-- </view>
          <view class="weui-flex__item"> -->
-        <!-- <text class="second-name">{{secondName}}</text> -->
-        <!-- </view> -->
-        <!-- <view class="more" @tap="isFilter">显示更多</view> -->
-      </view>
-    </view>
-    <view hidden="{{nolist}}" class="mychart">
+  <!-- <text class="second-name">{{secondName}}</text> -->
+  <!-- </view> -->
+  <!-- <view class="more" @tap="isFilter">显示更多</view> -->
+  <!-- </view> -->
+  <!-- </view> -->
+
+  <view hidden="{{nolist}}" class="mychart">
     <!-- <ecCanvas :ec.sync="ec" height="200px" bind:init="echartInit"></ecCanvas> -->
     <!-- <ec-canvas id="mychart" canvas-id="mychart-line" ec="{{ ec }}" bind:init="echartInit"></ec-canvas> -->
     <ec-canvas id="mychart" canvas-id="mychart-line" ec="{{ ec }}"></ec-canvas>
 
-    </view>
-    <view class="image" wx:if="{{nolist}}">
-       <image style="width: 200px; height: 237px;" src="/images/nolist.png"></image>
-    </view>
-    <pickerView :list.sync="sheetNameList" :firstLevel.sync="firstLevel" :secondLevel.sync="secondLevel" :thirdLevel.sync='thirdLevel' :isFilter.sync="isFilter"></pickerView>
-    <view class="weui-flex date-choose">
-      <view class="weui-flex__item text-center {{dateIndex === 0 ? 'cur' : ''}}" data-index=0 @tap="changeDate">
-        <view class="placeholder">近1周</view>
-      </view>
-      <view class="weui-flex__item text-center {{dateIndex === 1 ? 'cur' : ''}}" data-index=1 @tap="changeDate">
-        <view class="placeholder">近1月</view>
-      </view>
-      <view class="weui-flex__item text-center {{dateIndex === 2 ? 'cur' : ''}}" data-index=2 @tap="changeDate">
-        <view class="placeholder">近3月</view>
-      </view>
-      <view class="weui-flex__item text-center {{dateIndex === 3 ? 'cur' : ''}}" data-index=3 @tap="changeDate">
-        <view class="placeholder">近6月</view>
-      </view>
-      <view class="weui-flex__item text-center {{dateIndex === 4 ? 'cur' : ''}}" data-index=4 @tap="changeDate">
-        <view class="placeholder">近1年</view>
-      </view>
-    </view>
-    <!-- <view class="compare page__bd_spacing">
-      <button class="weui-btn" type="primary" @tap="isFilter">趋势对比</button>
-    </view> -->
   </view>
+  <view class="image" wx:if="{{nolist}}">
+    <image style="width: 200px; height: 237px;" src="/images/nolist.png"></image>
+  </view>
+
+  <!-- <view wx:if="{{!isFilter}}" class="choose-pro weui-flex">
+    <view class="left">
+      <scroll-view scroll-y style="height: 100vh;">
+        <view class="items" wx:for="{{sheetNameList}}" wx:for-item="first" wx:key="*this" wx:for-index='idxI'>
+          <view class="title">{{first.label}}</view>
+          <block wx:for="{{first.children}}" wx:for-item="second" wx:key="*this" wx:for-index="idxJ">
+            <view class="item {{(idxI == i && idxJ == j) ? 'active' : ''}}" bindtap="chooseThird" data-first-index='{{idxI}}' data-second-index='{{idxJ}}'>
+              <view class="text">{{second.label}}</view>
+            </view>
+          </block>
+        </view>
+      </scroll-view>
+    </view>
+    <view class="right weui-flex__item">
+      <view class="item" wx:for="{{thirdLevel}}" wx:key="*this" @tap="chooseOK" data-third-name="{{item.label}}"><text class="circle"></text>{{item.label}}</view>
+    </view>
+  </view> -->
+  <!-- <proFilter :list.sync="sheetNameList" :thirdLevel.sync='thirdLevel' :isFilter.sync="isFilter"></proFilter> -->
+  <view class="weui-flex date-choose">
+    <view class="weui-flex__item text-center {{dateIndex === 0 ? 'cur' : ''}}" data-index=0 @tap="changeDate">
+      <view class="placeholder">近1周</view>
+    </view>
+    <view class="weui-flex__item text-center {{dateIndex === 1 ? 'cur' : ''}}" data-index=1 @tap="changeDate">
+      <view class="placeholder">近1月</view>
+    </view>
+    <view class="weui-flex__item text-center {{dateIndex === 2 ? 'cur' : ''}}" data-index=2 @tap="changeDate">
+      <view class="placeholder">近3月</view>
+    </view>
+    <view class="weui-flex__item text-center {{dateIndex === 3 ? 'cur' : ''}}" data-index=3 @tap="changeDate">
+      <view class="placeholder">近6月</view>
+    </view>
+    <view class="weui-flex__item text-center {{dateIndex === 4 ? 'cur' : ''}}" data-index=4 @tap="changeDate">
+      <view class="placeholder">近1年</view>
+    </view>
+  </view>
+</view>
 </template>
 
 <script>
 import wepy from "wepy";
-import { __getApi } from "../../config.js";
+import {
+  __getApi
+} from "../../config.js";
 import base from "../../mixins/base";
 import http from "../../utils/Http";
-import pickerView from "../../components/pickerView";
+// import proFilter from "../../components/proFilter";
 import * as echarts from "../../ec-canvas/echarts";
 
 let chart = null;
+
 function initChart(canvas, width, height) {
   chart = echarts.init(canvas, null, {
     width: width,
@@ -93,17 +112,17 @@ function initChart(canvas, width, height) {
             return (
               params.value +
               "\n" +
-              (params.seriesData[0]
-                ? params.seriesData[0].seriesName +
-                  "：" +
-                  params.seriesData[0].data
-                : "") +
+              (params.seriesData[0] ?
+                params.seriesData[0].seriesName +
+                "：" +
+                params.seriesData[0].data :
+                "") +
               "\n" +
-              (params.seriesData[1]
-                ? params.seriesData[1].seriesName +
-                  "：" +
-                  params.seriesData[1].data
-                : "")
+              (params.seriesData[1] ?
+                params.seriesData[1].seriesName +
+                "：" +
+                params.seriesData[1].data :
+                "")
             );
           }
         }
@@ -131,9 +150,6 @@ function initChart(canvas, width, height) {
 }
 export default class ChartCompare extends wepy.page {
   mixins = [base];
-  components = {
-    pickerView
-  };
   config = {
     navigationBarTitleText: "小八塑价对比",
     usingComponents: {
@@ -149,34 +165,15 @@ export default class ChartCompare extends wepy.page {
     sheetNameList: [],
     sheetName: [],
     isFilter: false,
-    type: 0,
-    firstLevel: [],
-    secondLevel: [],
-    thirdLevel: [],
-    firstName: "",
-    secondName: "",
     dateIndex: 0,
-    chartState: false,
     nolist: false,
     ec: {
       onInit: initChart,
       lazyLoad: true
     },
-    firstcompareName: ""
-  };
-  events = {
-    eventName: (p1, $event) => {
-      const firstName = this.sheetNameList[p1[0]].label;
-      const secondName = this.sheetNameList[p1[0]].children[p1[1]].label;
-      const thirdName = this.sheetNameList[p1[0]].children[p1[1]].children[
-        p1[2]
-      ].label;
-      this.sheetName = firstName + "/" + secondName + "/" + thirdName;
-      this.firstName = firstName;
-      this.secondName = secondName + "/" + thirdName;
-      this.getSheetList();
-      this.$apply();
-    }
+    firstcompareName: "",
+    i: 0,
+    j: 0
   };
   methods = {
     changeDate(e) {
@@ -205,44 +202,8 @@ export default class ChartCompare extends wepy.page {
       this.startDate = this.formatTime(startDate);
       this.getSheetList();
       this.$apply();
-    },
-    isFilter() {
-      this.isFilter = false;
-      this.$apply();
     }
   };
-  async getSheetNames() {
-    const res = await http.get(__getApi._getSameTypeNameList, {
-      selectedName: this.firstcompareName
-    });
-    if (res.false) return;
-    this.sheetNameList = res.data;
-    const list = res.data;
-
-    let firstLevel = [];
-    let secondLevel = [];
-    let thirdLevel = [];
-
-    for (let i = 0; i < list.length; i++) {
-      firstLevel.push(list[i].label);
-    }
-
-    for (let i = 0; i < list[0].children.length; i++) {
-      secondLevel.push(list[0].children[i].label);
-    }
-
-    for (let i = 0; i < list[0].children[0].children.length; i++) {
-      thirdLevel.push(list[0].children[0].children[i].label);
-    }
-
-    this.firstLevel = firstLevel;
-    this.secondLevel = secondLevel;
-    this.thirdLevel = thirdLevel;
-    this.sheetName = firstLevel[0] + "/" + secondLevel[0] + "/" + thirdLevel[0];
-    this.firstName = firstLevel[0];
-    this.secondName = secondLevel[0] + "/" + thirdLevel[0];
-    this.$apply();
-  }
   async getSheetList() {
     wepy.showLoading({
       title: "加载中"
@@ -261,16 +222,13 @@ export default class ChartCompare extends wepy.page {
           data: [res.data.name0, res.data.name1]
         },
         xAxis: {
-          data:
-            res.data.date0.length > res.data.date1.length
-              ? res.data.date0
-              : res.data.date1
+          data: res.data.date0.length > res.data.date1.length ?
+            res.data.date0 : res.data.date1
         },
         yAxis: {
           name: "销售单价 " + res.data.unit
         },
-        series: [
-          {
+        series: [{
             name: res.data.name0,
             type: "line",
             smooth: true,
@@ -298,7 +256,8 @@ export default class ChartCompare extends wepy.page {
     }
     this.$wxpage.selectComponent("#mychart").data.ec.onInit = initChart;
     this.$wxpage.selectComponent("#mychart").init();
-    this.firstcompareName = decodeURIComponent(options.name) || this.firstcompareName;
+    this.firstcompareName = decodeURIComponent(options.name1) || this.firstcompareName;
+    this.sheetName = decodeURIComponent(options.name2) || this.sheetName;
 
     let data = new Date();
     let startDate = new Date(data);
@@ -306,58 +265,42 @@ export default class ChartCompare extends wepy.page {
     this.startDate = this.formatTime(startDate);
     this.endDate = this.formatTime(data);
 
-    await this.getSheetNames();
-    // await this.getSheetList();
+    setTimeout(() => {
+      this.getSheetList()
+    }, 500)
     this.$apply();
   }
 }
 </script>
 
-<style lang="css">
-.container {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
-  /* display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box; */
-}
-#mychart {
-  width: 375px;
-  height: 300px;
-}
+<style lang="less">
 .total {
-  font-size: 40rpx;
-  color: #1e1e1e;
-  padding-bottom: 20rpx;
+    font-size: 40rpx;
+    color: #1e1e1e;
+    padding-bottom: 20rpx;
 }
 .second-name {
-  font-size: 18px;
-  color: #323972;
-  background: #a1a6bb;
-  border-radius: 2px;
-  padding: 6rpx 30rpx;
+    font-size: 18px;
+    color: #323972;
+    background: #a1a6bb;
+    border-radius: 2px;
+    padding: 6rpx 30rpx;
 }
 .date-choose {
-  height: 80rpx;
-  background: #e4e7f0;
+    height: 80rpx;
+    background: #e4e7f0;
 }
 .date-choose .weui-flex__item {
-  height: 62rpx;
-  line-height: 62rpx;
+    height: 62rpx;
+    line-height: 62rpx;
 }
 .date-choose .weui-flex__item.cur {
-  background: #fff;
+    background: #fff;
 }
 .compare {
-  margin-top: 80rpx;
+    margin-top: 80rpx;
 }
 .image {
-  text-align: center;
+    text-align: center;
 }
 </style>
