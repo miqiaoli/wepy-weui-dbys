@@ -18,15 +18,15 @@
       </view>
       <view class="weui-flex">
         <view class="company-type" style="backgound: #FFF3F2; border: 1px solid #F9E7E5;">类型</view>
-        <view class="company-name">企业类型：   {{ detail.companyType }}</view>
+        <view class="company-name">企业类型：<text style="padding-left: 4px;">{{ detail.companyType }}</text></view>
       </view>
       <view class="weui-flex">
         <view class="company-type" style="color: #68C486; background: #EBFAE7; border: 1px solid #DDEED7;">模式</view>
-        <view class="company-name">经营模式：   {{ detail.businessModel }}</view>
+        <view class="company-name">经营模式：<text style="padding-left: 4px;">{{ detail.businessModel }}</text></view>
       </view>
       <view class="weui-flex">
         <view class="company-type" style="color: #D9945B; background: #FFFEF8; border: 1px solid #F2EAD6;">注册</view>
-        <view class="company-name">注册地区：   {{ detail.registerArea }}</view>
+        <view class="company-name">注册地区：<text style="padding-left: 4px;">{{ detail.registerArea }}</text></view>
       </view>
     </view>
     <view class="details">
