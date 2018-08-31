@@ -1,64 +1,66 @@
 <template>
-  <view class="login page bg__white">
-    <image class="login-bg" src="/images/login-bg.png"></image>
-    <view class="page__bd page__bd_spacing">
-      <form class="form" bindsubmit="loginBtnClick">
-        <view class="weui-cells__title">用户名</view>
-        <view class="weui-cells weui-cells_after-title">
-          <view class="weui-cell weui-cell_input h4">
-            <view class="weui-cell__bd">
-              <input type="text" name='username' placeholder="请输入用户名" />
-            </view>
+<view class="login page bg__white">
+  <image class="login-bg" src="/images/login-bg.png"></image>
+  <view class="page__bd page__bd_spacing">
+    <form class="form" bindsubmit="loginBtnClick">
+      <view class="weui-cells__title">用户名</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input h4">
+          <view class="weui-cell__bd">
+            <input type="text" name='username' placeholder="请输入用户名" />
           </view>
         </view>
-          <view class="weui-cells__title">密码</view>
-          <view class="weui-cells weui-cells_after-title">
-            <view class="weui-cell weui-cell_input h4">
-              <view class="weui-cell__bd">
-                <input type="password" name="password" placeholder="请输入密码" />
-              </view>
-            </view>
+      </view>
+      <view class="weui-cells__title">密码</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input h4">
+          <view class="weui-cell__bd">
+            <input type="password" name="password" placeholder="请输入密码" />
           </view>
-          <view class="weui-btn-area">
-             <button class="weui-btn" type="primary" formType="submit">登录</button>
-          </view>
-        <!-- <view class="item-input">
+        </view>
+      </view>
+      <view class="weui-btn-area">
+        <button class="weui-btn" type="primary" formType="submit">登录</button>
+      </view>
+      <!-- <view class="item-input">
           <input type="text" name='username' placeholder="请输入用户名" />
         </view>
         <view class="item-input">
           <input type="password" name="password" placeholder="请输入密码" />
         </view> -->
-        <!-- <view class="item-input page__bd_spacing">
+      <!-- <view class="item-input page__bd_spacing">
           <button class="weui-btn" type="primary" formType="submit">登录</button>
         </view> -->
-        <view class="weui-flex">
-          <view class="font-primary">
-            <navigator url="./registered?token_access={{token_access}}" open-type="reLaunch" hover-class="navigator-hover">注册新用户</navigator>
-          </view>
-          <view class="weui-flex__item"></view>
-          <view class="font-primary">
-            <navigator url="./forget-password?token_access={{token_access}}" open-type="reLaunch" hover-class="navigator-hover">忘记密码</navigator>
-          </view>
+      <view class="weui-flex">
+        <view class="font-primary">
+          <navigator url="./registered?token_access={{token_access}}" open-type="reLaunch" hover-class="navigator-hover">注册新用户</navigator>
         </view>
-      </form>
-      <view class="weui-phone text-center">
-        <image class="phone" src="/images/icon/phone.png"></image>
-        <text class="font-primary h4" bindtap='makePhoneCall' data-phone='400-888-9383'>客服热线：400-888-9383</text>
+        <view class="weui-flex__item"></view>
+        <view class="font-primary">
+          <navigator url="./forget-password?token_access={{token_access}}" open-type="reLaunch" hover-class="navigator-hover">忘记密码</navigator>
+        </view>
       </view>
-      <view class="weui-index">
-        <navigator url="/pages/index" open-type="reLaunch" hover-class="navigator-hover">
-          <image class="" src="/images/back_index.png"></image>
-        </navigator>
-      </view>
+    </form>
+    <view class="weui-phone text-center">
+      <image class="phone" src="/images/icon/phone.png"></image>
+      <text class="font-primary h4" bindtap='makePhoneCall' data-phone='400-888-9383'>客服热线：400-888-9383</text>
+    </view>
+    <view class="weui-index">
+      <navigator url="/pages/index" open-type="reLaunch" hover-class="navigator-hover">
+        <image class="" src="/images/back_index.png"></image>
+      </navigator>
     </view>
   </view>
+</view>
 </template>
 
 <script>
 import wepy from "wepy";
 import base from "../../mixins/base";
 import http from "../../utils/Http";
-import { __getApi } from "../../config.js";
+import {
+  __getApi
+} from "../../config.js";
 
 export default class Index extends wepy.page {
   mixins = [base];
@@ -71,6 +73,11 @@ export default class Index extends wepy.page {
     password: ""
   };
   methods = {
+    makePhoneCall(e) {
+      wx.makePhoneCall({
+        phoneNumber: e.currentTarget.dataset.phone
+      })
+    },
     async loginBtnClick(e) {
       if (!this.required(e.detail.value.username)) {
         this.$alert("温馨提示", "请输入用户名");
