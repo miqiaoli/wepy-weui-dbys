@@ -17,16 +17,16 @@
         <image class="rice-icon" src="/images/icon/icon_rice.png" />
       </view>
       <view class="weui-flex">
-        <view class="company-type" style="backgound: #FFF3F2;">类型</view>
-        <view class="company-name">企业类型： {{ detail.companyType }}</view>
+        <view class="company-type" style="backgound: #FFF3F2; border: 1px solid #F9E7E5;">类型</view>
+        <view class="company-name">企业类型：   {{ detail.companyType }}</view>
       </view>
       <view class="weui-flex">
-        <view class="company-type" style="color: #68C486; background: #EBFAE7;">模式</view>
-        <view class="company-name">经营模式： {{ detail.businessModel }}</view>
+        <view class="company-type" style="color: #68C486; background: #EBFAE7; border: 1px solid #DDEED7;">模式</view>
+        <view class="company-name">经营模式：   {{ detail.businessModel }}</view>
       </view>
       <view class="weui-flex">
-        <view class="company-type" style="color: #D9945B; background: #FFFEF8;">注册</view>
-        <view class="company-name">注册地区： {{ detail.registerArea }}</view>
+        <view class="company-type" style="color: #D9945B; background: #FFFEF8; border: 1px solid #F2EAD6;">注册</view>
+        <view class="company-name">注册地区：   {{ detail.registerArea }}</view>
       </view>
     </view>
     <view class="details">
@@ -207,7 +207,7 @@
     text-align: center;
     .company-type {
       background: #FFF3F2;
-      border: 1px solid #F9E7E5;
+      // border: 1px solid #F9E7E5;
       border-radius: 4rpx;
       width: 52rpx;
       font-size: 20rpx;
