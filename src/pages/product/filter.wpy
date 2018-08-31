@@ -26,6 +26,7 @@ import {
 } from '../../config.js'
 import base from '../../mixins/base'
 import http from '../../utils/Http'
+import events from '../../utils/event'
 
 export default class Filter extends wepy.page {
   mixins = [base]
@@ -48,12 +49,14 @@ export default class Filter extends wepy.page {
       this.getAdvOptionsList()
     },
     goChoose(e) {
-      const pages = getCurrentPages()
-      const prevPage = pages[pages.length - 2]
-      prevPage.data.chooseProduct.id = this.goods_id
-      prevPage.data.chooseProduct.name = this.goods_name
-      prevPage.data.chooseGrade.id = e.currentTarget.id
-      prevPage.data.chooseGrade.name = e.currentTarget.dataset.name
+        events.emitEvents('getChooseData', this.goods_id, this.goods_name, e.currentTarget.id, e.currentTarget.dataset.name)
+        // this.$emit('eventName', this.goods_id, this.goods_name, e.currentTarget.id, e.currentTarget.dataset.name);
+      // const pages = getCurrentPages()
+      // const prevPage = pages[pages.length - 2]
+      // prevPage.data.chooseProduct.id = this.goods_id
+      // prevPage.data.chooseProduct.name = this.goods_name
+      // prevPage.data.chooseGrade.id = e.currentTarget.id
+      // prevPage.data.chooseGrade.name = e.currentTarget.dataset.name
       wepy.navigateBack()
     }
   }

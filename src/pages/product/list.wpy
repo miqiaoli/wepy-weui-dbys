@@ -109,10 +109,10 @@
           </view>
         </view> -->
       </view>
-      <!-- <view class="inner_btn weui-flex">
+      <view class="inner_btn weui-flex">
         <button class="weui-flex__item" type="default" formType="reset">重置</button>
         <button class="weui-flex__item" type="primary" formType="submit">确定</button>
-      </view> -->
+      </view>
     </form>
     <view class="layer" catchtouchstart="removeLayer" data-type='isFilter'></view>
   </view>
@@ -146,6 +146,7 @@ import base from '../../mixins/base'
 import SearchBar from '../../components/searchbar'
 import ProductsList from '../../components/productsList'
 import http from '../../utils/Http'
+import events from '../../utils/event'
 
 export default class ProductList extends wepy.page {
   mixins = [base]
@@ -216,6 +217,21 @@ export default class ProductList extends wepy.page {
       att1_id: ''
     }
   }
+  events = {
+    eventName: (p1, $event) => {
+      const firstName = this.sheetNameList[p1[0]].label;
+      const secondName = this.sheetNameList[p1[0]].children[p1[1]].label;
+      const thirdName = this.sheetNameList[p1[0]].children[p1[1]].children[
+        p1[2]
+      ].label;
+      this.sheetName = firstName + "/" + secondName + "/" + thirdName;
+      this.firstName = firstName;
+      this.secondName = secondName + "/" + thirdName;
+      this.getSheetList();
+      this.getList()
+      this.$apply();
+    }
+  };
   async getProductList() {
     this.loading = true
     if (this.start === 1) {
@@ -284,6 +300,10 @@ export default class ProductList extends wepy.page {
     },
     chooseGoodsClassId(e) {
       this.goods_class_id = e.currentTarget.dataset.type
+      this.chooseProduct.id = ''
+      this.chooseProduct.name = ''
+      this.chooseGrade.id = 'id2'
+      this.chooseGrade.name = ''
       wx.navigateTo({
         url: './filter?goods_class_id=' + e.currentTarget.dataset.type
       })
@@ -293,10 +313,10 @@ export default class ProductList extends wepy.page {
       this.listType = !this.listType
       this.$apply()
     },
-    bindGoSearch(){
-        this.start = 1
-        this.isFilter = true
-        this.getProductList()
+    bindGoSearch() {
+      this.start = 1
+      this.isFilter = true
+      this.getProductList()
     },
     changePriceType(e) {
       this.advFilter.orderbysort = e.detail.value
@@ -378,27 +398,42 @@ export default class ProductList extends wepy.page {
       this.filterParam.goods_id = options.goods_id ? options.goods_id : this.filterParam.goods_id
       this.getProductList()
     }
+    events.addEvents("getChooseData", this.getChooseData, this);
 
     this.getCityList()
   }
+  getChooseData(id1, name1, id2, name2){
+      this.chooseProduct.id = id1
+      this.chooseProduct.name = name1
+      this.chooseGrade.id = id2
+      this.chooseGrade.name = name2
+
+      this.filterParam.goods_id = id1 || this.filterParam.goods_id
+      this.filterParam.att2_id = id2
+      this.filterParam.att1_id = this.chooseVendor.id
+
+      this.start = 1
+      this.isFilter = true
+      this.getProductList()
+  }
   onShow() {
-    const pages = getCurrentPages()
-    const currPage = pages[pages.length - 1] /* 当前页面 */
-
-    this.chooseProduct.id = currPage.data.chooseProduct.id
-    this.chooseProduct.name = currPage.data.chooseProduct.name
-    this.chooseGrade.id = currPage.data.chooseGrade.id
-    this.chooseGrade.name = currPage.data.chooseGrade.name
-    this.chooseVendor.id = currPage.data.chooseVendor.id
-    this.chooseVendor.name = currPage.data.chooseVendor.name
-
-    this.filterParam.goods_id = currPage.data.chooseProduct.id || this.filterParam.goods_id
-    this.filterParam.att2_id = currPage.data.chooseGrade.id
-    this.filterParam.att1_id = this.chooseVendor.id
-
-    this.start = 1
-    this.isFilter = true
-    this.getProductList()
+    // const pages = getCurrentPages()
+    // const currPage = pages[pages.length - 1] /* 当前页面 */
+    //
+    // this.chooseProduct.id = currPage.data.chooseProduct.id
+    // this.chooseProduct.name = currPage.data.chooseProduct.name
+    // this.chooseGrade.id = currPage.data.chooseGrade.id
+    // this.chooseGrade.name = currPage.data.chooseGrade.name
+    // this.chooseVendor.id = currPage.data.chooseVendor.id
+    // this.chooseVendor.name = currPage.data.chooseVendor.name
+    //
+    // this.filterParam.goods_id = currPage.data.chooseProduct.id || this.filterParam.goods_id
+    // this.filterParam.att2_id = currPage.data.chooseGrade.id
+    // this.filterParam.att1_id = this.chooseVendor.id
+    //
+    // this.start = 1
+    // this.isFilter = true
+    // this.getProductList()
   }
   onPullDownRefresh() {
     this.start = 1
@@ -517,7 +552,7 @@ export default class ProductList extends wepy.page {
 }
 .selector {
     width: 100%;
-    height: 370px;
+    height: 400px;
     position: fixed;
     top: 0;
     right: 0;
