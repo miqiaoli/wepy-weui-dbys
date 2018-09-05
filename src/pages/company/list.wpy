@@ -8,7 +8,7 @@
           <text class="arrow-down-s"></text>
         </view>
       </picker>
-      </view>
+    </view>
     <view class="weui-search-bar__form" style="background: #F9F9F9; border-radius: 8rpx; border: 0">
       <view class="weui-search-bar__box">
         <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
@@ -19,15 +19,26 @@
   <view class="search" style="background: url('http://ogm9o9o2u.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20180726121102.png') no-repeat; background-size: 100% 100%">
   </view>
   <view class="list-flex">
-    <view class="single-list" wx:for="{{topSeven}}" wx:for-item="single" wx:key="id" data-index="{{index}}" bindtap="chooseType" style="{{  index == 3 || index == 7 ? 'margin-right:24rpx;' : 'margin-right: 16%;' }}">
-      <image class="type-icon" src="{{ index == 7 ? '/images/alltyps/icon_all@2x.png' :'/images/alltyps/icon_'+single.spelling+'@2x.png'}}" />
-      <image class="type-bool" wx:if="{{chooseBoolean[index]}}" src="/images/alltyps/icon_true@2x.png" />
-      <view class="type-name">{{ single.chinese }}</view>
-    </view>
+    <block wx:for="{{topSeven}}" wx:for-item="single" wx:key="id" data-index="{{index}}" wx:if="{{index < 4}}">
+      <view class="single-list" bindtap="chooseType">
+        <image class="type-icon" src="{{ index == 7 ? '/images/alltyps/icon_all@2x.png' :'/images/alltyps/icon_'+single.spelling+'@2x.png'}}" />
+        <image class="type-bool" wx:if="{{chooseBoolean[index]}}" src="/images/alltyps/icon_true@2x.png" />
+        <view class="type-name">{{ single.chinese }}</view>
+      </view>
+    </block>
+  </view>
+  <view class="list-flex">
+    <block wx:for="{{topSeven}}" wx:for-item="single" wx:key="id" data-index="{{index}}" wx:if="{{index > 3}}">
+      <view class="single-list" bindtap="chooseType">
+        <image class="type-icon" src="{{ index == 7 ? '/images/alltyps/icon_all@2x.png' :'/images/alltyps/icon_'+single.spelling+'@2x.png'}}" />
+        <image class="type-bool" wx:if="{{chooseBoolean[index]}}" src="/images/alltyps/icon_true@2x.png" />
+        <view class="type-name">{{ single.chinese }}</view>
+      </view>
+    </block>
   </view>
   <view class="choose">
     <view class="weui-flex priduct-filter page__bd_spacing" style="justify-content: space-between;">
-      <view  class="col-width active picker" style="text-align: left;" bindtap="riseModel">{{chooseCitys ? chooseCitys : '地址'}}
+      <view class="col-width active picker" style="text-align: left;" bindtap="riseModel">{{chooseCitys ? chooseCitys : '地址'}}
         <text class="arrow-down arrow-pos"></text>
       </view>
       <view class="col-width active">
@@ -72,13 +83,14 @@
   </view>
   <view wx:for="{{list}}" wx:key="id" wx:for-item="single">
     <view class="newSingle" id="{{single.id}}" bindtap="todetail">
-      <view class="title">{{ single.custNname }}</view><view class="weui-cell__ft weui-cell__ft_in-access pos"></view>
+      <view class="title">{{ single.custNname }}</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access pos"></view>
       <view class="mainProduct"><text style="border: 1px solid rgba(106,126,238,0.30); border-radius: 2px; padding: 0 4rpx; margin-right: 6rpx; line-height: 22rpx;" class="">主营</text>{{ single.mainIndustry }}</view>
       <view class="dis">
         <view class="dis-name">{{ single.place }}</view>
         <view class="dis-num" wx:if="{{ single.distance }}">
           <image class="dis-img" style="width: 32rpx; height: 26rpx; display: inline-block;" src="/images/icon/icon_pos.png" />{{single.distance}}km
-          </view>
+        </view>
       </view>
     </view>
   </view>
@@ -164,7 +176,7 @@ export default class list extends wepy.page {
     urbanNum: '',
     areaNum: '',
     page_id: 1,
-    page_limit: 15, 
+    page_limit: 15,
     businessModel: 1, // 经营模式
     enterplace: null, // 搜索区域
     name: '', // 搜索词
@@ -182,7 +194,7 @@ export default class list extends wepy.page {
       this.$apply()
     },
     chooseType(e) {
-      const chooseIndex =  e.currentTarget.dataset.index
+      const chooseIndex = e.currentTarget.dataset.index
       if (chooseIndex == 7) {
         this.$parent.globalData.riceTypes = []
         wx.navigateTo({
@@ -192,12 +204,12 @@ export default class list extends wepy.page {
         // 只能单选
         this.chooseIndex = e.currentTarget.dataset.index
         this.chooseBoolean[chooseIndex] = !this.chooseBoolean[chooseIndex]
-        this.chooseBoolean[chooseIndex] ? 
+        this.chooseBoolean[chooseIndex] ?
           wx.showToast({
             title: `你已选择${this.topSeven[chooseIndex].chinese}`,
             icon: 'none',
             duration: 2000
-          }) : 
+          }) :
           wx.showToast({
             title: `你已取消${this.topSeven[chooseIndex].chinese}`,
             icon: 'none',
@@ -268,9 +280,12 @@ export default class list extends wepy.page {
             'label': val.label
           })
         })
-  
+
         // const addAll = []
-        const addAll = [{value: '', label: '全部'}]
+        const addAll = [{
+          value: '',
+          label: '全部'
+        }]
         this.urban = [...addAll, ...urban]
         this.cityValue = [e.detail.value[0], 0, 0]
         // 区处理
@@ -396,11 +411,11 @@ export default class list extends wepy.page {
       if (this.count < this.page_id * this.page_limit - this.page_limit) return
       if (this.list) {
         this.page_id++
-        this.list = [...this.list, ...res.data.list]
+          this.list = [...this.list, ...res.data.list]
         this.$apply()
       } else {
         this.page_id++
-        this.list = res.data.list
+          this.list = res.data.list
         this.$apply()
       }
     }
@@ -421,7 +436,7 @@ export default class list extends wepy.page {
     if (res.false) return
     if (res.meta.success) {
       this.page_id++
-      this.list = res.data.list
+        this.list = res.data.list
       this.$apply()
     }
   }
@@ -443,7 +458,7 @@ export default class list extends wepy.page {
     this.sorts = this.$parent.globalData.riceTypes
     wx.getLocation({
       type: 'wgs84',
-      success: function(res) {  
+      success: function(res) {
         self.lat = res.latitude
         self.lng = res.longitude
         // self.sorts.length > 0 ? self.getCompanyList() : self.getTop15()
@@ -465,10 +480,13 @@ export default class list extends wepy.page {
   }
   // 全部分类
   async getAllType() {
-    const res = await http.get(__getApi._getAllType, {
-    })
+    const res = await http.get(__getApi._getAllType, {})
     this.allType = res.data.list
-    this.topSeven = [...this.allType.slice(0, 7), ...[{chinese: "全部", spelling: "quanbu", count: 0}]]
+    this.topSeven = [...this.allType.slice(0, 7), ...[{
+      chinese: "全部",
+      spelling: "quanbu",
+      count: 0
+    }]]
     wx.setStorageSync('alltype', res.data.list)
     this.$apply()
     return res.data.list
@@ -477,141 +495,140 @@ export default class list extends wepy.page {
 </script>
 
 <style lang="less">
-.model{
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-  z-index: 999;
-  .limian {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 200px;
+.model {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
     z-index: 999;
-    .show {
-      margin-bottom: 40rpx;
-      width: 200px;
-      height: 200px;
-      background: rgb(212, 149, 149);
+    .limian {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 200px;
+        z-index: 999;
+        .show {
+            margin-bottom: 40rpx;
+            width: 200px;
+            height: 200px;
+            background: rgb(212, 149, 149);
+        }
+        .btn {
+            height: 100px;
+            background: #000;
+        }
     }
-    .btn {
-      height: 100px;
-      background: #000;
-    }
-  }
 }
 .searchbar {
-  margin: 0 16rpx;
+    margin: 0 16rpx;
 }
 .search-width {
-  padding-left: 4rpx;
-  width: 140rpx;
-  height: 54rpx;
-  line-height: 54rpx;
-  // background: #f0f;
-  font-size: 28rpx;
+    padding-left: 4rpx;
+    width: 140rpx;
+    height: 54rpx;
+    line-height: 54rpx;
+    // background: #f0f;
+    font-size: 28rpx;
 }
 .newSingle {
-  position: relative;
-  margin: 12rpx 16rpx;
-  padding-left: 20rpx;
-  padding-right: 20rpx;
-  padding-bottom: 10rpx;
-  // height: 160rpx;
-  border: 1px solid #E4E7F0;
-  .title {
-    margin-top: 18rpx;
-    margin-bottom: 16rpx;
-    font-size: 32rpx;
-    font-weight: bold;
-    color: #1E1E1E;
-  }
-  .pos {
-    position: absolute;
-    top: 40rpx;
-    right: 20rpx;
-  }
-  .mainProduct {
-    font-size: 24rpx;
-    color: #6A7EEE;
-  }
-  .dis {
-    margin-top: 6rpx;
-    height: 32rpx;
-    line-height: 32rpx;
-    display: flex;
-    font-size: 22rpx;
-    color: #3D3D3D;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    .dis-name {
-      flex: 9;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+    position: relative;
+    margin: 12rpx 16rpx;
+    padding-left: 20rpx;
+    padding-right: 20rpx;
+    padding-bottom: 10rpx;
+    // height: 160rpx;
+    border: 1px solid #E4E7F0;
+    .title {
+        margin-top: 18rpx;
+        margin-bottom: 16rpx;
+        font-size: 32rpx;
+        font-weight: bold;
+        color: #1E1E1E;
     }
-    .dis-num {
-      position: relative;
-      height: 32rpx;
-      flex: 1;
-      line-height: 32rpx;
-      .dis-img {
-        position: relative;
-        top: 4rpx;
-        left: 4rpx;
-      }
+    .pos {
+        position: absolute;
+        top: 40rpx;
+        right: 20rpx;
     }
-  }
+    .mainProduct {
+        font-size: 24rpx;
+        color: #6A7EEE;
+    }
+    .dis {
+        margin-top: 6rpx;
+        height: 32rpx;
+        line-height: 32rpx;
+        display: flex;
+        font-size: 22rpx;
+        color: #3D3D3D;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        .dis-name {
+            flex: 9;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .dis-num {
+            position: relative;
+            height: 32rpx;
+            flex: 1;
+            line-height: 32rpx;
+            .dis-img {
+                position: relative;
+                top: 4rpx;
+                left: 4rpx;
+            }
+        }
+    }
 }
 .list-flex {
-  margin-top: 20rpx;
-  margin-left: 16rpx;
-  margin-right: 22rpx;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  .single-list {
-    position: relative;
-    margin: 12rpx 0;
-    margin-right: 12%;
-    width: 12%;
-    height: 120rpx;
-    .type-icon {
-      display: block;
-      margin: auto;
-      padding-left: 8rpx;
-      width: 66rpx;
-      height: 66rpx
+    margin-top: 20rpx;
+    margin-left: 16rpx;
+    margin-right: 22rpx;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    box-sizing: border-box;
+    .single-list {
+        box-sizing: border-box;
+        margin: 12rpx 0;
+        height: 120rpx;
+        .type-icon {
+            display: block;
+            margin: auto;
+            padding-left: 8rpx;
+            width: 66rpx;
+            height: 66rpx;
+        }
+        .type-name {
+            margin-top: 12rpx;
+            font-size: 24rpx;
+            width: 96rpx;
+            font-weight: bold;
+            text-align: center;
+            color: #1E1E1E;
+        }
+        .type-bool {
+            position: absolute;
+            left: 98rpx;
+            top: -10rpx;
+            width: 20rpx;
+            height: 20rpx;
+        }
+        .type-count {
+            position: absolute;
+            right: 30rpx;
+            bottom: -6rpx;
+            font-size: 20rpx;
+            color: #EB4E35;
+        }
     }
-    .type-name {
-      margin-top: 12rpx;
-      font-size: 24rpx;
-      width: 96rpx;
-      font-weight: bold;
-      text-align: center;
-      color: #1E1E1E;
-    }
-    .type-bool {
-      position: absolute;
-      left: 98rpx;
-      top: -10rpx;
-      width: 20rpx;
-      height: 20rpx;
-    }
-    .type-count {
-      position: absolute;
-      right: 30rpx;
-      bottom: -6rpx;
-      font-size: 20rpx;
-      color: #EB4E35;
-    }
-  }
 }
 .alltype {
-  width: 25%;
+    width: 25%;
 }
 .company {
     background: #fff;
@@ -625,21 +642,21 @@ export default class list extends wepy.page {
     }
 }
 .choose {
-  margin: 0 16rpx;
+    margin: 0 16rpx;
 }
 .col-width {
-  position: relative;
-  // flex: 1;
-  width: 176rpx;
-  height: 52rpx;
-  line-height: 52rpx;
-  padding: 0 6rpx;
-  // opacity: 0.2;
-  background: #E4E7F0;
-  border-radius: 2px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+    position: relative;
+    // flex: 1;
+    width: 176rpx;
+    height: 52rpx;
+    line-height: 52rpx;
+    padding: 0 6rpx;
+    // opacity: 0.2;
+    background: #E4E7F0;
+    border-radius: 2px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .picker {
     font-size: 16px;
@@ -648,8 +665,8 @@ export default class list extends wepy.page {
     // color: #000;
 }
 .arrow-pos {
-  position: absolute;
-  right: 14rpx;
+    position: absolute;
+    right: 14rpx;
 }
 .arrow-down {
     display: inline-block;
@@ -672,10 +689,10 @@ export default class list extends wepy.page {
     // margin-left: 20rpx;
 }
 .active .arrow-down-s {
-  border-top: 4px solid #323972;
+    border-top: 4px solid #323972;
 }
 .active .arrow-down {
-  border-top: 4px solid #9B9B9B;
+    border-top: 4px solid #9B9B9B;
 }
 .search {
     margin: 0 16rpx;
@@ -786,4 +803,3 @@ export default class list extends wepy.page {
     background: rgba(0,0,0,0.5);
 }
 </style>
-

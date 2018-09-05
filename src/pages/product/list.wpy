@@ -126,10 +126,10 @@
       </view>
       <picker-view class="picker_box" indicator-class="selected" value="{{cityValue}}" bindchange="cityChange">
         <picker-view-column>
-          <view wx:for="{{provinces}}" wx:key='*this'>{{item}}</view>
+          <view wx:for="{{provinces}}" wx:key='*this'>{{item.label}}</view>
         </picker-view-column>
         <picker-view-column>
-          <view wx:for="{{citys}}" wx:key='*this'>{{item}}</view>
+          <view wx:for="{{citys}}" wx:key='*this'>{{item.label}}</view>
         </picker-view-column>
       </picker-view>
     </view>
@@ -275,13 +275,25 @@ export default class ProductList extends wepy.page {
     let provinces = []
     let citys = []
 
-    for (let i = 0; i < cityList.length; i++) {
-      provinces.push(cityList[i].label)
-    }
-
-    for (let i = 0; i < cityList[0].children.length; i++) {
-      citys.push(cityList[0].children[i].label)
-    }
+    cityList.forEach((val, index) => {
+      provinces.push({
+        'value': val.value,
+        'label': val.label
+      })
+    })
+    cityList[0].children.forEach((val, index) => {
+      citys.push({
+        'value': val.value,
+        'label': val.label
+      })
+    })
+    // for (let i = 0; i < cityList.length; i++) {
+    //   provinces.push(cityList[i].label)
+    // }
+    //
+    // for (let i = 0; i < cityList[0].children.length; i++) {
+    //   citys.push(cityList[0].children[i].label)
+    // }
 
     this.provinces = provinces
     this.citys = citys
@@ -355,23 +367,34 @@ export default class ProductList extends wepy.page {
       var t = this.data.cityValue
       const cityList = this.cityList
       if (val[0] !== t[0]) {
-        let citys = []
-        for (let i = 0; i < cityList[val[0]].children.length; i++) {
-          citys.push(cityList[val[0]].children[i].label)
-        }
+        let citys = [{
+          value: "",
+          label: "全部"
+        }];
+        cityList[val[0]].children.forEach((val, index) => {
+          citys.push({
+            'value': val.value,
+            'label': val.label
+          })
+        })
+        // for (let i = 0; i < cityList[val[0]].children.length; i++) {
+        //   citys.push(cityList[val[0]].children[i].label)
+        // }
         this.citys = citys
         this.cityValue = [val[0], 0]
         this.provinceName = cityList[val[0]].label
         this.advFilter.province_id = cityList[val[0]].value
-        this.cityName = cityList[val[0]].children[0].label
-        this.advFilter.city_id = cityList[val[0]].children[0].value
+        // this.cityName = cityList[val[0]].children[0].label
+        // this.advFilter.city_id = cityList[val[0]].children[0].value
+        this.cityName = citys[0].label
+        this.advFilter.city_id = citys[0].value
         this.$apply()
         return
       }
       if (val[1] !== t[1]) {
         this.cityValue = [val[0], val[1]]
-        this.cityName = cityList[val[0]].children[val[1]].label
-        this.advFilter.city_id = cityList[val[0]].children[val[1]].value
+        this.cityName = cityList[val[0]].children[val[1] - 1].label
+        this.advFilter.city_id = cityList[val[0]].children[val[1] - 1].value
         this.$apply()
       }
     },

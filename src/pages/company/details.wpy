@@ -18,15 +18,15 @@
       </view>
       <view class="weui-flex">
         <view class="company-type" style="backgound: #FFF3F2; border: 1px solid #F9E7E5;">类型</view>
-        <view class="company-name">企业类型：<text style="padding-left: 4px;">{{ detail.companyType }}</text></view>
+        <view class="company-name">企业类型：<text style="padding-left: 8px;">{{ detail.companyType }}</text></view>
       </view>
       <view class="weui-flex">
         <view class="company-type" style="color: #68C486; background: #EBFAE7; border: 1px solid #DDEED7;">模式</view>
-        <view class="company-name">经营模式：<text style="padding-left: 4px;">{{ detail.businessModel }}</text></view>
+        <view class="company-name">经营模式：<text style="padding-left: 8px;">{{ detail.businessModel }}</text></view>
       </view>
       <view class="weui-flex">
         <view class="company-type" style="color: #D9945B; background: #FFFEF8; border: 1px solid #F2EAD6;">注册</view>
-        <view class="company-name">注册地区：<text style="padding-left: 4px;">{{ detail.registerArea }}</text></view>
+        <view class="company-name">注册地区：<text style="padding-left: 8px;">{{ detail.registerArea }}</text></view>
       </view>
     </view>
     <view class="details">
@@ -47,7 +47,7 @@
         <view class="des-name">使用材料范围</view>
         <view class="des">{{ detail.enMaterials }}</view>
       </view>
-    </view>  
+    </view>
   </view>
 
   <view class="more-info">
@@ -127,9 +127,9 @@
         <view class="weui-cell__ft weui-cell__ft_in-access"></view>
       </view>
     </view>
-    <map class="map_container" id="myMap" latitude="{{detail.lat}}" longitude="{{detail.lng}}" controls="{{controls}}" markers="{{markers}}" scale="{{scale}}" bindcontroltap="controltap"  bindmarkertap="markertap" bindregionchange="regionchange" show-location="true"> 
+    <map class="map_container" id="myMap" latitude="{{detail.lat}}" longitude="{{detail.lng}}" controls="{{controls}}" markers="{{markers}}" scale="{{scale}}" bindcontroltap="controltap"  bindmarkertap="markertap" bindregionchange="regionchange" show-location="true">
     </map>
-    
+
   </view>
 </view>
 </template>
@@ -183,7 +183,7 @@
       color: #3D3D3D;
     }
   }
-  
+
 }
 .company {
   margin-top: 40rpx;
@@ -242,7 +242,7 @@
       text-align:left;
       white-space:wrap;
       overflow:hidden;
-      
+
     }
   }
 }
@@ -252,8 +252,8 @@
 .more-info{
   .map_container {
     margin-top: 40rpx;
-    height: 500rpx; 
-    width: 100%; 
+    height: 500rpx;
+    width: 100%;
   }
   .blod-title{
     .font-title{
@@ -305,7 +305,7 @@
   right: 20rpx;
   width: 120rpx;
   height: 120rpx;
-  background: url(http://ogm9o9o2u.bkt.clouddn.com/back_index.png) no-repeat center center; 
+  background: url(http://ogm9o9o2u.bkt.clouddn.com/back_index.png) no-repeat center center;
   background-size: 100% auto;
   border-radius: 50%;
   z-index: 999;
@@ -327,9 +327,9 @@ export default class companyDetails extends wepy.page {
     detailID: '',
     detail: {},
     token_access: '',
-    markers: '', 
-    latitude: '', 
-    longitude: '', 
+    markers: '',
+    latitude: '',
+    longitude: '',
     rgcData: {},
     mapCtx: '',
     controls: [
@@ -356,7 +356,7 @@ export default class companyDetails extends wepy.page {
           token_access: this.token_access,
           id: this.detailID,
           status: 0
-        }) 
+        })
         if (res.meta.success) {
           wx.showToast({
             title: '成功收藏',
@@ -367,7 +367,7 @@ export default class companyDetails extends wepy.page {
           this.collectionBoolean = false
           this.$apply()
         }
-        return 
+        return
       }
       const res = await http.get(__getApi._getCollectionDo, {
         token_access: this.token_access,
@@ -447,7 +447,7 @@ export default class companyDetails extends wepy.page {
       id: options.id
     })
     this.detail = res.data
-    this.collectionBoolean = this.detail.collect == 0 ? false : true 
+    this.collectionBoolean = this.detail.collect == 0 ? false : true
     this.markers = [{
       id: '99',
       latitude: res.data.lat,

@@ -137,7 +137,7 @@
     <view class="weui-flex">
       <view class="weui-cell__bd">备注描述</view>
       <view class="weui-cell__ft" wx:if="{{itemData.remark}}">{{itemData.remark }}</view>
-      <view class="weui-cell__ft" wx-else>暂无</view>
+      <view class="weui-cell__ft" wx:else>暂无</view>
     </view>
   </view>
   <view class="weui-cells">
@@ -398,7 +398,7 @@
   <view class="weui-cells__title">商品描述</view>
   <view class="box text-center">
     <block wx:if="{{itemData.intro}}">
-      <view>{{itemData.intro}}</view>
+      <rich-parse content="{{ itemData.intro }}" type="html"/>
     </block>
     <block wx:else>该商品暂无描述！</block>
   </view>
@@ -440,7 +440,10 @@ import getNumber from '../../utils/getNumber.wxs'
 export default class ProductDetails extends wepy.page {
   mixins = [base]
   config = {
-    navigationBarTitleText: '商品详情页'
+    navigationBarTitleText: '商品详情页',
+    usingComponents: {
+      "rich-parse": "../../rich-parse/rich-parse"
+    }
   }
   data = {
     swipers: [],

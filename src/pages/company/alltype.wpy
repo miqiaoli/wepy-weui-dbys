@@ -42,14 +42,14 @@ export default class allType extends wepy.page {
   }
   methods = {
     multipleChoiceChange() {
-      this.multipleChoice = true 
+      this.multipleChoice = true
     },
     search(e) {
       if (this.chooseVal.length > 0) {
         // 添加为全局变量
         this.$parent.globalData.riceTypes = this.chooseVal
         wx.reLaunch({
-          url: `./list`   
+          url: `./list`
         })
       } else {
         wx.showToast({
@@ -68,21 +68,21 @@ export default class allType extends wepy.page {
         this.$parent.globalData.riceTypes = this.chooseVal
         this.singleChooseBoolean = false
         wx.showToast({
-          title: `你已选择${this.allType[chooseIndex].chinese}`,
+          title: `您已选择${this.allType[chooseIndex].chinese}`,
           icon: 'none',
           duration: 1000
-        }) 
+        })
         setTimeout(() => {
           wx.reLaunch({
             url: `./list`
           })
         }, 500)
-        return 
+        return
       }
       // 选择超过三个
       if (this.chooseVal.length < 3) {
         this.chooseBoolean[chooseIndex] = !this.chooseBoolean[chooseIndex]
-        // 删除已经添加的元素 
+        // 删除已经添加的元素
         let chooseValIndex  = this.chooseVal.findIndex(element => element == self.allType[chooseIndex].spelling) // chinese
         this.chooseBoolean[chooseIndex] ? this.chooseVal.push(this.allType[chooseIndex].spelling) : this.chooseVal.splice(chooseValIndex, 1)   // chinese
         this.chooseBoolean[chooseIndex] ? this.chooseValChinese.push(this.allType[chooseIndex].chinese) : this.chooseValChinese.splice(chooseValIndex, 1)   // chinese
@@ -99,7 +99,7 @@ export default class allType extends wepy.page {
             duration: 2000
           })
         }
-      } 
+      }
     }
   }
   async onLoad() {
@@ -177,7 +177,7 @@ export default class allType extends wepy.page {
   flex-wrap: wrap;
   .single-list {
     position: relative;
-    margin: 26rpx 0; 
+    margin: 26rpx 0;
     width: 25%;
     height: 120rpx;
     .type-icon {

@@ -8,7 +8,9 @@
     </view>
     <view class="weui-article__section">
       <view class="weui-article__p">
-        <html2wxml :parserName="name" :parserContent.sync="textContent"></html2wxml>
+        <!-- <html2wxml :parserName="name" :parserContent.sync="textContent"></html2wxml> -->
+        <rich-parse content="{{ textContent }}" type="html" />
+
       </view>
     </view>
     <view class="gohome bg__primary">
@@ -28,23 +30,21 @@ import {
 } from '../config.js'
 import base from '../mixins/base'
 import http from '../utils/Http'
-import html2wxml from '../components/html2wxml'
+// import html2wxml from '../components/html2wxml'
 
 export default class NewsList extends wepy.page {
   mixins = [base]
   config = {
-    navigationBarTitleText: '信息详情页'
+    navigationBarTitleText: '信息详情页',
+    usingComponents: {
+      "rich-parse": "../rich-parse/rich-parse"
+    }
   }
   data = {
     id: '',
     productDetails: {},
-    name: 'myHtmlParserKiner',
+    // name: 'myHtmlParserKiner',
     textContent: ''
-  }
-  methods = {
-    wxParseImgTap() {
-      // this.$broadcast('wxParseImgTap')
-    }
   }
   async getNewsDetails() {
     const res = await http.get(__getApi._getNewsDetails, {
@@ -54,7 +54,7 @@ export default class NewsList extends wepy.page {
     this.productDetails = res.data
     this.textContent = res.data.article_content
     this.$apply()
-    this.$invoke('html2wxml', 'htmlParserNotice')
+    // this.$invoke('html2wxml', 'htmlParserNotice')
   }
   onLoad(options) {
     this.id = options.id
@@ -74,14 +74,10 @@ export default class NewsList extends wepy.page {
       }
     }
   }
-  components = {
-    html2wxml: html2wxml
-  }
 }
 </script>
 
 <style lang="css">
-@import '../wxparse/wxParse.wxss';
 .gohome {
   position: fixed;
   bottom: 40rpx;

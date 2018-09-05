@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 // HTML 支持的数学符号
 function strNumDiscode(str){
     str = str.replace(/&forall;/g, '∀');
@@ -99,11 +101,11 @@ function strGreeceDiscode(str){
     return str;
 }
 
-// 
+//
 
 function strcharacterDiscode(str){
     // 加入常用解析
-    str = str.replace(/&nbsp;/g, ' ');
+    str = str.replace(/&nbsp;/g, '\xa0');
     str = str.replace(/&quot;/g, "'");
     str = str.replace(/&amp;/g, '&');
     // str = str.replace(/&lt;/g, '‹');
@@ -176,10 +178,10 @@ function strOtherDiscode(str){
 }
 
 function strMoreDiscode(str){
-    str = str.replace(/\r\n/g,"");  
+    str = str.replace(/\r\n/g,"");
     str = str.replace(/\n/g,"");
 
-    str = str.replace(/code/g,"wxxxcode-style");
+    // str = str.replace(/code/g,"wxxxcode-style");
     return str;
 }
 
@@ -192,7 +194,7 @@ function strDiscode(str){
     return str;
 }
 function urlToHttpUrl(url,rep){
-    
+
     var patt1 = new RegExp("^//");
     var result = patt1.test(url);
     if(result){

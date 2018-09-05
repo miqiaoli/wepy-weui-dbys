@@ -12,11 +12,13 @@
  * detail : http://weappdev.com/t/wxparse-alpha0-1-html-markdown/184
  */
 
+/* eslint-disable */
+
 var __placeImgeUrlHttps = "https";
 var __emojisReg = '';
 var __emojisBaseSrc = '';
 var __emojis = {};
-var wxDiscode = require('./wxDiscode.js');
+var wxDiscode = require('./wx-discode.js');
 var HTMLParser = require('./htmlparser.js');
 // Empty Elements - HTML 5
 var empty = makeMap("area,base,basefont,br,col,frame,hr,img,input,link,meta,param,embed,command,keygen,source,track,wbr");
@@ -61,11 +63,16 @@ function trimHtml(html) {
         .replace(/[ ]+</ig, '<')
 }
 
+// ios 图片查询字符串有tp=webpIOS渲染不了
+function replacewebp(html) {
+  return html.replace(/tp=webp/ig, '')
+}
 
 function html2json(html, bindName) {
     //处理字符串
     html = removeDOCTYPE(html);
     html = trimHtml(html);
+    html = replacewebp(html);
     html = wxDiscode.strDiscode(html);
     //生成node节点
     var bufArray = [];
@@ -109,14 +116,14 @@ function html2json(html, bindName) {
                     var name = attr.name;
                     var value = attr.value;
                     if (name == 'class') {
-                        //console.dir(value);
+                        // console.dir(value);
                         //  value = value.join("")
                         node.classStr = value;
                     }
                     // has multi attibutes
                     // make it array of attribute
                     if (name == 'style') {
-                        //console.dir(value);
+                        // console.dir(value);
                         //  value = value.join("")
                         node.styleStr = value;
                     }
@@ -156,11 +163,6 @@ function html2json(html, bindName) {
                 node.from = bindName;
                 results.images.push(node);
                 results.imageUrls.push(imgUrl);
-            }
-
-            //对p便签添加margin
-            if (node.tag === 'p') {
-                node.styleStr += ';margin-top: 20rpx;';
             }
 
             // 处理font标签样式属性
