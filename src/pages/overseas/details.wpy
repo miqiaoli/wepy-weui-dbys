@@ -35,7 +35,7 @@
         </view>
         <view class='flex-pos'>
           <view class='des'>数量（吨/月）</view>
-          <view class='des-answer'>{{single.countOfMonth}}</view>
+          <view class='des-answer'>{{single.countOfMonth == 0 ? '——' : single.countOfMonth}}</view>
         </view>
         <view class='flex-pos'>
           <view class='des'>拉伸（Mpa）</view>

@@ -2,13 +2,13 @@
 <view class="">
   <SearchBar :placeholder="searchText" inputShowed="ture" @search.user="getSearch"></SearchBar>
   <view class="search-tab page__bd_spacing">
-    <view class="weui-tab">
+    <!-- <view class="weui-tab">
       <view class="weui-navbar weui-flex">
         <view wx:for="{{tabs}}" wx:key="*this" id="{{index}}" class="weui-flex__item weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" @tap="tabClick">
           <view class="weui-navbar__title">{{item}}</view>
         </view>
       </view>
-    </view>
+    </view> -->
   </view>
   <view class="search module-box page__bd_spacing">
     <view class="title">历史搜索</view>
