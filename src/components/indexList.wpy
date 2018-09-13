@@ -42,7 +42,7 @@
       <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?604:7}}" hover-class="navigator-hover"></navigator>
       <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?601:5}}" hover-class="navigator-hover"> </navigator>
       <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?124:91}}" hover-class="navigator-hover"> </navigator>
-      <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?602:8}}" hover-class="navigator-hover"> </navigator>
+      <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?602:121}}" hover-class="navigator-hover"> </navigator>
       <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?605:14}}" hover-class="navigator-hover"> </navigator>
     </view>
   </view>
