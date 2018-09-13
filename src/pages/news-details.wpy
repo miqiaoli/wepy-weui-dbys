@@ -13,10 +13,15 @@
 
       </view>
     </view>
-    <view class="gohome bg__primary">
+    <!-- <view class="gohome bg__primary">
       <navigator url="/pages/index" open-type="switchTab">
         <image class="gohome-image" src="/images/icon/home.png"></image>
         <text class="gohome-text">返回首页</text>
+      </navigator>
+    </view> -->
+    <view class="weui-index">
+      <navigator url="/pages/index" open-type="reLaunch" hover-class="navigator-hover">
+        <image class="" src="/images/back_index.png"></image>
       </navigator>
     </view>
   </view>
@@ -78,7 +83,7 @@ export default class NewsList extends wepy.page {
 </script>
 
 <style lang="css">
-.gohome {
+/* .gohome {
   position: fixed;
   bottom: 40rpx;
   right: 0;
@@ -94,5 +99,12 @@ export default class NewsList extends wepy.page {
 }
 .gohome-text {
   vertical-align: middle;
+} */
+.weui-index image {
+    width: 100rpx;
+    height: 100rpx;
+    position: fixed;
+    right: 40rpx;
+    bottom: 60rpx;
 }
 </style>

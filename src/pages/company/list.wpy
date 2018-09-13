@@ -606,7 +606,7 @@ export default class list extends wepy.page {
         .type-name {
             margin-top: 12rpx;
             font-size: 24rpx;
-            width: 96rpx;
+            // width: 96rpx;
             font-weight: bold;
             text-align: center;
             color: #1E1E1E;
