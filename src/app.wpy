@@ -7,7 +7,9 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/index',
-      'pages/fish-list',
+      // 'pages/fish-list',
+      'pages/fish/list',
+      'pages/fish/details',
       'pages/product/list',
       'pages/product/filter',
       'pages/product/details',
@@ -66,7 +68,7 @@ export default class extends wepy.app {
         iconPath: '/images/tabbars/home.png',
         text: '首页'
       }, {
-        pagePath: 'pages/fish-list',
+        pagePath: 'pages/fish/list',
         selectedIconPath: '/images/tabbars/information_HL.png',
         iconPath: '/images/tabbars/information.png',
         text: '鱼塘信息'

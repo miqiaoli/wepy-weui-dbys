@@ -1,0 +1,176 @@
+<template>
+<view class="fish" style="min-height: {{minHeight}}px">
+  <view class="scroll-size">
+    <scroll-view scroll-x="true" class="scroll">
+      <block wx:for="{{fishClassList}}" wx:for-item="single" wx:key="id">
+        <view class="main-class" style="{{classIndex == index ? 'color: #323972; font-weight: bold;' : 'color: #3D3D3D;'}}" data-index="{{index}}" bindtap="chooseClass">{{single}}</view>       
+      </block>
+    </scroll-view>
+  </view>
+  <view class="list">
+    <view class="single weui-flex" wx:for="{{fishList}}" wx:for-item="fish" wx:key="id">
+      <image src="{{imgHost}}{{fish.backImg}}" class="pic">
+      <view class="text">
+        <view class="name">{{fish.fishPoolName}}</view>
+        <view class="des">{{fish.fishpool_describe}}</view>
+      </view>
+      <navigator url='./details?id={{fish.id}}'>
+        <button class="btn" type="primary">进入鱼塘</button>
+      </navigator>
+    </view>
+  </view>
+</view>
+</template> 
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import base from '../../mixins/base'
+import http from '../../utils/Http'
+
+export default class FishList extends wepy.page {
+  mixins = [base]
+  config = {
+    navigationBarTitleText: '鱼塘信息',
+  }
+  data = {
+    imgHost: '',
+    minHeight: 0,
+    fishClassList: [],  // 大分类
+    classIndex: 0,
+    className: '',
+    chooseClassName: {},  // 请求的全部小分类数据集合
+    fishList: [], // 小分类
+    start: 1,
+    limit: 20,
+  }
+  methods = {
+    chooseClass(e) {
+      this.classIndex = e.currentTarget.dataset.index
+      // 如果已经请求过了 直接读取
+      if (this.chooseClassName[this.classIndex]) {
+        this.fishList = this.chooseClassName[this.classIndex]
+        console.log(this.chooseClassName)
+      } else {
+          // 选择的大分类名称
+        this.className = this.fishClassList[this.classIndex]
+        this.getFishList()
+      }
+
+    }
+  }
+  
+  async onLoad() {
+    this.imgHost = __getApi.imgHost
+    await this.getFishClass()
+    await this.getFishList()
+  }
+
+  async getFishClass() {
+    const res = await http.get(__getApi._getFishClass, {
+    })
+    if (res.meta.success) {
+      this.chooseClassName[this.classIndex] = res.data[0]
+      this.className = res.data[0]
+      this.$apply()
+      this.fishClassList = res.data
+      this.$apply()
+    }
+  }
+  async getFishList() {
+    const self = this
+    const res = await http.get(__getApi._getFishClassSort, {
+      start: 1,
+      limit: 5,
+      firstName: self.className
+    })
+    if (res.meta.success) {
+      this.fishList = res.data
+      this.chooseClassName[this.classIndex] = res.data
+      this.$apply()
+    }
+  }
+
+}
+</script>
+
+<style lang="css">
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
+}
+.fish {
+  padding-right: 30rpx; 
+  padding-left: 30rpx;
+  background: #ffffff;
+}
+.scroll-size {
+  box-shadow: 0 2px 8px 0 #EAEAEA;
+  /* border-bottom: 1px solid #EAEAEA; */
+}
+.scroll {
+  display: flex; 
+  white-space: nowrap; 
+  height:120rpx;
+
+}
+.main-class:last-child{ 
+  border-right: 0;
+}
+.main-class {
+  margin: 20rpx 0;
+  display: inline-block;
+  line-height: 80rpx;
+  width: 138px;
+  height: 80rpx;
+  border-right: 1px solid #E4E7F0;
+  font-size: 18px;
+  color: #3D3D3D;
+  text-align: center;
+}
+.list {
+  margin-top: 28rpx;
+}
+.single {
+  padding: 20rpx 0;
+  border-bottom: 1px solid #E4E7F0;
+}
+.pic {
+  width: 180rpx;
+  min-width: 180rpx;
+  height: 120rpx;
+  background: #3D3D3D;
+}
+.text {
+  margin-left: 20rpx;
+  margin-right: 10rpx;
+  flex: 1;
+  /* padding: 0 20rpx; */
+}
+.btn {
+  margin: 30rpx 0;
+  min-width: 160rpx;
+  /* width: 160rpx; */
+  height: 60rpx;
+  line-height: 60rpx;
+  font-size: 14px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  text-align: justify;
+}
+.name {
+  font-size: 16px;
+  color: #1E1E1E;
+}
+.des {
+  font-size: 11px;
+  color: #8F8E94;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+</style>

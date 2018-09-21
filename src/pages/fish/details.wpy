@@ -1,0 +1,463 @@
+<template>
+<view class="fish-detail" style="height: {{screenHeight}}px">
+  <view class="weui-search-bar__form" style="background: #F9F9F9; border-radius: 8rpx; border: 0">
+    <view class="weui-search-bar__box">
+      <image src="./../../images/icon/icon-fish-edit.png" class="icon" /> 
+      <input type="text" class="weui-search-bar__input" style="text-align: left;" maxlength="9" placeholder="输入您想要订制的内容" bindconfirm  bindinput="searchText"  value="{{editValue}}" />
+    </view>
+  </view>
+  <view class="tags weui-flex" wx:if="{{tags && tags.length>0}}">
+    <view class="single"  wx:for="{{tags}}" wx:for-item="tag" wx:key="id">
+      <text>{{tag}}</text>
+      <view bindtap="delTags" data-index="{{index}}" class="icon-del" style="background-image: url(./../../images/icon/icon-del.png)"></view>
+    </view>
+  </view>
+  <!-- 即时消息 -->
+  <view class="msg1">
+    <scroll-view id="chatScrollView" scroll-y upper-threshold="100"	lower-threshold="100" scroll-with-animation="true"
+ style="height: {{scrollHeight}}px;" bindscrolltoupper="scrolltoupper" bindscrolltolower="scrolltolower" bindscroll="scroll" scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
+      <listStates :loading.sync="loading" :noMore.sync="noMoreList" :noList.sync="noList"></listStates>
+
+      <view class="margin20" wx:for="{{historyList}}" wx:key="index" id="history{{index}}">
+        <view class="text-center" wx:if="{{item.dateTime}}"> <text class="time">{{item.dateTime}}</text> </view>
+        <view class="weui-flex">
+          <view class="avatar">
+            <image class="avatar" mode="widthFix" src="{{ item.heardImgUrl ? item.heardImgUrl : '/images/icon/icon-fish-avatar.png'}}" />
+          </view>
+          <view class="weui-flex__item">
+            <view class="content weui-flex">
+              <view class="triangle-left"></view>
+              <view class="msg">
+                <view class="name">{{ item.nickName }}</view>
+                <view class="box">
+                  <text>{{item.textMessage}}</text>
+                  <image mode="aspectFit" style="width: 200rpx;"  wx:if="{{item.contentgifUrl}}" src="{{item.contentgifUrl}}" />
+                  <image mode="aspectFill" style="width: 300rpx;" bindtap="imagepreview" data-src="{{item.contentImgUrl}}"  wx:if="{{item.contentImgUrl}}" src="{{item.contentImgUrl}}" />
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="margin20" wx:for="{{list}}" wx:key="index" id="item{{index}}">
+      <view class="weui-flex">
+        <view class="avatar">
+          <image class="avatar" mode="widthFix" src="{{ item.heardImgUrl ? item.heardImgUrl : '/images/icon/icon-fish-avatar.png'}}" />
+        </view>
+        <view class="weui-flex__item">
+          <view class="content weui-flex">
+            <view class="triangle-left"></view>
+            <view class="msg">
+              <view class="name">{{item.nickName}}</view>
+              <view class="box">
+                <text>{{item.textMessage}}</text>
+                <image style="width: 400rpx; height: 300rpx;"  wx:if="{{item.contentgifUrl}}" src="{{item.contentgifUrl}}" />
+                <image mode="aspectFill" style="width: 300rpx;"  bindtap="imagepreview" data-src="{{item.contentImgUrl}}"  wx:if="{{item.contentImgUrl}}" src="{{item.contentImgUrl}}" />
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    </scroll-view>
+  </view>
+
+</view>
+</template> 
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import base from '../../mixins/base'
+import http from '../../utils/Http'
+import listStates from '../../components/listStates'
+
+export default class FishList extends wepy.page {
+  mixins = [base]
+  components = {
+    listStates
+  }
+  config = {
+    navigationBarTitleText: '鱼塘信息',
+    enablePullDownRefresh: true,
+  }
+  data = {
+    token_access: '',
+    id: '',
+    screenHeight: 750,
+    editValue: '',
+    tags: [],
+    scrollTop: '',
+    scrollHeight: 0,
+    start: 1,
+    limit: 6,
+    firsTime: '',
+    historyList: [],   // 历史记录
+    list: [],    // 及时消息
+    count: 100000,
+    maxPage: 100, // 一共有多上页
+    noMoreList: false,
+    noList: false,
+    loading: true,
+    toView: '',
+
+    height: '',
+    rehandshake: true,
+    maxConnectNum: 0
+  }
+  methods = {
+    searchText(e) {
+      this.editValue = e.detail.value
+    },
+    // 确定编辑 
+    bindconfirm(e) {
+      if (this.tags.length < 4 && this.editValue) {
+        this.tags.push(e.detail.value)
+        this.editValue = ''
+        this.$apply()
+        this.createFishTags(e.detail.value)
+        return
+      } 
+      if (this.tags.length >= 4) {
+        wx.showToast({
+          title: '最多四个',
+          icon: 'none',
+          duration: 2000
+        })
+      }
+    },
+    // 删除标签
+    delTags(e) {
+      this.delFishTags(this.tags[e.currentTarget.dataset.index])
+      this.tags.splice(e.currentTarget.dataset.index, 1)
+      this.$apply()
+    }
+  }
+  getScrollOffset() {
+    const self = this
+    let query = wx.createSelectorQuery()
+
+    query.select('#chatScrollView').boundingClientRect(function(rects) {
+      self.scrollTop = self.scrollTop + rects.height
+      self.$apply()
+    }).exec()
+  }
+  getHistoryScrollOffset() {
+    const self = this
+    let query = wx.createSelectorQuery()
+
+    query.select('#history4').boundingClientRect(function(rects) {
+      if (rects) {
+        self.scrollTop = rects.bottom
+      }
+      self.$apply()
+    }).exec()
+  }
+  // 加载历史消息
+  onPullDownRefresh() {
+    this.scrolltoupper()
+    setTimeout(() => {
+      wx.stopPullDownRefresh()
+    }, 200)
+  }
+  // 加载更多历史消息
+  scrolltoupper(e) {
+    console.log('滚到顶部了d')
+    if (this.start < this.maxPage) {
+      ++this.start
+      this.getList()
+    } 
+    else {
+      this.noMoreList = true
+    }
+    // this.toView = 'history' + (this.limit - 1)
+    this.getHistoryScrollOffset()
+    this.$apply()
+  }
+
+  // 滚动到底部/右边
+  scrolltolower(e) {
+    console.log('滚到底部了')
+  }
+  // 滚到时触发
+  scroll(e) {
+    // this.scrollTop = e.detail.scrollTop
+    console.info(`scrollTop: ${e.detail.scrollTop}; scrollHeight: ${e.detail.scrollHeight};`)
+  }
+  onPageScroll(e){
+    console.log(e)
+  }
+  onLoad(e) {
+    this.token_access = this.$parent.globalData.token_access
+    this.id = e.id
+    this.getFishTags(e.id)
+    let self = this
+    wx.getSystemInfo({
+      success: function(res) {
+        self.screenHeight = res.windowHeight
+        self.scrollHeight = res.windowHeight - 96
+        self.$apply()
+      },
+    })
+    this.getScrollOffset()
+    this.getSocket()
+    this.getList()
+
+  }
+  // 接受发送的消息
+  onSocketMessage(data) {
+    this.list = [...this.list, data]
+    this.toView = 'item' + (this.list.length - 1)
+    this.$apply()
+  }
+  // websocket连接
+  async getSocket() {
+    const that = this
+    var socketOpen = false
+    await wx.connectSocket({
+      url: __getApi._getsocketList,
+      success() {
+        wx.onSocketOpen(function(res) { 
+          console.log('onLoad == WebSocket连接成功')
+          socketOpen = true
+          wx.sendSocketMessage({
+            data: `{'reply_start': '${that.id}','token_access': '${that.token_access}'}`
+          })
+        })     
+        that.setIntervalSendMsg()
+      },
+      fail(err) {
+        console.log('%cWebSocket连接失败', 'color:red', err)
+      }
+    }) 
+    wx.onSocketMessage(function(res) {
+      console.log('收到服务器内容：' + res.data)
+      if (JSON.parse(res.data)) {
+        that.onSocketMessage(JSON.parse(res.data))
+      }
+    })
+    wx.onSocketError(function(res) {
+      console.log('WebSocket连接打开失败，请检查！')
+      // that.maxConnectNum ++
+      // if (that.maxConnectNum > 3) {
+      //   return
+      // } else {
+      //   wx.connectSocket({
+      //     url: __getApi._getsocketList,
+      //     success() {
+      //       wx.onSocketOpen(function(res) {
+      //         console.log('%cWebSocket连接成功')
+      //         wx.sendSocketMessage({
+      //           data: `{'reply_start': '${that.id}','token_access': '${that.token_access}'}`
+      //         })
+      //       })  
+      //       // that.setIntervalSendMsg()
+      //     },
+      //     fail(err) {
+      //       console.log('%cWebSocket连接失败', 'color:red', err)
+      //     }
+      //   })
+      // }
+    })
+    // wx.onSocketClose(function (res) {
+    //   console.log('WebSocket连接已关闭！')
+    // })
+  }
+  // 加载历史消息 
+  async getList() {
+    if (this.start * this.limit - this.limit > this.count) {
+      wx.showToast({
+        title: '没有更多了',
+        icon: 'none',
+        duration: 2000
+      })
+      return
+    }
+    this.firsTime = (new Date().getTime())
+    const res = await http.get(__getApi._getFishPondList, {
+      firsTime: this.firsTime,
+      page_id: this.start,
+      page_limit: this.limit,
+      token_access: this.token_access,
+      id: this.id
+    })
+    this.loading = false
+    if (res.false) return
+    this.count = res.data.count
+    if (res.data.list.length === 0) {
+      this.noList = true
+    }
+    const self = this
+    if (this.start === 1) {
+      for (let i = 0; i < res.data.list.length; i++) {
+        // this.historyList.push(res.data.list[i])
+        this.historyList.unshift(res.data.list[i])
+      }
+      this.maxPage = Math.ceil(res.data.count / this.limit)
+    } else {
+      for (let i = 0; i < res.data.list.length; i++) {
+        setTimeout(() => {
+          // self.historyList.push(res.data.list[i])
+          self.historyList.unshift(res.data.list[i])
+        }, 50)
+      }
+    }
+    this.$apply()
+  }
+  // 定时发送消息 心跳连接
+  setIntervalSendMsg() {
+    setInterval(function() {
+      wx.sendSocketMessage({
+        data: "{'send_heart':'心跳连接--发哥是个帅哥'}"
+      })
+    }, 50000)
+  }
+  // 页面卸载
+  onUnload () {
+    wx.sendSocketMessage({
+      data: "{'reply_end':''}"
+    })
+    wx.closeSocket()
+    this.$apply()
+  }
+  // 创建标签
+  createFishTags(labelName) {
+    const self = this
+    http.get(__getApi._createFishTags, {
+      token_access: self.token_access,
+      labelName: labelName,
+      id: self.id
+    })
+  }
+  // 获取标签
+  async getFishTags(id) {
+    const self = this
+    const res = await http.get(__getApi._getFishTags, {
+      token_access: self.token_access,
+      id: id
+    })
+    if (res.meta.success && res.data) {
+      this.tags = res.data
+      this.$apply()
+    }
+  }
+  // 删除标签
+  delFishTags(labelName) {
+    const self = this
+    http.get(__getApi._delFishTags, {
+      token_access: self.token_access,
+      labelName: labelName,
+      id: self.id
+    })
+  }
+}
+</script>
+
+
+<style lang="less">
+
+/*隐藏滚动条*/
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
+}
+.icon {
+  position:absolute;
+  left:10px;
+  top:7px;
+  vertical-align:middle;
+  width: 28rpx;
+  height: 28rpx;
+}
+
+.fish-detail {
+  padding-right: 30rpx; 
+  padding-left: 30rpx;
+  background: #ffffff;
+  .tags {
+    position: relative;
+    margin-top: 56rpx;
+    height: 48rrpx;
+    text-align: center;
+    .single {
+      position: relative;
+      margin-right: 56rpx;  
+      font-size: 14px;
+      background: #E4E7F0;
+      color: #3D3D3D;
+      border-radius: 8rpx;
+      letter-spacing: 0;
+      text {
+        display: block;
+        padding: 4rpx 20rpx;
+        max-width: 102rpx;
+        overflow: hidden;
+        white-space: nowrap; 
+        text-overflow:ellipsis;
+      }
+      .icon-del {
+        position: absolute;
+        top: -16rpx;
+        right: -16rpx;
+        width: 32rpx;
+        height: 32rpx;
+        border-radius: 50%;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 32rpx 32rpx;
+      }
+    }
+
+  }
+  .msg1 {
+    margin-top: 40rpx;
+  }
+}
+
+.margin20 {
+  margin-bottom: 20rpx;
+}
+.avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+}
+.triangle-left {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-top: 12rpx solid transparent;
+  border-right: 24rpx;  /* solid #ecf2fe */
+  border-bottom: 12rpx solid transparent;
+  margin-top: 32rpx;
+}
+.content{
+  margin-left: 16rpx;
+}
+.name{
+  font-size:12px;
+  color:#8f8e94;
+}
+.box {
+  display: inline-block;
+  background:rgba(17,91,237,0.08);
+  border-radius:8rpx;
+  margin-top: 10rpx;
+  padding: 6rpx 22rpx;
+  font-size: 32rpx;
+}
+.time {
+  display: inline-block;
+  background: #cecece;
+  margin: 40rpx auto 28rpx;
+  color: #fff;
+  font-size: 24rpx;
+  border-radius: 6rpx;
+  padding: 0 24rpx;
+}
+</style>
