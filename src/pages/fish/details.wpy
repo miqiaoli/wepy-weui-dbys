@@ -3,13 +3,13 @@
   <view class="weui-search-bar__form" style="background: #F9F9F9; border-radius: 8rpx; border: 0">
     <view class="weui-search-bar__box">
       <image src="./../../images/icon/icon-fish-edit.png" class="icon" /> 
-      <input type="text" class="weui-search-bar__input" style="text-align: left;" maxlength="9" placeholder="输入您想要订制的内容" bindconfirm  bindinput="searchText"  value="{{editValue}}" />
+      <input type="text" class="weui-search-bar__input" style="text-align: left;" maxlength="9" placeholder="输入您想要订制的内容" bindblur bindconfirm  bindinput="searchText"  value="{{editValue}}" />
     </view>
   </view>
   <view class="tags weui-flex" wx:if="{{tags && tags.length>0}}">
     <view class="single"  wx:for="{{tags}}" wx:for-item="tag" wx:key="id">
       <text>{{tag}}</text>
-      <view bindtap="delTags" data-index="{{index}}" class="icon-del" style="background-image: url(./../../images/icon/icon-del.png)"></view>
+      <view bindtap="delTags" data-index="{{index}}" class="icon-del" style="background-image: url(http://pcve6cxe8.bkt.clouddn.com/icon-del.png)"></view>
     </view>
   </view>
   <!-- 即时消息 -->
@@ -112,6 +112,22 @@ export default class FishList extends wepy.page {
   methods = {
     searchText(e) {
       this.editValue = e.detail.value
+    },
+    bindblur(e) {
+      if (this.tags.length < 4 && this.editValue) {
+        this.tags.push(e.detail.value)
+        this.editValue = ''
+        this.$apply()
+        this.createFishTags(e.detail.value)
+        return
+      } 
+      if (this.tags.length >= 4) {
+        wx.showToast({
+          title: '最多四个',
+          icon: 'none',
+          duration: 2000
+        })
+      }
     },
     // 确定编辑 
     bindconfirm(e) {
