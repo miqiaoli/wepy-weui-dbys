@@ -118,19 +118,19 @@
         </view>
       </view>
       <view class="box weui-flex">
-        <view class="weui-flex__item">
+        <view class="box__item">
           <view class="placeholder" @tap='fileDownload' data-filename='inspection-orders'>检测委托书</view>
         </view>
-        <view class="weui-flex__item">
+        <view class="box__item">
           <view class="placeholder" @tap='fileDownload' data-filename='sample-testing-process'>来样检测流程</view>
         </view>
-        <view class="weui-flex__item">
+        <view class="box__item">
           <view class="placeholder" @tap='fileDownload' data-filename='test-items-and-costs'>检测项目及费用</view>
         </view>
-        <view class="weui-flex__item">
+        <view class="box__item">
           <view class="placeholder" @tap='fileDownload' data-filename='retest-application-instructions'>复测申请说明</view>
         </view>
-        <view class="weui-flex__item">
+        <view class="box__item">
           <view class="placeholder" @tap='fileDownload' data-filename='melt-refers-to-the-detection-conditions'>熔指检测条件</view>
         </view>
       </view>
@@ -300,6 +300,9 @@ export default class LabShare extends wepy.page {
     flex-wrap: wrap;
     margin-top: 40rpx;
 }
+.box__item {
+    width: 50%;
+}
 .placeholder {
     background: #ffffff;
     border: 2rpx solid #A1A6BB;
@@ -308,7 +311,7 @@ export default class LabShare extends wepy.page {
     padding: 16rpx 0;
     width: 316rpx;
     text-align: center;
-    margin-bottom: 20rpx;
+    margin: 0 auto 20rpx;
     font-size: 28rpx;
 }
 .user-phone {
