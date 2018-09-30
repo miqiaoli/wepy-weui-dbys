@@ -430,7 +430,7 @@ export default class ChartCompare extends wepy.page {
   height: 300px;
 } */
 .choose-pro {
-    position: absolute;
+    position: fixed;
     left: 0;
     right: 0;
     top: 0;

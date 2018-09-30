@@ -32,7 +32,7 @@
     </view>
     <ProductsList :list.sync="itemsList" :listType.sync="listType" :loading.sync="loading" :noMore.sync="noMoreList" :noList.sync="noList"></ProductsList>
   </view>
-  <view hidden='{{isFilter}}' class="selector" catchtouchmove='preventTouchMove'>
+  <view hidden='{{isFilter}}' class="selector">
     <form bindsubmit="formSubmit" bindreset="formReset">
       <view class="inner_box">
         <view class="module-box">
@@ -114,11 +114,12 @@
         <button class="weui-flex__item" type="primary" formType="submit">确定</button>
       </view>
     </form>
-    <view class="layer" catchtouchstart="removeLayer" data-type='isFilter'></view>
+    <view class="layer" catchtouchstart="removeLayer" data-type='isFilter' catchtouchmove='preventTouchMove'></view>
   </view>
 
   <view wx:if="{{!isCity}}" class="citys" catchtouchmove='preventTouchMove'>
-    <view class="inner_box">
+    <view class="layer" catchtouchstart="removeLayer" data-type='isCity' catchtouchmove='preventTouchMove'></view>
+    <view class="inner_box" catchtouchmove='preventTouchMove'>
       <view class="header_box">
         <view class="item l" data-act="cancel" data-mold="city" bindtap="ideChoice">取消</view>
         <view class="item c">请选择</view>
@@ -133,7 +134,6 @@
         </picker-view-column>
       </picker-view>
     </view>
-    <view class="layer" catchtouchstart="removeLayer" data-type='isCity'></view>
   </view>
 </view>
 </template>
@@ -363,6 +363,8 @@ export default class ProductList extends wepy.page {
       this.$apply()
     },
     cityChange(e) {
+      // wx.startPullDownRefresh()
+      delete this.onPullDownRefresh
       var val = e.detail.value
       var t = this.data.cityValue
       const cityList = this.cityList
@@ -425,19 +427,19 @@ export default class ProductList extends wepy.page {
 
     this.getCityList()
   }
-  getChooseData(id1, name1, id2, name2){
-      this.chooseProduct.id = id1
-      this.chooseProduct.name = name1
-      this.chooseGrade.id = id2
-      this.chooseGrade.name = name2
+  getChooseData(id1, name1, id2, name2) {
+    this.chooseProduct.id = id1
+    this.chooseProduct.name = name1
+    this.chooseGrade.id = id2
+    this.chooseGrade.name = name2
 
-      this.filterParam.goods_id = id1 || this.filterParam.goods_id
-      this.filterParam.att2_id = id2
-      this.filterParam.att1_id = this.chooseVendor.id
+    this.filterParam.goods_id = id1 || this.filterParam.goods_id
+    this.filterParam.att2_id = id2
+    this.filterParam.att1_id = this.chooseVendor.id
 
-      this.start = 1
-      this.isFilter = true
-      this.getProductList()
+    this.start = 1
+    this.isFilter = true
+    this.getProductList()
   }
   onShow() {
     // const pages = getCurrentPages()
