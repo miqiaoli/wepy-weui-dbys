@@ -201,6 +201,14 @@ export const __getApi = {
   _getMessageUp: `${host}/resourcemap/xlmapresourceUpxuqiu.dbys`,
 
   _getUpdateMsg: `${host}/wx/isNotice.dbys`, // 更新公告
+
+  // 物流司机端
+  _getImgUrl: `${host}/logist/trans_logist_abnormalimg.dbys`,   // 上传图片
+  _getOrderList: `${host}/logist/seek_logist_list.dbys`,   // 物流列表
+  _getOrderDoingDetails: `${host}/logist/trans_logist_abnormal.dbys`, // 发货
+  _getOrderWarningDetails: `${host}/logist/trans_logist_middle.dbys`,  // 运输中
+  _getOrderDoneDetails: `${host}/logist/trans_logist_end.dbys`,   // 完成
+
 }
 
 export default {
