@@ -9,7 +9,7 @@
       <view class="type margin-10">商品名称　 {{single.product_name}}</view>
       <view class="des margin-10">　　数量　 {{single.quantity}}公斤</view>
       <view class="dis margin-10">收货地址　 {{single.receiverAddress}}</view>
-      <view class="dis margin-10">联系方式　 15558071502</view>
+      <view class="dis margin-10">联系方式　 {{single.receiverLinkman}}</view>
       <view class="operate margin-10">
         <text wx:if="{{ single.state ==  -2 || single.state ==  2 || single.state ==  -3 || single.state ==  3 || single.state ==  -4}}" class="warning">异常已上报</text>
         <text wx:if="{{single.state == 0}}" class="btn btn-no" data-product_name="{{single.product_name}}" data-list_num="{{single.list_num}}" data-state="77" bindtap="toDetail">待发货</text>
@@ -72,9 +72,30 @@ export default class list extends wepy.page {
     this.$apply()
   }
   async onLoad() {
+    const self = this
     this.token_access = this.$parent.globalData.token_access
     this.getOrderList()
+    wx.getLocation({
+      type: 'wgs84',
+      success (res) {
+        self.getLocation(res.longitude, res.latitude)
+      },
+    })
     this.$apply()
+  }
+  async getLocation(lng, lat) {
+    const res = await http.get(__getApi._getLocation, {
+      token_access: this.token_access,
+      diver_location: {lng: lng, lat: lat, timestamp: new Date().getTime()}
+    })
+    if (res.meta.success) {
+       wx.showToast({
+        title: '上报位置信息成功',
+        icon: 'none',
+        duration: 2000
+      })
+    }
+    console.log(res)
   }
   onPullDownRefresh() {
     this.page_id = 1
