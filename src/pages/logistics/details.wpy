@@ -300,7 +300,7 @@ export default class details extends wepy.page {
           })
         }
       } else { 
-        if (! this.additional_charges.match(/^\d+(\.\d+)?$/)) {
+        if (this.additional_charges && ! this.additional_charges.match(/^\d+(\.\d+)?$/)) {
           return wx.showToast({
             title: '请正确填写金额',
             icon: 'none',
