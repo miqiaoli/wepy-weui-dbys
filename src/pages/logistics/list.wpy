@@ -1,5 +1,5 @@
 <template>
-<view class="collection">
+<view class="collection" style="min-height:{{height}}px">
   <view class="list"  wx:for="{{list}}" wx:for-item="single" wx:key="id" data-detai="{{id}}" data-index="{{index}}">
     <view data-id="{{single.list_num}}">
       <view class="title-flex">
@@ -39,10 +39,11 @@ export default class list extends wepy.page {
     onReachBottomDistance: 100
   }
   data = {
+    height: 667,
     token_access: '',
     list: [],
     page_id: 1,
-    page_limit: 50,
+    page_limit: 15,
     count: 0 
   }
   methods = {
@@ -66,10 +67,12 @@ export default class list extends wepy.page {
       page_limit: this.page_limit
     })
     wx.stopPullDownRefresh()
-    this.list = [...this.list, ...res.data]
-    this.count = res.data.count
+    if (res.meta.success) {
+      this.list = [...this.list, ...res.data]
+      this.count = res.data.count
+    }
     if (!res.data || res.data.length <= 0) {
-      this.page_id -- 
+      this.page_id -= 1
       wx.showToast({
         title: '暂无更多数据',
         icon: 'none',
@@ -82,6 +85,11 @@ export default class list extends wepy.page {
     const self = this
     this.token_access = this.$parent.globalData.token_access
     this.getOrderList()
+    wx.getSystemInfo({
+      success: function(res) {
+        self.height = res.screenHeight
+      }
+    })
     wx.getLocation({
       type: 'wgs84',
       success (res) {
