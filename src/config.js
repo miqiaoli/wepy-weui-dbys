@@ -209,6 +209,7 @@ export const __getApi = {
   _getOrderDoingDetails: `${host}/logist/trans_logist_abnormal.dbys`, // 发货
   _getOrderWarningDetails: `${host}/logist/trans_logist_middle.dbys`,  // 运输中
   _getOrderDoneDetails: `${host}/logist/trans_logist_end.dbys`,   // 完成
+  _getLocation: `${host}/logist/up_logist_location.dbys`, // 上报地理位置
 
 }
 

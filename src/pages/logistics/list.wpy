@@ -68,7 +68,7 @@ export default class list extends wepy.page {
     })
     wx.stopPullDownRefresh()
     if (res.meta.success) {
-      this.list = [...this.list, ...res.data]
+      this.list = [...this.list, ...res.data.list]
       this.count = res.data.count
     }
     if (!res.data || res.data.length <= 0) {
@@ -118,8 +118,8 @@ export default class list extends wepy.page {
   }
   onReachBottom() {
     this.page_id ++
-    this.getOrderList()
-    // this.page_id * this.page_limit - this.page_limit < this.count ? this.getOrderList() : ''
+    // this.getOrderList()
+    this.page_id * this.page_limit - this.page_limit < this.count ? this.getOrderList() : ''
   }
 }
 </script>

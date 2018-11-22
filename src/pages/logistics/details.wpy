@@ -261,7 +261,6 @@ export default class details extends wepy.page {
       })
     },
     inputText(type, e ) {
-      console.log(type)
       if (type == 'abnormals_describe') {
         this.abnormals_describe = e.detail.value
       } else if (type == 'additional_charges') {
@@ -269,7 +268,7 @@ export default class details extends wepy.page {
       } else if (type == 'charges_detail') {
         this.charges_detail = e.detail.value
       } else {
-        return null
+        return 
       }
     },
     doPreStep() {
@@ -300,7 +299,7 @@ export default class details extends wepy.page {
           })
         }
       } else { 
-        if (this.additional_charges && ! this.additional_charges.match(/^\d+(\.\d+)?$/)) {
+        if (this.additional_charges && !this.additional_charges.match(/^\d+(\.\d+)?$/)) {
           return wx.showToast({
             title: '请正确填写金额',
             icon: 'none',
@@ -330,7 +329,7 @@ export default class details extends wepy.page {
             abnormals_describef: this.warningText,
             abnormals_describe: this.abnormals_describe,
             abnormal_img: this.imgUrl,
-            additional_charges: parseFloat(this.additional_charges),
+            additional_charges: this.additional_charges,
             charges_detail: this.charges_detail,
             img_path: this.img_path
           })
@@ -348,7 +347,7 @@ export default class details extends wepy.page {
             abnormals_describef: this.warningText,
             abnormals_describe: this.abnormals_describe,
             abnormal_img: this.imgUrl,
-            additional_charges: parseFloat(this.additional_charges),
+            additional_charges: this.additional_charges,
             charges_detail: this.charges_detail,
             img_path: this.img_path
           })
