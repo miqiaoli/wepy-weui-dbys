@@ -91,7 +91,7 @@ export default class list extends wepy.page {
       }
     })
     wx.getLocation({
-      type: 'wgs84',
+      type: 'gcj02',
       success (res) {
         self.getLocation(res.longitude, res.latitude)
       },
