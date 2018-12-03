@@ -1,7 +1,7 @@
 <template>
 <view class="detail">
   <view class="base-info">
-    <view class="header" style="background: url('http://ogm9o9o2u.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20180726121102.png') no-repeat; background-size: 100% 100%">
+    <view class="header" style="background: url('http://imgs.afacode.top/rice.png') no-repeat; background-size: 100% 100%">
       <navigator url="/pages/company/alltype">
         <view class="alltype">全品类企业信息请点击前往
           <image class="left-icon" src="/images/icon/icon_arrow.png" />
@@ -305,7 +305,7 @@
   right: 20rpx;
   width: 120rpx;
   height: 120rpx;
-  background: url(http://ogm9o9o2u.bkt.clouddn.com/back_index.png) no-repeat center center;
+  background: url(http://imgs.afacode.top/back_index.png) no-repeat center center;
   background-size: 100% auto;
   border-radius: 50%;
   z-index: 999;

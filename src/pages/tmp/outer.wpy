@@ -1,0 +1,19 @@
+<template>
+  <web-view src="{{link}}"></web-view>
+</template>
+
+<script>
+import wepy from "wepy";
+export default class outer extends wepy.page {
+  config = {
+    navigationBarTitleText: "国际橡塑展"
+  };
+  data = {
+    link: 'https://mp.weixin.qq.com/s/Qq23aIV323DK9G3NnqXiwQ'
+  }
+  onLoad(e) {
+    this.link = e.link ? e.link : 'https://mp.weixin.qq.com/s/Qq23aIV323DK9G3NnqXiwQ'
+    this.$apply()
+  }
+}
+</script>

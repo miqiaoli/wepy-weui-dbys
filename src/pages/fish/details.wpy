@@ -9,7 +9,7 @@
   <view class="tags weui-flex" wx:if="{{tags && tags.length>0}}">
     <view class="single"  wx:for="{{tags}}" wx:for-item="tag" wx:key="id">
       <text>{{tag}}</text>
-      <view bindtap="delTags" data-index="{{index}}" class="icon-del" style="background-image: url(http://pcve6cxe8.bkt.clouddn.com/icon-del.png)"></view>
+      <view bindtap="delTags" data-index="{{index}}" class="icon-del" style="background-image: url(http://dbys.afacode.top/icon-del.png)"></view>
     </view>
   </view>
   <!-- 即时消息 -->

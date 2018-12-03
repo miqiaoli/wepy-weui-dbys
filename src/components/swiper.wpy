@@ -11,9 +11,11 @@
       </navigator>
     </swiper-item>
     <swiper-item wx:else>
-      <navigator wx:if="{{item.image_link && name}}" url="{{item.image_link}}">
+      <!-- <navigator wx:if="{{item.image_link && name}}" url="{{item.image_link}}"> -->
+      <view wx:if="{{item.image_link && name}}" style="height:{{style_height}}" @tap="navigator" data-image_link="{{item.image_link}}">
         <image src="{{checkHostUrl+item[name]}}" style="height:{{style_height}}" class="swiper-image" mode="widthFix" />
-      </navigator>
+      </view>
+      <!-- </navigator> -->
       <view wx:elif='{{name}}' style="height:{{style_height}}">
         <image src="{{checkHostUrl+item[name]}}" style="height:{{style_height}}" class="swiper-image" mode="aspectFit" />
       </view>
@@ -86,7 +88,16 @@ export default class SearchBar extends wepy.component {
     }
   }
 
-  methods = {}
+  methods = {
+    navigator(e) {
+      let link = e.currentTarget.dataset.image_link
+      if (link.startsWith('https://mp.weixin.qq.com')) {
+        wx.navigateTo({
+          url: '/pages/tmp/outer?link=' + link
+        })
+      } 
+    }
+  }
 
   isMatchHeight(str) {
     return this.isString(str) ? /\d+(r?px|em)$/.test(str) : false

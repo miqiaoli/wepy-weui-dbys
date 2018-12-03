@@ -16,7 +16,7 @@
       </view>
     </view>
   </view>
-  <view class="search" style="background: url('http://ogm9o9o2u.bkt.clouddn.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20180726121102.png') no-repeat; background-size: 100% 100%">
+  <view class="search" style="background: url('http://imgs.afacode.top/rice.png') no-repeat; background-size: 100% 100%">
   </view>
   <view class="list-flex">
     <block wx:for="{{topSeven}}" wx:for-item="single" wx:key="id" wx:if="{{index < 4}}">

@@ -43,13 +43,13 @@
         <view class="weui-cell__bd bold">我的收藏</view>
         <view class="weui-cell__ft weui-cell__ft_in-access"></view>
       </navigator>
-      <navigator url="/pages/logistics/list" class="user-cell weui-flex">
+      <!-- <navigator url="/pages/logistics/list" class="user-cell weui-flex">
         <view class="weui-cell__hd">
           <image class="icon" src="/images/icon/order.png" />
         </view>
         <view class="weui-cell__bd bold">小八物流</view>
         <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-      </navigator>
+      </navigator> -->
       <navigator url="/pages/customize/list" class="user-cell weui-flex">
         <view class="weui-cell__hd">
           <image class="icon" src="/images/icon/mime4.png" />

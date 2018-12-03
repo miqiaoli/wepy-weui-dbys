@@ -1,17 +1,16 @@
-// const host = 'https://www.otimes.com/front' 
-const host = 'https://dbys.otimes.info/front'
-// const host = 'http://10.0.0.31/front'
+const host = 'https://www.otimes.com/front' 
+// const host = 'https://dbys.otimes.info/front'
 
-const imgHost = 'https://dbys.otimes.info' // 测试图片地址
-// const imgHost = 'https://www.otimes.com'
-// const socketHost = 'wss://www.otimes.com' // websocket地址
-const socketHost = 'wss://dbys.otimes.info'
+// const imgHost = 'https://dbys.otimes.info' // 测试图片地址
+const imgHost = 'https://www.otimes.com'
+const socketHost = 'wss://www.otimes.com' // websocket地址
+// const socketHost = 'wss://dbys.otimes.info'
 
 export const __getApi = {
   host,
   imgHost,
   socketHost,
-  baseHrefUrl: 'https://dbys.otimes.com',
+  baseHrefUrl: 'https://www.otimes.com',
 
   //code encryptedData iv 换取openid，unionid,session_key
   _getPrivacyToken: `${host}/wxapp/codeei.dbys`,
