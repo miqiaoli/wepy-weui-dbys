@@ -1,0 +1,145 @@
+<template>
+  <view class="todolist page__bd">
+    <view class="weui-cells__title">{{day}}</view>
+    <view class="weui-cells weui-cells_form">
+      <picker bindchange="bindPickerChange" value="{{index}}" range="{{username}}">
+        <view class="picker weui-cells__title" style="color: red;">
+          选择提交人：{{username[index]}}
+        </view>
+      </picker>
+        <view class="weui-cells__title">{{username[index]}}</view>
+        <view class="weui-cell">
+          <view class="weui-cell__hd">
+            <text class="weui-label weui-cells__title">今日</text>
+          </view>
+          <view class="weui-cell__hd weui-flex__item" style="border: 1px solid #999;">
+            <input class="weui-input" data-index="{{index}}" value="{{now}}" bindinput="getNowValue" type="text"  placeholder="请输入">
+          </view>
+        </view>
+        <view class="weui-cell">
+          <view class="weui-cell__hd">
+            <text class="weui-label weui-cells__title">明日</text>
+          </view>
+          <view class="weui-cell__hd weui-flex__item" style="border: 1px solid #999;">
+            <input class="weui-input" data-index="{{index}}" value="{{next}}" bindinput="getNextValue" type="text"  placeholder="请输入">
+          </view>
+        </view>
+        <view class="weui-cell">
+          <button class="weui-btn weui-btn_plain-primary" @tap="upload" type="primary">提交({{username[index]}})</button>
+        </view>
+    </view>
+    <button type="primary" @tap="getAll">预览</button>
+    <view class="" wx:if="{{allLog}}">
+      <view class="weui-cells__title">杭州团队开发进度{{day}}</view>
+      <block wx:for="{{allLog}}" wx:for-index="index" wx:key="id" wx:for-item="single" >
+        <view class="weui-cells__title">{{single.username}}: {{single.today}}</view>
+      </block>
+      <view class="weui-cells__title">明日计划:</view>
+      <block wx:for="{{allLog}}" wx:for-index="index" wx:key="id" wx:for-item="single" >
+        <view class="weui-cells__title">{{single.username}}: {{single.tomorrow}}</view>
+      </block>
+    </view>
+    <button type="primary" @tap="copy">复制</button>
+  </view>
+</template>
+
+<script>
+import wepy from "wepy";
+export default class todolist extends wepy.page {
+  config = {
+    navigationBarTitleText: "每日日志"
+  };
+  data = {
+    day: new Date(),
+    index: 0,
+    now: '',
+    next: '',
+    username: ['王思亮', '密巧丽', '姜丽婧', '李发全', '何东红'],
+    allLog: [],
+  }
+  getNextValue(e) {
+    this.next = e.detail.value
+  }
+  getNowValue(e) {
+    this.now = e.detail.value
+  }
+  bindPickerChange(e) {
+    this.index = e.detail.value
+    this.$apply()
+  }
+  methods = {
+    copy() {
+      const title = `杭州团队开发进度${this.day}:\n`
+      let today = ''
+      let tomorrow = ''
+      this.allLog.forEach((val, index) => {
+        today = today + `${val.name}: ${val.today};\n`
+        tomorrow = tomorrow + `${val.name}: ${val.tomorrow};\n`
+      })
+      let data = `${title}${today}明日安排:\n ${tomorrow}`
+      wx.setClipboardData({
+        data: data,
+        success (res) {
+          wx.showToast({
+            title: '复制成功',
+            icon: 'none',
+            duration: 2000
+          })
+        }
+      })
+    },
+    getAll() {
+      let self = this
+      wx.request({
+        url: 'http://api.afacode.top/alllog',
+        method: 'GET',
+        data: {},
+        header: {
+          'content-type': 'application/json' // 默认值
+        },
+        success (res) {
+          self.allLog = res.data.data
+          self.$apply()
+        }
+      })
+    },
+    upload(e) {
+      let data = {
+        username: this.username[this.index],
+        today: this.now,
+        tomorrow: this.next,
+        userID: Number(this.index) + 1
+      }
+      const self = this
+      wx.request({
+        url: 'http://api.afacode.top/uplog',
+        method: 'POST',
+        data: data,
+        header: {
+          'content-type': 'application/json' // 默认值
+        },
+        success: (res) => {
+          if (res.data.data) {
+            self.next = ''
+            self.now = ''
+            self.$apply()
+            wx.showModal({
+              title: '提示',
+              showCancel: false,
+              content: '提交成功',
+              success (res) {
+                if (res.confirm) {
+                  console.log('用户点击确定')
+                }
+              }
+            })
+          }
+        }
+      })
+    }
+  }
+  onLoad(e) {
+    this.day = new Date().getFullYear() + '年' + (new Date().getMonth() + 1) + '月' + new Date().getDate() + '日' 
+  }
+}
+</script>

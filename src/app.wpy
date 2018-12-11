@@ -8,6 +8,7 @@ export default class extends wepy.app {
     pages: [
       'pages/index',
       'pages/tmp/outer',
+      'pages/tmp/todolist',
       'pages/fish/list',
       'pages/fish/details',
       'pages/product/list',

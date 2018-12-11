@@ -1,7 +1,7 @@
 <template>
   <view class="overseas">
     <view class="bgImg">
-      <image class="country-img" src="{{imgHost}}{{bannerImg}}" />
+      <image class="country-img" src="{{imgHost}}{{bannerImg}}" @tap="log" />
     </view>
     <view class="tips">- 第八元素再生资源全球分布图 -</view>
     <view class="tab weui-flex">
@@ -172,6 +172,11 @@ export default class overseasList extends wepy.page {
     tab: 0
   };
   methods = {
+    log() {
+      wx.navigateTo({
+        url: '../tmp/todolist'
+      })
+    },
     async changTabs(event) {
       this.tab = event.target.dataset.tab
       this.order = 0
