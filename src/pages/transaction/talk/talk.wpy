@@ -1,0 +1,183 @@
+<template>
+<view class="page bg__white">
+  <view class="module">
+    <view class="title">卖方信息</view>
+    <view class="weui-flex row">
+      <view class="col-name">卖方</view>
+      <view class="col-des weui-flex__item">{{detail.client_name}}</view>
+    </view>
+  </view>
+  <view class="module">
+    <view class="title">商品信息</view>
+    <view class="weui-flex row">
+      <view class="col-name">商品名称</view>
+      <view class="col-des weui-flex__item">{{detail.goods_name}} {{detail.att2}}/{{detail.att1}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">挂牌单价</view>
+      <view class="col-des weui-flex__item">{{detail.order_price}}元/KG</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">可供量</view>
+      <view class="col-des weui-flex__item">{{detail.amount}}KG</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">起批量</view>
+      <view class="col-des weui-flex__item">{{detail.min_batch_qtt}}KG</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name"><text class="text-color">洽谈量</text></view>
+      <view class="col-des weui-flex__item">
+        <input type="number" placeholder="请输入大于等于起批量的数" bindinput="amount" value="{{this.discuss_amount}}" />
+      </view>
+      <view style="margin-left: 8rpx; margin-top: 4rpx; width: 100rpx;">(kg)</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name"><text class="text-color">洽谈价格</text></view>
+      <view class="col-des weui-flex__item">
+        <input type="number" placeholder="请输入您想洽谈的价格" bindinput="price" value="{{this.discuss_price}}" />
+      </view>
+      <view style="margin-left: 8rpx; margin-top: 4rpx; width: 100rpx;">(元/kg)</view>
+    </view>
+  </view>
+  <view class="module">
+    <button type="primary" @tap="doTalk">提交</button>
+  </view>
+  <backIndex></backIndex>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import backIndex from '../../../components/backIndex'
+import {
+  __getApi
+} from '../../../config.js'
+import http from '../../../utils/Http'
+
+export default class details extends wepy.page {
+  components = {
+    backIndex
+  }
+  data = {
+    id: '',
+    token_access: '',
+    discuss_price: '',
+    discuss_amount: '',
+    buyorsell: 1, // 买方
+    detail: null,
+    reply: '',
+  }
+  methods = {
+    price(e) {
+      this.discuss_price = e.detail.value
+    },
+    amount(e) {
+      this.discuss_amount = e.detail.value
+    },
+    async doTalk() {
+      if (!this.discuss_price || !this.discuss_amount) {
+        wx.showToast({
+          title: '请输入价格/数量',
+          icon: 'none',
+          duration: 2000
+        })
+        return 
+      }      
+      if (this.reply == 'reply') {
+        // 回复洽谈单
+        const res = await http.get(__getApi._replyTalk, {
+          token_access: this.token_access,
+          order_id: this.id,
+          buyorsell: this.buyorsell,
+          discuss_price: this.discuss_price,
+          discuss_amount: this.discuss_amount
+        })
+        if (res.meta.success) {
+          wx.showToast({
+            title: '回复成功',
+            icon: 'success',
+            duration: 2000
+          })
+          setTimeout(() => {
+            wx.redirectTo({
+              url: './list?buyorsell=1'
+            })
+          }, 2000);
+        }
+      } else {
+        // 生成洽谈单
+        const res = await http.get(__getApi._getTalk, {
+          token_access: this.token_access,
+          order_id: this.id,
+          buyorsell: this.buyorsell,
+          discuss_price: this.discuss_price,
+          discuss_amount: this.discuss_amount
+        })
+        if (res.meta.success) {
+          wx.showToast({
+            title: '洽谈提交成功',
+            icon: 'success',
+            duration: 2000
+          })
+          setTimeout(() => {
+            wx.redirectTo({
+              url: './list?buyorsell=2'
+            })
+          }, 2000);
+        }
+      }
+    }
+  }
+  onLoad(e) {
+    this.id = e.id ? e.id : 1
+    this.reply = e.reply ? e.reply : ''
+    this.buyorsell = e.buyorsell ? e.buyorsell : 1
+    this.token_access = this.$parent.globalData.token_access
+    this.getProduct()
+  }
+  async getProduct() {
+    const res = await http.get(__getApi._getProductDetails, {
+      service_name: 'TRADE_ORDERDETAIL',
+      order_id: this.id
+    }, true)
+    if (res.meta.success) {
+      this.detail = res.data
+      this.$apply()
+    }
+    
+  }
+}
+</script>
+
+<style lang="less">
+.module {
+  padding: 16rpx 30rpx;
+  .title {
+    font-weight: bold;
+    font-size: 32rpx;
+    color: #1E1E1E;
+  }
+  .row {
+    padding: 20rpx 0;
+    font-size: 14px;
+    border-bottom: 1px solid #E4E7F0;
+    // border-bottom: 1px solid red;
+    .col-name {
+      color: #8F8E94;
+      width: 220rpx;
+      .text-color {
+        padding: 0rpx 8rpx;
+        color: #EB4E35;
+        background: rgba(235,78,53,0.15);
+        border: 1px solid rgba(235,78,53,0.65);
+        border-radius: 2px;
+      }
+    }
+    .col-des {
+      color: #3D3D3D;
+    }
+  } 
+}
+
+</style>

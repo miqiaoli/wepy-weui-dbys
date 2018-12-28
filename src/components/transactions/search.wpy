@@ -1,0 +1,52 @@
+<template>
+  <view class="search weui-flex">
+    <view class="weui-flex__item" >
+      <!-- <input class="search-text weui-search-bar__input"  value="{{value}}" bindinput="getValue" placeholder="搜索合同号" /> -->
+      <view class="weui-search-bar__box">
+        <input type="text" class="search-text weui-search-bar__input" style="text-align: left;" value="{{value}}" bindinput="getValue" placeholder="{{placeholder}}" />
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import base from '../../mixins/base.js'
+export default class search extends wepy.component {
+  mixins = [base]
+  props = {
+    value: {
+      type: String,
+      default: '',
+      twoWay: true
+    },
+    placeholder: {
+      type: String,
+      default: '搜索合同号'
+    }
+  }
+  methods = {
+    getValue(e) {
+      setTimeout(() => {
+        this.value = e.detail.value
+      }, 500);
+      this.$apply()
+    }
+  }
+}
+</script>
+<style>
+.search {
+  /* margin: 0 30rpx; */
+  /* padding: 0 30rpx; */
+  height: 56rpx;
+  font-size: 28rpx;
+  background: #F9F9F9;
+  border-radius: 8rpx;
+}
+.search-text {
+  padding-left: 20rpx;
+  width: 100%;
+  height: 100%;
+}
+</style>

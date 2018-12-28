@@ -1,0 +1,50 @@
+<template>
+  <view class="tabs weui-flex">
+    <block wx:for="{{tabs}}" wx:for-index="row" wx:key="id" wx:for-item="tab" >
+      <view class="weui-flex__item, {{index == row ? 'choose' : ''}}" data-index="{{row}}" @tap="tabTap" >{{tab.name}}</view>
+    </block>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import base from '../../mixins/base.js'
+export default class tab extends wepy.component {
+  mixins = [base]
+  props = {
+    tabs: {
+      type: Array,
+      default: ['全部', '待回复', '已完成', '已终止']
+    },
+    index: {
+      type: Number,
+      default: 0,
+      twoWay: true
+    }
+  }
+  data = {
+  }
+  methods = {
+    tabTap(e) {
+      this.index = e.currentTarget.dataset.index
+      this.$apply()
+    },
+  }
+}
+</script>
+<style>
+.tabs {
+    height: 96rpx;
+    line-height: 96rpx;
+    border-bottom: 1px solid #E4E7F0;
+    color: #A1A6BB;
+    font-size: 28rpx;
+    text-align: center;
+}
+.choose {
+  color: #323972;
+  /* font-size: 32rpx; */
+  border-bottom: 4rpx solid #323972;
+}
+
+</style>

@@ -1,0 +1,277 @@
+<template>
+  <view class="buy page bg__white">
+    <Search :value.sync="value" :placeholder="搜索合同号"></Search>
+    <!-- <tabs :tabs="tabs" :index.sync="index"></tabs> -->
+    <view class="list">
+      <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id">
+        <view class="weui-flex flex-margin flex-end">
+          <view class="weui-flex__item">合同号：{{single.subs_no}}</view>
+          <view class="">{{single.create_date}}</view>
+        </view>
+        <view class="weui-flex">
+          <view class="weui-flex__item weui-flex">
+            <view class="title">品种</view>
+            <view class="weui-flex__item">{{single.goods_class_name}}</view>
+          </view>
+          <view class="weui-flex__item weui-flex">
+            <view class="title">品名</view>
+            <view class="weui-flex__item">{{single.goods_name}}</view>
+          </view>
+        </view>
+        <view class="weui-flex">
+          <view class="weui-flex__item weui-flex">
+            <view class="title">牌号</view>
+            <view class="weui-flex__item">{{single.att2}}</view>
+          </view>
+          <view class="weui-flex__item weui-flex">
+            <view class="title">厂商</view>
+            <view class="weui-flex__item">{{single.att1}}</view>
+          </view>
+        </view>
+        <view class="weui-flex flex-padding">
+          <view class="title">存货地</view>
+          <view class="weui-flex__item">{{single.address}}</view>
+        </view>
+        <view class="weui-flex flex-margin">
+          <view class="weui-flex__item weui-flex">
+            <view class="title">成交价格</view>
+            <view class="weui-flex__item">{{single.deal_price}}元/KG</view>
+          </view>
+          <view class="weui-flex__item weui-flex">
+            <view class="title">成交量</view>
+            <view class="weui-flex__item">{{single.deal_amount}}KG</view>
+          </view>
+        </view>
+        <view class="weui-flex">
+          <view class="weui-flex__item weui-flex">
+            <view class="title">成交金额</view>
+            <view class="weui-flex__item">{{single.deal_money}}元</view>
+          </view>
+          <view class="weui-flex__item weui-flex">
+            <view class="title">保证金</view>
+            <view class="weui-flex__item">{{single.other_value}}元</view>
+          </view>
+        </view>
+
+        <view class="weui-flex flex-padding">
+          <view class="long-title">合同生成日</view>
+          <view class="weui-flex__item">{{single.create_date}}</view>          
+        </view>
+        <view class="weui-flex flex-margin">
+          <view class="long-title">付款截止日</view>
+          <view class="weui-flex__item">{{single.date1}}</view>          
+        </view>
+        <view class="weui-flex">
+          <view class="long-title">验货截止日</view>
+          <view class="weui-flex__item">{{single.date5}}</view>          
+        </view>
+        <view class="weui-flex">
+          <view class="long-title">验票截止日</view>
+          <view class="weui-flex__item">{{single.date7}}</view>          
+        </view>
+
+        <view class="weui-flex">
+          <view class="title weui-flex__item">
+            <text class="tags tags-status-color">状态：{{single.v_status}}</text>
+          </view>
+        </view>
+        <view class="weui-flex flex-end">
+          <view class="btn btn-color-out" data-subs_id="{{single.subs_id}}" @tap="downloadFile">导出</view>
+          <view class="btn btn-color-eye" data-subs_id="{{single.subs_id}}" @tap="eyeFile">查看</view>
+        </view>
+      </view>
+    </view>
+  <backIndex></backIndex>
+  <view wx:if="{{list.length <= 0 || count <= 0 }}" class="weui-loadmore weui-loadmore_line">
+    <text class="weui-loadmore__tips">暂无数据</text>
+  </view>
+  <view wx:if="{{!getMore}}" class="weui-loadmore weui-loadmore_line">
+    <text class="weui-loadmore__tips">没有更多了</text>
+  </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from "../../../config.js";
+import http from '../../../utils/Http'
+import backIndex from '../../../components/backIndex'
+import tabs from '../../../components/transactions/tab'
+import Search from '../../../components/transactions/search'
+export default class contractList extends wepy.page {
+  components = {
+    backIndex, tabs, Search
+  }
+  config = {
+    navigationBarTitleText: '合同列表',
+    enablePullDownRefresh: true,
+    onReachBottomDistance: 100
+  }
+  data = {
+    value: '',
+    index: 0,
+    list: [],
+    start: 1,
+    limit: 15,
+    count: 0, 
+    tabs: ['全部', '待支付', '异议中', '已完成', '已终止'],
+    buyorsell: 1,
+    fileSrc: '',
+    saveFile: '',
+    getMore: true,
+  }
+  methods = {
+    async downloadFile(e) {
+      const subs_id = e.currentTarget.dataset.subs_id
+      const downloadTask = wx.downloadFile({
+        url: `${__getApi._getContractDownload}?subs_id=${subs_id}&token_access=${this.token_access}`, 
+        success (res) {
+          if (res.statusCode === 200) {
+            const filePath = res.tempFilePath
+            wx.saveFile({
+              tempFilePath: filePath,
+              success (res) {
+                wx.showToast({
+                  title: '导出成功',
+                  icon: 'success',
+                  duration: 2000
+                })
+              }
+            })
+          }
+        }
+      })
+      downloadTask.onProgressUpdate((res) => {
+        console.log('已经下载的数据长度', res.totalBytesWritten)
+      })
+    },
+    async eyeFile(e) {
+      const subs_id = e.currentTarget.dataset.subs_id
+      const downloadTask = wx.downloadFile({
+        url: `${__getApi._getContractDownload}?subs_id=${subs_id}&token_access=${this.token_access}`, 
+        success (res) {
+          if (res.statusCode === 200) {
+            const filePath = res.tempFilePath
+            wx.openDocument({
+              filePath: filePath,
+              fileType: 'doc',
+              success: function(res) {
+                  console.log('打开文档成功')
+              }
+            })
+          }
+        }
+      })
+    }
+  }
+  onLoad(e) {
+    this.buyorsell = e.buyorsell
+    this.token_access = this.$parent.globalData.token_access
+    this.getContractHistory()
+    // _getContractHistory _getContractDownload _getContractDetails
+  }
+  async getContractHistory() {
+    const res = await http.get(__getApi._getContractHistory, {
+      start: this.start,
+      limit: this.limit,
+      token_access: this.token_access,
+      buyorsell: this.buyorsell
+    })
+    if (res.meta.success) {
+      this.list = [...this.list, ...res.data.resultlist]
+      this.count = res.data.rows_count
+      this.$apply()
+    }
+  }
+  onPullDownRefresh() {
+    this.start = 1
+    this.value = ''
+    this.list = []
+    this.chgContractList()
+  }
+  async onReachBottom() {
+    if (this.start * this.limit < this.count) {
+      this.start += 1
+      this.chgContractList()
+    } else {
+      this.getMore = false
+      this.$apply()
+    }
+  }
+  async chgContractList() {
+    console.log('dddddddddd')
+  }
+  
+}
+</script>
+
+<style lang="less">
+.flex-margin {
+  margin-top: 15rpx;
+}
+.flex-padding {
+  padding-bottom: 15rpx;
+  border-bottom: 1px solid #E4E7F0;
+}
+.flex-end {
+  justify-content: flex-end;
+}
+.buy {
+  font-size: 28rpx;
+  .buy-tab {
+    height: 48rpx;
+    line-height: 48rpx;
+    border-bottom: 1px solid #E4E7F0;
+    color: #A1A6BB;
+    font-size: 28rpx;
+    text-align: center;
+  }
+  .list {
+    margin: 0 30rpx;
+    .single {
+      margin: 10rpx 0;
+      padding: 10rpx 0;
+    }
+  }
+}
+.icon-choose {
+  width: 48rpx
+}
+.long-title {
+  width: 150rpx;
+  color: #8F8E94;
+}
+.title {
+  // margin-left: 48rpx;
+  width: 120rpx;
+  color: #8F8E94;
+}
+.tags {
+  margin: 6rpx 0;
+  padding:0 12rpx;
+  border-radius: 2px;
+}
+.tags-time-color {
+  border: 1px solid #00B9E7;
+  color: #00B9E7;
+}
+.tags-status-color {
+  border: 1px solid #1FCC24;
+  color: #1FCC24;
+}
+.btn {
+  margin: 20rpx 0 20rpx 20rpx;
+  padding: 10rpx 44rpx;
+  border-radius: 8rpx;
+  font-size: 36rpx;
+  color: #FFFFFF;
+}
+.btn-color-eye {
+  background: #00B9E7;
+}
+.btn-color-out {
+  background: #FB8E1E;
+}
+</style>

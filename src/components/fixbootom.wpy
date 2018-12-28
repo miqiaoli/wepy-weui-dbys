@@ -1,0 +1,123 @@
+<template>
+  <view class="weui-flex fix-bootom">
+    <view wx:if="{{trade_class == 101}}" class="talk weui-flex__item" @tap="doTalk">点击洽谈</view>
+    <view class="col-1 weui-flex__item" @tap="todo">加入进货单</view>
+    <view class="buy weui-flex__item" @tap="doBuy">立即购买</view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import base from '../mixins/base.js'
+import {
+  __getApi
+} from '../config.js'
+import http from '../utils/Http'
+
+export default class fixbootom extends wepy.component {
+  mixins = [base]
+  props = {
+    id: {
+      type: Number
+    },
+    trade_class: {
+      type: Number
+    },
+    weight_buy: {
+      type: Number
+    },
+    order_id: {
+      type: Number
+    },
+    token_access: {
+      type: String
+    },
+    itemData: {
+      type: Object
+    }
+  }
+  data = {
+    service_name: 'TRADE_ORDERDETAIL',
+    buyorsell: 1
+  }
+  methods = {
+    doTalk() {
+      wx.showToast({
+        title: '去洽谈',
+        icon: 'success',
+        duration: 2000
+      })
+      setTimeout(() => {
+        wx.navigateTo({
+          url: `../transaction/talk/talk?service_name=TRADE_ORDERDETAIL&id=${this.id}&buyorsell=${this.buyorsell}`
+        })
+      }, 2000);
+      
+    },
+    async todo() {
+      const res = await http.get(__getApi._addDo, {
+        token_access: this.token_access,
+        order_id: this.order_id,
+        order_buy_weight: this.weight_buy,
+        order_price: this.itemData.order_price,
+        goods_class: this.itemData.goods_class,    // 品种 
+        goods_name: this.itemData.goods_name, // 品名
+        att2: this.itemData.att2,   // 牌号
+        att1: this.itemData.att1, // 厂商
+        address: this.itemData.address
+      })
+      if (res.meta.success) {
+        wx.showToast({
+          title: '已添加购物车',
+          icon: 'success',
+          duration: 2000
+        })
+      }
+    },
+    async doBuy() {
+      const res = await http.get(__getApi._getBuyDo, {
+        token_access: this.token_access,
+        weight_buy: this.weight_buy,
+        order_id: this.order_id
+      })
+      if (res.meta.success) {
+        wx.showToast({
+          title: '已购买',
+          icon: 'success',
+          duration: 2000
+        })
+        setTimeout(() => {
+          wx.navigateTo({
+            url: '../transaction/buy/list?buyorsell=1'
+          })
+        }, 2000);
+      }
+    }
+  }
+}
+</script>
+<style lang="less">
+.fix-bootom {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 88rpx;
+  text-align: center;
+  font-size: 36rpx;
+  line-height: 88rpx;
+  background: #F4F5F9;
+  border: 1px solid #E4E7F0;
+  z-index: 999;
+  .talk {
+    border-right: 1px solid #E4E7F0;
+    width: 200rpx;
+  }
+  .todo {
+    color: #8F8E94;
+  }
+  .buy {
+    background: #6A7EEE;
+    color: #FFFFFF;
+  }
+}
+</style>

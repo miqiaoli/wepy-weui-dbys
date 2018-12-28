@@ -1,0 +1,245 @@
+<template>
+  <view class="user-cells page bg__white">
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd title">挂牌方式</view>
+      <view class="weui-cell__bd">保证金</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd title">出价方式</view>
+      <view class="weui-cell__bd">保证金</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd tags">挂牌量</view>
+      <view class="weui-cell__bd">
+        <input type="number" placeholder="请输入大于等于起批量的数" bindinput="amount" value="{{this.discuss_price}}" />
+      </view>
+      <view style="margin-left: 8rpx; margin-top: 4rpx; width: 100rpx;">(kg)</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd tags">挂牌单价</view>
+      <view class="col-des weui-flex__item">
+        <input type="number" placeholder="请输入挂牌价格" bindinput="price" value="{{this.discuss_amount}}" />
+      </view>
+      <view style="margin-left: 8rpx; margin-top: 4rpx; width: 100rpx;">(元/kg)</view>
+    </view>
+    <!-- <view class="weui-flex user-cell">
+      <view class="weui-cell__hd tags">挂牌单价</view>
+      <view class="weui-cell__bd">
+        <input placeholder="ddddd" />
+      </view>
+    </view> -->
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd title">起订量</view>
+      <view class="weui-cell__bd">100KG</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd title">有效期</view>
+      <view class="weui-cell__bd">长期有效</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd title">定向信息</view>
+      <view class="weui-cell__bd">是</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd title">定向价格</view>
+      <view class="weui-cell__bd">元/KG</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd title">定向会员</view>
+      <view class="weui-cell__bd">选择会员</view>
+    </view>
+
+
+    <view class="weui-flex user-cell margin-top">
+      <view class="weui-cell__hd title">配送方式</view>
+      <view class="weui-cell__bd">买房自提</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd title">结算方式</view>
+      <view class="weui-cell__bd">一票结算</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd title">交收方式</view>
+      <view class="weui-cell__bd">线下交手</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd title">存货地址</view>
+      <view class="weui-cell__bd">杭州</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd title">具体地址</view>
+      <view class="weui-cell__bd">滨江区长河路33号</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd title">装卸费</view>
+      <view class="weui-cell__bd">挂牌价不含装卸费，单位元/kg</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd title">备注描述</view>
+      <view class="weui-cell__bd">挂牌价不含装卸费，单位元/kg</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd title">货物类型</view>
+      <view class="weui-cell__bd">现货</view>
+    </view>
+    <view class="weui-flex user-cell margin-top">
+      <view class="weui-cell__hd long-title">买方支付保证金</view>
+      <view class="weui-cell__bd">请输入百分数</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd long-title">卖方支付保证金</view>
+      <view class="weui-cell__bd">请输入百分数</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd long-title">买方验货后付款</view>
+      <view class="weui-cell__bd">请输入百分数</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd long-title">买方验票后付款</view>
+      <view class="weui-cell__bd">请输入百分数</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd long-title">保证金截止日</view>
+      <view class="weui-cell__bd">请输入百分数</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd long-title">付款截止日</view>
+      <view class="weui-cell__bd">请输入百分数</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd long-title">发货截止日</view>
+      <view class="weui-cell__bd">请输入百分数</view>
+    </view>
+    <view class="weui-flex user-cell">
+      <view class="weui-cell__hd long-title">验货截止日</view>
+      <view class="weui-cell__bd">请输入百分数</view>
+    </view>
+    <view class="weui-flex user-cell margin-bottom">
+      <view class="weui-cell__hd long-title">验票截止日</view>
+      <view class="weui-cell__bd">请输入百分数</view>
+    </view>
+    <view class="weui-flex btn">
+      <button class="weui-flex__item btn-color" @tap="doBack">上一步</button>
+      <button class="weui-flex__item btn-border" type="primary" @tap="doNext">下一步</button>
+    </view>
+    <backIndex></backIndex>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import backIndex from '../../../components/backIndex'
+import {
+  __getApi
+} from "../../../config.js";
+import http from '../../../utils/Http'
+export default class shelfDetails extends wepy.page {
+  components = {
+    backIndex
+  }
+  data = {
+    order_id: '',
+    token_access: '',
+    details: null
+  }
+  methods = {
+    doBack() {
+      wx.navigateBack()
+    },
+    async doNext() {
+      const params = {
+        order_id: this.order_id,
+        token_access: this.token_access,
+        provided_qtt: this.provided_qtt,
+        order_price: this.order_price
+      }
+      const res = await http.get(__getApi._listingUpdate, params)
+      wx.stopPullDownRefresh()
+      if (res.meta.success) {
+        
+        console.log(res.data)
+        this.$apply()
+      }
+       wx.showToast({
+        title: '编辑成功',
+        icon: 'success',
+        duration: 2000
+      })
+      // setTimeout(() => {
+      //   wx.navigateTo({
+      //     url: './list?buyorsell=2'
+      //   })
+      // }, 2000);
+    }
+  }
+  onLoad(e) {
+    this.order_id = e.order_id
+    this.token_access = this.$parent.globalData.token_access
+    this.getShelfDetails()
+  }
+  async getShelfDetails() {
+    const res = await http.get(__getApi._getProductDetails, {
+      token_access: this.token_access,
+      service_name: 'TRADE_ORDERDETAIL',
+      order_id: this.order_id
+    })
+    if (res.meta.success) {
+      this.details = res.data
+      this.$apply()
+    }
+    console.log('编辑')
+  }
+}
+</script>
+
+<style scoped>
+.user-cells {
+  font-size: 32rpx;
+  padding: 24rpx 24rpx 60rpx;
+}
+.user-cell {
+  padding: 30rpx 0 10rpx;
+  border-bottom: 1px solid #E4E7F0;
+  align-items: center;
+}
+.margin-top {
+  margin-top: 60rpx;
+}
+.margin-bottom {
+  margin-bottom: 60rpx;
+}
+.title {
+  margin-right: 20rpx;
+  color: #8F8E94;
+  width: 140rpx;
+}
+.long-title {
+  margin-right: 20rpx;
+  width: 240rpx;
+  color: #8F8E94;
+}
+.tags {
+  margin-right: 20rpx;
+  font-size: 28rpx;
+  text-align: center;
+  padding: 0 6rpx;
+  width: 120rpx;
+  color: #EB4E35;
+  background: rgba(235,78,53,0.15);
+  border: 1px solid rgba(235,78,53,0.65);
+  border-radius: 4rpx;
+}
+.btn {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  height: 88rpx;
+  line-height: 88rpx;
+}
+.btn-color {
+  color: #8F8E94;
+}
+.btn-border {
+  border-radius: 0;
+}
+</style>

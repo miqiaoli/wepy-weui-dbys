@@ -1,0 +1,380 @@
+<template>
+  <view class="shelf page bg__white">
+    <Search :value.sync="value" :placeholder="搜索挂牌单号"></Search>
+    <tabs :tabs="tabs" :index.sync="index"></tabs>
+    <view class="list">
+      <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id">
+        <view class="weui-flex flex-btn">
+          <view class="">挂牌单号：{{single.order_no}}</view>
+          <view class="weui-flex__item" style="text-align: right;"></view>
+        </view>
+        <view class="weui-flex">
+          <view class="title">名称</view>
+          <view class="weui-flex__item">{{single.goods_class}}/{{single.goods_name}}/{{single.att2}}/{{single.att1}}</view>
+        </view>
+        <view class="weui-flex">
+          <view class="title">存货地</view>
+          <view class="weui-flex__item">{{single.address}}</view>
+        </view>
+        <view class="weui-flex">
+          <view class="title">挂牌总量</view>
+          <view class="weui-flex__item">{{single.provided_qtt}}KG</view>
+        </view>
+        <view class="weui-flex">
+          <view class="title">单价</view>
+          <view class="weui-flex__item">{{single.order_price}}元/KG</view>
+        </view>
+        <view class="weui-flex">
+          <view class="title">成交量</view>
+          <view class="weui-flex__item">{{single.deal_amount}}KG</view>
+        </view>
+        <view class="weui-flex">
+          <view class="title">有效期</view>
+          <view class="weui-flex__item">{{single.validity_day}}</view>
+        </view>
+        <view class="weui-flex">
+          <view class="tags">状态：{{single.v_status}}</view>
+        </view>
+        <view class="weui-flex" style="margin-top: 10rpx;">
+          <view class="tags">出价方式：{{single.trade_class_name}}</view>
+        </view>
+        <view class="weui-flex flex-btn">
+          <view class="btn btn-color-eye" wx:if="{{single.v_status == '已下架' || single.v_status == '待上架'}}" data-order_id="{{single.order_id}}" @tap="doUp">上架</view>
+          <view class="btn btn-color-down" wx:if="{{single.v_status == '已上架'}}" data-order_id="{{single.order_id}}" @tap="doDown">下架</view>
+          <view class="btn btn-color-do" wx:if="{{single.v_status !== '已上架'}}" data-choose_index="{{index}}" data-order_id="{{single.order_id}}" @tap="doEdit">编辑</view>
+          <!-- <view class="btn btn-color-do" data-order_id="{{single.order_id}}" @tap="doDel">删除</view> -->
+        </view>
+      </view>
+    </view>
+    <backIndex></backIndex>
+    <view wx:if="{{list.length <= 0 || count <= 0 }}" class="weui-loadmore weui-loadmore_line">
+      <text class="weui-loadmore__tips">暂无数据</text>
+    </view>
+    <view class="fix-chg" wx:if="{{show}}">
+      <view class="absoult-model">
+        <view class="weui-flex user-cell">
+          <view class="weui-flex__item">修改单号{{list[chooseIndex].order_no}}</view>
+        </view>
+        <view class="weui-flex user-cell">
+          <view class="weui-cell__hd tags">挂牌量</view>
+          <view class="weui-cell__bd">
+            <input type="number" placeholder="请输入大于等于起批量的数" bindinput="amount" value="{{discuss_amount}}" />
+          </view>
+          <view style="margin-left: 8rpx; margin-top: 4rpx; width: 100rpx;">(kg)</view>
+        </view>
+        <view class="weui-flex user-cell">
+          <view class="weui-cell__hd tags">挂牌单价</view>
+          <view class="col-des weui-flex__item">
+            <input type="number" placeholder="请输入挂牌价格" bindinput="price" value="{{discuss_price}}" />
+          </view>
+          <view style="margin-left: 8rpx; margin-top: 4rpx; width: 100rpx;">(元/kg)</view>
+        </view>
+        <view class="weui-flex user-cell">
+          <button class="weui-flex__item weui-btn weui-btn_mini weui-btn_default" type="default" @tap="cancel">取消</button>
+          <view style="width: 20rpx"></view>
+          <button class="weui-flex__item weui-btn weui-btn_mini weui-btn_primary" type="primary" @tap="editSuccess">确定</button>
+        </view>
+      </view>
+    </view> 
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import backIndex from '../../../components/backIndex'
+import tabs from '../../../components/transactions/tab'
+import Search from '../../../components/transactions/search'
+import {
+  __getApi
+} from "../../../config.js";
+import http from '../../../utils/Http'
+export default class shelfList extends wepy.page {
+  components = {
+    backIndex, tabs, Search
+  }
+  config = {
+    navigationBarTitleText: '挂牌列表',
+    enablePullDownRefresh: true,
+    onReachBottomDistance: 100
+  }
+  data = {
+    value: '',
+    tabs: [{
+      name: '全部',
+      status: ''
+    }, {
+      name: '一口价',
+      status: 100
+    }, {
+      name: '可洽谈',
+      status: 101
+    }],
+    index: 0,
+    buyorsell: 0,
+    token_access: '',
+    list: [],
+    start: 1,
+    limit: 15,
+    count: 0,
+    discuss_price: null,
+    discuss_amount: null,
+    show: false,
+    chooseIndex: 0
+  }
+  methods = {
+    price(e) {
+      this.discuss_price = e.detail.value
+    },
+    amount(e) {
+      this.discuss_amount = e.detail.value
+    },
+    doUp(e) {
+      const order_id = e.currentTarget.dataset.order_id
+      wx.showToast({
+        title: '去上架',
+        icon: 'success',
+        duration: 2000
+      })
+      setTimeout(() => {
+        wx.navigateTo({
+          url: `./success?order_id=${order_id}`
+        })
+      }, 2000);
+    },
+    async doDown(e) {
+      const self = this
+      const order_id = e.currentTarget.dataset.order_id
+      wx.showModal({
+        title: '下架',
+        content: '确定下架',
+        success (res) {
+          if (res.confirm) {
+            self.doDownNext(order_id)
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
+        }
+      })
+    },
+    doDel() {
+      wx.showModal({
+        title: '删除',
+        content: '确定删除',
+        success (res) {
+          if (res.confirm) {
+            console.log('用户点击确定')
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
+        }
+      })
+    },
+    doEdit(e) {
+      this.chooseIndex = e.currentTarget.dataset.choose_index
+      this.show = true
+      this.$apply()
+    },
+    async editSuccess() {
+      if (!this.discuss_price || !this.discuss_amount) {
+        wx.showToast({
+          title: '请输入价格/数量',
+          icon: 'none',
+          duration: 2000
+        })
+        return 
+      }  
+      if (typeof Number(this.discuss_price) !== 'number' || typeof Number(this.discuss_amount) !== 'number') {
+        wx.showToast({
+          title: '请输入数字',
+          icon: 'none',
+          duration: 2000
+        })
+        return 
+      }
+      const res = await http.get(__getApi._listingUpdate, {
+        order_id: this.list[this.chooseIndex].order_id,
+        provided_qtt: this.discuss_amount,
+        order_price: this.discuss_price,
+        token_access: this.token_access
+      })
+      if (res.data.success) {
+        wx.showToast({
+          title: '编辑挂牌成功',
+          icon: 'none',
+          duration: 2000
+        })
+        this.list = []
+        this.getShelfList()
+      }
+      this.discuss_price = null
+      this.discuss_amount = null
+      this.show = false
+      this.$apply()
+      
+    },
+    cancel() {
+      this.discuss_price = null
+      this.discuss_amount = null
+      this.show = false
+      this.$apply()
+    }
+  }
+  watch = {
+    'index': function(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        this.start = 1
+        this.list = []
+        this.chgShelfList()
+      }
+    },
+    'value': function(newValue, oldValue) {
+      if (newValue !== oldValue && newValue) {
+        this.start = 1
+        this.list = []
+        this.chgShelfList()
+      }
+    }
+  }
+  onLoad(e) {
+    this.buyorsell = e.buyorsell
+    this.token_access = this.$parent.globalData.token_access
+  }
+  onShow(e) {
+    this.getShelfList()
+  }
+  async doDownNext(order_id) {
+    const res = await http.get(__getApi._listingDown, {
+      ids: order_id,
+      token_access: this.token_access
+    })
+    if (res.data.success) {
+      wx.showToast({
+        title: '下架成功',
+        icon: 'success',
+        duration: 2000
+      })
+      this.list = []
+      this.getShelfList()
+    }
+  }
+  async getShelfList() {
+    const res = await http.get(__getApi._getListingList, {
+      start: this.start,
+      limit: this.limit,
+      token_access: this.token_access
+    })
+    if (res.meta.success) {
+      this.list = [...this.list, ...res.data.resultlist]
+      this.count = res.data.rows_count
+      this.$apply()
+    }
+  }
+  async chgShelfList() {
+    let params = {
+      start: this.start,
+      limit: this.limit,
+      token_access: this.token_access
+    }
+    if (this.value) {
+      params = Object.assign(params, {discuss_no: this.value})
+    }
+    if (this.index !== 0) {
+      params = Object.assign(params, {trade_class: this.tabs[this.index].status})
+    }
+    const res = await http.get(__getApi._getListingList, params)
+    wx.stopPullDownRefresh()
+    if (res.meta.success) {
+      this.list = [...this.list, ...res.data.resultlist]
+      this.count = res.data.rows_count
+      this.$apply()
+    }
+  }
+  onPullDownRefresh() {
+    this.start = 1
+    this.value = ''
+    this.list = []
+    this.chgShelfList()
+  }
+  async onReachBottom() {
+    if (this.start * this.limit < this.count) {
+      this.start += 1
+      this.chgShelfList()
+    }
+  }
+}
+</script>
+
+<style>
+.fix-chg {
+  position: fixed;
+  top:50%;
+  left:50%;
+  z-index: 999;
+  background: rgba(0, 0, 0, .5);
+  width: 100%;
+  height: 100%;
+  transform: translateX(-50%) translateY(-50%);
+}
+.absoult-model {
+  padding: 40rpx;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: #fff; 
+  min-width: 300px;
+  transform: translateX(-50%) translateY(-50%);
+}
+.user-cell {
+  padding: 30rpx 0 10rpx;
+  align-items: center;
+}
+.shelf {
+  font-size: 28rpx;
+}
+.shelf-tap {
+  height: 48rpx;
+  line-height: 48rpx;
+  border-bottom: 1px solid #E4E7F0;
+  color: #A1A6BB;
+  font-size: 28rpx;
+  text-align: center;
+}
+.list {
+  margin: 30rpx;
+}
+.single {
+  margin: 30rpx 0;
+}
+.flex-btn {
+  justify-content: flex-end;
+}
+.title {
+  color: #8F8E94;
+  width: 134rpx;
+}
+.tags {
+  margin-right: 12rpx;
+  padding: 0 12rpx;
+  border: 1px solid #1FCC24;
+  border-radius: 2px;
+  color: #1FCC24;
+  min-width: 112rpx;
+  text-align: center;
+}
+.btn {
+  margin: 20rpx 0 20rpx 20rpx;
+  padding: 10rpx 44rpx;
+  border-radius: 8rpx;
+  font-size: 36rpx;
+  color: #FFFFFF;
+}
+.btn-color-eye {
+  background: #00B9E7;
+}
+.btn-color-do {
+  background: #6A7EEE;
+}
+.btn-color-down {
+  background: #EB4E35;
+}
+</style>

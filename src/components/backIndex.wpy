@@ -1,0 +1,36 @@
+<template>
+    <view class="fix-index" @tap="doBackIndex">首页</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import base from '../mixins/base.js'
+export default class backIndex extends wepy.component {
+  mixins = [base]
+  methods = {
+    doBackIndex() {
+      wx.switchTab({
+        url: '/pages/index'
+      })
+    },
+  }
+}
+</script>
+<style>
+.fix-index {
+  padding: 0 16rpx;
+  position: fixed;
+  right: 0;
+  bottom: 160rpx;
+  font-size: 28rpx;
+  line-height: 58rpx;
+  background: #6A7EEE;
+  color: #ffffff;
+}
+.icon-index {
+  padding-top: 8rpx;
+  padding-right: 8rpx;
+  width: 36rpx;
+  height: 36rpx;
+}
+</style>

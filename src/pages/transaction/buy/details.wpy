@@ -1,0 +1,149 @@
+<template>
+  <view class="buy page bg__white">
+    <view class="list">
+      <view class="single">
+        <view class="weui-flex flex-margin flex-end">
+          <view class="weui-flex__item">订单号：{{details.deal_no}}</view>
+          <view class="">{{details.pay_date}}</view>
+        </view>
+        <view class="weui-flex">
+          <view class="weui-flex__item weui-flex">
+            <view class="title">品种</view>
+            <view class="weui-flex__item">{{details.goods_class}}</view>
+          </view>
+          <view class="weui-flex__item weui-flex">
+            <view class="title">品名</view>
+            <view class="weui-flex__item">{{details.goods_name}}</view>
+          </view>
+        </view>
+        <view class="weui-flex">
+          <view class="weui-flex__item weui-flex">
+            <view class="title">牌号</view>
+            <view class="weui-flex__item">{{details.att2}}</view>
+          </view>
+          <view class="weui-flex__item weui-flex">
+            <view class="title">厂商</view>
+            <view class="weui-flex__item">{{details.att1}}</view>
+          </view>
+        </view>
+        <view class="weui-flex flex-padding">
+          <view class="title">存货地</view>
+          <view class="weui-flex__item">{{details.address}}</view>
+        </view>
+        <view class="weui-flex flex-margin">
+          <view class="weui-flex__item weui-flex">
+            <view class="title">成交价格</view>
+            <view class="weui-flex__item">{{details.deal_price}}元/KG</view>
+          </view>
+          <view class="weui-flex__item weui-flex">
+            <view class="title">成交量</view>
+            <view class="weui-flex__item">{{details.deal_amount}}KG</view>
+          </view>
+        </view>
+        <view class="weui-flex">
+          <view class="weui-flex__item weui-flex">
+            <view class="title">成交金额</view>
+            <view class="weui-flex__item">{{details.deal_money}}元</view>
+          </view>
+          <view class="weui-flex__item weui-flex">
+            <view class="title">保证金</view>
+            <view class="weui-flex__item">{{details.other_value}}元</view>
+          </view>
+        </view>
+        <view class="weui-flex flex-margin">
+          <view class="title weui-flex__item">
+            <text class="tags tags-time-color">保证金截止时间：{{details.date4}}</text>
+          </view>
+        </view>
+        <view class="weui-flex ">
+          <view class="title weui-flex__item">
+            <text class="tags tags-status-color">状态：{{details.v_status}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <backIndex></backIndex>
+  </view>
+</template>
+
+<style lang="less">
+.flex-margin {
+  margin-top: 15rpx;
+}
+.flex-padding {
+  padding-bottom: 15rpx;
+  border-bottom: 1px solid #E4E7F0;
+}
+.flex-end {
+  justify-content: flex-end;
+}
+.buy {
+  font-size: 28rpx;
+  .buy-tab {
+    text-align: center;
+  }
+  .list {
+    margin: 0 30rpx;
+    .single {
+      margin: 10rpx 0;
+      padding: 10rpx 0;
+    }
+  }
+}
+.icon-choose {
+  width: 48rpx
+}
+.title {
+  // margin-left: 48rpx;
+  width: 120rpx;
+  color: #8F8E94;
+}
+.tags {
+  margin: 6rpx 0;
+  padding:0 12rpx;
+  border-radius: 2px;
+}
+.tags-time-color {
+  border: 1px solid #00B9E7;
+  color: #00B9E7;
+}
+.tags-status-color {
+  border: 1px solid #1FCC24;
+  color: #1FCC24;
+}
+</style>
+
+<script>
+import wepy from 'wepy'
+import backIndex from '../../../components/backIndex'
+import {
+  __getApi
+} from "../../../config.js";
+import http from '../../../utils/Http'
+export default class buyDetails extends wepy.page {
+  components = {
+    backIndex
+  }
+  data = {
+    details: null,
+    token_access: '',
+    discuss_id: null
+  }
+  onLoad(e) {
+    this.discuss_id = e.discuss_id
+    this.token_access = this.$parent.globalData.token_access
+    this.getBuyDetails()
+  }
+  async getBuyDetails() {
+    const res = await http.get(__getApi._getBuyDetails, {
+      discuss_id: this.discuss_id,
+      token_access: this.token_access
+    })
+    if (res.meta.success) {
+      this.details = res.data.resultmap
+      this.$apply()
+    }
+  }
+}
+</script>
+

@@ -73,8 +73,8 @@ export default class todolist extends wepy.page {
       let today = ''
       let tomorrow = ''
       this.allLog.forEach((val, index) => {
-        today = today + `${val.name}: ${val.today};\n`
-        tomorrow = tomorrow + `${val.name}: ${val.tomorrow};\n`
+        today = today + `${val.username}: ${val.today};\n`
+        tomorrow = tomorrow + `${val.username}: ${val.tomorrow};\n`
       })
       let data = `${title}${today}明日安排:\n ${tomorrow}`
       wx.setClipboardData({

@@ -1,0 +1,349 @@
+<template>
+<view class="todo page bg__white">
+  <view class="weui-flex flex-end">
+    <view class="" @tap="changeType" wx:if="{{changeType}}">完成</view>
+    <view class="" @tap="changeType" wx:else>管理</view>
+  </view>
+  <view class="list" @longpress="longpress">
+    <view class="single" wx:for="{{list}}" wx:key="id" wx:for-item="single">
+      <view class="weui-flex margin-row" @tap="chooseBuyIndex" data-index="{{index}}">
+        <view class="icon-choose" wx:if="{{single.choosed}}">
+          <icon type="success" size="20" color="orange"/>
+        </view>
+        <view class="icon-choose" wx:else>
+          <icon class="self-icon" size="20"/>
+        </view>
+        <view class="weui-flex__item">{{single.define_order_id}}</view>
+      </view>
+      <navigator url='/pages/product/details?id={{single.order_id}}'>
+      <view class="weui-flex margin-row">
+        <view class="title">品种</view>
+        <view class="weui-flex__item">{{single.goods_class}}/{{single.goods_name}}/{{single.att2}}/{{single.att1}}</view>
+      </view>
+      <view class="weui-flex margin-row">
+        <view class="weui-flex__item weui-flex">
+          <view class="title">存货地</view>
+          <view class="weui-flex__item">{{single.address}}</view>
+        </view>
+        <view class="weui-flex__item weui-flex">
+          <view class="title">单价</view>
+          <view class="weui-flex__item">{{single.order_price}}元/KG</view>
+        </view>
+      </view>
+      </navigator>
+      <view class="weui-flex margin-row">
+        <view class="title">数量(KG)</view>
+        <view class="weui-flex__item weui-flex">
+          <text class="icon-text" data-index="{{index}}" @tap="reduce">-</text>
+          <input type="number" data-index="{{index}}" min="0" class="input-text" maxlength="6" bindinput="getInputNum" value="{{single.order_buy_weight}}" />
+          <text class="icon-text" data-index="{{index}}" @tap="add">+</text>
+        </view>
+      </view>
+      <view class="weui-flex margin-row">
+        <view class="title">金额(元)</view>
+        <view class="weui-flex__item">{{single.order_buy_weight*single.order_price}}</view>
+      </view>
+    </view>
+  </view>
+  <view class="fix-bottom weui-flex flex-end">
+    <view class="all-icon icon-choose" @tap="choosedAll">
+      <icon wx:if="{{choosedAll}}" style="padding-top: 24rpx;" type="success" size="20" color="orange"/>
+      <icon wx:else class="self-icon" type="" size="20"/>
+    </view>
+    <view class="weui-flex__item" @tap="choosedAll">全选</view>
+    <view class="" @tap="delChoosed" wx:if="{{changeType}}">
+      <button class="btn" type="primary">删除</button>
+    </view>
+    <view class="" @tap="sumPrice" wx:else>
+      <button class="btn" type="primary">结算<text wx:if="{{sumPrice > 0}}">{{sumPrice}}元</text></button>
+    </view>
+  </view>
+  <backIndex></backIndex>
+  <view wx:if="{{list.length <= 0 || count <= 0 }}" class="weui-loadmore weui-loadmore_line">
+    <text class="weui-loadmore__tips">购物车空空的</text>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import backIndex from '../../../components/backIndex'
+import {
+  __getApi
+} from "../../../config.js";
+import http from '../../../utils/Http'
+export default class todoList extends wepy.page {
+  components = {
+    backIndex
+  }
+  config = {
+    navigationBarTitleText: '购物车列表',
+    enablePullDownRefresh: false,
+    onReachBottomDistance: 100
+  }
+  data = {
+    sumPrice: 0,
+    selected: false,
+    choosedAll: false,
+    changeType: false,
+    step: 25,
+    list: [],
+    start: 1,
+    limit: 50,
+    count: 0,
+    token_access: '',
+  }
+  methods = {
+    longpress() {
+      this.changeType = !this.changeType
+      this.$apply()
+    },
+    // 全选
+    choosedAll() {
+      this.list = this.list.map(val => {
+        val.choosed = !this.choosedAll
+        return val
+      })
+      this.choosedAll = !this.choosedAll
+      this.getTotalPrice()
+      this.$apply()
+    },
+    reduce(e) {
+      let index = e.currentTarget.dataset.index
+      this.getProductNum(index)
+      this.list[index].order_buy_weight = Number(this.list[index].order_buy_weight) >= Number(this.list[index].min_weight) + this.step ? Number(this.list[index].order_buy_weight) - this.step : Number(this.list[index].min_weight)
+      if (this.list[index].order_buy_weight <= this.list[index].min_weight) {
+        wx.showToast({
+          title: `商品${this.list[index].att1}最小购买量${this.list[index].min_weight}KG`,
+          icon: 'none',
+          duration: 2000
+        }) 
+      }
+      this.getTotalPrice()
+      this.$apply()
+    },
+    add(e) {
+      let index = e.currentTarget.dataset.index
+      this.getProductNum(index)
+      this.list[index].order_buy_weight = Number(this.list[index].order_buy_weight) >= Number(this.list[index].max_weight) - this.step ? this.list[index].max_weight : Number(this.list[index].order_buy_weight) + this.step
+      if (this.list[index].order_buy_weight >= this.list[index].max_weight) {
+        wx.showToast({
+          title: `商品${this.list[index].att1}最大购买量${this.list[index].max_weight}KG`,
+          icon: 'none',
+          duration: 2000
+        }) 
+      }
+      this.getTotalPrice()
+      this.$apply()
+    },
+    // 单选
+    chooseBuyIndex(e) {
+      let index = e.currentTarget.dataset.index
+      this.list[index].choosed = !this.list[index].choosed
+      this.getTotalPrice()
+      // 是否全选 返回的
+      let choosedRow = this.list.filter(val => val.choosed == true)
+      if (choosedRow.length == this.list.length) {
+        this.choosedAll = true
+      } else {
+        this.choosedAll = false
+      }
+      this.$apply()
+    },
+    // 购买结算
+    async sumPrice(e) {
+      if (this.sumPrice <= 0) {
+        return wx.showToast({
+          title: '请选择商品',
+          icon: 'none',
+          duration: 2000
+        })
+      }
+      let choosedRow = this.list.filter(val => val.choosed == true)
+      let orders = []
+      choosedRow.forEach(val => {
+        // 选择的商品校验购买数量
+        // if (val.order_buy_weight < val.min_weight || val.order_buy_weight > val.max_weight) {
+          
+        // }
+        orders.push({
+          weight_buy: val.order_buy_weight,
+          order_id: val.order_id,
+          define_order_id: val.define_order_id
+        })
+      })
+      const res = await http.get(`${__getApi._getBuyDoMany}`, {
+        jsons: orders,
+        token_access: this.token_access
+      })
+      if (res.meta.success) {
+        wx.showToast({
+          title: '已购买',
+          icon: 'success',
+          duration: 2000
+        })
+        setTimeout(() => {
+          wx.switchTab({
+            url: '../../about/index'
+          })
+        }, 2000);
+        
+      }
+    },
+    changeType(e) {
+      this.changeType = !this.changeType
+      this.$apply()
+    },
+    // 购物车删除
+    async delChoosed() {
+      let delList = this.list.filter(val => val.choosed == true)
+      if (delList.length <= 0) {
+        return wx.showToast({
+          title: '请选择商品',
+          icon: 'none',
+          duration: 2000
+        }) 
+      }
+      this.list = this.list.filter(val => val.choosed == false)
+      let delOrders = []
+      delList.forEach(val => {
+        delOrders.push(val.define_order_id)
+      })
+      let delString = delOrders.join(",")
+      const res = await http.get(__getApi._delDo, {
+        define_order_id: delString,
+        token_access: this.token_access
+      })
+      if (res.meta.success) {
+        
+      }
+    }
+  }
+  onLoad(e) {
+    this.token_access = this.$parent.globalData.token_access
+  }
+  onShow(e) {
+    this.getTodoList()
+  }
+  // 查看商品起售, 库存量
+  async getProductNum(index) {
+    if (this.list[index].min_weight || this.list[index].max_weight) {
+      return
+    } 
+    const res = await http.get(__getApi._getProductDetails, {
+      token_access: this.token_access,
+      service_name: 'TRADE_ORDERDETAIL',
+      order_id: this.list[index].order_id
+    })
+    if (res.meta.success) {
+      Object.assign(this.list[index], {min_weight: res.data.min_batch_qtt, max_weight: res.data.amount})
+    }
+  }
+  // 结算总价格
+  getTotalPrice() {
+    this.choosedRow = this.list.filter(val => val.choosed == true)
+    let getTotalPrice = 0
+    this.choosedRow.forEach(val => {
+      getTotalPrice += Number((val.order_buy_weight * val.order_price))
+    });
+    this.sumPrice = getTotalPrice
+  }
+  getInputNum(e) {
+    let index = e.currentTarget.dataset.index
+    if (Number(e.detail.value)) {
+      this.list[index].order_buy_weight = e.detail.value
+    } else {
+      this.list[index].order_buy_weight = 0
+      return wx.showToast({
+          title: `请输入数字`,
+          icon: 'none',
+          duration: 2000
+        }) 
+    } 
+  }
+  async getTodoList() {
+    const res = await http.get(__getApi._getBuyDoList, {
+      start: this.start,
+      limit: this.limit,
+      token_access: this.token_access
+    })
+    if (res.meta.success) {
+      this.list = [...this.list, ...res.data.list]
+      this.list = this.list.map(val => {
+        return Object.assign(val, {choosed: false})
+      })
+      this.count = res.data.count
+      this.$apply()
+    }
+  }
+}
+</script>
+
+<style>
+.margin-row {
+  margin: 8rpx 0;
+}
+.icon-text {
+  padding: 0 8rpx;
+  border: 1px solid #888;
+}
+.self-icon {
+  width: 34rpx; height: 34rpx; 
+  border-radius: 50%; 
+  border: 1px solid #A1A6BB;
+}
+.all-icon {
+  margin-left: 30rpx;
+}
+.input-text {
+  min-width: 60rpx; 
+  max-width: 100rpx;
+  border-top: 1px solid #888; 
+  border-bottom: 1px solid #888; 
+  text-align: center; 
+}
+.flex-end {
+  padding-right: 30rpx;
+  justify-content: flex-end;
+}
+.todo {
+  padding-top: 20rpx;
+  font-size: 28rpx;
+}
+.list {
+  /* margin-top: 20rpx; */
+  margin: 0 30rpx 120rpx 30rpx;
+}
+.single {
+  margin: 10rpx 0;
+  padding: 10rpx 0;
+}
+.icon-choose {
+  width: 48rpx
+}
+.title {
+  margin-left: 48rpx;
+  width: 120rpx;
+  color: #8F8E94;
+}
+.fix-bottom {
+  position: fixed;
+  bottom: 0;
+  height: 120rpx;
+  width: 100%;
+  line-height: 120rpx;
+  background: #ffffff;
+  z-index: 999;
+  /* background: #8F8E94; */
+}
+.btn {
+  margin: 16rpx 20rpx;
+}
+.img-icon {
+  margin-top: 4rpx;
+  margin-left: 4rpx;
+  margin-right: 4rpx;
+  width: 30rpx;
+  height: 40rpx;
+}
+</style>

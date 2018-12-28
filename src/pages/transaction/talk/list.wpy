@@ -1,0 +1,232 @@
+<template>
+  <view class="talk page bg__white">
+    <Search :value.sync="value" :placeholder="搜索洽谈编号"></Search>
+    <tabs :tabs="tabs" :index.sync="index"></tabs>
+    <view class="list">
+      <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id">
+        <view class="num">洽谈编号：{{single.discuss_id}}</view>
+        <view class="weui-flex row">
+          <view class="title">卖方会员</view>
+          <view class="weui-flex__item">{{single.client_name}}</view>
+        </view>
+        <view class="weui-flex row">
+          <view class="title">买方会员</view>
+          <view class="weui-flex__item">{{single.purchase_name}}</view>
+        </view>
+        <view class="weui-flex row">
+          <view class="title">名称</view>
+          <view class="weui-flex__item">{{single.goods_class}}/{{single.att1}}/{{single.att2}}/{{single.goods_name}}</view>
+        </view>
+        <view class="weui-flex row">
+          <view class="title">洽谈价格</view>
+          <view class="weui-flex__item">{{single.discuss_price}}元/KG</view>
+        </view>
+        <view class="weui-flex row">
+          <view class="title">洽谈量</view>
+          <view class="weui-flex__item">{{single.discuss_amount}}KG</view>
+        </view>
+        <view class="weui-flex row">
+          <view class="title">洽谈日期</view>
+          <view class="weui-flex__item">{{single.discuss_date}}</view>
+        </view>
+        <view class="weui-flex row">
+          <view class="tag">状态：{{single.v_status}}</view>
+        </view>
+        <view class="weui-flex flex-btn">
+          <view class="btn btn-color-eye" data-discuss_id="{{single.discuss_id}}" @tap="doTalk('eye')">查看</view>
+          <view class="btn btn-color-do" data-discuss_id="{{single.discuss_id}}" wx:if="{{buyorsell == 1 && single.d_status == 11}}" @tap="doTalk('do')">处理</view>
+          <view class="btn btn-color-do" data-discuss_id="{{single.discuss_id}}" wx:if="{{buyorsell == 2 && single.d_status == 1}}" @tap="doTalk('do')">处理</view>
+        </view>
+      </view>
+    </view>
+    <backIndex></backIndex>
+    <view wx:if="{{list.length <= 0 || count <= 0 }}" class="weui-loadmore weui-loadmore_line">
+      <text class="weui-loadmore__tips">暂无数据</text>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from "../../../config.js";
+import http from '../../../utils/Http'
+import backIndex from '../../../components/backIndex'
+import tabs from '../../../components/transactions/tab'
+import Search from '../../../components/transactions/search'
+export default class talkList extends wepy.page {
+  components = {
+    backIndex, tabs, Search
+  }
+  config = {
+    navigationBarTitleText: '洽谈列表',
+    enablePullDownRefresh: true,
+    onReachBottomDistance: 100
+  }
+  data = {
+    index: 0,
+    value: '',  // 搜索
+    tabs: [{
+      name: '全部',
+      status: '',
+    }, {
+      name: '待卖方回复',
+      status: 1,
+    }, {
+      name: '待买方回复',
+      status: 11,
+    }, {
+      name: '已完成',
+      status: 99,
+    }, {
+      name: '取消',
+      status: -1,
+    }],
+    list: [],
+    start: 1,
+    limit: 15,
+    count: 0,
+    discuss_no: '', // 洽谈编号
+    status: '',
+    token_access: '',
+    buyorsell: 1, // 买方
+  }
+  methods = {
+    doTalk(val, e) {
+      const discuss_id = e.currentTarget.dataset.discuss_id
+      wx.showToast({
+        title: '去查看',
+        icon: 'success',
+        duration: 2000
+      })
+      setTimeout(() => {
+        wx.navigateTo({
+          url: `./details?discuss_id=${discuss_id}&buyorsell=${this.buyorsell}&type=${val}`
+        })
+      }, 2000);
+    },
+  }
+  watch = {
+    'index': function(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        this.start = 1
+        this.list = []
+        this.chgTalkList()
+      }
+    },
+    'value': function(newValue, oldValue) {
+      if (newValue !== oldValue && newValue) {
+        this.start = 1
+        this.list = []
+        this.chgTalkList()
+      }
+    }
+  }
+  onLoad(e) {
+    this.buyorsell = e.buyorsell
+    this.token_access = this.$parent.globalData.token_access
+    this.getTalkList()
+  }
+  onPullDownRefresh() {
+    this.start = 1
+    this.value = ''
+    this.list = []
+    this.chgTalkList()
+  }
+  async onReachBottom() {
+    if (this.start * this.limit < this.count) {
+      this.start += 1 
+      this.chgTalkList()
+    }
+  }
+  async chgTalkList() {
+    let params = {
+      start: this.start,
+      limit: this.limit,
+      token_access: this.token_access,
+      buyorsell: this.buyorsell
+    }
+    if (this.value) {
+      params = Object.assign(params, {discuss_no: this.value})
+    }
+    if (this.index !== 0) {
+      params = Object.assign(params, {status: this.tabs[this.index].status})
+    }
+    const res = await http.get(__getApi._getTalkList, params)
+    wx.stopPullDownRefresh()
+    if (res.meta.success) {
+      this.list = [...this.list, ...res.data.resultlist]
+      this.count = res.data.rows_count
+      this.$apply()
+    }
+  }
+  async getTalkList() {
+    const res = await http.get(__getApi._getTalkList, {
+      start: this.start,
+      limit: this.limit,
+      token_access: this.token_access,
+      buyorsell: this.buyorsell
+    })
+    if (res.meta.success) {
+      this.list = [...this.list, ...res.data.resultlist]
+      this.count = res.data.rows_count
+      this.$apply()
+    }
+  }
+}
+</script>
+
+<style>
+  .talk-tap {
+    height: 48rpx;
+    line-height: 48rpx;
+    border-bottom: 1px solid #E4E7F0;
+    color: #A1A6BB;
+    font-size: 28rpx;
+    text-align: center;
+  }
+  .list {
+    margin: 30rpx;
+    font-size: 28rpx;
+  }
+  .single {
+    /* margin-left: 20rpx; */
+    margin: 20rpx;
+  }
+  .num {
+    margin-bottom: 28rpx;
+  }
+  .title {
+    color: #8F8E94;
+    width: 134rpx;
+  }
+  .row {
+    height: 48rpx;
+    line-height: 48rpx;
+  }
+  .tag {
+    padding:0 12rpx;
+    border: 1px solid #1FCC24;
+    color: #1FCC24;
+    border-radius: 2px;
+  }
+  .flex-btn {
+    justify-content: flex-end;
+  }
+  .btn {
+    /* margin-top: 20rpx;
+    margin-right: 20rpx; */
+    margin: 20rpx 0 20rpx 20rpx;
+    padding: 10rpx 44rpx;
+    border-radius: 8rpx;
+    font-size: 36rpx;
+    color: #FFFFFF;
+  }
+  .btn-color-eye {
+    background: #00B9E7;
+  }
+  .btn-color-do {
+    background: #6A7EEE;
+  }
+</style>

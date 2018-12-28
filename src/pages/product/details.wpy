@@ -1,5 +1,7 @@
 <template>
+<view>
 <Swiper :list.sync="swipers" name='image' height="360"></Swiper>
+<fixBootom :itemData.sync="itemData" :id.sync="id" :trade_class.sync="trade_class" :order_id.sync="order_id" :weight_buy.sync="buyNumber" :token_access.sync="token_access"></fixBootom>
 <view class="weui-cells weui-cells_after-title">
   <view class="weui-cell">
     <view class="weui-cell__hd">
@@ -10,20 +12,6 @@
     </view>
   </view>
 </view>
-<!-- <view class="weui-panel weui-panel_access">
-  <view class="weui-panel__bd">
-    <view class="weui-media-box weui-media-box_text">
-      <view class="weui-media-box__desc">
-        <view>
-          <text class="text">起批量：>{{itemData.min_batch_qtt}}KG</text>
-          <text class="text">可供量：{{itemData.amount}}kg</text>
-          <text class="text">厂商：{{itemData.att1}}</text>
-        </view>
-        <view>存货地：{{itemData.address}}</view>
-      </view>
-    </view>
-  </view>
-</view> -->
 <view class="module-box bg__white">
   <view class="desc-box weui-flex">
     <view class="item weui-flex">
@@ -48,13 +36,21 @@
       <view class="weui-cell__bd">存货地：</view>
       <view class="weui-cell__ft">{{itemData.address}}</view>
     </view>
+    <view class="weui-flex page__bd_spacing">
+      <view class="weui-cell__bd">采购量：</view>
+      <view class="weui-cell__ft weui-flex">
+        <text class="icon-text" @tap="reduce">-</text>
+        <input type="number" class="input-text" bindinput="getInputNum" maxlength="6" value="{{buyNumber}}" />
+        <text class="icon-text"  @tap="add">+</text>
+      </view>
+    </view>
+    <view class="weui-flex page__bd_spacing" wx:if="{{buyNumber / step !== 0}}">
+      <view class="weui-cell__bd"></view>
+      <view class="weui-cell__ft" style="color: #EB4E35;"> 您输入的不是25的倍数，请确认!</view>
+    </view>
   </view>
 </view>
 <view class="module-box bg__white">
-  <!-- <view class="top">
-    <text class="title">店铺信息</text>
-    <text class="sub">INFORMATION</text>
-  </view> -->
   <view class="weui-cells__title">店铺信息</view>
   <view class="weui-cells weui-cells-no-spacing">
     <view class="weui-flex">
@@ -78,10 +74,6 @@
   </view>
 </view>
 <view class="module-box bg__white">
-  <!-- <view class="top">
-    <text class="title">商品详情</text>
-    <text class="sub">PRODUCT DETAILS</text>
-  </view> -->
   <view class="weui-cells__title">商品详情</view>
   <view class="weui-cells weui-cells-no-spacing">
     <view class="weui-flex">
@@ -103,10 +95,6 @@
   </view>
 </view>
 <view class="module-box bg__white">
-  <!-- <view class="top">
-    <text class="title">交易信息</text>
-    <text class="sub">INFORMATION</text>
-  </view> -->
   <view class="weui-cells__title">交易信息</view>
   <view class="weui-cells weui-cells-no-spacing">
     <view class="weui-flex">
@@ -181,10 +169,6 @@
 </view>
 <block wx:if="{{itemData.goods_class_id===2}}">
   <view class="module-box bg__white">
-    <!-- <view class="top">
-      <text class="title">商品基本属性</text>
-      <text class="sub">BASIC ATTRIBUTES</text>
-    </view> -->
     <view class="weui-cells__title">商品基本属性</view>
     <view class="weui-cells weui-cells-no-spacing">
       <view class="weui-flex">
@@ -222,10 +206,6 @@
     </view>
   </view>
   <view class="module-box bg__white">
-    <!-- <view class="top">
-      <text class="title">商品扩展属性</text>
-      <text class="sub">BASIC ATTRIBUTES</text>
-    </view> -->
     <view class="weui-cells__title">商品扩展属性</view>
     <view class="weui-cells weui-cells-no-spacing">
       <view class="weui-flex">
@@ -281,10 +261,6 @@
 </block>
 <block wx:elif="{{itemData.goods_class_id===3}}">
   <view class="module-box bg__white">
-    <!-- <view class="top">
-      <text class="title">商品基本属性</text>
-      <text class="sub">BASIC ATTRIBUTES</text>
-    </view> -->
     <view class="weui-cells__title">商品基本属性</view>
     <view class="weui-cells weui-cells-no-spacing">
       <view class="weui-flex">
@@ -322,10 +298,6 @@
     </view>
   </view>
   <view class="module-box bg__white">
-    <!-- <view class="top">
-      <text class="title">商品扩展属性</text>
-      <text class="sub">BASIC ATTRIBUTES</text>
-    </view> -->
     <view class="weui-cells__title">商品扩展属性</view>
     <view class="weui-cells weui-cells-no-spacing">
       <view class="weui-flex">
@@ -376,10 +348,6 @@
   </view>
 </block>
 <view class="module-box bg__white">
-  <!-- <view class="top">
-    <text class="title">商品检测报告</text>
-    <text class="sub">INSPECTION REPORT</text>
-  </view> -->
   <view class="weui-cells__title">商品检测报告</view>
   <view class="box text-center">
     <block wx:if="{{itemData.imagejclist.length > 0}}">
@@ -391,10 +359,6 @@
   </view>
 </view>
 <view class="module-box bg__white">
-  <!-- <view class="top">
-    <text class="title">商品描述</text>
-    <text class="sub">PRODUCT DESCRIPTION</text>
-  </view> -->
   <view class="weui-cells__title">商品描述</view>
   <view class="box text-center">
     <block wx:if="{{itemData.intro}}">
@@ -414,16 +378,10 @@
     <view class="weui-cell__bd bold">咨询客服</view>
     <view class="weui-cell__ft weui-cell__ft_in-access text-right">400-888-9383</view>
   </view>
-  <view class="logo" plain @tap="goHome">
-    <image class="logo-icon" mode="widthFix" src="/images/otimes-logo.png"></image>
+    <view class="logo" plain @tap="goHome">
+      <image class="logo-icon" mode="widthFix" src="/images/otimes-logo.png"></image>
+    </view>
   </view>
-  <!-- <button class="button" type="primary" plain @tap="goHome">
-    <image class="logo" mode="widthFix" src="/images/otimes-logo.png"></image>
-  </button> -->
-  <!-- <button class="button" type="primary" bindtap='makePhoneCall' data-phone='400-888-9383'>
-      <image class="phone" src="/images/icon/icon-phone.png"></image>
-      400-888-9383
-  </button> -->
 </view>
 </template>
 
@@ -435,6 +393,7 @@ import {
 import base from '../../mixins/base'
 import http from '../../utils/Http'
 import Swiper from '../../components/swiper'
+import fixBootom from '../../components/fixbootom'
 import getNumber from '../../utils/getNumber.wxs'
 
 export default class ProductDetails extends wepy.page {
@@ -449,13 +408,28 @@ export default class ProductDetails extends wepy.page {
     swipers: [],
     itemData: {},
     baseHrefUrl: '',
-    id: ''
+    id: '',
+    trade_class: 100,
+    order_id: 0,
+    buyNumber: 0,
+    step: 25,
+    token_access: ''
   }
   components = {
-    Swiper
+    Swiper, fixBootom
   }
   wxs = {
     m1: getNumber
+  }
+  // 输入框
+  getInputNum(e) {
+    if (Number(e.detail.value)) {
+      this.buyNumber = e.detail.value
+      this.$apply()
+    } else {
+      this.buyNumber = this.itemData.min_batch_qtt
+      this.$apply()
+    }
   }
   async getProductDetails() {
     const res = await http.get(__getApi._getProductDetails, {
@@ -464,6 +438,8 @@ export default class ProductDetails extends wepy.page {
     }, true)
     if (res.false) return
     this.itemData = res.data
+    this.trade_class = res.data.trade_class
+    this.buyNumber = res.data.min_batch_qtt
     let image = res.data.image_url ? this.baseHrefUrl + res.data.image_url : '/images/dbys-default.jpg'
     this.swipers.push({
       image: image
@@ -476,6 +452,14 @@ export default class ProductDetails extends wepy.page {
     })
   }
   methods = {
+    reduce() {
+      this.buyNumber = Number(this.buyNumber) >= Number(this.itemData.min_batch_qtt) + this.step ? Number(this.buyNumber) - this.step : Number(this.itemData.min_batch_qtt)
+      this.$apply()
+    },
+    add() {
+      this.buyNumber = Number(this.buyNumber) >= Number(this.itemData.amount) - this.step ? this.itemData.amount : Number(this.buyNumber) + this.step
+      this.$apply()
+    },
     makePhoneCall(e) {
       wx.makePhoneCall({
         phoneNumber: e.currentTarget.dataset.phone
@@ -485,6 +469,8 @@ export default class ProductDetails extends wepy.page {
   onLoad(options) {
     this.baseHrefUrl = __getApi.baseHrefUrl
     this.id = options.id
+    this.order_id = options.id
+    this.token_access = this.$parent.globalData.token_access
     this.getProductDetails()
     wx.showShareMenu({
       withShareTicket: true
@@ -508,6 +494,16 @@ export default class ProductDetails extends wepy.page {
 </script>
 
 <style lang="less">
+.icon-text {
+  padding: 0 16rpx;
+  border: 1px solid #979797;
+}
+.input-text {
+  width: 200rpx;
+  text-align: center;
+  border-top: 1px solid #979797;
+  border-bottom: 1px solid #979797;
+}
 .weui-panel.weui-panel_access {
     margin-top: 0;
 }

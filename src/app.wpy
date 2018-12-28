@@ -7,8 +7,23 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/index',
+
       'pages/tmp/outer',
       'pages/tmp/todolist',
+
+      'pages/transaction/todo/list',
+      'pages/transaction/buy/list',
+      'pages/transaction/contract/list',
+      'pages/transaction/shelf/list',
+      'pages/transaction/shelf/success',
+      'pages/transaction/shelf/details',
+      'pages/transaction/buy/details',
+      'pages/transaction/talk/list',
+      'pages/transaction/talk/talk',
+      'pages/transaction/talk/details',
+
+      'pages/about/index',
+
       'pages/fish/list',
       'pages/fish/details',
       'pages/product/list',
@@ -20,6 +35,7 @@ export default class extends wepy.app {
       'pages/news-details',
       'pages/database/list',
       'pages/database/details',
+      
       'pages/mime',
       'pages/mine/report',
       'pages/mine/inforlist',
@@ -40,17 +56,18 @@ export default class extends wepy.app {
       'pages/other/chart-list',
       'pages/other/chart-filter',
       'pages/other/chart-compare',
+
       'pages/company/list',
       'pages/company/collections',
       'pages/company/details',
       'pages/company/alltype',
       'pages/company/error',
+
       'pages/overseas/list',
       'pages/overseas/details',
+
       'pages/user/getUserInfo',
       'pages/other/chart-price',
-      'pages/logistics/list',
-      'pages/logistics/details',
 
     ],
     window: {
@@ -81,7 +98,7 @@ export default class extends wepy.app {
         iconPath: '/images/tabbars/rice.png',
         text: '早稻'
       }, {
-        pagePath: 'pages/mime',
+        pagePath: 'pages/about/index',
         selectedIconPath: '/images/tabbars/mime_HL.png',
         iconPath: '/images/tabbars/mime.png',
         text: '我的'

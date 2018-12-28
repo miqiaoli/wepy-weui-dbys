@@ -106,7 +106,7 @@ export default class Index extends wepy.page {
 
       setTimeout(function() {
         wepy.switchTab({
-          url: "../mime",
+          url: "/pages/about/index",
           success: function(e) {
             var page = getCurrentPages().pop();
             if (page == undefined || page == null) return;
@@ -119,7 +119,6 @@ export default class Index extends wepy.page {
   };
   async getCode() {
     const login = await wepy.login();
-    console.log(login)
     const res = await wepy.request({
       url: __getApi._getPrivacyToken,
       data: {
@@ -131,7 +130,6 @@ export default class Index extends wepy.page {
   }
   onLoad(options) {
     this.token_access = options.token_access;
-    console.log('token_access:' + this.token_access);
     this.getCode();
   }
 }

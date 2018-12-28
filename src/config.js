@@ -202,13 +202,32 @@ export const __getApi = {
 
   _getUpdateMsg: `${host}/wx/isNotice.dbys`, // 更新公告
 
-  // 物流司机端
-  _getImgUrl: `${host}/logist/trans_logist_abnormalimg.dbys`,   // 上传图片
-  _getOrderList: `${host}/logist/seek_logist_list.dbys`,   // 物流列表
-  _getOrderDoingDetails: `${host}/logist/trans_logist_abnormal.dbys`, // 发货
-  _getOrderWarningDetails: `${host}/logist/trans_logist_middle.dbys`,  // 运输中
-  _getOrderDoneDetails: `${host}/logist/trans_logist_end.dbys`,   // 完成
-  _getLocation: `${host}/logist/up_logist_location.dbys`, // 上报地理位置
+  // 交易功能
+  _getTalkList: `${host}/wxtrade/negotiateHistory.dbys`, // 洽谈 获取历史列表
+  _getTalk: `${host}/wxtrade/negotiateCreate.dbys`, // 生成洽谈单
+  _replyTalk: `${host}/wxtrade/negotiateReply.dbys`, // 回复洽谈单
+  _replyTalkReject: `${host}/wxtrade/negotiateReject.dbys`, // 回复拒绝
+  _replyTalkCancel: `${host}/wxtrade/negotiateCancel.dbys`, // 取消洽谈单
+  _replyTalkAgree: `${host}/wxtrade/negotiateAgree.dbys`, // 同意洽谈单
+  _getTalkDetails: `${host}/wxtrade/negotiateDetail.dbys`, // 单条洽谈单
+
+  _getContractHistory: `${host}/wxtrade/contractHistory.dbys`, // 合同历史列表
+  _getContractDownload: `${host}/wxtrade/contractDownload.dbys`, // 合同下载列表
+  _getContractDetails: `${host}/wxtrade/contractPreview_attach_info.dbys`, // 这个是合同预览中附加的信息
+  
+  _getListingList: `${host}/wxtrade/listing_listmanager.dbys`, // 挂牌列表
+  _listingUpdate: `${host}/wxtrade/listing_listupdate.dbys`, // 编辑挂牌单
+  _listingUp: `${host}/wxtrade/listing_listShelf.dbys`, // 批量上架
+  _listingDown: `${host}/wxtrade/listing_listcancels.dbys`, // 批量下架
+
+  _getBuyList: `${host}/wxtrade/orderHistory.dbys`, // 订单列表
+  _getBuyDetails: `${host}/wxtrade/orderDetail.dbys`, // 订单详情
+  _getBuyDo: `${host}/wxtrade/product_trade_one.dbys`, // 立即购买接口
+  _getBuyDoMany: `${host}/wxtrade/product_trade_many.dbys`, // 批量支付接口
+  _addDo: `${host}/wxtrade/shopping_car_add.dbys`, // 添加购物车
+  _delDo: `${host}/wxtrade/shopping_car_delete.dbys`, // 购物车删除
+  _getBuyDoList: `${host}/wxtrade/shopping_car_search.dbys`, // 购物车接口查询
+  _getCodeAndCookie: `${host}/wxtrade/volicode__png.dbys`, 
 
 }
 

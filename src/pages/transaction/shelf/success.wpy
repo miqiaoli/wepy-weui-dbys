@@ -1,0 +1,126 @@
+<template>
+<view class="page bg__white">
+  <view class="box">
+    <view class="">验证码</view>
+    <view class="weui-flex">
+      <input class="weui-flex__item input" value="{{code}}" bindinput="getValue('code')" placeholder="请输入验证码" />
+      <image class="validate" src="{{url}}" @tap="chgValidateCode" />
+    </view>
+  </view>
+  <view class="box">
+    <view class="">支付密码</view>
+    <input class="input" type="number" password="true" value="{{password}}" bindinput="getValue('password')" placeholder="请输入支付密码" />
+  </view>
+  <button type="primary" @tap="doSuccess">完成</button>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import base from '../../../mixins/base'
+import http from '../../../utils/Http'
+import Pwdmd5 from '../../../utils/pwdmd'
+import {
+  __getApi
+} from '../../../config.js'
+
+export default class Index extends wepy.page {
+  mixins = [base]
+  config = {
+    navigationBarTitleText: '商品挂牌'
+  }
+  data = {
+    order_id: null,
+    token_access: '',
+    url: '',
+    code: '',
+    password: '',
+    cookie: '',
+  }
+  methods = {
+    getValue(val, e) {
+      this[val] = e.detail.value
+      this.$apply()
+    },
+    chgValidateCode() {
+      // this.url = `${__getApi._getValidateCode}?type=${new Date().getTime()}`
+      this.cookieAndCode()
+    },
+    async doSuccess() {
+      if (!this.password || !this.code) {
+        wx.showToast({
+          title: '请输入支付密码/验证码',
+          icon: 'none',
+          duration: 2000
+        })
+        return 
+      }  
+      let signa = Pwdmd5(String(this.password), String(this.code), this.cookie)
+      const res = await http.get(__getApi._listingUp, {
+        token_access: this.token_access,
+        password: signa,
+        ids: String(this.order_id),
+        yss: this.cookie
+      })
+      if (res.meta.success) {
+        wx.showModal({
+          showCancel: false,
+          title: '提示',
+          content: res.data.msg,
+          success(res) {
+            if (res.confirm) {
+              wx.redirectTo({
+                url: './list?buyorsell=2'
+              })
+            } 
+          }
+        })
+        this.$apply()
+      }
+      
+    },
+    
+  }
+  async onLoad(e) {
+    this.order_id = e.order_id
+    this.token_access = this.$parent.globalData.token_access
+    // this.url = `${__getApi._getValidateCode}?type=${new Date().getTime()}`
+    this.cookieAndCode()
+    this.$apply() 
+  }
+  async cookieAndCode() {
+    const res = await http.get(__getApi._getCodeAndCookie, {
+      token_access: this.token_access
+    })
+    if (res.meta.success) {
+      this.url = res.data.img_path
+      this.cookie = res.data.yss
+      this.$apply()
+    }
+  }
+}
+</script>
+
+<style>
+.page {
+  padding: 60rpx 30rpx;
+  height: 100vh;
+}
+.box {
+  margin: 30rpx 0;
+  font-size: 32rpx;
+}
+.validate {
+  width: 200rpx;
+  height: auto;
+}
+.input {
+  margin-top: 20rpx;
+  padding-left: 30rpx;
+  background: #F9F9F9;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 8rpx;
+}
+
+</style>

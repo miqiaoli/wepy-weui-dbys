@@ -1,0 +1,265 @@
+<template>
+<view class="page bg__white">
+  <view class="module">
+    <view class="title">洽谈单信息</view>
+    <view class="weui-flex row">
+      <view class="col-name">洽谈编号</view>
+      <view class="col-des weui-flex__item">{{details.discuss_id}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">买方</view>
+      <view class="col-des weui-flex__item">{{details.client_name}}</view>
+    </view>
+  </view>
+  <view class="module">
+    <view class="title">商品信息</view>
+    <view class="weui-flex row">
+      <view class="col-name">商品信息</view>
+      <view class="col-des weui-flex__item">{{details.goods_class}}/{{details.att1}}/{{details.att2}}/{{details.goods_name}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">挂牌单价</view>
+      <view class="col-des weui-flex__item">{{details.order_price}}元/KG</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">可供量</view>
+      <view class="col-des weui-flex__item">{{details.weight_left}}KG</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">起批量</view>
+      <view class="col-des weui-flex__item">{{details.min_batch_qtt}}KG</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">洽谈单价</view>
+      <view class="col-des weui-flex__item">{{details.discuss_price}}元/KG</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">洽谈量</view>
+      <view class="col-des weui-flex__item">{{details.discuss_amount}}KG</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">总计</view>
+      <view class="col-des weui-flex__item">{{details.deal_money}}元</view>
+    </view>
+  </view>
+  <view class="module" wx:if="{{type == 'eye'}}">
+    <view class="title">交易信息</view>
+    <view class="weui-flex row">
+      <view class="col-name">配送方式</view>
+      <view class="col-des weui-flex__item">{{details.csg_way}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">结算方式</view>
+      <view class="col-des weui-flex__item">{{details.att21}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">交收方式</view>
+      <view class="col-des weui-flex__item">{{details.jsfs}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">货物类型</view>
+      <view class="col-des weui-flex__item">{{details.csg_way}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">存货地</view>
+      <view class="col-des weui-flex__item">{{details.address}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">配送方式</view>
+      <view class="col-des weui-flex__item">{{details.csg_way}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">描述备注</view>
+      <view class="col-des weui-flex__item">{{details.remark}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">买方支付保证金</view>
+      <view class="col-des weui-flex__item">{{details.other_value}}%</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">卖方支付保证金</view>
+      <view class="col-des weui-flex__item">{{details.deposit_value}}%</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">买方验票后付款</view>
+      <view class="col-des weui-flex__item">{{details.att63}}%</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">买方验货后付款</view>
+      <view class="col-des weui-flex__item">{{details.att62}}%</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">保证金截止日</view>
+      <view class="col-des weui-flex__item">订单生成后{{details.att41}}小时</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">付款截止日</view>
+      <view class="col-des weui-flex__item">订单生成后{{details.att42}}天</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">发货截止日</view>
+      <view class="col-des weui-flex__item">订单生成后{{details.att45}}天</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">验票截止日</view>
+      <view class="col-des weui-flex__item">订单生成后{{details.att44}}天</view>
+    </view>
+  </view>
+  <view class="module" wx:if="{{type !== 'eye'}}">
+     <view class="weui-flex flex-btn">
+        <view class="btn btn-color-reply" wx:if="{{buyorsell == 2 && details.d_status == 1}}" @tap="doTalk">回复</view>
+        <view class="btn btn-color-success" wx:if="{{buyorsell == 1 && details.d_status == 11}}" @tap="doSuccess">同意</view>
+        <view class="btn btn-color-success" wx:if="{{buyorsell == 2 && details.d_status == 1}}" @tap="doSuccess">同意</view>
+        <view class="btn btn-color-warning" @tap="doReject" wx:if="{{buyorsell == 2 && details.d_status == 1}}">拒绝</view>
+        <view class="btn btn-color-warning" @tap="doReject" wx:if="{{buyorsell == 1 && details.d_status == 11}}">拒绝</view>
+        <view class="btn btn-color-warning" wx:if="{{buyorsell == 1 && details.d_status == 11}}" @tap="doCancel">取消</view>
+      </view>
+  </view>
+  <backIndex></backIndex>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from "../../../config.js";
+import http from '../../../utils/Http'
+import backIndex from '../../../components/backIndex'
+export default class details extends wepy.page {
+  components = {
+    backIndex
+  }
+  data = {
+    type: 'eye', // 查看 与 操作
+    token_access: '',
+    discuss_id: '', // 洽谈ID
+    details: null,
+    buyorsell: 1, // 1：买方； 2：卖方
+  }
+  methods = {
+    doTalk() {
+      wx.showToast({
+        title: '去回复',
+        icon: 'success',
+        duration: 2000
+      })
+      setTimeout(() => {
+        wx.redirectTo({
+          url: `./talk?id=${this.details.order_id}&buyorsell=${this.buyorsell}&reply=reply`
+        })
+      }, 2000);
+    },
+    async doSuccess() {
+      const res = await http.get(__getApi._replyTalkAgree, {
+        discussid: this.discuss_id,
+        token_access: this.token_access,
+        buyorsell: this.buyorsell,
+        weight_left: this.details.weight_left,
+        provided_qtt: this.details.provided_qtt
+      })
+      if (res.meta.success) {
+        this.prompt('已同意', `./list?buyorsell=${this.buyorsell}`)
+        this.$apply()
+      }
+    },
+    async doReject() {
+      const res = await http.get(__getApi._replyTalkCancel, {
+        discuss_ids: this.discuss_id,
+        token_access: this.token_access,
+        buyorsell: this.buyorsell
+      })
+      if (res.meta.success) {
+        this.prompt('已拒绝', `./list?buyorsell=${this.buyorsell}`)
+        this.$apply()
+      }
+    },
+    async doCancel() {
+      const res = await http.get(__getApi._replyTalkCancel, {
+        discuss_ids: this.discuss_id,
+        token_access: this.token_access,
+        buyorsell: this.buyorsell
+      })
+      if (res.meta.success) {
+        this.prompt('已取消', `./list?buyorsell=${this.buyorsell}`)
+        this.$apply()
+      }
+    }
+  }
+  onLoad(e) {
+    this.discuss_id = e.discuss_id
+    this.type = e.type ? e.type : 'eye'
+    this.buyorsell = e.buyorsell
+    this.token_access = this.$parent.globalData.token_access
+    this.getTalkDetails()
+  }
+  async getTalkDetails() {
+    const res = await http.get(__getApi._getTalkDetails, {
+      discuss_id: this.discuss_id,
+      token_access: this.token_access,
+    })
+    if (res.meta.success) {
+      this.details = res.data.resultmap
+      this.$apply()
+    }
+  }
+  prompt(title='成功', url='./list', icon='none', time='2000') {
+    wx.showToast({
+      title: title,
+      icon: icon,
+      duration: time
+    })
+    setTimeout(() => {
+      wx.redirectTo({
+        url: url
+      })
+    }, time);
+  }
+
+}
+</script>
+
+<style lang="less">
+.btn-color-reply {
+  border: 1px solid #FB8E1E;
+  color: #FB8E1E;
+}
+.btn-color-success {
+  border: 1px solid #6A7EEE;
+  color: #6A7EEE;
+}
+.btn-color-warning {
+  border: 1px solid #EB4E35;
+  color: #EB4E35;
+}
+.module {
+  padding: 16rpx 30rpx;
+  .flex-btn {
+    justify-content: flex-end;
+    .btn {
+      margin: 20rpx 0 20rpx 20rpx;
+      padding: 10rpx 44rpx;
+      border-radius: 8rpx;
+      font-size: 36rpx;
+    }
+  }
+  .title {
+    font-weight: bold;
+    font-size: 32rpx;
+    color: #1E1E1E;
+  }
+  .row {
+    padding: 20rpx 0;
+    font-size: 14px;
+    border-bottom: 1px solid #E4E7F0;
+    // border-bottom: 1px solid red;
+    .col-name {
+      color: #8F8E94;
+      width: 220rpx;
+    }
+    .col-des {
+      color: #3D3D3D;
+    }
+  }
+}
+</style>
