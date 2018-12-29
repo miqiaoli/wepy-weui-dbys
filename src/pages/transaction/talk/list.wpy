@@ -1,6 +1,6 @@
 <template>
   <view class="talk page bg__white">
-    <Search :value.sync="value" :placeholder="搜索洽谈编号"></Search>
+    <Search :value.sync="value" :placeholder="placeholder"></Search>
     <tabs :tabs="tabs" :index.sync="index"></tabs>
     <view class="list">
       <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id">
@@ -39,7 +39,7 @@
         </view>
       </view>
     </view>
-    <backIndex></backIndex>
+    <!-- <backIndex></backIndex> -->
     <view wx:if="{{list.length <= 0 || count <= 0 }}" class="weui-loadmore weui-loadmore_line">
       <text class="weui-loadmore__tips">暂无数据</text>
     </view>
@@ -65,6 +65,7 @@ export default class talkList extends wepy.page {
     onReachBottomDistance: 100
   }
   data = {
+    placeholder: '搜索洽谈编号',
     index: 0,
     value: '',  // 搜索
     tabs: [{
@@ -126,6 +127,8 @@ export default class talkList extends wepy.page {
   onLoad(e) {
     this.buyorsell = e.buyorsell
     this.token_access = this.$parent.globalData.token_access
+  }
+  onShow() {
     this.getTalkList()
   }
   onPullDownRefresh() {

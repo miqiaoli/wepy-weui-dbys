@@ -115,7 +115,7 @@
         <view class="btn btn-color-warning" wx:if="{{buyorsell == 1 && details.d_status == 11}}" @tap="doCancel">取消</view>
       </view>
   </view>
-  <backIndex></backIndex>
+  <!-- <backIndex></backIndex> -->
 </view>
 </template>
 

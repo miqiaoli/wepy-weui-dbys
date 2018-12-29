@@ -1,6 +1,6 @@
 <template>
   <view class="shelf page bg__white">
-    <Search :value.sync="value" :placeholder="搜索挂牌单号"></Search>
+    <Search :value.sync="value" :placeholder="placeholder"></Search>
     <tabs :tabs="tabs" :index.sync="index"></tabs>
     <view class="list">
       <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id">
@@ -98,6 +98,7 @@ export default class shelfList extends wepy.page {
     onReachBottomDistance: 100
   }
   data = {
+    placeholder: '搜索挂牌单号',
     value: '',
     tabs: [{
       name: '全部',

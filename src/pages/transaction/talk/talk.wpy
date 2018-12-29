@@ -43,7 +43,7 @@
   <view class="module">
     <button type="primary" @tap="doTalk">提交</button>
   </view>
-  <backIndex></backIndex>
+  <!-- <backIndex></backIndex> -->
 </view>
 </template>
 
@@ -122,7 +122,7 @@ export default class details extends wepy.page {
           })
           setTimeout(() => {
             wx.redirectTo({
-              url: './list?buyorsell=2'
+              url: './list?buyorsell=1'
             })
           }, 2000);
         }

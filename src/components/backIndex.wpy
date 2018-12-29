@@ -1,5 +1,6 @@
 <template>
-    <view class="fix-index" @tap="doBackIndex">首页</view>
+    <!-- <view class="fix-index" @tap="doBackIndex">首页</view> -->
+    <view></view>
 </template>
 
 <script>
