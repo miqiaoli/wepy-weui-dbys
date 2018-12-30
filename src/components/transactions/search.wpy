@@ -27,9 +27,9 @@ export default class search extends wepy.component {
   }
   methods = {
     getValue(e) {
-      setTimeout(() => {
-        this.value = e.detail.value
-      }, 500);
+      // setTimeout(() => {
+      this.value = e.detail.value
+      // }, 500);
       this.$apply()
     }
   }
