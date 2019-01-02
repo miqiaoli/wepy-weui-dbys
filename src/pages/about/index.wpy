@@ -26,7 +26,7 @@
       <navigator url="/pages/transaction/shelf/list?buyorsell=2">
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/mime1.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/about1@2x.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">挂牌管理</view>
       </view>  
@@ -34,7 +34,7 @@
       <navigator url="/pages/transaction/talk/list?buyorsell=2">  
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/mime2.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/about2@2x.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">洽谈管理</view>
       </view>  
@@ -42,7 +42,7 @@
       <navigator url="/pages/transaction/buy/list?buyorsell=2">  
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/mime3.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/about3@2x.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">订单管理</view>
       </view>
@@ -50,7 +50,7 @@
       <navigator url="/pages/transaction/contract/list?buyorsell=2">
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/mime4.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/about4@2x.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">合同管理</view>
       </view>
@@ -62,14 +62,14 @@
     <view class="weui-grids">
       <view class="weui-grid" @tap="aler">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/mime1.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/about5@2x.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">采购单管理</view>
       </view>
       <navigator url="/pages/transaction/talk/list?buyorsell=1"> 
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/mime2.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/about2@2x.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">洽谈管理</view>
       </view>
@@ -77,7 +77,7 @@
       <navigator url="/pages/transaction/buy/list?buyorsell=1">
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/mime3.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/about3@2x.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">订单管理</view>
       </view>
@@ -85,7 +85,7 @@
       <navigator url="/pages/transaction/contract/list?buyorsell=1">  
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/mime4.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/about4@2x.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">合同管理</view>
       </view>
@@ -93,7 +93,7 @@
       <navigator url="/pages/transaction/todo/list?buyorsell=1">
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/mime5.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/about5@2x.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">提货单管理</view>
       </view>
