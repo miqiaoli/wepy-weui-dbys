@@ -77,7 +77,7 @@ export default class todoList extends wepy.page {
     backIndex
   }
   config = {
-    navigationBarTitleText: '购物车列表',
+    navigationBarTitleText: '采购单列表',
     enablePullDownRefresh: false,
     onReachBottomDistance: 100
   }

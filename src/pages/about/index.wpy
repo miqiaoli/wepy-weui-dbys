@@ -64,7 +64,7 @@
         <view class="weui-grid__icon">
           <image class="img-icon" src="/images/icon/about5@2x.png" mode="scaleToFill" />
         </view>
-        <view class="weui-grid__label">采购单管理</view>
+        <view class="weui-grid__label">提货单管理</view>
       </view>
       <navigator url="/pages/transaction/talk/list?buyorsell=1"> 
       <view class="weui-grid">
@@ -95,7 +95,7 @@
         <view class="weui-grid__icon">
           <image class="img-icon" src="/images/icon/about5@2x.png" mode="scaleToFill" />
         </view>
-        <view class="weui-grid__label">提货单管理</view>
+        <view class="weui-grid__label">采购单管理</view>
       </view>
       </navigator>
     </view>
