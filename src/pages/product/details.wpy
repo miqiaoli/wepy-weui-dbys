@@ -44,9 +44,10 @@
         <text class="icon-text"  @tap="add">+</text>
       </view>
     </view>
-    <view class="weui-flex page__bd_spacing" wx:if="{{buyNumber / step !== 0}}">
+    <view class="weui-flex page__bd_spacing" wx:if="{{buyNumber % step !== 0 }}">
+    <!-- <view class="weui-flex page__bd_spacing" wx:if="{{showTips}}"> -->
       <view class="weui-cell__bd"></view>
-      <view class="weui-cell__ft" style="color: #EB4E35;"> 您输入的不是25的倍数，请确认!</view>
+      <view class="weui-cell__ft" style="color: #EB4E35;">您输入的不是25的倍数，请确认!</view>
     </view>
   </view>
 </view>
@@ -367,9 +368,9 @@
     <block wx:else>该商品暂无描述！</block>
   </view>
 </view>
-<view class="tips">
+<!-- <view class="tips">
   对不起！该商品目前仅支持在PC端进行交易！
-</view>
+</view> -->
 <view class="foot-btn bg__white">
   <view class="user-phone weui-flex" bindtap='makePhoneCall' data-phone='400-888-9383'>
     <view class="weui-cell__hd">
@@ -413,7 +414,8 @@ export default class ProductDetails extends wepy.page {
     order_id: 0,
     buyNumber: 0,
     step: 25,
-    token_access: ''
+    token_access: '',
+    showTips: false
   }
   components = {
     Swiper, fixBootom
@@ -425,9 +427,18 @@ export default class ProductDetails extends wepy.page {
   getInputNum(e) {
     if (Number(e.detail.value)) {
       this.buyNumber = e.detail.value
+      // this.showTips = this.buyNumber / this.step == 0 ? false : true
       this.$apply()
     } else {
-      this.buyNumber = this.itemData.min_batch_qtt
+      // this.buyNumber = 0
+      this.buyNumber = e.detail.value
+      // this.showTips = this.buyNumber / this.step == 0 ? false : true
+      // this.buyNumber = this.itemData.min_batch_qtt
+      wx.showToast({
+        title: '请输入正确的数字',
+        icon: 'none',
+        duration: 2000
+      })
       this.$apply()
     }
   }
@@ -440,6 +451,7 @@ export default class ProductDetails extends wepy.page {
     this.itemData = res.data
     this.trade_class = res.data.trade_class
     this.buyNumber = res.data.min_batch_qtt
+    // this.showTips = this.buyNumber / this.step == 0 ? false : true
     let image = res.data.image_url ? this.baseHrefUrl + res.data.image_url : '/images/dbys-default.jpg'
     this.swipers.push({
       image: image
@@ -454,10 +466,12 @@ export default class ProductDetails extends wepy.page {
   methods = {
     reduce() {
       this.buyNumber = Number(this.buyNumber) >= Number(this.itemData.min_batch_qtt) + this.step ? Number(this.buyNumber) - this.step : Number(this.itemData.min_batch_qtt)
+      // this.showTips = this.buyNumber / this.step == 0 ? false : true
       this.$apply()
     },
     add() {
       this.buyNumber = Number(this.buyNumber) >= Number(this.itemData.amount) - this.step ? this.itemData.amount : Number(this.buyNumber) + this.step
+      // this.showTips = this.buyNumber / this.step == 0 ? false : true
       this.$apply()
     },
     makePhoneCall(e) {

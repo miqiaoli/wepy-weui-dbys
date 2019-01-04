@@ -114,7 +114,8 @@ export default class baseMixin extends wepy.mixin {
     return (value && value != null) ? true : false
   }
  isPhone(str) {
-   return (this.required(str) && str.match(/^(0|86|17951)?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[579])[0-9]{8}$/)!==null) ? true : false
+  //  return (this.required(str) && str.match(/^(0|86|17951)?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[579])[0-9]{8}$/) !== null) ? true : false
+   return (this.required(str) && str.match(/^1\d{10}$/)!==null) ? true : false
  }
   equalTo(value, param) {
     return (this.required(value) && value === param) ? true : false
