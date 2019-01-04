@@ -39,7 +39,8 @@
           <view class="tags">出价方式：{{single.trade_class_name}}</view>
         </view>
         <view class="weui-flex flex-btn">
-          <view class="btn btn-color-eye" wx:if="{{single.v_status == '已下架' || single.v_status == '待上架'}}" data-order_id="{{single.order_id}}" @tap="doUp">上架</view>
+          <!-- <view class="btn btn-color-eye" wx:if="{{single.v_status == '已下架' || single.v_status == '待上架'}}" data-order_id="{{single.order_id}}" @tap="doUp">上架</view> -->
+          <view class="btn btn-color-eye" wx:if="{{single.v_status !== '已上架'}}" data-order_id="{{single.order_id}}" @tap="doUp">上架</view>
           <view class="btn btn-color-down" wx:if="{{single.v_status == '已上架'}}" data-order_id="{{single.order_id}}" @tap="doDown">下架</view>
           <view class="btn btn-color-do" wx:if="{{single.v_status !== '已上架'}}" data-choose_index="{{index}}" data-order_id="{{single.order_id}}" @tap="doEdit">编辑</view>
           <!-- <view class="btn btn-color-do" data-order_id="{{single.order_id}}" @tap="doDel">删除</view> -->

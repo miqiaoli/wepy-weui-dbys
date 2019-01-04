@@ -81,16 +81,31 @@ export default class fixbootom extends wepy.component {
         order_id: this.order_id
       })
       if (res.meta.success) {
-        wx.showToast({
-          title: '已购买',
-          icon: 'success',
-          duration: 2000
+
+        wx.showModal({
+          showCancel: false,
+          title: '提示',
+          content: res.data.msg,
+          success(res) {
+            if (res.confirm) {
+              wx.navigateTo({
+                // url: './list?buyorsell=2'
+                url: '../transaction/buy/list?buyorsell=1'
+              })
+            } 
+          }
         })
-        setTimeout(() => {
-          wx.navigateTo({
-            url: '../transaction/buy/list?buyorsell=1'
-          })
-        }, 2000);
+
+        // wx.showToast({
+        //   title: '已购买',
+        //   icon: 'success',
+        //   duration: 2000
+        // })
+        // setTimeout(() => {
+        //   wx.navigateTo({
+        //     url: '../transaction/buy/list?buyorsell=1'
+        //   })
+        // }, 2000);
       }
     }
   }

@@ -159,7 +159,17 @@ export default class details extends wepy.page {
         provided_qtt: this.details.provided_qtt
       })
       if (res.meta.success) {
-        this.prompt('已同意', `./list?buyorsell=${this.buyorsell}`)
+        // this.prompt('已同意', `./list?buyorsell=${this.buyorsell}`)
+        wx.showToast({
+            title: '已同意',
+            icon: 'success',
+            duration: 2000
+          })
+          setTimeout(() => {
+            wx.redirectTo({
+              url: `./list?buyorsell=${this.buyorsell}`
+            })
+          }, 2000);
         this.$apply()
       }
     },
@@ -170,7 +180,17 @@ export default class details extends wepy.page {
         buyorsell: this.buyorsell
       })
       if (res.meta.success) {
-        this.prompt('已拒绝', `./list?buyorsell=${this.buyorsell}`)
+        // this.prompt('已拒绝', `./list?buyorsell=${this.buyorsell}`)
+        wx.showToast({
+            title: '已拒绝',
+            icon: none,
+            duration: 2000
+          })
+          setTimeout(() => {
+            wx.redirectTo({
+              url: `./list?buyorsell=${this.buyorsell}`
+            })
+          }, 2000);
         this.$apply()
       }
     },
@@ -181,7 +201,17 @@ export default class details extends wepy.page {
         buyorsell: this.buyorsell
       })
       if (res.meta.success) {
-        this.prompt('已取消', `./list?buyorsell=${this.buyorsell}`)
+        // this.prompt('已取消', `./list?buyorsell=${this.buyorsell}`)
+        wx.showToast({
+            title: '已取消',
+            icon: none,
+            duration: 2000
+          })
+          setTimeout(() => {
+            wx.redirectTo({
+              url: `./list?buyorsell=${this.buyorsell}`
+            })
+          }, 2000);
         this.$apply()
       }
     }
