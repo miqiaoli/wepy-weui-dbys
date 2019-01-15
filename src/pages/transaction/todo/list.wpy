@@ -180,6 +180,12 @@ export default class todoList extends wepy.page {
       // const res = await http.post(__getApi._getBuyDoMany, 
       //   Object.assign({jsons: JSON.stringify(orders)}, {token_access: this.token_access})
       // )
+      // const res = await http.post(__getApi._getBuyDoMany, 
+      //   {
+      //     jsons: JSON.stringify(orders), 
+      //     token_access: this.token_access
+      //   }
+      // )
       const res = await http.post(__getApi._getBuyDoMany, {
         jsons: orders, token_access: this.token_access
       })

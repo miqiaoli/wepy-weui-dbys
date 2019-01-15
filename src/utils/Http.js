@@ -79,7 +79,18 @@ export default class http {
         return this.request('PUT', url, data, dataState, loading);
     }
 
+    // static post(url, data, dataState, loading = true) {
+    //     return this.request('POST', url, data, dataState, {
+    //         'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+    //     });
+    // }
+
     static post(url, data, dataState, loading = true) {
+        if (url.includes("/wxtrade/product_trade_many.dbys")) {
+            return  this.request('POST', url, data, dataState, {
+                'content-type': 'application/json'
+            });
+        }
         return this.request('POST', url, data, dataState, {
             'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
         });
