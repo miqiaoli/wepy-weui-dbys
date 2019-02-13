@@ -1,6 +1,8 @@
 <script>
 import wepy from 'wepy'
-import {__getApi} from './config.js'
+import {
+  __getApi
+} from './config.js'
 import 'wepy-async-function'
 
 export default class extends wepy.app {
@@ -35,7 +37,7 @@ export default class extends wepy.app {
       'pages/news-details',
       'pages/database/list',
       'pages/database/details',
-      
+
       'pages/mine/report',
       'pages/mine/inforlist',
       'pages/mine/new',
@@ -69,6 +71,11 @@ export default class extends wepy.app {
       'pages/other/chart-price',
 
     ],
+    permission: {
+      "scope.userLocation": {
+        "desc": "你的位置信息将用于对附近的早稻商家进行排序"
+      }
+    },
     window: {
       navigationBarTitleText: '第八元素',
       navigationBarTextStyle: 'black',
@@ -128,7 +135,7 @@ export default class extends wepy.app {
 
   }
   onShow(options) {
-    this.$updateGlobalData('token_access',wepy.getStorageSync('token_access') || '')
+    this.$updateGlobalData('token_access', wepy.getStorageSync('token_access') || '')
   }
   onHide(options) {
     wx.setStorage({

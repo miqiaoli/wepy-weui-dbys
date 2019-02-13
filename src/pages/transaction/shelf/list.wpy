@@ -76,7 +76,7 @@
           <button class="weui-flex__item weui-btn weui-btn_mini weui-btn_primary" type="primary" @tap="editSuccess">确定</button>
         </view>
       </view>
-    </view> 
+    </view>
   </view>
 </template>
 
@@ -183,15 +183,15 @@ export default class shelfList extends wepy.page {
           icon: 'none',
           duration: 2000
         })
-        return 
-      }  
+        return
+      }
       if (typeof Number(this.discuss_price) !== 'number' || typeof Number(this.discuss_amount) !== 'number') {
         wx.showToast({
           title: '请输入数字',
           icon: 'none',
           duration: 2000
         })
-        return 
+        return
       }
       const res = await http.get(__getApi._listingUpdate, {
         order_id: this.list[this.chooseIndex].order_id,
@@ -212,7 +212,7 @@ export default class shelfList extends wepy.page {
       this.discuss_amount = null
       this.show = false
       this.$apply()
-      
+
     },
     cancel() {
       this.discuss_price = null
@@ -322,7 +322,7 @@ export default class shelfList extends wepy.page {
   position: absolute;
   top: 50%;
   left: 50%;
-  background: #fff; 
+  background: #fff;
   min-width: 300px;
   transform: translateX(-50%) translateY(-50%);
 }
@@ -342,10 +342,14 @@ export default class shelfList extends wepy.page {
   text-align: center;
 }
 .list {
-  margin: 30rpx;
+  padding: 20rpx 30rpx;
+  background: #f9f9f9;
 }
 .single {
-  margin: 30rpx 0;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  background: #fff;
+  border-radius: 10rpx;
 }
 .flex-btn {
   justify-content: flex-end;

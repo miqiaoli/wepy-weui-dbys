@@ -6,7 +6,6 @@
       <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id" data-discuss_id="{{single.discussid}}" @tap="toBuyDetails">
         <view class="weui-flex flex-margin flex-end">
           <view class="weui-flex__item">订单号：{{single.deal_no}}</view>
-          <view class="time">{{single.deal_date}}</view>
         </view>
         <view class="weui-flex">
           <view class="weui-flex__item weui-flex">
@@ -61,6 +60,9 @@
           <view class="title weui-flex__item">
             <text class="tags tags-status-color">状态：{{single.v_status}}</text>
           </view>
+        </view>
+        <view class="weui-flex">
+        <view class="time">成交时间：{{single.deal_date}}</view>
         </view>
       </view>
     </view>
@@ -161,7 +163,7 @@ export default class buyList extends wepy.page {
   }
   async onReachBottom() {
     if (this.start * this.limit < this.count) {
-      this.start += 1 
+      this.start += 1
       this.chgBuyList()
     }
   }
@@ -199,7 +201,7 @@ export default class buyList extends wepy.page {
       this.$apply()
     }
   }
-  
+
 }
 </script>
 
@@ -225,10 +227,14 @@ export default class buyList extends wepy.page {
     text-align: center;
   }
   .list {
-    margin: 0 30rpx;
+    padding: 20rpx 30rpx;
+    background: #f9f9f9;
     .single {
-      margin: 10rpx 0;
-      padding: 10rpx 0;
+      // margin: 10rpx 0;
+      padding: 20rpx;
+      margin-bottom: 20rpx;
+      background: #fff;
+      border-radius: 10rpx;
     }
   }
 }
@@ -246,7 +252,7 @@ export default class buyList extends wepy.page {
   border-radius: 2px;
 }
 .time {
-  font-size: 10px;
+  font-size: 12px;
   color: #8F8E94;
   line-height: 200%;
 }

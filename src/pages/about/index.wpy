@@ -29,17 +29,17 @@
           <image class="img-icon" src="/images/icon/about1@2x.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">挂牌管理</view>
-      </view>  
-      </navigator>  
-      <navigator url="/pages/transaction/talk/list?buyorsell=2">  
+      </view>
+      </navigator>
+      <navigator url="/pages/transaction/talk/list?buyorsell=2">
       <view class="weui-grid">
         <view class="weui-grid__icon">
           <image class="img-icon" src="/images/icon/about2@2x.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">洽谈管理</view>
-      </view>  
+      </view>
       </navigator>
-      <navigator url="/pages/transaction/buy/list?buyorsell=2">  
+      <navigator url="/pages/transaction/buy/list?buyorsell=2">
       <view class="weui-grid">
         <view class="weui-grid__icon">
           <image class="img-icon" src="/images/icon/about3@2x.png" mode="scaleToFill" />
@@ -60,13 +60,13 @@
   <view class="list-grid user-box">
     <view class="title">采购管理</view>
     <view class="weui-grids">
-      <view class="weui-grid" @tap="aler">
+      <!-- <view class="weui-grid" @tap="aler">
         <view class="weui-grid__icon">
           <image class="img-icon" src="/images/icon/about6@2x.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">提货单管理</view>
-      </view>
-      <navigator url="/pages/transaction/talk/list?buyorsell=1"> 
+      </view> -->
+      <navigator url="/pages/transaction/talk/list?buyorsell=1">
       <view class="weui-grid">
         <view class="weui-grid__icon">
           <image class="img-icon" src="/images/icon/about2@2x.png" mode="scaleToFill" />
@@ -82,7 +82,7 @@
         <view class="weui-grid__label">订单管理</view>
       </view>
       </navigator>
-      <navigator url="/pages/transaction/contract/list?buyorsell=1">  
+      <navigator url="/pages/transaction/contract/list?buyorsell=1">
       <view class="weui-grid">
         <view class="weui-grid__icon">
           <image class="img-icon" src="/images/icon/about4@2x.png" mode="scaleToFill" />

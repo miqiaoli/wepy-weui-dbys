@@ -139,7 +139,7 @@ export default class talkList extends wepy.page {
   }
   async onReachBottom() {
     if (this.start * this.limit < this.count) {
-      this.start += 1 
+      this.start += 1
       this.chgTalkList()
     }
   }
@@ -190,12 +190,15 @@ export default class talkList extends wepy.page {
     text-align: center;
   }
   .list {
-    margin: 30rpx;
     font-size: 28rpx;
+    padding: 20rpx 30rpx;
+    background: #f9f9f9;
   }
   .single {
-    /* margin-left: 20rpx; */
-    margin: 20rpx;
+    padding: 20rpx;
+    margin-bottom: 20rpx;
+    background: #fff;
+    border-radius: 10rpx;
   }
   .num {
     margin-bottom: 28rpx;

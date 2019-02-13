@@ -1,16 +1,16 @@
-// const host = 'https://www.otimes.com/front' 
-const host = 'https://dbys.otimes.info/front'
+const host = 'https://www.otimes.com/front'
+// const host = 'https://dbys.otimes.info/front'
 
-const imgHost = 'https://dbys.otimes.info' // 测试图片地址
-// const imgHost = 'https://www.otimes.com'
-// const socketHost = 'wss://www.otimes.com' // websocket地址
-const socketHost = 'wss://dbys.otimes.info'
+// const imgHost = 'https://dbys.otimes.info' // 测试图片地址
+const imgHost = 'https://www.otimes.com'
+const socketHost = 'wss://www.otimes.com' // websocket地址
+// const socketHost = 'wss://dbys.otimes.info'
 
 export const __getApi = {
   host,
   imgHost,
   socketHost,
-  baseHrefUrl: 'https://dbys.otimes.info',
+  baseHrefUrl: 'https://www.otimes.com',
 
   //code encryptedData iv 换取openid，unionid,session_key
   _getPrivacyToken: `${host}/wxapp/codeei.dbys`,
@@ -184,7 +184,7 @@ export const __getApi = {
   // 鱼塘历史接口
   _getFishPondList: `${host}/wechat/polist.dbys`,
   _getsocketList: `${socketHost}/weixin_haslogin.dbys`,
-  _getFishClass: `${host}/wechat/firstpool.do`, 
+  _getFishClass: `${host}/wechat/firstpool.do`,
   _getFishClassSort: `${host}/wechat/secondPoolType.do`,
   _getFishTags: `${host}/wechat/getPoolLabel.do`,
   _createFishTags: `${host}/wechat/creatPoolLabel.do`,
@@ -214,7 +214,7 @@ export const __getApi = {
   _getContractHistory: `${host}/wxtrade/contractHistory.dbys`, // 合同历史列表
   _getContractDownload: `${host}/wxtrade/contractDownload.dbys`, // 合同下载列表
   _getContractDetails: `${host}/wxtrade/contractPreview_attach_info.dbys`, // 这个是合同预览中附加的信息
-  
+
   _getListingList: `${host}/wxtrade/listing_listmanager.dbys`, // 挂牌列表
   _listingUpdate: `${host}/wxtrade/listing_listupdate.dbys`, // 编辑挂牌单
   _listingUp: `${host}/wxtrade/listing_listShelf.dbys`, // 批量上架
@@ -227,7 +227,7 @@ export const __getApi = {
   _addDo: `${host}/wxtrade/shopping_car_add.dbys`, // 添加购物车
   _delDo: `${host}/wxtrade/shopping_car_delete.dbys`, // 购物车删除
   _getBuyDoList: `${host}/wxtrade/shopping_car_search.dbys`, // 购物车接口查询
-  _getCodeAndCookie: `${host}/wxtrade/volicode__png.dbys`, 
+  _getCodeAndCookie: `${host}/wxtrade/volicode__png.dbys`,
 
 }
 

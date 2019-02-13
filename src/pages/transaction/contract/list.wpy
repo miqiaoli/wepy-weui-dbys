@@ -55,19 +55,19 @@
 
         <view class="weui-flex flex-padding">
           <view class="long-title">合同生成日</view>
-          <view class="weui-flex__item">{{single.create_date}}</view>          
+          <view class="weui-flex__item">{{single.create_date}}</view>
         </view>
         <view class="weui-flex flex-margin">
           <view class="long-title">付款截止日</view>
-          <view class="weui-flex__item">{{single.date1}}</view>          
+          <view class="weui-flex__item">{{single.date1}}</view>
         </view>
         <view class="weui-flex">
           <view class="long-title">验货截止日</view>
-          <view class="weui-flex__item">{{single.date5}}</view>          
+          <view class="weui-flex__item">{{single.date5}}</view>
         </view>
         <view class="weui-flex">
           <view class="long-title">验票截止日</view>
-          <view class="weui-flex__item">{{single.date7}}</view>          
+          <view class="weui-flex__item">{{single.date7}}</view>
         </view>
 
         <view class="weui-flex">
@@ -116,7 +116,7 @@ export default class contractList extends wepy.page {
     list: [],
     start: 1,
     limit: 15,
-    count: 0, 
+    count: 0,
     tabs: ['全部', '待支付', '异议中', '已完成', '已终止'],
     buyorsell: 1,
     fileSrc: '',
@@ -127,7 +127,7 @@ export default class contractList extends wepy.page {
     async downloadFile(e) {
       const subs_id = e.currentTarget.dataset.subs_id
       const downloadTask = wx.downloadFile({
-        url: `${__getApi._getContractDownload}?subs_id=${subs_id}&token_access=${this.token_access}`, 
+        url: `${__getApi._getContractDownload}?subs_id=${subs_id}&token_access=${this.token_access}`,
         success (res) {
           if (res.statusCode === 200) {
             const filePath = res.tempFilePath
@@ -151,7 +151,7 @@ export default class contractList extends wepy.page {
     async eyeFile(e) {
       const subs_id = e.currentTarget.dataset.subs_id
       const downloadTask = wx.downloadFile({
-        url: `${__getApi._getContractDownload}?subs_id=${subs_id}&token_access=${this.token_access}`, 
+        url: `${__getApi._getContractDownload}?subs_id=${subs_id}&token_access=${this.token_access}`,
         success (res) {
           if (res.statusCode === 200) {
             const filePath = res.tempFilePath
@@ -204,7 +204,7 @@ export default class contractList extends wepy.page {
   async chgContractList() {
     console.log('dddddddddd')
   }
-  
+
 }
 </script>
 
@@ -230,10 +230,13 @@ export default class contractList extends wepy.page {
     text-align: center;
   }
   .list {
-    margin: 0 30rpx;
+  padding: 20rpx 30rpx;
+  background: #f9f9f9;
     .single {
-      margin: 10rpx 0;
-      padding: 10rpx 0;
+      padding: 20rpx;
+      margin-bottom: 20rpx;
+      background: #fff;
+      border-radius: 10rpx;
     }
   }
 }

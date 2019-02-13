@@ -52,7 +52,7 @@ export default class fixbootom extends wepy.component {
           url: `../transaction/talk/talk?service_name=TRADE_ORDERDETAIL&id=${this.id}&buyorsell=${this.buyorsell}`
         })
       }, 2000);
-      
+
     },
     async todo() {
       const res = await http.get(__getApi._addDo, {
@@ -60,12 +60,13 @@ export default class fixbootom extends wepy.component {
         order_id: this.order_id,
         order_buy_weight: this.weight_buy,
         order_price: this.itemData.order_price,
-        goods_class: this.itemData.goods_class,    // 品种 
+        goods_class: this.itemData.goods_class,    // 品种
         goods_name: this.itemData.goods_name, // 品名
         att2: this.itemData.att2,   // 牌号
         att1: this.itemData.att1, // 厂商
         address: this.itemData.address
       })
+      console.log(res);
       if (res.meta.success) {
         wx.showToast({
           title: '已添加购物车',
@@ -92,7 +93,7 @@ export default class fixbootom extends wepy.component {
                 // url: './list?buyorsell=2'
                 url: '../transaction/buy/list?buyorsell=1'
               })
-            } 
+            }
           }
         })
 

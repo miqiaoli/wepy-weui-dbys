@@ -95,7 +95,11 @@ export default class SearchBar extends wepy.component {
         wx.navigateTo({
           url: '/pages/tmp/outer?link=' + link
         })
-      } 
+      } else if (link.startsWith('/pages')) {
+        wx.navigateTo({
+          url: link
+        })
+      }
     }
   }
 

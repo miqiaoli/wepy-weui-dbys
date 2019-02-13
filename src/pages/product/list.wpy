@@ -25,6 +25,17 @@
       </view>
       <view class="weui-flex__item active" bindtap="risePicker">发货地 {{cityText}}
       </view>
+      <checkbox-group @change="bindAgreeChange">
+        <label class="weui-agree" for="weuiAgree">
+          <view class="weui-agree__text active">
+            <checkbox class="weui-agree__checkbox" id="weuiAgree" value="agree" checked="{{isAgree}}" />
+            <view class="weui-agree__checkbox-icon">
+              <icon class="weui-agree__checkbox-icon-check" type="success_no_circle" size="9" wx:if="{{isAgree}}"></icon>
+            </view>
+            定向挂牌
+          </view>
+        </label>
+      </checkbox-group>
       <view class="weui-flex__item active" bindtap="riseFilter">
         筛选
         <image src='/images/icon/filter_HL.png'></image>
@@ -160,6 +171,7 @@ export default class ProductList extends wepy.page {
     onReachBottomDistance: 100
   }
   data = {
+    token_access: '',
     itemsList: [],
     start: 1,
     limit: 15,
@@ -174,7 +186,8 @@ export default class ProductList extends wepy.page {
       orderbysort: 0,
       /* 0表示默认，1表示降序,2表示升序 */
       province_id: '',
-      city_id: ''
+      city_id: '',
+      isDx_id: 0,
     },
     isCity: true,
     cityList: [{
@@ -215,7 +228,8 @@ export default class ProductList extends wepy.page {
       goods_id: '',
       att2_id: '',
       att1_id: ''
-    }
+    },
+    isAgree: false
   }
   events = {
     eventName: (p1, $event) => {
@@ -239,6 +253,7 @@ export default class ProductList extends wepy.page {
     }
 
     let params = {
+      token_access: this.token_access,
       service_name: 'TRADE_ORDERLIST',
       goods_class_id: this.goods_class_id,
       start: this.start,
@@ -303,6 +318,26 @@ export default class ProductList extends wepy.page {
   methods = {
     preventTouchMove(e) {
 
+    },
+    bindAgreeChange(e) {
+      if (!this.token_access) {
+        wx.showModal({
+          title: '提示',
+          content: '定向挂牌需要会员登录，请先登录！',
+          success(res) {
+            if (res.confirm) {
+              wepy.navigateTo({
+                url: "/pages/user/getUserInfo"
+              });
+            } else if (res.cancel) {}
+          }
+        })
+        return
+      }
+      this.isAgree = !!e.detail.value.length
+      this.advFilter.isDx_id = Number(this.isAgree)
+      this.$apply()
+      this.getProductList(this.advFilter)
     },
     bindPriceSInput(e) {
       this.filterParam.price_s = e.detail.value
@@ -413,6 +448,7 @@ export default class ProductList extends wepy.page {
   }
 
   onLoad(options) {
+    this.token_access = this.$parent.globalData.token_access
     if (options.lists) {
       const resJson = JSON.parse(options.lists)
       this.itemsList = resJson.result
@@ -477,6 +513,11 @@ export default class ProductList extends wepy.page {
 }
 </script>
 <style lang="less">
+.weui-agree {
+    font-size: 32rpx;
+    padding: 0 15px;
+
+}
 .searchbar {
     border-bottom: 2rpx solid #e9e7e7;
 }

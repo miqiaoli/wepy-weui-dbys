@@ -120,7 +120,7 @@ export default class todoList extends wepy.page {
       //     title: `商品${this.list[index].att1}最小购买量${this.list[index].min_weight}KG`,
       //     icon: 'none',
       //     duration: 2000
-      //   }) 
+      //   })
       // }
       this.getTotalPrice()
       this.$apply()
@@ -135,7 +135,7 @@ export default class todoList extends wepy.page {
       //     title: `商品${this.list[index].att1}最大购买量${this.list[index].max_weight}KG`,
       //     icon: 'none',
       //     duration: 2000
-      //   }) 
+      //   })
       // }
       this.getTotalPrice()
       this.$apply()
@@ -168,7 +168,7 @@ export default class todoList extends wepy.page {
       choosedRow.forEach(val => {
         // 选择的商品校验购买数量
         // if (val.order_buy_weight < val.min_weight || val.order_buy_weight > val.max_weight) {
-          
+
         // }
         orders.push({
           weight_buy: val.amount,
@@ -177,12 +177,12 @@ export default class todoList extends wepy.page {
         })
       })
       // orders = [{aaa: 'ddd'}, {aaa: 'fff'}]
-      // const res = await http.post(__getApi._getBuyDoMany, 
+      // const res = await http.post(__getApi._getBuyDoMany,
       //   Object.assign({jsons: JSON.stringify(orders)}, {token_access: this.token_access})
       // )
-      // const res = await http.post(__getApi._getBuyDoMany, 
+      // const res = await http.post(__getApi._getBuyDoMany,
       //   {
-      //     jsons: JSON.stringify(orders), 
+      //     jsons: JSON.stringify(orders),
       //     token_access: this.token_access
       //   }
       // )
@@ -200,7 +200,7 @@ export default class todoList extends wepy.page {
             url: '../../about/index'
           })
         }, 2000);
-        
+
       }
     },
     changeType(e) {
@@ -215,7 +215,7 @@ export default class todoList extends wepy.page {
           title: '请选择商品',
           icon: 'none',
           duration: 2000
-        }) 
+        })
       }
       this.list = this.list.filter(val => val.choosed == false)
       let delOrders = []
@@ -228,7 +228,7 @@ export default class todoList extends wepy.page {
         token_access: this.token_access
       })
       if (res.meta.success) {
-        
+
       }
     }
   }
@@ -242,7 +242,7 @@ export default class todoList extends wepy.page {
   async getProductNum(index) {
     if (this.list[index].min_weight || this.list[index].max_weight) {
       return
-    } 
+    }
     const res = await http.get(__getApi._getProductDetails, {
       token_access: this.token_access,
       service_name: 'TRADE_ORDERDETAIL',
@@ -271,8 +271,8 @@ export default class todoList extends wepy.page {
           title: `请输入数字`,
           icon: 'none',
           duration: 2000
-        }) 
-    } 
+        })
+    }
   }
   async getTodoList() {
     const res = await http.get(__getApi._getBuyDoList, {
@@ -301,19 +301,19 @@ export default class todoList extends wepy.page {
   border: 1px solid #888;
 }
 .self-icon {
-  width: 34rpx; height: 34rpx; 
-  border-radius: 50%; 
+  width: 34rpx; height: 34rpx;
+  border-radius: 50%;
   border: 1px solid #A1A6BB;
 }
 .all-icon {
   margin-left: 30rpx;
 }
 .input-text {
-  min-width: 60rpx; 
+  min-width: 60rpx;
   max-width: 100rpx;
-  border-top: 1px solid #888; 
-  border-bottom: 1px solid #888; 
-  text-align: center; 
+  border-top: 1px solid #888;
+  border-bottom: 1px solid #888;
+  text-align: center;
 }
 .flex-end {
   padding-right: 30rpx;
@@ -322,14 +322,16 @@ export default class todoList extends wepy.page {
 .todo {
   padding-top: 20rpx;
   font-size: 28rpx;
+  background: #f9f9f9;
 }
 .list {
-  /* margin-top: 20rpx; */
-  margin: 0 30rpx 120rpx 30rpx;
+  padding: 30rpx 30rpx 120rpx 30rpx;
 }
 .single {
-  margin: 10rpx 0;
-  padding: 10rpx 0;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  background: #fff;
+  border-radius: 10rpx;
 }
 .icon-choose {
   width: 48rpx
