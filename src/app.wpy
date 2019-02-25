@@ -10,15 +10,16 @@ export default class extends wepy.app {
     pages: [
       'pages/index',
 
+      'pages/transaction/buy/iccard',
       'pages/tmp/outer',
       'pages/tmp/todolist',
 
       'pages/transaction/todo/list',
-      'pages/transaction/buy/list',
       'pages/transaction/contract/list',
       'pages/transaction/shelf/list',
       'pages/transaction/shelf/success',
       'pages/transaction/shelf/details',
+      'pages/transaction/buy/list',
       'pages/transaction/buy/details',
       'pages/transaction/talk/list',
       'pages/transaction/talk/talk',
