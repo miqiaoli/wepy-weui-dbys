@@ -9,7 +9,7 @@
   </view>
   <view class="box">
     <view class="">支付密码</view>
-    <input class="input" type="number" password="true" value="{{password}}" bindinput="getValue('password')" placeholder="请输入支付密码" />
+    <input class="input" type="text" password="true" value="{{password}}" bindinput="getValue('password')" placeholder="请输入支付密码" />
   </view>
   <button type="primary" @tap="doSuccess">完成</button>
 </view>
@@ -53,8 +53,8 @@ export default class Index extends wepy.page {
           icon: 'none',
           duration: 2000
         })
-        return 
-      }  
+        return
+      }
       let signa = Pwdmd5(String(this.password), String(this.code), this.cookie)
       const res = await http.get(__getApi._listingUp, {
         token_access: this.token_access,
@@ -72,21 +72,21 @@ export default class Index extends wepy.page {
               wx.redirectTo({
                 url: './list?buyorsell=2'
               })
-            } 
+            }
           }
         })
         this.$apply()
       }
-      
+
     },
-    
+
   }
   async onLoad(e) {
     this.order_id = e.order_id
-    this.token_access = this.$parent.globalData.token_access
+    this.token_access = this.$parent.globalData.token_access || ""
     // this.url = `${__getApi._getValidateCode}?type=${new Date().getTime()}`
     this.cookieAndCode()
-    this.$apply() 
+    this.$apply()
   }
   async cookieAndCode() {
     const res = await http.get(__getApi._getCodeAndCookie, {
