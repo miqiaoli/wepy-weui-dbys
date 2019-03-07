@@ -158,6 +158,7 @@ export default class details extends wepy.page {
         weight_left: this.details.weight_left,
         provided_qtt: this.details.provided_qtt
       })
+      if (res.false) return
       if (res.meta.success) {
         // this.prompt('已同意', `./list?buyorsell=${this.buyorsell}`)
         wx.showToast({
@@ -179,6 +180,7 @@ export default class details extends wepy.page {
         token_access: this.token_access,
         buyorsell: this.buyorsell
       })
+      if (res.false) return
       if (res.meta.success) {
         // this.prompt('已拒绝', `./list?buyorsell=${this.buyorsell}`)
         wx.showToast({
@@ -200,6 +202,7 @@ export default class details extends wepy.page {
         token_access: this.token_access,
         buyorsell: this.buyorsell
       })
+      if (res.false) return
       if (res.meta.success) {
         // this.prompt('已取消', `./list?buyorsell=${this.buyorsell}`)
         wx.showToast({
@@ -228,6 +231,7 @@ export default class details extends wepy.page {
       discuss_id: this.discuss_id,
       token_access: this.token_access,
     })
+    if (res.false) return
     if (res.meta.success) {
       this.details = res.data.resultmap
       this.$apply()

@@ -93,6 +93,7 @@ export default class details extends wepy.page {
           discuss_price: this.discuss_price,
           discuss_amount: this.discuss_amount
         })
+        if (res.false) return
         if (res.meta.success) {
           wx.showToast({
             title: '回复成功',
@@ -114,6 +115,7 @@ export default class details extends wepy.page {
           discuss_price: this.discuss_price,
           discuss_amount: this.discuss_amount
         })
+        if (res.false) return
         if (res.meta.success) {
           wx.showToast({
             title: '洽谈提交成功',
@@ -141,6 +143,7 @@ export default class details extends wepy.page {
       service_name: 'TRADE_ORDERDETAIL',
       order_id: this.id
     }, true)
+    if (res.false) return
     if (res.meta.success) {
       this.detail = res.data
       this.$apply()

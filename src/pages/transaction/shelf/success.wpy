@@ -62,6 +62,7 @@ export default class Index extends wepy.page {
         ids: String(this.order_id),
         yss: this.cookie
       })
+      if (res.false) return
       if (res.meta.success) {
         wx.showModal({
           showCancel: false,
@@ -92,6 +93,7 @@ export default class Index extends wepy.page {
     const res = await http.get(__getApi._getCodeAndCookie, {
       token_access: this.token_access
     })
+    if (res.false) return
     if (res.meta.success) {
       this.url = res.data.img_path
       this.cookie = res.data.yss

@@ -1,0 +1,39 @@
+<template>
+<view class="page page__bd bg__white">
+  <view class="bg__white">
+    hhhh
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from "wepy";
+import {
+  __getApi
+} from "../config.js";
+import base from "../mixins/base";
+import http from "../utils/Http";
+
+
+const sliderWidth = 75;
+export default class pageIndex extends wepy.page {
+  mixins = [base];
+  config = {
+    navigationBarTitleText: "小八物流"
+  };
+  data = {
+    
+  };
+
+  methods = {
+    
+  };
+  components = {
+    
+  };
+}
+</script>
+
+<style lang="less">
+
+</style>
