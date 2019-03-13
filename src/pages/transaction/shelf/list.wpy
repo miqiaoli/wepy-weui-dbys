@@ -66,7 +66,7 @@
         <view class="weui-flex user-cell">
           <view class="weui-cell__hd tags">挂牌单价</view>
           <view class="col-des weui-flex__item">
-            <input type="number" placeholder="请输入挂牌价格" bindinput="price" value="{{discuss_price}}" />
+            <input type="digit" placeholder="请输入挂牌价格" bindinput="price" value="{{discuss_price}}" />
           </view>
           <view style="margin-left: 8rpx; margin-top: 4rpx; width: 100rpx;">(元/kg)</view>
         </view>

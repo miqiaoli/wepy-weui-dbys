@@ -35,7 +35,7 @@
     <view class="weui-flex row">
       <view class="col-name"><text class="text-color">洽谈价格</text></view>
       <view class="col-des weui-flex__item">
-        <input type="number" placeholder="请输入您想洽谈的价格" bindinput="price" value="{{this.discuss_price}}" />
+        <input type="digit" placeholder="请输入您想洽谈的价格" bindinput="price" value="{{this.discuss_price}}" />
       </view>
       <view style="margin-left: 8rpx; margin-top: 4rpx; width: 100rpx;">(元/kg)</view>
     </view>
@@ -82,8 +82,8 @@ export default class details extends wepy.page {
           icon: 'none',
           duration: 2000
         })
-        return 
-      }      
+        return
+      }
       if (this.reply == 'reply') {
         // 回复洽谈单
         const res = await http.get(__getApi._replyTalk, {
@@ -148,7 +148,7 @@ export default class details extends wepy.page {
       this.detail = res.data
       this.$apply()
     }
-    
+
   }
 }
 </script>
@@ -180,7 +180,7 @@ export default class details extends wepy.page {
     .col-des {
       color: #3D3D3D;
     }
-  } 
+  }
 }
 
 </style>

@@ -18,7 +18,7 @@
     <view class="weui-flex user-cell">
       <view class="weui-cell__hd tags">挂牌单价</view>
       <view class="col-des weui-flex__item">
-        <input type="number" placeholder="请输入挂牌价格" bindinput="price" value="{{this.discuss_amount}}" />
+        <input type="digit" placeholder="请输入挂牌价格" bindinput="price" value="{{this.discuss_amount}}" />
       </view>
       <view style="margin-left: 8rpx; margin-top: 4rpx; width: 100rpx;">(元/kg)</view>
     </view>
@@ -155,10 +155,11 @@ export default class shelfDetails extends wepy.page {
       }
       const res = await http.get(__getApi._listingUpdate, params)
       wx.stopPullDownRefresh()
-      if (res.false) return
-      // if (res.meta.success) {
-      //   this.$apply()
-      // }
+      if (res.meta.success) {
+
+        console.log(res.data)
+        this.$apply()
+      }
        wx.showToast({
         title: '编辑成功',
         icon: 'success',
@@ -182,7 +183,6 @@ export default class shelfDetails extends wepy.page {
       service_name: 'TRADE_ORDERDETAIL',
       order_id: this.order_id
     })
-    if (res.false) return
     if (res.meta.success) {
       this.details = res.data
       this.$apply()
