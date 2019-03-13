@@ -219,8 +219,9 @@ export default class ProductList extends wepy.page {
       name: '',
       id: ''
     },
-    /* 选中的厂商 */
+    /* 选中的品种 */
     goods_class_id: 1,
+    zc_goods_class_id: 1,
 
     filterParam: {
       price_s: '',
@@ -335,6 +336,12 @@ export default class ProductList extends wepy.page {
         return
       }
       this.isAgree = !!e.detail.value.length
+      if(this.isAgree) {
+        this.zc_goods_class_id = this.goods_class_id
+        this.goods_class_id = ''
+      } else {
+        this.goods_class_id = this.zc_goods_class_id
+      }
       this.advFilter.isDx_id = Number(this.isAgree)
       this.$apply()
       this.getProductList(this.advFilter)
