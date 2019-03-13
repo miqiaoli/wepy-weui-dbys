@@ -158,6 +158,7 @@ export default class talkList extends wepy.page {
     }
     const res = await http.get(__getApi._getTalkList, params)
     wx.stopPullDownRefresh()
+    if (res.false) return
     if (res.meta.success) {
       this.list = [...this.list, ...res.data.resultlist]
       this.count = res.data.rows_count
@@ -171,6 +172,7 @@ export default class talkList extends wepy.page {
       token_access: this.token_access,
       buyorsell: this.buyorsell
     })
+    if (res.false) return
     if (res.meta.success) {
       this.list = [...this.list, ...res.data.resultlist]
       this.count = res.data.rows_count

@@ -71,6 +71,7 @@ export default class FishList extends wepy.page {
   async getFishClass() {
     const res = await http.get(__getApi._getFishClass, {
     })
+    if (res.false) return
     if (res.meta.success) {
       this.chooseClassName[this.classIndex] = res.data[0]
       this.className = res.data[0]
@@ -86,6 +87,7 @@ export default class FishList extends wepy.page {
       limit: 5,
       firstName: self.className
     })
+    if (res.false) return
     if (res.meta.success) {
       this.fishList = res.data
       this.chooseClassName[this.classIndex] = res.data

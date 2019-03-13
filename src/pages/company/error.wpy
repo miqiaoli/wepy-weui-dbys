@@ -76,7 +76,7 @@ export default class error extends wepy.page {
         type: this.chooseValEnglish,
         content: this.textMsg
       }) 
-      console.log(res)
+      if (res.false) return
       if (res.meta.success) {
         wx.showToast({
           title: '感谢你的反馈',

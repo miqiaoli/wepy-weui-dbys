@@ -357,6 +357,7 @@ export default class companyDetails extends wepy.page {
           id: this.detailID,
           status: 0
         })
+        if (res.false) return
         if (res.meta.success) {
           wx.showToast({
             title: '成功收藏',
@@ -374,6 +375,7 @@ export default class companyDetails extends wepy.page {
         id: this.detailID,
         status: 1
       })
+      if (res.false) return
       if (res.meta.success) {
         wx.showToast({
           title: '取消收藏',

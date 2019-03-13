@@ -189,6 +189,7 @@ export default class todoList extends wepy.page {
       const res = await http.post(__getApi._getBuyDoMany, {
         jsons: orders, token_access: this.token_access
       })
+      if (res.false) return
       if (res.meta.success) {
         wx.showToast({
           title: '已购买',
@@ -227,6 +228,7 @@ export default class todoList extends wepy.page {
         define_order_id: delString,
         token_access: this.token_access
       })
+      if (res.false) return
       if (res.meta.success) {
 
       }
@@ -248,6 +250,7 @@ export default class todoList extends wepy.page {
       service_name: 'TRADE_ORDERDETAIL',
       order_id: this.list[index].order_id
     })
+    if (res.false) return
     if (res.meta.success) {
       Object.assign(this.list[index], {min_weight: res.data.min_batch_qtt, max_weight: res.data.amount})
     }
@@ -280,6 +283,7 @@ export default class todoList extends wepy.page {
       limit: this.limit,
       token_access: this.token_access
     })
+    if (res.false) return
     if (res.meta.success) {
       this.list = [...this.list, ...res.data.resultlist]
       this.list = this.list.map(val => {
