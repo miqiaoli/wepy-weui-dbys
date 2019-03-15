@@ -1,39 +1,66 @@
 <template>
-<view class="page page__bd bg__white">
-  <view class="bg__white">
-    hhhh
+  <view class="page page__bd bg__white">
+
+    <navigator url="/pages/logistics/logistics-list" class="logistics weui-flex">
+      <view class="weui-cell__hd icon-width">
+        <image class="icon" src="/images/icon/logistics1.png" />
+      </view>
+      <view class="weui-cell__bd weui-flex__item bold">物流单管理</view>
+    </navigator>
+    <navigator url="/pages/logistics/driver-list" class="logistics weui-flex">
+      <view class="weui-cell__hd icon-width">
+        <image class="icon" src="/images/icon/logistics2.png" />
+      </view>
+      <view class="weui-cell__bd weui-flex__item bold">司机信息维护</view>
+    </navigator>
+    <navigator url="/pages/logistics/car-list" class="logistics weui-flex">
+      <view class="weui-cell__hd icon-width">
+        <image class="icon" src="/images/icon/logistics3.png" />
+      </view>
+      <view class="weui-cell__bd weui-flex__item bold">车号信息维护</view>
+    </navigator>
+
   </view>
-</view>
 </template>
 
 <script>
 import wepy from "wepy";
 import {
   __getApi
-} from "../config.js";
-import base from "../mixins/base";
-import http from "../utils/Http";
-
-
-const sliderWidth = 75;
-export default class pageIndex extends wepy.page {
-  mixins = [base];
+} from "../../config.js";
+import base from "../../mixins/base";
+import http from "../../utils/Http";
+export default class logisticsList extends wepy.page {
   config = {
     navigationBarTitleText: "小八物流"
-  };
+  }
   data = {
-    
-  };
 
-  methods = {
-    
-  };
-  components = {
-    
-  };
+  }
 }
 </script>
 
-<style lang="less">
-
+<style lang="less" scoped>
+.page {
+  padding-top: 140rpx;
+}
+.logistics {
+  margin-bottom: 40rpx;
+  box-shadow: 0 2px 8px 0 #EAEAEA;
+  border-radius: 8px;
+  height: 240rpx;
+  font-size: 30px;
+  color: #3D3D3D;
+  align-items: center;
+}
+.icon-width {
+  padding-left: 200rpx;
+  // width: 260rpx;
+}
+.icon {
+    display: block;
+    width: 60rpx;
+    height: 60rpx;
+    margin-right: 20rpx;
+}
 </style>

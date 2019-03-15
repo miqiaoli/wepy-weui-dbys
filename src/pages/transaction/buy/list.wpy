@@ -149,7 +149,7 @@ export default class buyList extends wepy.page {
   }
   onLoad(e) {
     this.buyorsell = e.buyorsell
-    this.token_access = this.$parent.globalData.token_access
+    this.token_access = this.$parent.globalData.token_access || ''
     this.$apply()
   }
   onShow() {

@@ -9,10 +9,17 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/index',
+      'pages/logistics/index',
+      'pages/logistics/logistics-list',      
+      'pages/logistics/logistics-input',
+      'pages/logistics/car-list',
+      'pages/logistics/driver-list',
+      'pages/logistics/logistics-details',
 
-      'pages/transaction/buy/iccard',
+
       'pages/tmp/outer',
       'pages/tmp/todolist',
+      'pages/transaction/buy/iccard',
 
       'pages/transaction/todo/list',
       'pages/transaction/contract/list',

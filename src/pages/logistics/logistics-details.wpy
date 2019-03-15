@@ -1,0 +1,231 @@
+<template>
+<view class="page bg__white">
+  <view class="module" wx:if="{{info}}">
+    <view class="weui-flex row">
+      <view class="col-name">物流单号</view>
+      <view class="col-des weui-flex__item">{{commission_num}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">产品名称</view>
+      <view class="col-des weui-flex__item">{{info.entru.product_name}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">仓库</view>
+      <view class="col-des weui-flex__item">{{info.entru.wareHouse_name}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">购物地址</view>
+      <view class="col-des weui-flex__item">{{info.entru.receiverAddress}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">数量</view>
+      <view class="col-des weui-flex__item">{{info.entru.quantity}}{{info.entru.qnunit}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">提货时间</view>
+      <view class="col-des weui-flex__item">{{pickupDate}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">送达时间</view>
+      <view class="col-des weui-flex__item">{{arrive_date}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">执行总价</view>
+      <view class="col-des weui-flex__item">{{info.entru.exe_price}}元</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">部门</view>
+      <view class="col-des weui-flex__item">{{info.entru.depart}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">购货单位</view>
+      <view class="col-des weui-flex__item">{{info.entru.buyer_department}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">备注</view>
+      <view class="col-des weui-flex__item">{{info.entru.remarks_describe}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">物流状态</view>
+      <view class="col-des weui-flex__item">{{list_state}}</view>
+      <!-- <view class="col-des weui-flex__item">{{info.list.list_state}}</view> -->
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">额外总费用</view>
+      <view class="col-des weui-flex__item">{{info.list.additional_charges}}</view>
+    </view>
+  </view>
+
+  <view class="module" wx:if="{{includepoints}}">
+    <map class="map_container" id="myMap" latitude="{{info.list.path[0].lat}}" longitude="{{info.list.path[0].lng}}" polyline="{{polyline}}" include-points="{{includepoints}}" markers="{{includepoints}}" show-location bindmarkertap="markertap">
+    </map>
+  </view>
+
+  <view class="module" wx:if="{{path}}">
+    <view class="weui-flex row" wx:for="{{path}}" wx:for-item="single" wx:key="id">
+      <view class="col-time">{{single.formatDate}}</view>
+      <view class="col-des weui-flex__item">{{single.placeChina}}</view>
+    </view>
+  </view>
+  <!-- <backIndex></backIndex> -->
+</view>
+</template>
+
+<script>
+import wepy from "wepy";
+import {
+  __getApi
+} from "../../config.js";
+import base from "../../mixins/base";
+import http from "../../utils/Http";
+import tabs from '../../components/transactions/tab';
+import backIndex from '../../components/backIndex';
+
+export default class logisticsDetails extends wepy.page {
+  components = {
+    backIndex
+  }
+  data = {
+    token_access: '',
+    commission_num: '', // 洽谈ID
+    info: null,
+    arrive_date: '',
+    pickupDate: '',
+    list_state: '',
+    path: [],
+    polyline: [],
+    includepoints: [],
+    markers: '',
+    latitude: '',
+    longitude: '',
+    mapCtx: '',
+    scale: 6,
+  }
+  methods = {
+  }
+  onLoad(e) {
+    this.commission_num = e.commission_num
+    this.token_access = this.$parent.globalData.token_access || ''
+    this.getLogisticsDetails()
+    this.$apply()
+  }
+  async getLogisticsDetails() {
+    const res = await http.get(__getApi._getOrderDetail, {
+      commission_num: this.commission_num,
+      token_access: this.token_access
+    })
+    if (res.false) return
+    if (res.meta.success) {
+      this.info = res.data
+      
+      const path = res.data.list.path ? res.data.list.path : []
+      if (path.length > 0 ) {
+        path.forEach(val => {
+          let date = new Date(val.timestamp)
+          let month = date.getMonth() + 1
+          this.path.push({
+            placeChina: val.placeChina,
+            formatDate: `${date.getFullYear()}-${month}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+          }) 
+        });
+      }
+      let points = []
+      res.data.list.path.forEach((val, index) => {
+        points.push({
+          id: index,
+          title: this.path[index].formatDate,
+          time: this.path[index].formatDate,
+          placeChina: this.path[index].placeChina,
+          longitude: val.lng,
+          latitude: val.lat
+        })
+      })
+      this.includepoints = points
+      this.polyline = [{
+        points: points,
+        color: '#FF00FF',
+        width: 2,
+        arrowLine: true
+      }]
+
+      this.list_state = this.formatStatus(res.data.list.list_state)
+      this.arrive_date = this.formatDate(res.data.entru.arrive_date.time)
+      this.pickupDate = this.formatDate(res.data.entru.pickupDate.time)
+      this.$apply()
+    }
+  }
+  markertap(e) {
+  }
+  formatStatus(status) {
+    if (status < 0) {
+        return '状态异常'
+      } else if (status == 0) {
+        return '待发货'
+      } else if (status == 2 || status == 3 || status == 1) {
+        return '配送中'
+      } else if (status == 4) {
+        return '完成配送'
+      } else {
+        return '未知'
+      }
+  }
+  formatDate(timestamp) {
+    let date = new Date(timestamp)
+    let month = date.getMonth() + 1
+    return `${date.getFullYear()}-${month}-${date.getDate()}`
+  }
+}
+</script>
+
+<style lang="less">
+.map_container {
+  margin-top: 40rpx;
+  height: 500rpx;
+  width: 100%;
+}
+
+.col-time {
+  padding-right: 20rpx;
+}
+.btn-color-reply {
+  border: 1px solid #FB8E1E;
+  color: #FB8E1E;
+}
+.btn-color-success {
+  border: 1px solid #6A7EEE;
+  color: #6A7EEE;
+}
+.btn-color-warning {
+  border: 1px solid #EB4E35;
+  color: #EB4E35;
+}
+.module {
+  padding: 16rpx 30rpx;
+  .flex-btn {
+    justify-content: flex-end;
+    .btn {
+      margin: 20rpx 0 20rpx 20rpx;
+      padding: 10rpx 44rpx;
+      border-radius: 8rpx;
+      font-size: 36rpx;
+    }
+  }
+  .title {
+    font-weight: bold;
+    font-size: 32rpx;
+    color: #1E1E1E;
+  }
+  .row {
+    padding: 20rpx 0;
+    font-size: 14px;
+    // border-bottom: 1px solid #E4E7F0;
+    .col-name {
+      color: #8F8E94;
+      width: 220rpx;
+    }
+    .col-des {
+      color: #3D3D3D;
+    }
+  }
+}
+</style>

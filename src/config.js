@@ -1,8 +1,11 @@
-const host = 'https://www.otimes.com/front'
-// const host = 'https://dbys.otimes.info/front'
+// const host = 'https://www.otimes.com/front'
+// const host = 'http://192.168.0.127/front'
+const host = 'https://dbys.otimes.info/front'
+// const host = 'http://192.168.0.129:8080/front'
 
-// const imgHost = 'https://dbys.otimes.info' // 测试图片地址
-const imgHost = 'https://www.otimes.com'
+// const imgHost = 'http://192.168.0.129:8080'
+const imgHost = 'https://dbys.otimes.info' // 测试图片地址
+// const imgHost = 'https://www.otimes.com'
 const socketHost = 'wss://www.otimes.com' // websocket地址
 // const socketHost = 'wss://dbys.otimes.info'
 
@@ -228,6 +231,21 @@ export const __getApi = {
   _delDo: `${host}/wxtrade/shopping_car_delete.dbys`, // 购物车删除
   _getBuyDoList: `${host}/wxtrade/shopping_car_search.dbys`, // 购物车接口查询
   _getCodeAndCookie: `${host}/wxtrade/volicode__png.dbys`,
+
+  // 物流公司
+  _getAllOrderList: `${host}/logist/seek_entrus.dbys`, // 物流
+  _getQuotationNum: `${host}/logist/createQuatation_id.dbys`, // 置换单号
+  _getOrderDetail: `${host}/logist/seekDetail_logistCompony.dbys`,
+  _getDriverName: `${host}/logist/seek_driver.dbys`, // 搜索司机
+  _createOrder: `${host}/logist/save_quotation.dbys`,
+  _getOrderUpdate: `${host}/logist/updateQuatation_before.dbys`,
+  _updateOrder: `${host}/logist/updateQuatation.dbys`,
+  _getDriverList: `${host}/logist/get_driverlist.dbys`,
+  _updateDirver: `${host}/logist/update_driver.dbys`,
+  _addDriver: `${host}/logist/addDriver.dbys`,
+  _delDirver: `${host}/logist/delete_driver.dbys`,
+  _getCarList: `${host}/logist/getDriverCards.dbys`,
+  _updateCar: `${host}/logist/modifyDriverCards.dbys`,
 
 }
 

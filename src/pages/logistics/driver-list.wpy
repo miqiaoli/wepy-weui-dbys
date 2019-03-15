@@ -1,0 +1,285 @@
+<template>
+  <view class="page page__bd bg__white">
+    <view class="list">
+      <view class="weui-flex">
+        <view class="new-driver" bindtap="model">新建</view>
+        <view class="weui-flex__item"></view>
+        <!-- <view class="weui-cell__ft new-driver">更多</view> -->
+      </view>
+      <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id">
+          <view class="weui-flex row">
+            <view class="title">司机姓名</view>
+            <view class="weui-flex__item">{{single.drivers_name}}</view>
+            <view class="weui-cell__ft" data-id="{{single.id}}" data-drivers_name="{{single.drivers_name}}" bindtap="delDriver">
+              <image class="icon-del" src="/images/icon/order-del.png" />
+            </view>
+          </view>
+          <view class="weui-flex row">
+            <view class="title">手机号</view>
+            <view class="weui-flex__item">{{single.phoneNum}}</view>
+          </view>
+          <view class="weui-flex row">
+            <view class="title">身份证</view>
+            <view class="weui-flex__item">{{single.id_card}}</view>
+          </view>
+      </view>
+    </view>
+    <view wx:if="{{list.length <= 0 || count <= 0 }}" class="weui-loadmore weui-loadmore_line">
+      <text class="weui-loadmore__tips">暂无数据</text>
+    </view>
+    <view wx:if="{{count > 0 && list.length >= count}}" class="weui-loadmore weui-loadmore_line">
+      <text class="weui-loadmore__tips">没有更多了</text>
+    </view>
+    <view class="model" wx:if="{{model}}">
+      <!-- <view class="blank" bindtap="model"></view> -->
+      <view class="add-driver">
+        <view class="weui-flex">
+          <view class="weui-flex__item" style="text-align: right;"><icon type="clear" size="20" bindtap="model" /></view>
+        </view>
+        <view class="weui-flex row">
+          <view class="col-name"><text class="text-color">司机姓名</text></view>
+          <view class="col-des weui-flex__item">
+            <input type="text" placeholder="请输入司机姓名" bindinput="username" value="{{this.username}}" />
+          </view>
+        </view>
+        <view class="weui-flex row">
+          <view class="col-name"><text class="text-color">手机号码</text></view>
+          <view class="col-des weui-flex__item">
+            <input type="number" placeholder="请输入联系方式" bindinput="phone" value="{{this.phone}}" />
+          </view>
+        </view>
+        <view class="weui-flex row">
+          <view class="col-name"><text class="text-color">身份证号</text></view>
+          <view class="col-des weui-flex__item">
+            <input type="idcard" placeholder="请输入身份证号码" bindinput="idcard" value="{{this.idcard}}" />
+          </view>
+        </view>
+        <view class="weui-flex btn-confirm">
+          <button class="weui-flex__item" style="margin-right: 40rpx;" type="primary" @tap="newDriver">确定</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from "wepy";
+import {
+  __getApi
+} from "../../config.js";
+import base from "../../mixins/base";
+import http from "../../utils/Http";
+export default class driverList extends wepy.page {
+  config = {
+    navigationBarTitleText: "司机信息维护",
+    enablePullDownRefresh: true,
+    onReachBottomDistance: 100
+  }
+  data = {
+    username: '',
+    phone: '',
+    idcard: '',
+    token_access: '',
+    list: [],
+    start: 1,
+    limit: 15,
+    count: 0,
+    model: false,
+  }
+  methods = {
+    username(e) {
+      this.username = e.detail.value
+    },
+    phone(e) {
+      this.phone = e.detail.value
+    },
+    idcard(e) {
+      this.idcard = e.detail.value
+    },
+    model() {
+      this.model = !this.model
+    },
+    async newDriver() {
+      const usernamePattern = /^\S[\S\s]*$/
+      const phonePattern = /^1\d{10}$/
+      const idcardPattern = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+      if (!usernamePattern.test(this.username)) {
+        wx.showToast({
+          title: '请输入司机姓名',
+          icon: 'none',
+          duration: 2000
+        })
+        return
+      }
+      if (!phonePattern.test(this.phone)) {
+        wx.showToast({
+          title: '请输入手机号',
+          icon: 'none',
+          duration: 2000
+        })
+        return
+      }
+      if (!idcardPattern.test(this.idcard)) {
+        wx.showToast({
+          title: '请输入身份证号码',
+          icon: 'none',
+          duration: 2000
+        })
+        return
+      }
+      const res = await http.post(__getApi._addDriver, {
+        phoneNum: this.phone,
+        id_card: this.idcard,
+        drivers_name: this.username,
+        token_access: this.token_access
+      })
+      if (res.false) return
+      if (res.meta.success) {
+        wx.showToast({
+          title: '成功添加司机',
+          icon: 'none',
+          duration: 2000
+        })
+        this.username = ''
+        this.phone = ''
+        this.idcard = ''
+        this.model = false
+        this.onPullDownRefresh()
+        this.$apply()
+      }
+    },
+    async delDriver(e) {
+      const self = this
+      const id = e.currentTarget.dataset.id
+      const drivers_name = e.currentTarget.dataset.drivers_name
+      wx.showModal({
+        title: '提示',
+        content: `确定删除${drivers_name}`,
+        async success(res) {
+          if (res.confirm) {
+            const res = await http.get(__getApi._delDirver, {
+              id: id,
+              token_access: self.token_access
+            })
+            if (res.false) return
+            if (res.meta.success) {
+              self.onPullDownRefresh()
+            }
+          } else if (res.cancel) {
+          }
+        }
+      })
+      
+    }
+  }
+  onLoad(e) {
+    this.token_access = this.$parent.globalData.token_access || ""
+    this.driverList()
+  }
+  onPullDownRefresh() {
+    this.start = 1
+    this.list = []
+    this.driverList()
+  }
+  onReachBottom() {
+    if (this.start * this.limit < this.count) {
+      this.start += 1
+      this.driverList()
+    }
+  }
+  async driverList() {
+    const res = await http.get(__getApi._getDriverList, {
+      page_id: this.start || 1,
+      page_limit: this.limit || 15,
+      token_access: this.token_access
+    })
+    wx.stopPullDownRefresh()
+    if (res.false) return
+    if (res.meta.success) {
+      this.count = res.data.count
+      this.list = res.data.list
+      this.$apply()
+    }
+  }
+}
+</script>
+
+<style lang="less">
+.icon-del {
+  width: 48rpx;
+  height: 100%;
+}
+.btn-confirm {
+  // margin: 40rpx;
+  position: absolute;
+  right: 0;
+  left: 40px;
+  bottom: 40rpx;
+}
+.model {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.2);
+  z-index: 999;
+  .blank {
+    height: 100%;
+    // height: 320rpx;
+  }
+  .add-driver {
+    position: absolute;
+    // left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 20rpx;
+    height: 800rpx;
+    background: #fff;
+    // border-radius: 10px 10px 0px 0px;
+    font-size: 28rpx;
+  }
+}
+.row {
+    padding: 20rpx 20rpx;
+    font-size: 14px;
+    // border-bottom: 1px solid #E4E7F0;
+    .col-name {
+      color: #8F8E94;
+      width: 160rpx;
+      text-align: center;
+      .text-color {
+        padding: 0rpx 8rpx;
+        color: #EB4E35;
+        background: rgba(235,78,53,0.15);
+        border: 1px solid rgba(235,78,53,0.65);
+        border-radius: 2px;
+      }
+    }
+    .col-des {
+      color: #3D3D3D;
+    }
+  } 
+.list {
+  font-size: 28rpx;
+  padding: 20rpx 30rpx;
+  background: #f9f9f9;
+}
+.single {
+  padding: 20rpx;
+  // margin-bottom: 20rpx;
+  background: #fff;
+  border-radius: 10rpx;
+}
+.new-driver {
+  color: #3D3D3D;
+}
+.row {
+  margin: 8rpx 0;
+}
+.title {
+  /*margin-left: 48rpx; */
+  width: 120rpx;
+  color: #8F8E94;
+}
+</style>
