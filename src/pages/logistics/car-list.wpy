@@ -181,7 +181,7 @@ export default class carList extends wepy.page {
     bottom: 0;
     width: 100%;
     padding: 20rpx;
-    height: 600rpx;
+    height: 1000rpx;
     background: #fff;
     // border-radius: 10px 10px 0px 0px;
     font-size: 28rpx;

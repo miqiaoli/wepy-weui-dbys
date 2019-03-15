@@ -71,6 +71,23 @@
           <view style="margin-left: 8rpx; margin-top: 4rpx; width: 100rpx;">(元/kg)</view>
         </view>
         <view class="weui-flex user-cell">
+          <view class="weui-cell__hd tags">挂牌有效期</view>
+          <view class="col-des weui-flex__item">
+            <picker
+              mode="date"
+              value="{{date}}"
+              start="{{nowDate}}"
+              end="2022-09-01"
+              bindchange="bindDateChange"
+            >
+              <view class="picker" style="height: 44rpx;">
+                {{date}}
+              </view>
+            </picker>
+          </view>
+          <view style="margin-left: 8rpx; margin-top: 4rpx; width: 100rpx;">前</view>
+        </view>
+        <view class="weui-flex user-cell">
           <button class="weui-flex__item weui-btn weui-btn_mini weui-btn_default" type="default" @tap="cancel">取消</button>
           <view style="width: 20rpx"></view>
           <button class="weui-flex__item weui-btn weui-btn_mini weui-btn_primary" type="primary" @tap="editSuccess">确定</button>
@@ -121,7 +138,9 @@ export default class shelfList extends wepy.page {
     discuss_price: null,
     discuss_amount: null,
     show: false,
-    chooseIndex: 0
+    chooseIndex: 0,
+    date: '',
+    nowDate: ''
   }
   methods = {
     price(e) {
@@ -185,6 +204,14 @@ export default class shelfList extends wepy.page {
         })
         return
       }
+      if (!this.date) {
+        wx.showToast({
+          title: '请选择日期',
+          icon: 'none',
+          duration: 2000
+        })
+        return
+      }
       if (typeof Number(this.discuss_price) !== 'number' || typeof Number(this.discuss_amount) !== 'number') {
         wx.showToast({
           title: '请输入数字',
@@ -197,6 +224,7 @@ export default class shelfList extends wepy.page {
         order_id: this.list[this.chooseIndex].order_id,
         provided_qtt: this.discuss_amount,
         order_price: this.discuss_price,
+        validity_day: this.date,
         token_access: this.token_access
       })
       if (res.data.success) {
@@ -240,9 +268,16 @@ export default class shelfList extends wepy.page {
   onLoad(e) {
     this.buyorsell = e.buyorsell
     this.token_access = this.$parent.globalData.token_access
+    const date = new Date()
+    const month = date.getMonth()+1 <10 ? `0${date.getMonth()+1}` : `${date.getMonth()+1}`
+    const day = date.getDate() < 9 ? `${date.getDate()}` : date.getDate()
+    this.nowDate = `${date.getFullYear()}-${month}-${day}`
   }
   onShow(e) {
     this.getShelfList()
+  }
+  bindDateChange(e) {
+    this.date = e.detail.value
   }
   async doDownNext(order_id) {
     const res = await http.get(__getApi._listingDown, {
