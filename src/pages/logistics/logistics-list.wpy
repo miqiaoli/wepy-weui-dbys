@@ -185,6 +185,7 @@ export default class logisticsList extends wepy.page {
   padding: 20rpx;
   margin-bottom: 20rpx;
   background: #fff;
+  box-shadow: 0 2px 8px 0 #EAEAEA;
   border-radius: 10rpx;
 }
 .icon-choose {
