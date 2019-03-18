@@ -272,6 +272,7 @@ export default class driverList extends wepy.page {
   border-radius: 10rpx;
 }
 .new-driver {
+  padding: 30rpx;
   color: #3D3D3D;
 }
 .row {

@@ -218,7 +218,7 @@ export default class logisticsDetails extends wepy.page {
   .row {
     padding: 20rpx 0;
     font-size: 14px;
-    // border-bottom: 1px solid #E4E7F0;
+    border-bottom: 1px solid #E4E7F0;
     .col-name {
       color: #8F8E94;
       width: 220rpx;

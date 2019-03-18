@@ -526,8 +526,6 @@ export default class logisticsInput extends wepy.page {
     }
   }
 }
-
-
 .flex-justify {
   flex-wrap: wrap; 
 }
@@ -543,8 +541,8 @@ export default class logisticsInput extends wepy.page {
   width: 196rpx;
 }
 .icon-add {
-  width: 40rpx;
-  height: 100%;
+  width: 44rpx;
+  height: 44rpx;
 }
 .icon-circle {
   width: 32rpx;
@@ -554,7 +552,6 @@ export default class logisticsInput extends wepy.page {
 }
 .icon-success {
   margin-right: 8rpx;
-  // display: inline-block;
 }
 .carnum-choosed {
   position: relative;
@@ -593,8 +590,10 @@ export default class logisticsInput extends wepy.page {
     color: #1E1E1E;
   }
   .rows {
-    padding: 20rpx;
+    // padding: 20rpx;
+    padding: 20rpx 0;
     font-size: 14px;
+    border-bottom: 1px solid #E4E7F0;
     .col-name {
       width: 180rpx;
       color: #8F8E94;
@@ -606,6 +605,7 @@ export default class logisticsInput extends wepy.page {
   .row {
     padding: 20rpx 0;
     font-size: 14px;
+    border-bottom: 1px solid #E4E7F0;
     .col-name {
       color: #8F8E94;
       width: 200rpx;

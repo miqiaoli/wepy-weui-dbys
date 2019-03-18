@@ -219,10 +219,12 @@ export default class carList extends wepy.page {
   border-radius: 10rpx;
 }
 .new-driver {
+  padding: 30rpx;
   color: #3D3D3D;
 }
 .row {
   margin: 8rpx 0;
+  // border-bottom: 1px solid #E4E7F0;
 }
 .title {
   /*margin-left: 48rpx; */
