@@ -267,7 +267,7 @@ export default class driverList extends wepy.page {
 }
 .single {
   padding: 20rpx;
-  // margin-bottom: 20rpx;
+  margin-bottom: 20rpx;
   background: #fff;
   box-shadow: 0 2px 8px 0 #EAEAEA;
   border-radius: 10rpx;
