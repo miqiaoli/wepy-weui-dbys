@@ -123,7 +123,6 @@
       </view>
     </view>
   </view>
-
   <view class="module">
     <view class="weui-flex">
       <button class="weui-flex__item" type="primary" bindtap="submitBtn">确定修改</button>
@@ -178,7 +177,6 @@ export default class logisticsInput extends wepy.page {
       // 添加
       if (this.allOldCarList[index].choosed) {
         this.choosedCarList.push(this.allOldCarList[index].name)
-        // new Set(this.choosedCarList)
       } 
       // 删除
       if (this.choosedCarList.includes(this.allOldCarList[index].name) && !this.allOldCarList[index].choosed) {
@@ -199,6 +197,7 @@ export default class logisticsInput extends wepy.page {
       const index = e.currentTarget.dataset.index
       this.searchDriverList[index].choosed = !this.searchDriverList[index].choosed
     },
+    // 删除已选司机
     delChoosedDriver(e) {
       const index = e.currentTarget.dataset.index
       this.choosedDriverList.splice(index, 1)
@@ -304,6 +303,23 @@ export default class logisticsInput extends wepy.page {
     },
     submitBtn(e) {
       const self = this
+      if (this.choosedCarList.length < 1) {
+        wx.showToast({
+          title: `请添加车辆`,
+          icon: 'none',
+          duration: 2000
+        })
+        return
+      }
+      if (this.choosedDriverList.length < 1) {
+        wx.showToast({
+          title: `请添加司机`,
+          icon: 'none',
+          duration: 2000
+        })
+        return
+      }
+
       let params = {
         quotation_num: this.quotation_num,
         diver_cards: JSON.stringify(this.choosedCarList),
@@ -327,7 +343,7 @@ export default class logisticsInput extends wepy.page {
     this.commission_num = e.commission_num
     this.token_access = this.$parent.globalData.token_access || ''
     this.getBaseinfo()
-    this.getCarList()
+    // this.getCarList()
     this.$apply()
   }
   async getDriverName() {
@@ -359,8 +375,69 @@ export default class logisticsInput extends wepy.page {
     if (res.meta.success) {
       this.quotation_num = res.data.quotation_num
       this.exe_price = res.data.exe_price
-      // this.choosedCarList = res.data.driver_cards
-      // this.choosedDriverList = res.data.drivers
+      this.choosedCarList = res.data.diver_cards
+
+      // 已选的司机
+      this.choosedDriverList = []
+      res.data.diver_names.forEach(item => {
+        this.choosedDriverList.push({
+          drivers_name: item,
+          phoneNum: '',
+          id_card: '',
+          choosed: true
+        })
+      })
+      // this.count = res.data.length
+
+      this.allOldCarList = []
+      const choosedCarList = res.data.diver_cards // 已选车辆
+      res.data.driver_cards.forEach(item => {
+        if (choosedCarList.includes(item)) {
+          if (item.indexOf('"') == 0) {
+            this.allOldCarList.push({
+              name: item.substring(1, item.length-1),
+              choosed: true
+            })
+          } else {
+            this.allOldCarList.push({
+              name: item,
+              choosed: true
+            })
+          }
+        } else {
+          if (item.indexOf('"') == 0) {
+            this.allOldCarList.push({
+              name: item.substring(1, item.length-1),
+              choosed: false
+            })
+          } else {
+            this.allOldCarList.push({
+              name: item,
+              choosed: false
+            })
+          }
+        }
+      })
+      
+
+      // res.data.driver_cards.forEach(item => {
+      //   if (item.indexOf('"') == 0) {
+      //     this.allOldCarList.push({
+      //       name: item.substring(1, item.length-1),
+      //       choosed: false
+      //     })
+      //   } else {
+      //     this.allOldCarList.push({
+      //       name: item,
+      //       choosed: false
+      //     })
+      //   }
+      // })
+
+
+
+
+
       this.$apply()
     } 
   }

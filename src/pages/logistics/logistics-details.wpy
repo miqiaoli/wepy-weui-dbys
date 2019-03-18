@@ -56,7 +56,7 @@
     </view>
   </view>
 
-  <view class="module" wx:if="{{includepoints}}">
+  <view class="module" wx:if="{{info}}">
     <map class="map_container" id="myMap" latitude="{{info.list.path[0].lat}}" longitude="{{info.list.path[0].lng}}" polyline="{{polyline}}" include-points="{{includepoints}}" markers="{{includepoints}}" show-location bindmarkertap="markertap">
     </map>
   </view>
