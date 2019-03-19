@@ -75,7 +75,7 @@
       <view class="weui-flex row" wx:if="{{showType == 'addCar'}}"> 
         <view class="col-name"><text class="text-color">车牌号</text></view>
         <view class="col-des weui-flex__item">
-          <input type="text" placeholder="请输入车牌号" bindinput="newCarName" value="{{this.newCarName}}" />
+          <input type="text" confirm-type="确定" placeholder="请输入车牌号" bindinput="newCarName" value="{{this.newCarName}}" />
         </view>
       </view>
 
@@ -101,7 +101,7 @@
         <view class="weui-flex row">
           <view class="col-name"><text class="text-color">司机姓名</text></view>
           <view class="col-des weui-flex__item">
-            <input type="text" placeholder="请输入司机姓名" bindinput="addNewDriver('username')" value="{{this.username}}" />
+            <input type="text" confirm-type="确定" placeholder="请输入司机姓名" bindinput="addNewDriver('username')" value="{{this.username}}" />
           </view>
         </view>
         <view class="weui-flex row">
@@ -212,6 +212,12 @@ export default class logisticsInput extends wepy.page {
     },
     addNewDriver(val, e) {
       this[val] = e.detail.value
+      // if (this[val] == 'phone' && e.detail.cursor >= 11) {
+      //   this.focusPhone = false
+      // }
+      // if (this[val] == 'idcard' && e.detail.cursor >= 18) {
+      //   this.focusIdcard = false
+      // }
     },
     // 搜索司机
     searchDriverName(e) {
@@ -483,10 +489,15 @@ export default class logisticsInput extends wepy.page {
 
 <style lang="less">
 .btn-confirm {
-  position: absolute;
-  right: 0;
-  left: 40px;
-  bottom: 40rpx;
+  margin: 40rpx;
+  position: relative;
+  left: 0;
+  transform: translateX(5%);
+
+  // position: absolute;
+  // right: 0;
+  // left: 40px;
+  // bottom: 40rpx;
 }
 .model {
   position: fixed;

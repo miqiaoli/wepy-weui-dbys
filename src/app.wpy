@@ -10,10 +10,10 @@ export default class extends wepy.app {
     pages: [
       'pages/index',
       'pages/logistics/index',
+      'pages/logistics/driver-list',
       'pages/logistics/logistics-list',      
       'pages/logistics/logistics-input',
       'pages/logistics/car-list',
-      'pages/logistics/driver-list',
       'pages/logistics/logistics-details',
 
 

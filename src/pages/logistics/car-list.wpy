@@ -30,7 +30,7 @@
         <view class="weui-flex row">
           <view class="col-name"><text class="text-color">车牌号</text></view>
           <view class="col-des weui-flex__item">
-            <input type="text" placeholder="请输入车牌号" bindinput="carname" value="{{this.carname}}" />
+            <input type="text" confirm-type="确定" placeholder="请输入车牌号" bindinput="carname" value="{{this.carname}}" />
           </view>
         </view>
         <view class="weui-flex btn-confirm">
@@ -159,10 +159,14 @@ export default class carList extends wepy.page {
   height: 100%;
 }
 .btn-confirm {
-  position: absolute;
-  right: 0;
-  left: 40px;
-  bottom: 40rpx;
+  margin: 40rpx;
+  position: relative;
+  left: 0;
+  transform: translateX(5%);
+  // position: absolute;
+  // right: 0;
+  // left: 40px;
+  // bottom: 40rpx;
 }
 .model {
   position: fixed;

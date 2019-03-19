@@ -39,7 +39,7 @@
         <view class="weui-flex row">
           <view class="col-name"><text class="text-color">司机姓名</text></view>
           <view class="col-des weui-flex__item">
-            <input type="text" placeholder="请输入司机姓名" bindinput="username" value="{{this.username}}" />
+            <input type="text" confirm-type="确定" placeholder="请输入司机姓名" bindinput="username" value="{{this.username}}" />
           </view>
         </view>
         <view class="weui-flex row">
@@ -92,9 +92,15 @@ export default class driverList extends wepy.page {
     },
     phone(e) {
       this.phone = e.detail.value
+      // if (e.detail.cursor >= 11) {
+      //   this.focusPhone = false
+      // }
     },
     idcard(e) {
       this.idcard = e.detail.value
+      // if (e.detail.cursor >= 18) {
+      //   this.focusIdcard = false
+      // }
     },
     model() {
       this.model = !this.model
@@ -210,11 +216,14 @@ export default class driverList extends wepy.page {
   height: 100%;
 }
 .btn-confirm {
-  // margin: 40rpx;
-  position: absolute;
-  right: 0;
-  left: 40px;
-  bottom: 40rpx;
+  margin: 40rpx;
+  position: relative;
+  left: 0;
+  // top: 50%;
+  // right: 0;
+  transform: translateX(5%);
+  // left: 40px;
+  // bottom: 40rpx;
 }
 .model {
   position: fixed;
