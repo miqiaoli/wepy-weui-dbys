@@ -119,7 +119,7 @@
       </view>
 
       <view class="weui-flex btn-confirm">
-        <button class="weui-flex__item" style="margin-right: 40rpx;" type="primary" bindtap="confirmBtn">确定</button>
+        <button class="weui-flex__item" style="margin-right: 40rpx;" type="primary" bindtap="confirmBtn">确认提交</button>
       </view>
     </view>
   </view>
