@@ -54,7 +54,7 @@ export default class logisticsList extends wepy.page {
   align-items: center;
 }
 .icon-width {
-  padding-left: 200rpx;
+  padding-left: 180rpx;
   // width: 260rpx;
 }
 .icon {
