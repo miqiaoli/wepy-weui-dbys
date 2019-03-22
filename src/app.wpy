@@ -9,6 +9,7 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/index',
+
       'pages/logistics/index',
       'pages/logistics/driver-list',
       'pages/logistics/logistics-list',      
@@ -16,11 +17,10 @@ export default class extends wepy.app {
       'pages/logistics/car-list',
       'pages/logistics/logistics-details',
 
-
       'pages/tmp/outer',
       'pages/tmp/todolist',
-      'pages/transaction/buy/iccard',
 
+      'pages/transaction/buy/iccard',
       'pages/transaction/todo/list',
       'pages/transaction/contract/list',
       'pages/transaction/shelf/list',
@@ -96,27 +96,38 @@ export default class extends wepy.app {
       selectedColor: '#6A7EEE',
       backgroundColor: '#fff',
       borderStyle: 'black',
-      list: [{
-        pagePath: 'pages/index',
-        selectedIconPath: '/images/tabbars/home_HL.png',
-        iconPath: '/images/tabbars/home.png',
-        text: '首页'
-      }, {
-        pagePath: 'pages/fish/list',
-        selectedIconPath: '/images/tabbars/information_HL.png',
-        iconPath: '/images/tabbars/information.png',
-        text: '鱼塘信息'
-      }, {
-        pagePath: 'pages/company/list',
-        selectedIconPath: '/images/tabbars/rice_HL.png',
-        iconPath: '/images/tabbars/rice.png',
-        text: '早稻'
-      }, {
-        pagePath: 'pages/about/index',
-        selectedIconPath: '/images/tabbars/mime_HL.png',
-        iconPath: '/images/tabbars/mime.png',
-        text: '我的'
-      }]
+      list: [
+        {
+          pagePath: 'pages/index',
+          selectedIconPath: '/images/tabbars/home_HL.png',
+          iconPath: '/images/tabbars/home.png',
+          text: '首页'
+        }, 
+        // {
+        //   pagePath: 'pages/fish/list',
+        //   selectedIconPath: '/images/tabbars/information_HL.png',
+        //   iconPath: '/images/tabbars/information.png',
+        //   text: '鱼塘信息'
+        // }, 
+        {
+          pagePath: 'pages/logistics/index',
+          selectedIconPath: '/images/tabbars/order_HL.png',
+          iconPath: '/images/tabbars/order.png',
+          text: '小八物流'
+        }, 
+        {
+          pagePath: 'pages/company/list',
+          selectedIconPath: '/images/tabbars/rice_HL.png',
+          iconPath: '/images/tabbars/rice.png',
+          text: '早稻'
+        }, 
+        {
+          pagePath: 'pages/about/index',
+          selectedIconPath: '/images/tabbars/mime_HL.png',
+          iconPath: '/images/tabbars/mime.png',
+          text: '我的'
+        }
+      ]
     },
     networkTimeout: {
       request: 5000,
