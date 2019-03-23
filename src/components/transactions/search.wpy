@@ -1,5 +1,5 @@
 <template>
-  <view class="search weui-flex">
+  <view class="search weui-flex weui-flex__item">
     <view class="weui-flex__item" >
       <!-- <input class="search-text weui-search-bar__input"  value="{{value}}" bindinput="getValue" placeholder="搜索合同号" /> -->
       <view class="weui-search-bar__box">

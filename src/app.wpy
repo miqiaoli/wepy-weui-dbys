@@ -9,6 +9,7 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/index',
+      'pages/transaction/buy/list',
 
       'pages/logistics/index',
       'pages/logistics/driver-list',
@@ -26,7 +27,6 @@ export default class extends wepy.app {
       'pages/transaction/shelf/list',
       'pages/transaction/shelf/success',
       'pages/transaction/shelf/details',
-      'pages/transaction/buy/list',
       'pages/transaction/buy/details',
       'pages/transaction/talk/list',
       'pages/transaction/talk/talk',
