@@ -246,7 +246,6 @@ export const __getApi = {
   _delDirver: `${host}/logist/delete_driver.dbys`,
   _getCarList: `${host}/logist/getDriverCards.dbys`,
   _updateCar: `${host}/logist/modifyDriverCards.dbys`,
-
 }
 
 export default {
