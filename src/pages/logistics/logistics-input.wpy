@@ -21,7 +21,7 @@
       </view>
     </view>
 
-    <view class="weui-flex rows">
+    <view class="weui-flex rows-noline">
       <view class="col-name">可用车辆</view>
     </view>
     <view class="weui-flex rows flex-wrap">
@@ -32,7 +32,7 @@
       </view>
     </view>
 
-    <view class="weui-flex rows">
+    <view class="weui-flex rows-noline">
       <view class="col-name">已选车辆</view>
     </view>
     <view class="weui-flex rows flex-wrap">
@@ -54,7 +54,7 @@
       </view>
     </view>
 
-    <view class="weui-flex rows">
+    <view class="weui-flex rows-noline">
       <view class="col-name">已选司机</view>
     </view>
     <view class="weui-flex rows flex-justify">
@@ -601,10 +601,22 @@ export default class logisticsInput extends wepy.page {
     color: #1E1E1E;
   }
   .rows {
-    // padding: 20rpx;
+    margin: 20rpx;
     padding: 20rpx 0;
     font-size: 14px;
     border-bottom: 1px solid #E4E7F0;
+    .col-name {
+      width: 180rpx;
+      color: #8F8E94;
+    }
+    .col-des {
+      color: #3D3D3D;
+    }
+  }
+  .rows-noline {
+    margin: 0 20rpx;
+    padding-top: 20rpx;
+    font-size: 14px;
     .col-name {
       width: 180rpx;
       color: #8F8E94;
