@@ -209,12 +209,12 @@ export default class ProductList extends wepy.page {
       name: '',
       id: ''
     },
-    /* 选中的品名 */
+    /* 选中的牌号 */
     chooseGrade: {
       name: '',
       id: ''
     },
-    /* 选中的牌号 */
+    /* 选中的厂商 */
     chooseVendor: {
       name: '',
       id: ''
