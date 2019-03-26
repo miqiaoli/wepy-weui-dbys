@@ -99,8 +99,6 @@
       <view class="layer" catchtouchstart="removeLayer" data-type='isFilter' catchtouchmove='preventTouchMove'></view>
     </view>
     
-
-    
     <view class="list">
       <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id" data-discuss_id="{{single.discussid}}" @tap="toBuyDetails">
         <view class="weui-flex flex-margin flex-end">
@@ -281,11 +279,13 @@ export default class buyList extends wepy.page {
     formReset() {
       this.startdate = ''
       this.enddate = ''
+      this.value = ''
       this.goods_class_id = ''
       this.chooseProduct = {}
       this.chooseGrade = {}
       this.chooseVendor = {}
       this.isFilter = true
+      this.chgBuyList()
       this.$apply()
     },
     // 点击model
@@ -346,6 +346,7 @@ export default class buyList extends wepy.page {
     this.chooseGrade.name = name2
     this.start = 1
     this.isFilter = true
+    this.list = []
     this.chgBuyList()
   }
 
@@ -381,10 +382,6 @@ export default class buyList extends wepy.page {
       goods_id: this.chooseProduct.id,
       att2_id: this.chooseGrade.id
     }
-    // goods_class_id	品种id
-    // goods_id	品名id
-    // att2_id	牌号id
-
     if (this.value) {
       params = Object.assign(params, {deal_no: this.value})
     }

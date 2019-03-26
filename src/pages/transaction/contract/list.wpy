@@ -1,7 +1,103 @@
 <template>
   <view class="buy page bg__white">
-    <Search :value.sync="value" :placeholder="placeholder"></Search>
+    <view class="weui-flex page__bd_spacing">
+      <search :value.sync="value" :placeholder="placeholder"></search>
+      <view class="order-filter filter active" bindtap="riseFilter">
+        筛选
+        <image src='/images/icon/filter_HL.png'></image>
+      </view>
+    </view>
     <!-- <tabs :tabs="tabs" :index.sync="index"></tabs> -->
+     <view hidden='{{isFilter}}' class="selector">
+      <form bindsubmit="formSubmit" bindreset="formReset">
+        <view class="inner_box">
+          <view class="module-box">
+            <view class="top page__bd_spacing">订单时间</view>
+            <view class="content weui-flex">
+              <view class="weui-flex__item active">
+                <picker
+                  mode="date"
+                  value="{{startdate}}"
+                  start="2016-09-01"
+                  end="{{nowDate}}"
+                  bindchange="bindStartDateChange"
+                >
+                  <view class="picker" style="height: 44rpx;">
+                    开始时间{{startdate}}
+                  </view>
+                </picker>
+              </view>
+              <text class="interval-line">~</text>
+              <view class="weui-flex__item active">
+                <picker
+                  mode="date"
+                  value="{{enddate}}"
+                  start="2016-09-01"
+                  end="{{nowDate}}"
+                  bindchange="bindEndDateChange"
+                >
+                  <view class="picker" style="height: 44rpx;">
+                    结束时间{{enddate}}
+                  </view>
+                </picker>
+              </view>
+
+            </view>
+          </view>
+          <view class="">
+            <view class="top page__bd_spacing">品种</view>
+            <view class="items weui-flex">
+              <view class="item weui-flex {{goods_class_id==1 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='1'>
+                <view class="weui-cell__hd">
+                  <image wx:if="{{goods_class_id==1}}" src="/images/icon/active.png" class="icon"></image>
+                  <image wx:else src="/images/icon/su.png" class="icon"></image>
+                </view>
+                <view class="weui-cell__bd">塑料原料</view>
+                <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+              </view>
+              <view class="item weui-flex {{goods_class_id==2 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='2'>
+                <view class="weui-cell__hd">
+                  <image wx:if="{{goods_class_id==2}}" src="/images/icon/active.png" class="icon"></image>
+                  <image wx:else src="/images/icon/zai.png" class="icon"></image>
+                </view>
+                <view class="weui-cell__bd">再生塑料</view>
+                <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+              </view>
+              <view class="item weui-flex {{goods_class_id==3 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='3'>
+                <view class="weui-cell__hd">
+                  <image wx:if="{{goods_class_id==3}}" src="/images/icon/active.png" class="icon"></image>
+                  <image wx:else src="/images/icon/gai.png" class="icon"></image>
+                </view>
+                <view class="weui-cell__bd">改性塑料</view>
+                <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+              </view>
+              <view class="item weui-flex {{goods_class_id==6 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='6'>
+                <view class="weui-cell__hd">
+                  <image wx:if="{{goods_class_id==6}}" src="/images/icon/active.png" class="icon"></image>
+                  <image wx:else src="/images/icon/zhu.png" class="icon"></image>
+                </view>
+                <view class="weui-cell__bd">助剂</view>
+                <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+              </view>
+            </view>
+          </view>
+          <view class="module-box">
+            <view class="top page__bd_spacing">品名 牌号</view>
+            <view class="content weui-flex">
+              <view class="font-primary" wx:if="{{chooseGrade.name}}">
+                {{chooseProduct.name}}/{{chooseGrade.name}}
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="inner_btn weui-flex">
+          <button class="weui-flex__item" type="default" formType="reset">重置</button>
+          <button class="weui-flex__item" type="primary" formType="submit">确定</button>
+        </view>
+      </form>
+      <view class="layer" catchtouchstart="removeLayer" data-type='isFilter' catchtouchmove='preventTouchMove'></view>
+    </view>
+
     <view class="list">
       <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id">
         <view class="weui-flex flex-margin flex-end">
@@ -81,13 +177,13 @@
         </view>
       </view>
     </view>
-  <backIndex></backIndex>
-  <view wx:if="{{list.length <= 0 || count <= 0 }}" class="weui-loadmore weui-loadmore_line">
-    <text class="weui-loadmore__tips">暂无数据</text>
-  </view>
-  <view wx:if="{{!getMore}}" class="weui-loadmore weui-loadmore_line">
-    <text class="weui-loadmore__tips">没有更多了</text>
-  </view>
+    <backIndex></backIndex>
+    <view wx:if="{{list.length <= 0 || count <= 0 }}" class="weui-loadmore weui-loadmore_line">
+      <text class="weui-loadmore__tips">暂无数据</text>
+    </view>
+    <view wx:if="{{!getMore}}" class="weui-loadmore weui-loadmore_line">
+      <text class="weui-loadmore__tips">没有更多了</text>
+    </view>
   </view>
 </template>
 
@@ -99,10 +195,12 @@ import {
 import http from '../../../utils/Http'
 import backIndex from '../../../components/backIndex'
 import tabs from '../../../components/transactions/tab'
-import Search from '../../../components/transactions/search'
+import search from '../../../components/transactions/search'
+import events from '../../../utils/event'
+
 export default class contractList extends wepy.page {
   components = {
-    backIndex, tabs, Search
+    backIndex, tabs, search
   }
   config = {
     navigationBarTitleText: '合同列表',
@@ -110,6 +208,28 @@ export default class contractList extends wepy.page {
     onReachBottomDistance: 100
   }
   data = {
+    isFilter: true,
+    /* 选择品名 */
+    chooseProduct: {
+      name: '',
+      id: ''
+    },
+    /* 选中的牌号 */
+    chooseGrade: {
+      name: '',
+      id: ''
+    },
+    /* 选中的厂商 */
+    chooseVendor: {
+      name: '',
+      id: ''
+    },
+    /* 选中的品种 */
+    goods_class_id: '',
+    startdate: '',
+    enddate: '',
+    nowDate: '',
+
     placeholder: '搜索合同号',
     value: '',
     index: 0,
@@ -165,13 +285,102 @@ export default class contractList extends wepy.page {
           }
         }
       })
+    },
+    preventTouchMove(e) {
+
+    },
+    // 选中品种跳转
+    chooseGoodsClassId(e) {
+      this.goods_class_id = e.currentTarget.dataset.type
+      this.chooseProduct.id = ''
+      this.chooseProduct.name = ''
+      this.chooseGrade.id = ''
+      this.chooseGrade.name = ''
+      wx.navigateTo({
+        url: './../../product/filter?goods_class_id=' + e.currentTarget.dataset.type
+      })
+      this.$apply()
+    },
+    // 提交筛选
+    formSubmit(e) {
+      this.start = 1
+      this.isFilter = true
+      this.list = []
+      this.chgContractList()
+    },
+    // 条件重置
+    formReset() {
+      this.startdate = ''
+      this.enddate = ''
+      this.value = ''
+      this.goods_class_id = ''
+      this.chooseProduct = {}
+      this.chooseGrade = {}
+      this.chooseVendor = {}
+      this.isFilter = true
+      this.chgContractList()
+      this.$apply()
+    },
+    // 点击model
+    riseFilter() {
+      this.isFilter = false
+      this.$apply()
+    },
+    removeLayer(e) {
+      const type = e.currentTarget.dataset.type
+      this[type] = !this[type]
+    }
+  }
+  events = {
+    eventName: (p1, $event) => {
+      const firstName = this.sheetNameList[p1[0]].label;
+      const secondName = this.sheetNameList[p1[0]].children[p1[1]].label;
+      const thirdName = this.sheetNameList[p1[0]].children[p1[1]].children[
+        p1[2]
+      ].label;
+      this.sheetName = firstName + "/" + secondName + "/" + thirdName;
+      this.firstName = firstName;
+      this.secondName = secondName + "/" + thirdName;
+      this.$apply();
+    }
+  };
+  watch = {
+    'index': function(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        this.start = 1
+        this.list = []
+        this.chgContractList()
+      }
+    },
+    'value': function(newValue, oldValue) {
+      if (newValue !== oldValue && newValue) {
+        this.start = 1
+        this.list = []
+        this.chgContractList()
+      }
     }
   }
   onLoad(e) {
     this.buyorsell = e.buyorsell
-    this.token_access = this.$parent.globalData.token_access
-    this.getContractHistory()
-    // _getContractHistory _getContractDownload _getContractDetails
+    this.token_access = this.$parent.globalData.token_access || ''
+    const date = new Date()
+    const month = date.getMonth()+1 <10 ? `0${date.getMonth()+1}` : `${date.getMonth()+1}`
+    const day = date.getDate() < 9 ? `${date.getDate()}` : date.getDate()
+    this.nowDate = `${date.getFullYear()}-${month}-${day}`
+    events.addEvents("getChooseData", this.getChooseData, this)
+    // this.getContractHistory()
+    this.chgContractList()
+    this.$apply()
+  }
+  getChooseData(id1, name1, id2, name2) {
+    this.chooseProduct.id = id1
+    this.chooseProduct.name = name1
+    this.chooseGrade.id = id2
+    this.chooseGrade.name = name2
+    this.start = 1
+    this.isFilter = true
+    this.list = []
+    this.chgContractList()
   }
   async getContractHistory() {
     const res = await http.get(__getApi._getContractHistory, {
@@ -189,6 +398,12 @@ export default class contractList extends wepy.page {
   }
   onPullDownRefresh() {
     this.start = 1
+    this.startdate = ''
+    this.enddate = ''
+    this.goods_class_id = ''
+    this.chooseProduct = {}
+    this.chooseGrade = {}
+    this.chooseVendor = {}
     this.value = ''
     this.list = []
     this.chgContractList()
@@ -203,13 +418,51 @@ export default class contractList extends wepy.page {
     }
   }
   async chgContractList() {
-    console.log('dddddddddd')
-  }
+    let params = {
+      start: this.start,
+      limit: this.limit,
+      token_access: this.token_access,
+      buyorsell: this.buyorsell,
+      date_start: this.startdate || '',
+      date_end: this.enddate || '',
+      goods_class_id: this.goods_class_id,
+      goods_id: this.chooseProduct.id,
+      att2_id: this.chooseGrade.id
+    }
+    if (this.value) {
+      params = Object.assign(params, {subs_no: this.value})
+    }
+    if (this.index !== 0) {
+      params = Object.assign(params, {status: this.tabs[this.index].status})
+    }
 
+    const res = await http.get(__getApi._getContractHistory, params)
+    if (res.false) return
+    if (res.meta.success) {
+      this.list = [...this.list, ...res.data.resultlist]
+      this.count = res.data.rows_count
+      this.$apply()
+    }
+  }
+  bindStartDateChange(e) {
+    this.startdate = e.detail.value
+  }
+  bindEndDateChange(e) {
+    this.enddate = e.detail.value
+  }
 }
 </script>
 
 <style lang="less">
+.order-filter {
+  text-align: center;
+  line-height: 56rpx;
+  // padding: 20rpx 0;
+  image {
+    width: 28rpx;
+    height: 28rpx;
+  }
+}
 .flex-margin {
   margin-top: 15rpx;
 }
@@ -278,5 +531,91 @@ export default class contractList extends wepy.page {
 }
 .btn-color-out {
   background: #FB8E1E;
+}
+.selector {
+  width: 100%;
+  height: 400px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 99;
+  .inner_box {
+    height: 100%;
+    background: #ffffff;
+    position: relative;
+    z-index: 99;
+  }
+  .inner_btn {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 99;
+  }
+  .top {
+    line-height: 60rpx;
+    background: #E4E7F0;
+    font-size: 28rpx;
+    color: #8F8E94;
+  }
+  .content {
+    padding: 40rpx 24rpx 0;
+  }
+  .input {
+    display: inline-block;
+    background: #ffffff;
+    border: 2rpx solid #9b9b9b;
+    border-radius: 8rpx;
+    width: 216rpx;
+    height: 52rpx;
+    line-height: 52rpx;
+    text-align: center;
+    font-size: 28rpx;
+  }
+  .items {
+    flex-wrap: wrap;
+  }
+  .item {
+    width: 50%;
+    padding: 40rpx 70rpx;
+    border-bottom: 2rpx solid #E4E7F0;
+    border-right: 2rpx solid #E4E7F0;
+    box-sizing: border-box;
+    align-items: center;
+  }
+  .item.active {
+    border: 2rpx solid #6A7EEE;
+    color: #3B55E7;
+    background: #D2D7FF;
+  }
+  .item.active .weui-cell__bd {
+    font-weight: bold;
+  }
+  .icon {
+    display: block;
+    width: 32rpx;
+    height: 32rpx;
+    margin-right: 20rpx;
+  }
+  .interval-line {
+    height: 52rpx;
+    vertical-align: top;
+    margin: 0 20rpx;
+  }
+  .module-box {
+    margin-bottom: 30rpx;
+  }
+  button {
+    border-radius: 0;
+  }
+}
+.layer {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  background: rgba(0,0,0,0.5);
 }
 </style>
