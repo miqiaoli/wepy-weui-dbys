@@ -102,7 +102,7 @@ export default class logisticsList extends wepy.page {
       const status =  e.currentTarget.dataset.status
       if (status == 2) {
         wx.navigateTo({
-          url: `./logistics-input?commission_num=${commission_num}`
+          url: `./logistics-update?commission_num=${commission_num}`
         })
       } else {
         wx.navigateTo({

@@ -1,0 +1,492 @@
+<template>
+<view class="page bg__white">
+  <view class="module">
+    <view class="weui-flex row">
+      <view class="col-name">物流单号</view>
+      <view class="col-des weui-flex__item">{{commission_num}}</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">执行价格</view>
+      <view class="col-des weui-flex__item" wx:if="{{exe_price}}">{{exe_price}}元</view>
+    </view>
+  </view>
+  <view class="module">
+    <view class="weui-flex rows" >
+      <view class="col-name">添加车辆</view>
+      <view class="weui-flex__item" style="color: #8F8E94;" bindtap="model('addCar')">
+        请输入车牌号，可添加多个车牌
+      </view>
+      <view class="weui-cell__ft" bindtap="model('addCar')">
+        <image class="icon-add" src="/images/icon/order-add.png" />
+      </view>
+    </view>
+    <view class="weui-flex rows-noline">
+      <view class="col-name">可选车辆</view>
+    </view>
+    <view class="weui-flex rows flex-wrap">
+      <view class="carnum weui-flex" wx:for="{{allCarList}}" wx:for-item="singleCar" wx:key="id" data-car_index="{{index}}" bindtap="tapCar">
+        <icon wx:if="{{singleCar.choosed}}" class="icon-success" type="success" size="20" color="blue" />
+        <view wx:else class="icon-success icon-circle"></view>
+        <view class="weui-flex__item">{{singleCar.name}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="module">
+    <view class="weui-flex rows">
+      <view class="col-name">添加司机</view>
+      <view class="weui-flex__item" style="color: #8F8E94;" bindtap="model('addNewDriver')">
+        请搜索，无司机信息可点击添加
+      </view>
+      <view class="weui-cell__ft" bindtap="model('addNewDriver')">
+        <image class="icon-add" src="/images/icon/order-add.png" />
+      </view>
+    </view>
+    <view class="weui-flex rows-noline">
+      <view class="col-name">可选司机</view>
+    </view>
+    <view class="weui-flex rows flex-wrap">
+      <view class="carnum weui-flex" wx:for="{{allDriverList}}" wx:for-item="singleDriver" wx:key="id" data-driver_index="{{index}}" bindtap="tapDriver">
+        <icon wx:if="{{singleDriver.choosed}}" class="icon-success" type="success" size="20" color="blue" />
+        <view wx:else class="icon-success icon-circle"></view>
+        <view class="weui-flex__item">{{singleDriver.drivers_name}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- <backIndex></backIndex> -->
+  <view class="model" wx:if="{{model}}">
+    <view class="add-driver">
+      <view class="weui-flex rows">
+        <view class="weui-flex__item" style="text-align: right;"><icon type="clear" size="20" bindtap="model" /></view>
+      </view>
+
+      <view class="weui-flex row" wx:if="{{showType == 'addCar'}}"> 
+        <view class="col-name"><text class="text-color">车牌号</text></view>
+        <view class="col-des weui-flex__item">
+          <input type="text" confirm-type="确定" placeholder="请输入车牌号" bindinput="newCarName" value="{{this.newCarName}}" />
+        </view>
+      </view>
+
+      <view class="row" wx:if="{{showType == 'addNewDriver'}}">
+        <view class="weui-flex row">
+          <view class="col-name"><text class="text-color">司机姓名</text></view>
+          <view class="col-des weui-flex__item">
+            <input type="text" confirm-type="确定" placeholder="请输入司机姓名" bindinput="addNewDriver('username')" value="{{this.username}}" />
+          </view>
+        </view>
+        <view class="weui-flex row">
+          <view class="col-name"><text class="text-color">手机号码</text></view>
+          <view class="col-des weui-flex__item">
+            <input type="number" placeholder="请输入联系方式" bindinput="addNewDriver('phone')" value="{{this.phone}}" />
+          </view>
+        </view>
+        <view class="weui-flex row">
+          <view class="col-name"><text class="text-color">身份证号</text></view>
+          <view class="col-des weui-flex__item">
+            <input type="idcard" placeholder="请输入身份证号码" bindinput="addNewDriver('idcard')" value="{{this.idcard}}" />
+          </view>
+        </view>
+      </view>
+
+      <view class="weui-flex btn-confirm">
+        <button class="weui-flex__item" style="margin-right: 40rpx;" type="primary" bindtap="confirmBtn">确认提交</button>
+      </view>
+    </view>
+  </view>
+  <view class="module">
+    <view class="weui-flex">
+      <button class="weui-flex__item" type="primary" bindtap="submitBtn">确定修改</button>
+    </view>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from "wepy";
+import {
+  __getApi
+} from "../../config.js";
+import base from "../../mixins/base";
+import http from "../../utils/Http";
+import tabs from '../../components/transactions/tab';
+import backIndex from '../../components/backIndex';
+
+export default class logisticsUpdate extends wepy.page {
+  components = {
+    backIndex
+  }
+  data = {
+    token_access: '',
+    commission_num: '', // 洽谈ID
+    quotation_num: '',
+    exe_price: '',
+    model: false,
+    showType: '',
+
+    allCarList: [], // 全部车辆
+    allDriverList: [], // 全部的司机
+
+    newCarName: '',
+    username: '',
+    phone: '',
+    idcard: ''
+  }
+  methods = {
+    tapCar(e) {
+      const index = e.currentTarget.dataset.car_index
+      this.allCarList[index].choosed = !this.allCarList[index].choosed
+    },
+    tapDriver(e) {
+      const index = e.currentTarget.dataset.driver_index
+      this.allDriverList[index].choosed = !this.allDriverList[index].choosed
+    },
+    model(val, e) {
+      this.model = !this.model
+      this.showType = val ? val : ''
+    },
+    newCarName(e) {
+      this.newCarName = e.detail.value
+    },
+    addNewDriver(val, e) {
+      this[val] = e.detail.value
+    },
+    confirmBtn(e) {
+      if (this.showType == 'addCar') {
+        if (!this.newCarName) {
+          wx.showToast({
+            title: '请输入车牌',
+            icon: 'none',
+            duration: 2000
+          })
+          return
+        }
+        const carReg = /^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/
+        if (!carReg.test(this.newCarName)) {
+          wx.showToast({
+            title: '请输入正确车牌',
+            icon: 'none',
+            duration: 2000
+          })
+          return
+        }
+        let addNewCar = [{
+          name: this.newCarName, 
+          choosed: true
+        }]
+        this.allCarList = [...this.allCarList, ...addNewCar]
+        this.model = false
+      } else if (this.showType == 'addNewDriver') {
+        const usernamePattern = /^\S[\S\s]*$/
+        const phonePattern = /^1\d{10}$/
+        const idcardPattern = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+        if (!usernamePattern.test(this.username)) {
+          wx.showToast({
+            title: '请输入司机姓名',
+            icon: 'none',
+            duration: 2000
+          })
+          return
+        }
+        if (!phonePattern.test(this.phone)) {
+          wx.showToast({
+            title: '请输入手机号',
+            icon: 'none',
+            duration: 2000
+          })
+          return
+        }
+        if (!idcardPattern.test(this.idcard)) {
+          wx.showToast({
+            title: '请输入身份证号码',
+            icon: 'none',
+            duration: 2000
+          })
+          return
+        }
+        let addNewDriver = [{
+          drivers_name: this.username,
+          phoneNum: this.phone,
+          id_card: this.idcard,
+          choosed: true
+        }]
+        this.allDriverList = [...this.allDriverList, ...addNewDriver]
+        this.model = false
+        return
+      } else {}
+      
+    },
+    // 确认提交
+    submitBtn(e) {
+      const self = this
+      let choosedCarList = this.allCarList.filter((val, index, arr) => val.choosed === true)
+      if (choosedCarList.length < 1) {
+        wx.showToast({
+          title: `请添加车辆`,
+          icon: 'none',
+          duration: 2000
+        })
+        return
+      }
+      let uploadChoosedCarList = []
+      choosedCarList.forEach(val => {
+        uploadChoosedCarList.push(val.name)
+      })
+      
+      let choosedDriverList = this.allDriverList.filter((val, index, arr) => val.choosed === true)
+      if (choosedDriverList.length < 1) {
+        wx.showToast({
+          title: `请添加司机`,
+          icon: 'none',
+          duration: 2000
+        })
+        return
+      }
+
+      let params = {
+        quotation_num: this.quotation_num,
+        diver_cards: JSON.stringify(uploadChoosedCarList),
+        drivers: JSON.stringify(choosedDriverList),
+        comment: '',
+        token_access: this.token_access
+      }
+      wx.showModal({
+        title: '提示',
+        content: `确定提交修改`,
+        success: function(res) {
+          if (res.confirm) {
+            self.updateOrder(params)
+          }
+        }
+      })
+    }
+  }
+
+  onLoad(e) {
+    this.commission_num = e.commission_num || 'WT20190322152443'
+    this.token_access = this.$parent.globalData.token_access || ''
+    this.getBaseinfo()
+    this.$apply()
+  }
+  async getBaseinfo() {
+     const res = await http.get(__getApi._getOrderUpdate, {
+      commission_num: this.commission_num,
+      token_access: this.token_access
+    })
+    if (res.false) return
+    if (res.meta.success) {
+      this.quotation_num = res.data.quotation_num
+      this.exe_price = res.data.exe_price
+      this.choosedCarList = res.data.diver_cards
+
+      // 司机
+      this.allDriverList = []
+      res.data.drivers.forEach(val => {
+        if (res.data.diver_names.includes(val.drivers_name)) {
+          this.allDriverList.push({
+            drivers_name: val.drivers_name,
+            id_card: val.id_card,
+            phoneNum: val.phoneNum,
+            choosed: true
+          })
+        } else {
+          this.allDriverList.push({
+            drivers_name: val.drivers_name,
+            id_card: val.id_card,
+            phoneNum: val.phoneNum,
+            choosed: false
+          })
+        }
+      })
+
+      // 车辆
+      this.allCarList = []
+      res.data.driver_cards.forEach(val => {
+        if (res.data.diver_cards.includes(val)) {
+          this.allCarList.push({
+            name: val,            
+            choosed: true
+          })
+        } else {
+          this.allCarList.push({
+            name: val,         
+            choosed: false
+          })
+        }
+      })
+      this.$apply()
+    } 
+  }
+  async updateOrder(params) {
+    const res = await http.post(__getApi._updateOrder, params)
+    if (res.false) return
+    if (res.meta.success) {
+      wx.navigateBack({
+        delta: 1
+      })
+    }
+  }
+
+}
+</script>
+
+<style lang="less">
+.btn-confirm {
+  margin: 40rpx;
+  position: relative;
+  left: 0;
+  transform: translateX(5%);
+
+  // position: absolute;
+  // right: 0;
+  // left: 40px;
+  // bottom: 40rpx;
+}
+.model {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.2);
+  z-index: 999;
+  .add-driver {
+    padding: 20rpx;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1000rpx;
+    background: #fff;
+    font-size: 28rpx;
+    .row {
+      padding: 20rpx 20rpx;
+      font-size: 14px;
+      .col-name {
+        color: #8F8E94;
+        width: 160rpx;
+        text-align: center;
+        .text-color {
+          padding: 0rpx 8rpx;
+          color: #EB4E35;
+          background: rgba(235,78,53,0.15);
+          border: 1px solid rgba(235,78,53,0.65);
+          border-radius: 2px;
+        }
+      }
+      .col-des {
+        color: #3D3D3D;
+      }
+    }
+  }
+}
+.flex-justify {
+  flex-wrap: wrap; 
+}
+.flex-wrap {
+  flex-wrap: wrap; 
+  align-content: flex-start;
+  // justify-content: space-between;
+  align-items: center;
+}
+.carnum {
+  padding: 10rpx 10rpx;
+  text-align: left;
+  width: 196rpx;
+}
+.icon-add {
+  width: 44rpx;
+  height: 44rpx;
+}
+.icon-circle {
+  width: 32rpx;
+  height: 32rpx;
+  border: 1px solid #3D3D3D;
+  border-radius: 50%;
+}
+.icon-success {
+  margin-right: 8rpx;
+}
+.carnum-choosed {
+  position: relative;
+  margin: 20rpx 20rpx;
+  padding: 0 20rpx;
+  border-radius: 4px;
+  color: #3D3D3D;
+  background: #E4E7F0;
+}
+.type-bool {
+  display: block;
+  position: absolute;
+  right: -10rpx;
+  top: -10rpx;
+  width: 30rpx;
+  height: 30rpx;
+}
+
+.page {
+  // padding-bottom: 400rpx;
+}
+.module {
+  padding: 16rpx 30rpx;
+  .flex-btn {
+    justify-content: flex-end;
+    .btn {
+      margin: 20rpx 0 20rpx 20rpx;
+      padding: 10rpx 44rpx;
+      border-radius: 8rpx;
+      font-size: 36rpx;
+    }
+  }
+  .title {
+    font-weight: bold;
+    font-size: 32rpx;
+    color: #1E1E1E;
+  }
+  .rows {
+    margin: 20rpx;
+    padding: 20rpx 0;
+    font-size: 14px;
+    border-bottom: 1px solid #E4E7F0;
+    .col-name {
+      width: 180rpx;
+      color: #8F8E94;
+    }
+    .col-des {
+      color: #3D3D3D;
+    }
+  }
+  .rows-noline {
+    margin: 0 20rpx;
+    padding-top: 20rpx;
+    font-size: 14px;
+    .col-name {
+      width: 180rpx;
+      color: #8F8E94;
+    }
+    .col-des {
+      color: #3D3D3D;
+    }
+  }
+  .row {
+    padding: 20rpx 0;
+    font-size: 14px;
+    border-bottom: 1px solid #E4E7F0;
+    .col-name {
+      color: #8F8E94;
+      width: 200rpx;
+      .text-color {
+        padding: 0rpx 8rpx;
+        color: #EB4E35;
+        background: rgba(235,78,53,0.15);
+        border: 1px solid rgba(235,78,53,0.65);
+        border-radius: 2px;
+      }
+    }
+    .col-des {
+      color: #3D3D3D;
+    }
+    
+  }
+}
+</style>
