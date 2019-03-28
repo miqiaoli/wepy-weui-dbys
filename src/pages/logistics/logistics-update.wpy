@@ -45,8 +45,8 @@
     <view class="weui-flex rows-noline">
       <view class="col-name">可选司机</view>
     </view>
-    <view class="weui-flex rows flex-wrap">
-      <view class="carnum weui-flex" wx:for="{{allDriverList}}" wx:for-item="singleDriver" wx:key="id" data-driver_index="{{index}}" bindtap="tapDriver">
+    <view class="weui-flex rows flex-wrap flex-justify">
+      <view class="carnum-choosed weui-flex" wx:for="{{allDriverList}}" wx:for-item="singleDriver" wx:key="id" data-driver_index="{{index}}" bindtap="tapDriver">
         <icon wx:if="{{singleDriver.choosed}}" class="icon-success" type="success" size="20" color="blue" />
         <view wx:else class="icon-success icon-circle"></view>
         <view class="weui-flex__item">{{singleDriver.drivers_name}}</view>
@@ -93,6 +93,7 @@
         <button class="weui-flex__item" style="margin-right: 40rpx;" type="primary" bindtap="confirmBtn">确认提交</button>
       </view>
     </view>
+    <view class="layer" catchtouchstart="model" catchtouchmove='preventTouchMove'></view>
   </view>
   <view class="module">
     <view class="weui-flex">
@@ -133,6 +134,9 @@ export default class logisticsUpdate extends wepy.page {
     idcard: ''
   }
   methods = {
+    preventTouchMove(e) {
+
+    },
     tapCar(e) {
       const index = e.currentTarget.dataset.car_index
       this.allCarList[index].choosed = !this.allCarList[index].choosed
@@ -219,7 +223,7 @@ export default class logisticsUpdate extends wepy.page {
     // 确认提交
     submitBtn(e) {
       const self = this
-      let choosedCarList = this.allCarList.filter((val, index, arr) => val.choosed === true)
+      let choosedCarList = this.allCarList.filter(val => val.choosed === true)
       if (choosedCarList.length < 1) {
         wx.showToast({
           title: `请添加车辆`,
@@ -263,7 +267,8 @@ export default class logisticsUpdate extends wepy.page {
   }
 
   onLoad(e) {
-    this.commission_num = e.commission_num || 'WT20190322152443'
+    this.commission_num = e.commission_num
+    // this.commission_num = e.commission_num || 'WT20190322152443'
     this.token_access = this.$parent.globalData.token_access || ''
     this.getBaseinfo()
     this.$apply()
@@ -277,28 +282,10 @@ export default class logisticsUpdate extends wepy.page {
     if (res.meta.success) {
       this.quotation_num = res.data.quotation_num
       this.exe_price = res.data.exe_price
-      this.choosedCarList = res.data.diver_cards
+      // this.choosedCarList = res.data.diver_cards
 
-      // 司机
-      this.allDriverList = []
-      res.data.drivers.forEach(val => {
-        if (res.data.diver_names.includes(val.drivers_name)) {
-          this.allDriverList.push({
-            drivers_name: val.drivers_name,
-            id_card: val.id_card,
-            phoneNum: val.phoneNum,
-            choosed: true
-          })
-        } else {
-          this.allDriverList.push({
-            drivers_name: val.drivers_name,
-            id_card: val.id_card,
-            phoneNum: val.phoneNum,
-            choosed: false
-          })
-        }
-      })
-
+      // 司机   
+      this.getAllDriver(res.data.diver_names)
       // 车辆
       this.allCarList = []
       res.data.driver_cards.forEach(val => {
@@ -316,6 +303,34 @@ export default class logisticsUpdate extends wepy.page {
       })
       this.$apply()
     } 
+  }
+  async getAllDriver(choosedDriverList) {
+    const res = await http.get(__getApi._getDriverName, {
+      drivers_name: '',
+      token_access: this.token_access
+    })
+    if (res.false) return
+    if (res.meta.success) {
+      this.allDriverList = []
+      res.data.forEach(val => {
+        if (choosedDriverList.includes(val.drivers_name)) {
+          this.allDriverList.push({
+            drivers_name: val.drivers_name,
+            id_card: val.id_card,
+            phoneNum: val.phoneNum,
+            choosed: true
+          })
+        } else {
+          this.allDriverList.push({
+            drivers_name: val.drivers_name,
+            id_card: val.id_card,
+            phoneNum: val.phoneNum,
+            choosed: false
+          })
+        }
+      })
+      this.$apply()
+    }
   }
   async updateOrder(params) {
     const res = await http.post(__getApi._updateOrder, params)
@@ -336,29 +351,26 @@ export default class logisticsUpdate extends wepy.page {
   position: relative;
   left: 0;
   transform: translateX(5%);
-
-  // position: absolute;
-  // right: 0;
-  // left: 40px;
-  // bottom: 40rpx;
 }
 .model {
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.2);
-  z-index: 999;
-  .add-driver {
-    padding: 20rpx;
-    position: absolute;
-    right: 0;
-    bottom: 0;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 99;
+  font-size: 28rpx;
+  .layer {
     width: 100%;
-    height: 1000rpx;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    background: rgba(0,0,0,0.3);
+  }
+  .add-driver {
     background: #fff;
-    font-size: 28rpx;
+    height: 1000rpx;
     .row {
       padding: 20rpx 20rpx;
       font-size: 14px;
@@ -412,8 +424,8 @@ export default class logisticsUpdate extends wepy.page {
   margin: 20rpx 20rpx;
   padding: 0 20rpx;
   border-radius: 4px;
-  color: #3D3D3D;
-  background: #E4E7F0;
+  // color: #3D3D3D;
+  // background: #E4E7F0;
 }
 .type-bool {
   display: block;
