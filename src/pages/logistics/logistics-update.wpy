@@ -423,7 +423,7 @@ export default class logisticsUpdate extends wepy.page {
 .carnum-choosed {
   position: relative;
   margin: 20rpx 20rpx;
-  padding: 0 20rpx;
+  // padding: 0 20rpx;
   border-radius: 4px;
   // color: #3D3D3D;
   // background: #E4E7F0;
