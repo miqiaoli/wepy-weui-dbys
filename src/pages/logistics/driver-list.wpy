@@ -31,7 +31,6 @@
       <text class="weui-loadmore__tips">没有更多了</text>
     </view>
     <view class="model" wx:if="{{model}}">
-      <!-- <view class="blank" bindtap="model"></view> -->
       <view class="add-driver">
         <view class="weui-flex">
           <view class="weui-flex__item" style="text-align: right;"><icon type="clear" size="20" bindtap="model" /></view>
@@ -58,6 +57,7 @@
           <button class="weui-flex__item" style="margin-right: 40rpx;" type="primary" @tap="newDriver">确认提交</button>
         </view>
       </view>
+      <view class="layer" catchtouchstart="model" catchtouchmove='preventTouchMove'></view>      
     </view>
   </view>
 </template>
@@ -87,20 +87,17 @@ export default class driverList extends wepy.page {
     model: false,
   }
   methods = {
+    preventTouchMove(e) {
+
+    },
     username(e) {
       this.username = e.detail.value
     },
     phone(e) {
       this.phone = e.detail.value
-      // if (e.detail.cursor >= 11) {
-      //   this.focusPhone = false
-      // }
     },
     idcard(e) {
       this.idcard = e.detail.value
-      // if (e.detail.cursor >= 18) {
-      //   this.focusIdcard = false
-      // }
     },
     model() {
       this.model = !this.model
@@ -219,34 +216,27 @@ export default class driverList extends wepy.page {
   margin: 40rpx;
   position: relative;
   left: 0;
-  // top: 50%;
-  // right: 0;
   transform: translateX(5%);
-  // left: 40px;
-  // bottom: 40rpx;
 }
 .model {
-  position: fixed;
-  top: 0;
   width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.2);
-  z-index: 999;
-  .blank {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  font-size: 28rpx;
+  .layer {
+    width: 100%;
     height: 100%;
-    // height: 320rpx;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    background: rgba(0,0,0,0.3);
   }
   .add-driver {
-    position: absolute;
-    // left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
     padding: 20rpx;
     height: 1000rpx;
     background: #fff;
-    // border-radius: 10px 10px 0px 0px;
-    font-size: 28rpx;
   }
 }
 .row {

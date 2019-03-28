@@ -368,7 +368,8 @@ export default class logisticsUpdate extends wepy.page {
     z-index: -1;
     background: rgba(0,0,0,0.3);
   }
-  .add-driver {
+  .add-driver {    
+    padding: 20rpx;
     background: #fff;
     height: 1000rpx;
     .row {
