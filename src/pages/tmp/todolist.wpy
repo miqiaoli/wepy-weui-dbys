@@ -3,7 +3,7 @@
     <view class="weui-cells__title">{{day}}</view>
     <view class="weui-cells weui-cells_form">
       <picker bindchange="bindPickerChange" value="{{index}}" range="{{username}}">
-        <view class="picker weui-cells__title" style="color: red;">
+        <view class="picker weui-cells__title" style="color: red;  font-size: 20px;">
           选择提交人：{{username[index]}}
         </view>
       </picker>
@@ -13,7 +13,7 @@
             <text class="weui-label weui-cells__title">今日</text>
           </view>
           <view class="weui-cell__hd weui-flex__item" style="border: 1px solid #999;">
-            <input class="weui-input" data-index="{{index}}" value="{{now}}" bindinput="getNowValue" type="text"  placeholder="请输入">
+            <textarea class="weui-input" data-index="{{index}}" value="{{now}}" bindinput="getNowValue" type="text"  placeholder="请输入" />
           </view>
         </view>
         <view class="weui-cell">
@@ -21,7 +21,7 @@
             <text class="weui-label weui-cells__title">明日</text>
           </view>
           <view class="weui-cell__hd weui-flex__item" style="border: 1px solid #999;">
-            <input class="weui-input" data-index="{{index}}" value="{{next}}" bindinput="getNextValue" type="text"  placeholder="请输入">
+            <textarea class="weui-input" data-index="{{index}}" value="{{next}}" bindinput="getNextValue" type="text"  placeholder="请输入" />
           </view>
         </view>
         <view class="weui-cell">
@@ -54,7 +54,7 @@ export default class todolist extends wepy.page {
     index: 0,
     now: '',
     next: '',
-    username: ['王思亮', '密巧丽', '姜丽婧', '李发全', '何东红', '许淑君'],
+    username: ['王思亮', '密巧丽', '李发全', '何东红', '许淑君'],
     allLog: [],
   }
   getNextValue(e) {
