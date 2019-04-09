@@ -15,7 +15,7 @@
           </view>
           <view class="weui-flex row">
             <view class="title">始发地</view>
-            <view class="weui-flex__item">{{single.receiverAddress}}</view>
+            <view class="weui-flex__item">{{single.pickupAddress}}</view>
           </view>
           <view class="weui-flex row">
             <view class="title">目的地</view>

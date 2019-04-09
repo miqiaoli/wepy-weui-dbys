@@ -1,10 +1,10 @@
 // const host = 'https://www.otimes.com/front'
 // const host = 'http://192.168.0.127/front'
-const host = 'https://dbys.otimes.info/front'
-// const host = 'http://192.168.0.129:8080/front'
+// const host = 'https://dbys.otimes.info/front'
+const host = 'http://hdhhp4.vicp.io/front'
 
-// const imgHost = 'http://192.168.0.129:8080'
-const imgHost = 'https://dbys.otimes.info' // 测试图片地址
+const imgHost = 'http://hdhhp4.vicp.io'
+// const imgHost = 'https://dbys.otimes.info' // 测试图片地址
 // const imgHost = 'https://www.otimes.com'
 const socketHost = 'wss://www.otimes.com' // websocket地址
 // const socketHost = 'wss://dbys.otimes.info'
