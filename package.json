@@ -4,8 +4,10 @@
   "description": "",
   "main": "dist/app.js",
   "scripts": {
-    "dev": "wepy build --watch",
-    "build": "cross-env NODE_ENV=production wepy build --no-cache",
+    "dev": "cross-env env_config=dev wepy build --watch",
+    "build": "cross-env NODE_ENV=production env_config=prod wepy build --no-cache",
+    "build:prod": "cross-env NODE_ENV=production env_config=prod wepy build --no-cache",
+    "build:test": "cross-env NODE_ENV=production env_config=test wepy build --no-cache",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
