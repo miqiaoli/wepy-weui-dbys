@@ -146,7 +146,7 @@ export default class details extends wepy.page {
       })
       setTimeout(() => {
         wx.redirectTo({
-          url: `./talk?id=${this.details.order_id}&buyorsell=${this.buyorsell}&reply=reply`
+          url: `./talk?id=${this.details.order_id}&buyorsell=${this.buyorsell}&discuss_id=${this.discuss_id}&reply=reply`
         })
       }, 2000);
     },
@@ -182,7 +182,6 @@ export default class details extends wepy.page {
       })
       if (res.false) return
       if (res.meta.success) {
-        // this.prompt('已拒绝', `./list?buyorsell=${this.buyorsell}`)
         wx.showToast({
             title: '已拒绝',
             icon: none,

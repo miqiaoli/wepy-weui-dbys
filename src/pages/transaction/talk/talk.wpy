@@ -67,6 +67,7 @@ export default class details extends wepy.page {
     buyorsell: 1, // 买方
     detail: null,
     reply: '',
+    discuss_id: '',
   }
   methods = {
     price(e) {
@@ -91,20 +92,23 @@ export default class details extends wepy.page {
           order_id: this.id,
           buyorsell: this.buyorsell,
           discuss_price: this.discuss_price,
-          discuss_amount: this.discuss_amount
+          discuss_amount: this.discuss_amount,
+          discuss_id: this.discuss_id || ''
         })
         if (res.false) return
         if (res.meta.success) {
-          wx.showToast({
-            title: '回复成功',
-            icon: 'success',
-            duration: 2000
+          wx.showModal({
+            title: '提示',
+            content: res.data.msg,
+            showCancel: false,
+            success(res) {
+              if (res.confirm) {
+                 wx.redirectTo({
+                  url: './list?buyorsell=2'
+                })
+              } 
+            }
           })
-          setTimeout(() => {
-            wx.redirectTo({
-              url: './list?buyorsell=1'
-            })
-          }, 2000);
         }
       } else {
         // 生成洽谈单
@@ -113,26 +117,30 @@ export default class details extends wepy.page {
           order_id: this.id,
           buyorsell: this.buyorsell,
           discuss_price: this.discuss_price,
-          discuss_amount: this.discuss_amount
+          discuss_amount: this.discuss_amount,
+          discuss_id: this.discuss_id || ''
         })
         if (res.false) return
         if (res.meta.success) {
-          wx.showToast({
-            title: '洽谈提交成功',
-            icon: 'success',
-            duration: 2000
+          wx.showModal({
+            title: '提示',
+            content: res.data.msg,
+            showCancel: false,
+            success(res) {
+              if (res.confirm) {
+                 wx.redirectTo({
+                  url: './list?buyorsell=1'
+                })
+              } 
+            }
           })
-          setTimeout(() => {
-            wx.redirectTo({
-              url: './list?buyorsell=1'
-            })
-          }, 2000);
         }
       }
     }
   }
   onLoad(e) {
     this.id = e.id ? e.id : 1
+    this.discuss_id = e.discuss_id ? e.discuss_id : ''
     this.reply = e.reply ? e.reply : ''
     this.buyorsell = e.buyorsell ? e.buyorsell : 1
     this.token_access = this.$parent.globalData.token_access
