@@ -1,6 +1,6 @@
 <template>
-<view class="page bg__white">
-  <view class="module" wx:if="{{info}}">
+<view class="page">
+  <view class="module bg__white" wx:if="{{info}}">
     <view class="weui-flex row">
       <view class="col-name">物流单号</view>
       <view class="col-des weui-flex__item">{{commission_num}}</view>
@@ -50,18 +50,26 @@
       <view class="col-des weui-flex__item">{{list_state}}</view>
       <!-- <view class="col-des weui-flex__item">{{info.list.list_state}}</view> -->
     </view>
-    <view class="weui-flex row">
-      <view class="col-name">额外总费用</view>
-      <view class="col-des weui-flex__item">{{info.list.additional_charges}}</view>
-    </view>
+      <view class="weui-flex row">
+        <view class="col-name">额外总费用</view>
+        <view class="col-des weui-flex__item">{{info.list.additional_charges}}</view>
+      </view>
+      <view class="row">
+        <view class="col-pic-name">回单</view>
+        <view class="col-pic-des weui-flex__item">
+          <block class="avatar" wx:for="{{info.list.end_img_paths}}" wx:key="index">
+            <image class="avatar" mode="" src="{{item}}" data-url='{{item}}' bindtap="previewImage"></image>
+          </block>
+        </view>
+      </view>
   </view>
 
-  <view class="module" wx:if="{{info}}">
+  <view class="module margin-top-20 bg__white" wx:if="{{info}}">
     <map class="map_container" id="myMap" latitude="{{info.list.path[0].lat}}" longitude="{{info.list.path[0].lng}}" polyline="{{polyline}}" include-points="{{includepoints}}" markers="{{includepoints}}" show-location bindmarkertap="markertap">
     </map>
   </view>
 
-  <view class="module" wx:if="{{path}}">
+  <view class="module bg__white" wx:if="{{path}}">
     <view class="weui-flex row" wx:for="{{path}}" wx:for-item="single" wx:key="id">
       <view class="col-time">{{single.formatDate}}</view>
       <view class="col-des weui-flex__item">{{single.placeChina}}</view>
@@ -102,6 +110,12 @@ export default class logisticsDetails extends wepy.page {
     scale: 6,
   }
   methods = {
+    previewImage(e) {
+      wx.previewImage({
+        current: e.currentTarget.dataset.url, // 当前显示图片的http链接
+        urls: this.data.info.list.end_img_paths // 需要预览的图片http链接列表
+      })
+    }
   }
   onLoad(e) {
     this.commission_num = e.commission_num
@@ -117,16 +131,16 @@ export default class logisticsDetails extends wepy.page {
     if (res.false) return
     if (res.meta.success) {
       this.info = res.data
-      
+
       const path = res.data.list.path ? res.data.list.path : []
-      if (path.length > 0 ) {
+      if (path.length > 0) {
         path.forEach(val => {
           let date = new Date(val.timestamp)
           let month = date.getMonth() + 1
           this.path.push({
             placeChina: val.placeChina,
             formatDate: `${date.getFullYear()}-${month}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
-          }) 
+          })
         });
       }
       let points = []
@@ -154,20 +168,19 @@ export default class logisticsDetails extends wepy.page {
       this.$apply()
     }
   }
-  markertap(e) {
-  }
+  markertap(e) {}
   formatStatus(status) {
     if (status < 0) {
-        return '状态异常'
-      } else if (status == 0) {
-        return '待发货'
-      } else if (status == 2 || status == 3 || status == 1) {
-        return '配送中'
-      } else if (status == 4) {
-        return '完成配送'
-      } else {
-        return '未知'
-      }
+      return '状态异常'
+    } else if (status == 0) {
+      return '待发货'
+    } else if (status == 2 || status == 3 || status == 1) {
+      return '配送中'
+    } else if (status == 4) {
+      return '完成配送'
+    } else {
+      return '未知'
+    }
   }
   formatDate(timestamp) {
     let date = new Date(timestamp)
@@ -179,53 +192,66 @@ export default class logisticsDetails extends wepy.page {
 
 <style lang="less">
 .map_container {
-  margin-top: 40rpx;
-  height: 500rpx;
-  width: 100%;
+    margin-top: 40rpx;
+    height: 500rpx;
+    width: 100%;
 }
 
 .col-time {
-  padding-right: 20rpx;
+    padding-right: 20rpx;
 }
 .btn-color-reply {
-  border: 1px solid #FB8E1E;
-  color: #FB8E1E;
+    border: 1px solid #FB8E1E;
+    color: #FB8E1E;
 }
 .btn-color-success {
-  border: 1px solid #6A7EEE;
-  color: #6A7EEE;
+    border: 1px solid #6A7EEE;
+    color: #6A7EEE;
 }
 .btn-color-warning {
-  border: 1px solid #EB4E35;
-  color: #EB4E35;
+    border: 1px solid #EB4E35;
+    color: #EB4E35;
+}
+.margin-top-20 {
+    margin-top: 20rpx;
 }
 .module {
-  padding: 16rpx 30rpx;
-  .flex-btn {
-    justify-content: flex-end;
-    .btn {
-      margin: 20rpx 0 20rpx 20rpx;
-      padding: 10rpx 44rpx;
-      border-radius: 8rpx;
-      font-size: 36rpx;
+    padding: 16rpx 30rpx;
+    .flex-btn {
+        justify-content: flex-end;
+        .btn {
+            margin: 20rpx 0 20rpx 20rpx;
+            padding: 10rpx 44rpx;
+            border-radius: 8rpx;
+            font-size: 36rpx;
+        }
     }
-  }
-  .title {
-    font-weight: bold;
-    font-size: 32rpx;
-    color: #1E1E1E;
-  }
-  .row {
-    padding: 20rpx 0;
-    font-size: 14px;
-    border-bottom: 1px solid #E4E7F0;
-    .col-name {
-      color: #8F8E94;
-      width: 220rpx;
+    .title {
+        font-weight: bold;
+        font-size: 32rpx;
+        color: #1E1E1E;
     }
-    .col-des {
-      color: #3D3D3D;
+    .row {
+        padding: 20rpx 0;
+        font-size: 14px;
+        border-bottom: 1px solid #E4E7F0;
+        .col-name {
+            color: #8F8E94;
+            width: 220rpx;
+        }
+        .col-des {
+            color: #3D3D3D;
+        }
+        .col-pic-name {
+            color: #8F8E94;
+            margin-bottom: 20rpx;
+        }
+        .avatar {
+            width: 200rpx;
+            height: 200rpx;
+            margin-right: 20rpx;
+            background-color: #eeeeee;
+        }
     }
-  }
 }
 </style>
