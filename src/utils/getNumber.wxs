@@ -1,5 +1,0 @@
-module.exports = {
-  getNumber: function (num) {
-    return num !== 0 ? num : ''
-  }
-};

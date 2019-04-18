@@ -395,7 +395,7 @@ import base from '../../mixins/base'
 import http from '../../utils/Http'
 import Swiper from '../../components/swiper'
 import fixBootom from '../../components/fixbootom'
-import getNumber from '../../utils/getNumber.wxs'
+import filter from '../../utils/filter.wxs'
 
 export default class ProductDetails extends wepy.page {
   mixins = [base]
@@ -422,7 +422,7 @@ export default class ProductDetails extends wepy.page {
     fixBootom
   }
   wxs = {
-    m1: getNumber
+    m1: filter
   }
   // 输入框
   getInputNum(e) {

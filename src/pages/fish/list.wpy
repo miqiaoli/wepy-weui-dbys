@@ -3,13 +3,13 @@
   <view class="scroll-size">
     <scroll-view scroll-x="true" class="scroll">
       <block wx:for="{{fishClassList}}" wx:for-item="single" wx:key="id">
-        <view class="main-class" style="{{classIndex == index ? 'color: #323972; font-weight: bold;' : 'color: #3D3D3D;'}}" data-index="{{index}}" bindtap="chooseClass">{{single}}</view>       
+        <view class="main-class" style="{{classIndex == index ? 'color: #323972; font-weight: bold;' : 'color: #3D3D3D;'}}" data-index="{{index}}" bindtap="chooseClass">{{single}}</view>
       </block>
     </scroll-view>
   </view>
   <view class="list">
     <view class="single weui-flex" wx:for="{{fishList}}" wx:for-item="fish" wx:key="id">
-      <image src="{{imgHost}}{{fish.backImg}}" class="pic">
+      <image src="{{imgHost}}{{fish.backImg}}" class="pic"></image>
       <view class="text">
         <view class="name">{{fish.fishPoolName}}</view>
         <view class="des">{{fish.fishpool_describe}}</view>
@@ -20,7 +20,7 @@
     </view>
   </view>
 </view>
-</template> 
+</template>
 
 <script>
 import wepy from 'wepy'
@@ -38,10 +38,10 @@ export default class FishList extends wepy.page {
   data = {
     imgHost: '',
     minHeight: 0,
-    fishClassList: [],  // 大分类
+    fishClassList: [], // 大分类
     classIndex: 0,
     className: '',
-    chooseClassName: {},  // 请求的全部小分类数据集合
+    chooseClassName: {}, // 请求的全部小分类数据集合
     fishList: [], // 小分类
     start: 1,
     limit: 20,
@@ -54,14 +54,14 @@ export default class FishList extends wepy.page {
         this.fishList = this.chooseClassName[this.classIndex]
         console.log(this.chooseClassName)
       } else {
-          // 选择的大分类名称
+        // 选择的大分类名称
         this.className = this.fishClassList[this.classIndex]
         this.getFishList()
       }
 
     }
   }
-  
+
   async onLoad() {
     this.imgHost = __getApi.imgHost
     await this.getFishClass()
@@ -69,8 +69,7 @@ export default class FishList extends wepy.page {
   }
 
   async getFishClass() {
-    const res = await http.get(__getApi._getFishClass, {
-    })
+    const res = await http.get(__getApi._getFishClass, {})
     if (res.false) return
     if (res.meta.success) {
       this.chooseClassName[this.classIndex] = res.data[0]
@@ -105,7 +104,7 @@ export default class FishList extends wepy.page {
   color: transparent;
 }
 .fish {
-  padding-right: 30rpx; 
+  padding-right: 30rpx;
   padding-left: 30rpx;
   background: #ffffff;
 }
@@ -114,12 +113,12 @@ export default class FishList extends wepy.page {
   /* border-bottom: 1px solid #EAEAEA; */
 }
 .scroll {
-  display: flex; 
-  white-space: nowrap; 
+  display: flex;
+  white-space: nowrap;
   height:120rpx;
 
 }
-.main-class:last-child{ 
+.main-class:last-child{
   border-right: 0;
 }
 .main-class {
