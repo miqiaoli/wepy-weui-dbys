@@ -106,6 +106,8 @@ export const __getApi = {
 
   //现货商城页获取产品列表
   _getProductList: `${host}/outsource/shangpinlist`,
+  //现货商城页获取产品列表，定向用户拦截
+  _getProductList_d: `${host}/outsource/shangpinlist_d.dbys`,
 
   //现货商城页获取品名
   _getProductNameList: `${host}/outsource/pinming`,

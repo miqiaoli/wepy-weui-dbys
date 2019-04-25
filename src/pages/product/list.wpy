@@ -247,7 +247,8 @@ export default class ProductList extends wepy.page {
       this.$apply();
     }
   };
-  async getProductList() {
+  async getProductList(url) {
+    let apiUrl = url ? url : __getApi._getProductList
     this.loading = true
     if (this.start === 1) {
       this.itemsList = []
@@ -262,7 +263,7 @@ export default class ProductList extends wepy.page {
     }
     params = Object.assign(params, this.advFilter, this.filterParam)
 
-    const res = await http.get(__getApi._getProductList, params, true)
+    const res = await http.get(apiUrl, params, true)
     this.loading = false
     if (res.false) return
     if (res.data[1].length === 0) {
@@ -344,7 +345,7 @@ export default class ProductList extends wepy.page {
       }
       this.advFilter.isDx_id = Number(this.isAgree)
       this.$apply()
-      this.getProductList(this.advFilter)
+      this.getProductList(__getApi._getProductList_d)
     },
     bindPriceSInput(e) {
       this.filterParam.price_s = e.detail.value
@@ -376,7 +377,7 @@ export default class ProductList extends wepy.page {
       this.advFilter.orderbysort = e.detail.value
       this.start = 1
       this.$apply()
-      this.getProductList(this.advFilter)
+      this.getProductList()
     },
     formSubmit(e) {
       this.start = 1
@@ -446,7 +447,7 @@ export default class ProductList extends wepy.page {
     ideChoice(e) {
       this.cityText = this.provinceName + ' ' + this.cityName
       this.isCity = true
-      this.getProductList(this.advFilter)
+      this.getProductList()
     },
     removeLayer(e) {
       const type = e.currentTarget.dataset.type
@@ -511,7 +512,7 @@ export default class ProductList extends wepy.page {
   onReachBottom() {
     if (this.start < this.maxPage) {
       ++this.start
-      this.getProductList(this.advFilter)
+      this.getProductList()
     } else {
       this.noMoreList = true
     }
