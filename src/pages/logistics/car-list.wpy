@@ -124,11 +124,11 @@ export default class carList extends wepy.page {
     if (res.false) return
     if (res.meta.success) {
       this.getCarList()
-      wx.showToast({
-        title: '成功添加车牌',
-        icon: 'none',
-        duration: 2000
-      })
+      // wx.showToast({
+      //   title: '成功添加车牌',
+      //   icon: 'none',
+      //   duration: 2000
+      // })
     }
 
   }
