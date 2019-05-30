@@ -5,7 +5,7 @@
     <SearchBar :placeholder="searchText"></SearchBar>
   </view>
   <bannerSwiper :list.sync="swipers" name='image_url' hostUrl="true" height="360"></bannerSwiper>
-  <view class="bg__white">
+  <!-- <view class="bg__white">
     <view class="page__bd_spacing broadcast weui-flex">
       <image class="image" mode="widthFix" src="../images/icon/broadcast.png"></image>
       <view class="weui-flex__item content">
@@ -13,7 +13,7 @@
       </view>
       <image class="more" src="/images/icon/more1.png" />
     </view>
-  </view>
+  </view> -->
   <view class="module-box weui-flex center_tab">
     <view class="weui-flex__item">
       <navigator url="./product/list" hover-class="navigator-hover">
@@ -155,25 +155,25 @@
 </template>
 
 <script>
-import wepy from "wepy";
+import wepy from 'wepy'
 import {
   __getApi
-} from "../config.js";
-import base from "../mixins/base";
-import Swiper from "../components/swiper";
-import SearchBar from "../components/searchbar";
-import IndexList from "../components/indexList";
-import http from "../utils/Http";
-import ModelAlert from "../components/modelAlert";
+} from '../config.js'
+import base from '../mixins/base'
+import Swiper from '../components/swiper'
+import SearchBar from '../components/searchbar'
+import IndexList from '../components/indexList'
+import http from '../utils/Http'
+import ModelAlert from '../components/modelAlert'
 
-const sliderWidth = 75;
+const sliderWidth = 75
 export default class pageIndex extends wepy.page {
   mixins = [base];
   config = {
-    navigationBarTitleText: "第八元素"
+    navigationBarTitleText: '第八元素'
   };
   data = {
-    searchText: "搜索",
+    searchText: '搜索',
     col1Img: '',
     col2Img: '',
     type1Img: '',
@@ -192,13 +192,13 @@ export default class pageIndex extends wepy.page {
     sheetNameList: [],
     sheetList: [],
     sheetNameIndex: 0,
-    startDate: "",
-    endDate: "",
-    sheetName: "",
+    startDate: '',
+    endDate: '',
+    sheetName: '',
     lineChart: null,
     categorie: [],
     date: [],
-    tabs: ["原  油", "单  体", "塑料原料", "再生塑料", "助  剂"],
+    tabs: ['原  油', '单  体', '塑料原料', '再生塑料', '助  剂'],
     activeIndex: 0,
     sliderOffset: 0,
     sliderLeft: 0
@@ -206,22 +206,22 @@ export default class pageIndex extends wepy.page {
 
   methods = {
     tabClick(e) {
-      this.sliderOffset = e.currentTarget.offsetLeft;
-      this.activeIndex = e.currentTarget.id;
+      this.sliderOffset = e.currentTarget.offsetLeft
+      this.activeIndex = e.currentTarget.id
     }
   };
 
   onReady() {
-    this.initPageData();
+    this.initPageData()
     try {
-      this.windowWidth = wepy.getSystemInfoSync().windowWidth || 320;
+      this.windowWidth = wepy.getSystemInfoSync().windowWidth || 320
     } catch (e) {
-      console.error("getSystemInfoSync failed!");
+      console.error('getSystemInfoSync failed!')
     }
     this.sliderLeft =
-      ((this.windowWidth - 30) / this.tabs.length - sliderWidth) / 2;
+      ((this.windowWidth - 30) / this.tabs.length - sliderWidth) / 2
     this.sliderOffset =
-      (this.windowWidth - 30) / this.tabs.length * this.activeIndex;
+      (this.windowWidth - 30) / this.tabs.length * this.activeIndex
 
     this.col1Img = 'http://dbys.afacode.top/index-col1.png?' + Math.random()
     this.col2Img = 'http://dbys.afacode.top/index-col2.png?' + Math.random()
@@ -231,25 +231,25 @@ export default class pageIndex extends wepy.page {
   // 初始化页面数据
   async initPageData() {
     // 处理轮播图
-    this.getADList();
-    this.getList("tradeList", __getApi._getTradeList);
+    this.getADList()
+    this.getList('tradeList', __getApi._getTradeList)
 
-    this.getList("supplyList", __getApi._getInfoList, {
+    this.getList('supplyList', __getApi._getInfoList, {
       type: 1
-    });
-    this.getList("demandList", __getApi._getInfoList, {
+    })
+    this.getList('demandList', __getApi._getInfoList, {
       type: 0
-    });
-    this.getList("plasticsNewsList", __getApi._getNewsList, {
+    })
+    this.getList('plasticsNewsList', __getApi._getNewsList, {
       type_id: 13
-    });
-    this.getProductList();
-    const historySearch = wepy.getStorageSync("historySearch") || [];
-    this.$parent.$updateGlobalData("historySearch", historySearch);
+    })
+    this.getProductList()
+    const historySearch = wepy.getStorageSync('historySearch') || []
+    this.$parent.$updateGlobalData('historySearch', historySearch)
 
-    await this.getSheetNames();
-    this.sheetName = this.sheetNameList[this.sheetNameIndex];
-    console.log(this.sheetName);
+    await this.getSheetNames()
+    this.sheetName = this.sheetNameList[this.sheetNameIndex]
+    console.log(this.sheetName)
 
     // let data = new Date()
     // let startDate = new Date(data)
@@ -263,30 +263,30 @@ export default class pageIndex extends wepy.page {
   }
   bindPickerChange(e) {
     if (e.detail.value) {
-      this.sheetNameIndex = e.detail.value;
-      this.sheetName = this.sheetNameList[this.sheetNameIndex];
+      this.sheetNameIndex = e.detail.value
+      this.sheetName = this.sheetNameList[this.sheetNameIndex]
     } else {
-      this.sheetName = e.currentTarget.dataset.name;
-      this.sheetNameIndex = e.currentTarget.dataset.index - 1;
+      this.sheetName = e.currentTarget.dataset.name
+      this.sheetNameIndex = e.currentTarget.dataset.index - 1
     }
-    this.updateChart();
+    this.updateChart()
   }
   bindDateChange(e) {
-    this[e.currentTarget.dataset.name] = e.detail.value;
+    this[e.currentTarget.dataset.name] = e.detail.value
   }
   async getADList() {
     const res = await http.get(__getApi._getADList, {
       ad_Model_id: 11
-    });
-    if (res.false) return;
-    this.swipers = res.data;
-    this.$apply();
+    })
+    if (res.false) return
+    this.swipers = res.data
+    this.$apply()
   }
   async getSheetNames() {
-    const res = await http.get(__getApi._getSheetNames);
-    if (res.false) return;
-    this.sheetNameList = res.data;
-    this.$apply();
+    const res = await http.get(__getApi._getSheetNames)
+    if (res.false) return
+    this.sheetNameList = res.data
+    this.$apply()
   }
   async getList(fields, url, params) {
     const res = await http.get(
@@ -295,27 +295,27 @@ export default class pageIndex extends wepy.page {
         page_id: 1,
         page_limit: 4
       })
-    );
-    if (res.false) return;
-    this[fields] = res.data.list;
-    this.$apply();
+    )
+    if (res.false) return
+    this[fields] = res.data.list
+    this.$apply()
   }
   async getProductList(limit) {
     const params = {
-      service_name: "TRADE_ORDERLIST",
-      goods_class_id: "1,2",
+      service_name: 'TRADE_ORDERLIST',
+      goods_class_id: '1,2',
       limit: limit || 5
-    };
-    const res = await http.get(__getApi._getSYProductList, params);
-    if (res.false) return;
-    this.recycledPlasticList = res.data[2];
-    this.plasticRawMaterials = res.data[1];
-    this.$apply();
+    }
+    const res = await http.get(__getApi._getSYProductList, params)
+    if (res.false) return
+    this.recycledPlasticList = res.data[2]
+    this.plasticRawMaterials = res.data[1]
+    this.$apply()
   }
   onShareAppMessage(res) {
     return {
-      title: "第八元素",
-      path: `pages/index`,
+      title: '第八元素',
+      path: `pages/index`
     }
   }
 
