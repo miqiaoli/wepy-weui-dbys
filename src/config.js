@@ -1,5 +1,5 @@
 const host = 'https://www.otimes.com/front'
-// const host = 'http://192.168.0.103/front'
+// const host = 'https://dbys.otimes.info/front'
 // var host = ''
 // var imgHost = ''
 // var socketHost = ''
