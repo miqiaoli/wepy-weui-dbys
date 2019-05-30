@@ -54,7 +54,7 @@ export default class todolist extends wepy.page {
     index: 0,
     now: '',
     next: '',
-    username: ['王思亮', '宓巧丽', '李发全', '何东红', '许淑君'],
+    username: ['宓巧丽', '李发全', '许淑君', '周方东', '张帅', '王兵强'],
     allLog: [],
   }
   getNextValue(e) {
@@ -69,7 +69,7 @@ export default class todolist extends wepy.page {
   }
   methods = {
     copy() {
-      const title = `杭州团队开发进度${this.day}:\n`
+      const title = `深圳团队开发进度${this.day}:\n`
       let today = ''
       let tomorrow = ''
       this.allLog.forEach((val, index) => {
