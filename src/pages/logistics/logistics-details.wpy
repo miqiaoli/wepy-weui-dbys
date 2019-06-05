@@ -29,6 +29,24 @@
       <view class="col-name">送达时间</view>
       <view class="col-des weui-flex__item">{{arrive_date}}</view>
     </view>
+
+    <view class="weui-flex row">
+      <view class="col-name">厂外装卸费</view>
+      <view class="col-des weui-flex__item">{{info.entru.externall_loading_charge}}元</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">厂内装卸费</view>
+      <view class="col-des weui-flex__item">{{info.entru.internal_loading_charge}}元</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">叉车费</view>
+      <view class="col-des weui-flex__item">{{info.entru.forklift_truck_fee}}元</view>
+    </view>
+    <view class="weui-flex row">
+      <view class="col-name">其他物流费用</view>
+      <view class="col-des weui-flex__item">{{info.entru.other_logistics_expenses}}元</view>
+    </view>
+
     <view class="weui-flex row">
       <view class="col-name">执行总价</view>
       <view class="col-des weui-flex__item">{{info.entru.exe_price}}元</view>

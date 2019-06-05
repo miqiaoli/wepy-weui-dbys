@@ -14,6 +14,10 @@
         <view wx:else class="weui-cell__ft weui-cell__ft_in-access pos"></view>
       </view>
       <view class="weui-flex row">
+        <view class="title">客户名称</view>
+        <view class="weui-flex__item">{{single.buyer_department}}</view>
+      </view>
+      <view class="weui-flex row">
         <view class="title">始发地</view>
         <view class="weui-flex__item">{{single.pickupAddress}}</view>
       </view>
@@ -116,16 +120,7 @@ export default class logisticsList extends wepy.page {
         })
       }
     }
-    // dateFormat(time) {
-    //   return this.formatTime(time)
-    // }
-
   }
-  // computed = {
-  // dateFormat() {
-  // return new Date(parseInt(time)).toLocaleString().substr(0,17)}
-  // }
-  // }
   onLoad(e) {
     this.token_access = this.$parent.globalData.token_access || ""
   }
