@@ -12,28 +12,28 @@
     <view class="weui-flex row">
       <view class="col-name">厂外装卸费</view>
       <view class="col-des weui-flex__item">
-            <input type="text" confirm-type="确定" placeholder="请输入厂外装卸费" value="{{externallLoadingCharge}}" />
+            <input type="text" confirm-type="确定" bindinput="addOther('externallLoadingCharge')" placeholder="请输入厂外装卸费" value="{{externallLoadingCharge}}" />
       </view>
       <view class="weui-cell__ft">元</view>
     </view>
     <view class="weui-flex row">
       <view class="col-name">厂内装卸费</view>
       <view class="col-des weui-flex__item">
-            <input type="text" confirm-type="确定" placeholder="请输入厂内装卸费" value="{{internalLoadingCharge}}" />
+            <input type="text" confirm-type="确定" bindinput="addOther('internalLoadingCharge')" placeholder="请输入厂内装卸费" value="{{internalLoadingCharge}}" />
       </view>
       <view class="weui-cell__ft">元</view>
     </view>
     <view class="weui-flex row">
       <view class="col-name">叉车费</view>
       <view class="col-des weui-flex__item">
-        <input type="text" confirm-type="确定" placeholder="请输入叉车费" value="{{forkliftTruckFee}}" />
+        <input type="text" confirm-type="确定" bindinput="addOther('forkliftTruckFee')" placeholder="请输入叉车费" value="{{forkliftTruckFee}}" />
       </view>
       <view class="weui-cell__ft">元</view>
     </view>
     <view class="weui-flex row">
       <view class="col-name">其他物流费用</view>
       <view class="col-des weui-flex__item">
-        <input type="text" confirm-type="确定" placeholder="请输入其他物流费用" value="{{otherLogisticsExpenses}}" />
+        <input type="text" confirm-type="确定" bindinput="addOther('otherLogisticsExpenses')" placeholder="请输入其他物流费用" value="{{otherLogisticsExpenses}}" />
       </view>
       <view class="weui-cell__ft">元</view>
     </view>
@@ -166,6 +166,9 @@ export default class logisticsUpdate extends wepy.page {
     otherLogisticsExpenses: ''
   }
   methods = {
+    addOther(val, e) {
+      this[val] = e.detail.value
+    },
     preventTouchMove(e) {
 
     },
@@ -319,10 +322,10 @@ export default class logisticsUpdate extends wepy.page {
       // this.choosedCarList = res.data.diver_cards
 
       // 4笔额外费用
-      this.externallLoadingCharge = res.data.externall_loading_charge ? res.data.externall_loading_charge : ''
-      this.internalLoadingCharge = res.data.internal_loading_charge ? res.data.internal_loading_charge : ''
-      this.forkliftTruckFee = res.data.forklift_truck_fee ? res.data.forklift_truck_fee : ''
-      this.otherLogisticsExpenses = res.data.other_logistics_expenses ? res.data.other_logistics_expenses : ''
+      this.externallLoadingCharge = res.data.externall_loading_charge
+      this.internalLoadingCharge = res.data.internal_loading_charge 
+      this.forkliftTruckFee = res.data.forklift_truck_fee
+      this.otherLogisticsExpenses = res.data.other_logistics_expenses
 
       // 司机
       this.getAllDriver(res.data.diver_names)
