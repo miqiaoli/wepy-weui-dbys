@@ -13,7 +13,7 @@
             <text class="weui-label weui-cells__title">今日</text>
           </view>
           <view class="weui-cell__hd weui-flex__item" style="border: 1px solid #999;">
-            <textarea class="weui-input" data-index="{{index}}" value="{{now}}" bindinput="getNowValue" type="text"  placeholder="请输入" />
+            <textarea class="weui-input" maxlength="-1" data-index="{{index}}" value="{{now}}" bindinput="getNowValue" type="text"  placeholder="请输入" />
           </view>
         </view>
         <view class="weui-cell">
@@ -21,7 +21,7 @@
             <text class="weui-label weui-cells__title">明日</text>
           </view>
           <view class="weui-cell__hd weui-flex__item" style="border: 1px solid #999;">
-            <textarea class="weui-input" data-index="{{index}}" value="{{next}}" bindinput="getNextValue" type="text"  placeholder="请输入" />
+            <textarea class="weui-input" maxlength="-1" data-index="{{index}}" value="{{next}}" bindinput="getNextValue" type="text"  placeholder="请输入" />
           </view>
         </view>
         <view class="weui-cell">
