@@ -54,7 +54,7 @@ export default class todolist extends wepy.page {
     index: 0,
     now: '',
     next: '',
-    username: ['宓巧丽', '李发全', '许淑君', '周方东', '张帅', '王兵强'],
+    username: ['宓巧丽', '李发全', '许淑君', '周方东', '王兵强'],
     allLog: [],
   }
   getNextValue(e) {
@@ -76,7 +76,7 @@ export default class todolist extends wepy.page {
         today = today + `${val.username}: ${val.today};\n`
         tomorrow = tomorrow + `${val.username}: ${val.tomorrow};\n`
       })
-      let data = `${title}${today}明日安排:\n ${tomorrow}`
+      let data = `${title}明日安排:\n ${tomorrow}\n今日开发：\n${today}`
       wx.setClipboardData({
         data: data,
         success (res) {
