@@ -1,0 +1,156 @@
+<template>
+<view class="rice-list">
+  <view class="search">
+    <view class="weui-search-bar__form" style="line-height: 60rpx; background: #FFFFFF; border-radius: 60rpx; border: 0">
+      <view class="weui-search-bar__box">
+        <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
+        <input type="text" class="weui-search-bar__input" style="height: 60rpx;line-height: 60rpx; text-align: left;" placeholder="搜索您想要的内容" bindconfirm bindinput="searchText" value="{{this.name}}" />
+      </view>
+    </view>
+  </view>
+  <view class="filter weui-flex">
+    <view class="weui-flex__item">
+      <view class="col-width active picker" style="text-align: center;" >
+        ddddddd
+        <text class="arrow-down arrow-pos"></text>
+      </view>
+    </view>
+    <view class="weui-flex__item">
+      <view class="col-width active picker" style="text-align: center;" >
+        ddddddddcdfvfvfvfvf
+        <text class="arrow-down arrow-pos"></text>
+      </view>
+    </view>
+    <view class="weui-flex__item">
+      <view class="col-width active picker" style="text-align: center;" >
+        dddddddssss
+        <text class="arrow-down arrow-pos"></text>
+      </view>
+    </view>
+  </view>
+  <view class="list">
+    <view class="single">
+      <view class="name">第八元素环境技术有限公司</view>
+      <view class="weui-flex">
+        <view class="detail weui-flex__item">主营产品：PP；热塑性弹性体；EVA；POE；乙热塑性弹性体；EVA；POE；乙热塑性弹性体；EVA；POE；乙</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access pos"></view>
+      </view>
+      
+      <view class="dis">
+        <icon type="success" size="20"/>
+        中国广东深圳市宝安区沙井德普电子诚
+      </view>
+    </view>
+    <view class="single">
+      <view class="name">第八元素环境技术有限公司</view>
+      <view class="weui-flex">
+        <view class="detail weui-flex__item">主营产品：PP；热塑性弹性体；EVA；POE；乙热塑性弹性体；EVA；POE；乙热塑性弹性体；EVA；POE；乙</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access pos"></view>
+      </view>
+      
+      <view class="dis">
+        <icon type="success" size="20"/>
+        中国广东深圳市宝安区沙井德普电子诚
+      </view>
+    </view>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import http from '../../utils/Http'
+
+export default class RiceList extends wepy.page {
+  config = {
+    navigationBarTitleText: '早稻2.0',
+    enablePullDownRefresh: true,
+    onReachBottomDistance: 100
+  }
+  data = {
+    
+  }
+  methods = {
+    
+  }
+  onLoad() {
+    this.token_access = this.$parent.globalData.token_access
+  }
+}
+</script>
+
+<style lang="less">
+.arrow-down {
+  display: inline-block;
+  vertical-align: top;
+  border-top: 6px solid #353535;
+  border-right: 6px solid transparent;
+  border-left: 6px solid transparent;
+  content: "";
+}
+
+.pos {
+  position: relative;
+}
+.rice-list {
+  height: 100vh;
+  background: #EDEDED;
+}
+.search {
+  margin: 30rpx 120rpx;
+}
+.filter {
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  border-bottom: 1px solid #EDEDED;
+  background: #ffffff;
+  .col-width {
+    position: relative;
+    padding: 0 6rpx;
+    width: 176rpx;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    .arrow-pos {
+      position: absolute;
+      top: 38rpx;
+      right: 0rpx;
+    }
+  }
+}
+.single {
+  position: relative;
+  margin-bottom: 10rpx;
+  padding: 20rpx 30rpx;
+  background: #ffffff;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  .name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #030000;
+  }
+  .highlight {
+    color: #F52020;
+  }
+  .detail {
+    position: relative;
+    margin: 20rpx 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 14px;
+    color: #030000;
+  }
+  .dis {
+    font-size: 12px;
+    color: #9F9E9E;
+  }
+}
+</style>

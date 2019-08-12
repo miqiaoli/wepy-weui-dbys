@@ -30,7 +30,7 @@
     </view>
     <button type="primary" @tap="getAll">预览</button>
     <view class="" wx:if="{{allLog}}">
-      <view class="weui-cells__title">杭州团队开发进度{{day}}</view>
+      <view class="weui-cells__title">深圳团队开发进度{{day}}</view>
       <block wx:for="{{allLog}}" wx:for-index="index" wx:key="id" wx:for-item="single" >
         <view class="weui-cells__title">{{single.username}}: {{single.today}}</view>
       </block>
@@ -54,7 +54,7 @@ export default class todolist extends wepy.page {
     index: 0,
     now: '',
     next: '',
-    username: ['宓巧丽', '李发全', '许淑君', '周方东', '王兵强'],
+    username: ['宓巧丽', '李发全', '许淑君', '周方东', '王兵强', '吴方涛'],
     allLog: [],
   }
   getNextValue(e) {

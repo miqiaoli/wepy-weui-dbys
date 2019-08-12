@@ -1,0 +1,114 @@
+<template>
+  <view class='rice-detail'>
+    <view class="tip">此次收费由第八元素提供</view>
+    <view class="company">
+      <view class="weui-flex">
+        <view class="weui-flex__item">深圳市PP环境技术有限公司</view>
+        <view class="icon">收藏</view>
+      </view>
+      <view class="weui-flex">
+        <view class="weui-flex__item">
+          <view>企业法人</view>
+          <view>雷军</view>
+        </view>      
+        <view class="weui-flex__item">
+          <view>企业法人</view>
+          <view>雷军</view>
+        </view>       
+        <view class="weui-flex__item">
+          <view>企业法人</view>
+          <view>雷军</view>
+        </view>      
+        <view class="weui-flex__item">
+          <view>企业法人</view>
+          <view>雷军</view>
+        </view>
+        
+      </view>
+    </view>
+    <view class="link">
+      <view class="weui-flex">
+        <view class="icon">1</view>
+        <view class="weui-flex__item">13454566765(总经理) 13454566765</view>
+      </view>
+      <view class="weui-flex">
+        <view class="icon">1</view>
+        <view class="weui-flex__item">中国广东深圳市宝安区沙井德普电子诚</view>
+      </view>
+      <view class="weui-flex">
+        <view class="icon">1</view>
+        <view class="weui-flex__item">13454566765@qq.com</view>
+      </view>
+      <view class="weui-flex">
+        <view class="icon">1</view>
+        <view class="weui-flex__item">www.otimes.com</view>
+      </view>
+    </view>
+    <view class="direction">
+      <view class="weui-flex">
+        <view class="icon">主营产品：</view>
+        <view class="weui-flex__item">；热塑性弹性体；EVA；POE；乙丙橡…</view>
+      </view>
+      <view class="weui-flex">
+        <view class="icon">主营行业：</view>
+        <view class="weui-flex__item">；热塑性弹性体；EVA；POE；乙丙橡…</view>
+      </view>
+      <view class="weui-flex">
+        <view class="icon">使用材料范围：</view>
+        <view class="weui-flex__item"></view>
+      </view>
+    </view>
+    <view class="scope">
+      <view>经营范围</view>
+      <view>互塑胶原料、货物进出口。普通货运…信息技术外包、金融业务流程、外包、金融知识流程外包、以服务外包方式从事票据中</view>
+    </view>
+    <view class="risk">
+      风险信息
+    </view>
+    <view class="news">
+      <view class="title">企业关联舆情</view>
+      <view></view>
+    </view>
+  </view>
+</template>
+
+<style lang='less'>
+.rice-detail {
+  background: #EDEDED;
+  .tip {
+    height: 60rpx;
+    line-height: 60rpx;
+    background: #0E91FF;
+    text-align: center;
+    font-size: 20px;
+    color: #FFFFFF;
+  }
+}
+</style>
+
+<script>
+import wepy from "wepy";
+import base from "../../mixins/base";
+import { __getApi } from "../../config.js";
+import http from "../../utils/Http";
+
+export default class riceDetails extends wepy.page {
+  mixins = [base];
+  config = {
+    navigationBarTitleText: "环球资源详情"
+  };
+  data = {
+    
+  };
+  methods = {
+    makePhoneCall(e) {
+      wx.makePhoneCall({
+        phoneNumber: "400-888-9383"
+      });
+    },
+  }
+  onLoad(options) {
+    
+  }
+}
+</script>
