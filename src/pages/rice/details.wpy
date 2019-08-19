@@ -1,80 +1,122 @@
 <template>
-  <view class='rice-detail'>
+  <view class='rice-detail page'>
     <view class="tip">此次收费由第八元素提供</view>
-    <view class="company">
+    <view class="company margin-safe">
       <view class="weui-flex">
-        <view class="weui-flex__item">深圳市PP环境技术有限公司</view>
+        <view class="name weui-flex__item">深圳市PP环境技术有限公司</view>
         <view class="icon">收藏</view>
       </view>
       <view class="weui-flex">
-        <view class="weui-flex__item">
-          <view>企业法人</view>
-          <view>雷军</view>
+        <view class="box weui-flex__item">
+          <view class="tit">企业法人</view>
+          <view class="des">雷军</view>
         </view>      
-        <view class="weui-flex__item">
-          <view>企业法人</view>
-          <view>雷军</view>
+        <view class="box weui-flex__item">
+          <view class="tit">注册资本</view>
+          <view class="des">雷军</view>
         </view>       
-        <view class="weui-flex__item">
-          <view>企业法人</view>
-          <view>雷军</view>
+        <view class="box weui-flex__item">
+          <view class="tit">成立日期</view>
+          <view class="des">2010-03-03</view>
         </view>      
-        <view class="weui-flex__item">
-          <view>企业法人</view>
-          <view>雷军</view>
+        <view class="box weui-flex__item">
+          <view class="tit">活跃度</view>
+          <view class="des">40</view>
         </view>
         
       </view>
     </view>
-    <view class="link">
-      <view class="weui-flex">
-        <view class="icon">1</view>
+    <view class="link margin-safe">
+      <view class="weui-flex item">
+        <view class="icon">G</view>
         <view class="weui-flex__item">13454566765(总经理) 13454566765</view>
       </view>
-      <view class="weui-flex">
+      <view class="weui-flex item">
         <view class="icon">1</view>
         <view class="weui-flex__item">中国广东深圳市宝安区沙井德普电子诚</view>
       </view>
-      <view class="weui-flex">
+      <view class="weui-flex item">
         <view class="icon">1</view>
         <view class="weui-flex__item">13454566765@qq.com</view>
       </view>
-      <view class="weui-flex">
+      <view class="weui-flex item">
         <view class="icon">1</view>
         <view class="weui-flex__item">www.otimes.com</view>
       </view>
     </view>
-    <view class="direction">
-      <view class="weui-flex">
+    <view class="direction margin-safe">
+      <view class="weui-flex item">
         <view class="icon">主营产品：</view>
         <view class="weui-flex__item">；热塑性弹性体；EVA；POE；乙丙橡…</view>
       </view>
-      <view class="weui-flex">
+      <view class="weui-flex item">
         <view class="icon">主营行业：</view>
-        <view class="weui-flex__item">；热塑性弹性体；EVA；POE；乙丙橡…</view>
+        <view class="weui-flex__item">热塑性弹性体；EVA；POE；乙丙12312312321</view>
       </view>
-      <view class="weui-flex">
+      <view class="weui-flex item">
         <view class="icon">使用材料范围：</view>
         <view class="weui-flex__item"></view>
       </view>
     </view>
-    <view class="scope">
-      <view>经营范围</view>
-      <view>互塑胶原料、货物进出口。普通货运…信息技术外包、金融业务流程、外包、金融知识流程外包、以服务外包方式从事票据中</view>
+    <view class="scope shadow margin-safe">
+      <view class="title">经营范围</view>
+      <view class="scope-des">互塑胶原料、货物进出口。普通货运…信息技术外包、金融业务流程、外包、金融知识流程外包、以服务外包方式从事票据中</view>
     </view>
-    <view class="risk">
-      风险信息
+    <view class="risks shadow margin-safe">
+      <view class="title">风险信息</view>
+      <view class="item weui-flex">
+        <view class="weui-flex__item">
+          <view class="icon">ICON</view>
+          <view class="text">裁判文书</view>
+        </view>      
+        <view class="weui-flex__item">
+          <view class="icon">ICON</view>
+          <view class="text">失信信息</view>
+        </view>      
+        <view class="weui-flex__item">
+          <view class="icon">ICON</view>
+          <view class="text">法院公告</view>
+        </view>      
+        <view class="weui-flex__item">
+          <view class="icon">ICON</view>
+          <view class="text">企业年报</view>
+        </view>      
+      </view>
     </view>
-    <view class="news">
+    <view class="news shadow margin-safe">
       <view class="title">企业关联舆情</view>
-      <view></view>
+      <view class="weui-flex">
+        <view class="weui-flex__item">
+          <view class="">2019年Q2印度智能手机出货量小米位居第一</view>
+          <view class="">#积极   #亏损盈利</view>
+          <view class="">来自站长之家</view>
+        </view> 
+        <view class="">
+          <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+        </view>          
+      </view>
     </view>
   </view>
 </template>
 
 <style lang='less'>
+@border: 1px solid #EDEDED;
+@colorBase:#080000;
+.item {
+  padding: 20rpx 0;
+  border-bottom: @border;
+  .icon {
+    margin-right: 20rpx;
+  }
+}
+.margin-safe {
+  margin-top: 10rpx;
+  padding: 0 30rpx;
+  background: #FFFFFF;
+}
 .rice-detail {
-  background: #EDEDED;
+  font-size: 14px;
+  color: #080000;
   .tip {
     height: 60rpx;
     line-height: 60rpx;
@@ -83,6 +125,57 @@
     font-size: 20px;
     color: #FFFFFF;
   }
+  .company {
+    padding-bottom: 16rpx;
+    .name {
+      margin: 10rpx 0;
+      font-size: 18px;
+      color: #030000;
+      font-weight: bold;
+    }
+    .box {
+      margin: 6rpx 0;
+      border-right: @border;
+      &:last-child {
+        border-right: 0;
+      }
+      .tit {
+        text-align: center;
+        font-size: 14px;
+        color: #8E8E8E;
+      }
+      .des {
+        text-align: center;
+        font-size: 14px;
+        color: @border;
+      }
+    }
+
+  }
+  .link {
+    color: #080000;
+  }
+  .scope-des {
+    font-size: 14px;
+    color: #080000;
+    line-height: 40rpx;
+  }
+  .risks {
+    .item {
+      margin: 20rpx 0;
+      .icon {
+        background: #0E91FF;
+        height: 50px;
+      }
+    }
+  }
+}
+.title {
+  padding: 10rpx 0;
+  font-weight: bold;
+  font-size: 16px;
+  color: #080000;
+  border-bottom: @border;
 }
 </style>
 
