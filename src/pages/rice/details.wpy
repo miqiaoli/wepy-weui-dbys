@@ -3,21 +3,24 @@
     <view class="tip">此次收费由第八元素提供</view>
     <view class="company margin-safe">
       <view class="weui-flex">
-        <view class="name weui-flex__item">深圳市PP环境技术有限公司</view>
-        <view class="icon">收藏</view>
+        <view class="name weui-flex__item">{{detail.custNname}}</view>
+        <view wx:if="{{detail.is_collection == 0}}" class="icon" bindtap="doCollection">
+          <!-- <image class="collection-icon" src="{{ detail.is_collection == 0 ? '/images/icon/collection_icon_HL.png' : '/images/icon/collection_icon.png' }}" /> -->
+        </view>
+        <view wx:else class="icon">已收藏</view>
       </view>
       <view class="weui-flex">
         <view class="box weui-flex__item">
           <view class="tit">企业法人</view>
-          <view class="des">雷军</view>
+          <view class="des">{{detail.corporation}}</view>
         </view>      
         <view class="box weui-flex__item">
           <view class="tit">注册资本</view>
-          <view class="des">雷军</view>
+          <view class="des">{{detail.registeredCapital}}</view>
         </view>       
         <view class="box weui-flex__item">
           <view class="tit">成立日期</view>
-          <view class="des">2010-03-03</view>
+          <view class="des">{{detail.establishingTime}}</view>
         </view>      
         <view class="box weui-flex__item">
           <view class="tit">活跃度</view>
@@ -29,38 +32,38 @@
     <view class="link margin-safe">
       <view class="weui-flex item">
         <view class="icon">G</view>
-        <view class="weui-flex__item">13454566765(总经理) 13454566765</view>
+        <view class="weui-flex__item"></view>
       </view>
       <view class="weui-flex item">
         <view class="icon">1</view>
-        <view class="weui-flex__item">中国广东深圳市宝安区沙井德普电子诚</view>
+        <view class="weui-flex__item">{{detail.place}}</view>
       </view>
       <view class="weui-flex item">
         <view class="icon">1</view>
-        <view class="weui-flex__item">13454566765@qq.com</view>
+        <view class="weui-flex__item">{{detail.mail}}</view>
       </view>
       <view class="weui-flex item">
         <view class="icon">1</view>
-        <view class="weui-flex__item">www.otimes.com</view>
+        <view class="weui-flex__item">{{detail.website}}</view>
       </view>
     </view>
     <view class="direction margin-safe">
       <view class="weui-flex item">
         <view class="icon">主营产品：</view>
-        <view class="weui-flex__item">；热塑性弹性体；EVA；POE；乙丙橡…</view>
+        <view class="weui-flex__item">{{detail.mainProducts}}</view>
       </view>
       <view class="weui-flex item">
         <view class="icon">主营行业：</view>
-        <view class="weui-flex__item">热塑性弹性体；EVA；POE；乙丙12312312321</view>
+        <view class="weui-flex__item">{{detail.mainIndustry}}</view>
       </view>
       <view class="weui-flex item">
         <view class="icon">使用材料范围：</view>
-        <view class="weui-flex__item"></view>
+        <view class="weui-flex__item">{{detail.enMaterials}}</view>
       </view>
     </view>
     <view class="scope shadow margin-safe">
       <view class="title">经营范围</view>
-      <view class="scope-des">互塑胶原料、货物进出口。普通货运…信息技术外包、金融业务流程、外包、金融知识流程外包、以服务外包方式从事票据中</view>
+      <view class="scope-des">{{detail.scopebusiness}}</view>
     </view>
     <view class="risks shadow margin-safe">
       <view class="title">风险信息</view>
@@ -188,20 +191,59 @@ import http from "../../utils/Http";
 export default class riceDetails extends wepy.page {
   mixins = [base];
   config = {
-    navigationBarTitleText: "环球资源详情"
+    navigationBarTitleText: "环球资源详情",
+    onReachBottomDistance: 50,
   };
   data = {
-    
+    id: '',
+    token_access: '',
+    detail: {},
+    pageNum: 1,
+    pageSize: 15,
+    newList: [],
   };
   methods = {
+    async doCollection() {
+      const res = await http.get(__getApi._doCollection, {
+        token_access: this.token_access,
+        id: this.id
+      })
+      console.log(res.data)
+      this.detail.is_collection = this.detail.is_collection == 1 ? 0 : 1
+    },
     makePhoneCall(e) {
+      // e.currentTarget.dataset.phone
       wx.makePhoneCall({
         phoneNumber: "400-888-9383"
       });
     },
   }
-  onLoad(options) {
+  async getRiceNews() {
+    const res = await http.get(__getApi._getRiceNews, {
+      token_access: this.token_access,
+      id: this.id,
+      pageNum: this.pageNum,
+      pageSize: this.pageSize
+    })
+    console.log(res.data)
+    this.pageNum++
     
+  }
+  async onLoad(options) {
+    this.token_access = this.$parent.globalData.token_access || ''
+    this.id = options.id
+    const res = await http.get(__getApi._getRiceDetails, {
+      token_access: this.token_access,
+      id: options.id
+    })
+    this.detail = res.data
+    this.collectionBoolean = this.detail.collect == 0 ? false : true
+    this.$apply()
+  }
+  // 加载更多
+  onReachBottom() {
+    this.loading = true
+    this.getRiceNews()
   }
 }
 </script>

@@ -4,7 +4,7 @@
     <view class="weui-search-bar__form" style="line-height: 60rpx; background: #FFFFFF; border-radius: 60rpx; border: 0">
       <view class="weui-search-bar__box">
         <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
-        <input type="text" class="weui-search-bar__input" style="height: 60rpx;line-height: 60rpx; text-align: left;" placeholder="搜索您想要的内容" bindconfirm bindinput="searchText" value="{{this.name}}" />
+        <input type="text" class="weui-search-bar__input" style="height: 60rpx;line-height: 60rpx; text-align: left;" placeholder="搜索您想要的内容" bindconfirm bindinput="searchText" value="{{this.keyword}}" />
       </view>
     </view>
   </view>
@@ -28,32 +28,34 @@
       </view>
     </view>
   </view>
-  <view class="list">
-    <view class="single">
-      <view class="name">第八元素环境技术有限公司</view>
+  <view class="list"> 
+    <view wx:for="{{realList}}" wx:key="id" wx:for-item="single"  id="{{single.id}}" bindtap="todetail" class="single">
+      <view class="name">
+        <rich-text nodes="{{single.custNname}}"></rich-text>
+      </view>
       <view class="weui-flex">
-        <view class="detail weui-flex__item">主营产品：PP；热塑性弹性体；EVA；POE；乙热塑性弹性体；EVA；POE；乙热塑性弹性体；EVA；POE；乙</view>
+        <view class="detail weui-flex__item weui-flex">
+          <!-- <view class="weui-flex__item">主营产品：</view> -->
+          <rich-text nodes="{{single.mainProducts}}"></rich-text>
+          </view>
         <view class="weui-cell__ft weui-cell__ft_in-access pos"></view>
-      </view>
-      
+      </view>   
       <view class="dis">
-        <icon type="success" size="20"/>
-        中国广东深圳市宝安区沙井德普电子诚
-      </view>
-    </view>
-    <view class="single">
-      <view class="name">第八元素环境技术有限公司</view>
-      <view class="weui-flex">
-        <view class="detail weui-flex__item">主营产品：PP；热塑性弹性体；EVA；POE；乙热塑性弹性体；EVA；POE；乙热塑性弹性体；EVA；POE；乙</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access pos"></view>
-      </view>
-      
-      <view class="dis">
-        <icon type="success" size="20"/>
-        中国广东深圳市宝安区沙井德普电子诚
+        <image class="icon" src="/images/icon/pos.png" />
+        {{single.place}}
       </view>
     </view>
   </view>
+
+  <view wx:if="{{ count == 0 }}" class="weui-loadmore weui-loadmore_line">
+    <text class="weui-loadmore__tips">暂无数据</text>
+  </view>
+  <block wx:if="{{loading}}">
+    <view class="weui-loadmore">
+      <view class="weui-loading"></view>
+      <view class="weui-loadmore__tips">正在加载</view>
+    </view>
+  </block>
 </view>
 </template>
 
@@ -68,21 +70,113 @@ export default class RiceList extends wepy.page {
   config = {
     navigationBarTitleText: '早稻2.0',
     enablePullDownRefresh: true,
-    onReachBottomDistance: 100
+    onReachBottomDistance: 100,
+    usingComponents: {
+      "rich-parse": "../rich-parse/rich-parse"
+    }
   }
   data = {
-    
+    loading: false,
+    keyword: '冰箱',
+    pageNum: 1,
+    pageSize: 15,
+    lng: '',
+    lat: '',
+    province: '',
+    city: '',
+    count: 0,
+    list: [],
+    realList: []
   }
   methods = {
-    
+    searchText(e) {
+      this.keyword = e.detail.value
+    },
+    async bindconfirm(e) {
+      this.keyword = e.detail.value
+      this.pageNum = 1
+      this.list = ''
+      this.realList = '' 
+      this.getCompanyList()
+    },
+    // 到详情
+    todetail(event) {
+      wx.navigateTo({
+        url: '/pages/rice/details?id=' + event.currentTarget.id
+      })
+    },
+  }
+  // 高亮
+  highLight(str) {
+    let high = str.replace(/#--/g, "<span class='red'>").replace(/--#/g, "</span>")
+    this.realList = JSON.parse(high)
+  }
+  // 公司列表数据
+  async getCompanyList() {
+    this.loading = true
+    const res = await http.get(__getApi._getRiceList, {
+      keyword: this.keyword,
+      pageNum: this.pageNum,
+      pageSize: this.pageSize,
+      province: this.province,
+      city: this.city,
+      lng: this.lng,
+      lat: this.lat,
+      token_access: this.token_access
+    })
+    wx.stopPullDownRefresh()
+    this.loading = false
+    this.$apply()
+    if (res.false) return
+    if (res.meta.success) {
+      this.count = res.meta.success ? res.data.count : this.count
+      // if (this.pageNum * this.pageSize - this.pageNum > this.count) {
+      //   this.loading = false
+      //   wx.showToast({
+      //     title: '没有更多了',
+      //     icon: 'none',
+      //     duration: 2000
+      //   })
+      //   return
+      // }
+      if (this.count < this.pageNum * this.pageSize - this.pageSize) return
+      this.pageNum++
+      this.list = [...this.list, ...res.data.list]
+      this.highLight(JSON.stringify(this.list))
+      this.$apply()  
+    }
   }
   onLoad() {
+    let self = this
     this.token_access = this.$parent.globalData.token_access
+    wx.getLocation({
+      type: 'wgs84',
+      success: function(res) {
+        self.lat = res.latitude
+        self.lng = res.longitude
+        self.getCompanyList()
+      }
+    })
+  }
+  // 加载更多
+  async onReachBottom() {
+    this.loading = true
+    this.getCompanyList()
+  }
+  // 刷新
+  onPullDownRefresh() {
+    this.pageNum = 1
+    this.list = []
+    this.getCompanyList()
   }
 }
 </script>
 
 <style lang="less">
+.red {
+  font-weight: bold;
+  color: red;
+}
 .arrow-down {
   display: inline-block;
   vertical-align: top;
@@ -146,11 +240,18 @@ export default class RiceList extends wepy.page {
     white-space: nowrap;
     text-overflow: ellipsis;
     font-size: 14px;
-    color: #030000;
+    color: #080000;
   }
   .dis {
     font-size: 12px;
     color: #9F9E9E;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    .icon {
+      width: 10rpx;
+      height: 20rpx;
+    }
   }
 }
 </style>
