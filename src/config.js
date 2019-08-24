@@ -1,32 +1,5 @@
-const host = 'https://www.otimes.com/front'
-// const host = 'https://dbys.otimes.info/front'
-// var host = ''
-// var imgHost = ''
-// var socketHost = ''
-// var prod = process.env.NODE_ENV === 'production'
-// if (prod) {
-//   if (process.env.env_config === 'prod') {
-//     host = 'https://www.otimes.com/front'
-//     imgHost = 'https://www.otimes.com'
-//     socketHost = 'wss://www.otimes.com'
-//   } else if (process.env.env_config === 'test') {
-//     host = 'https://dbys.otimes.info/front'
-//     imgHost = 'https://dbys.otimes.info'
-//     socketHost = 'wss://dbys.otimes.info'
-//   }
-// } else {
-//   host = 'http://192.168.0.103/front'
-//   imgHost = 'https://dbys.otimes.info'
-//   socketHost = 'wss://dbys.otimes.info'
-// }
-// host = 'http://192.168.0.103/front'
-// imgHost = 'https://dbys.otimes.info'
-// socketHost = 'wss://dbys.otimes.info'
-
-// const host = 'https://dbys.otimes.info/front'
-// const host = 'http://hdhhp4.vicp.io/front'
-
-// const imgHost = 'http://192.168.0.129:8080'
+// const host = 'https://www.otimes.com/front'
+const host = 'https://dbys.otimes.info/front'
 // const imgHost = 'https://dbys.otimes.info' // 测试图片地址
 const imgHost = 'https://www.otimes.com'
 const socketHost = 'wss://www.otimes.com' // websocket地址
@@ -208,6 +181,13 @@ export const __getApi = {
   _getCollectionDo: `${host}/enter/collect.dbys`, // 收藏操作
   _getSearchCollection: `${host}/enter/collectSearch.dbys`, // 收藏搜索
   _getFeedBack: `${host}/enter/feedback.dbys`, // 反馈
+
+  // 早稻新接口
+  _getRiceList: `${host}/rise/list.dbys`, // 搜索
+  _getCollectionList: `${host}/rise/collectList.dbys`,
+  _doCollection: `${host}/rise/collect.dbys`,
+  _getRiceDetails: `${host}/rise/particulars.dbys`,
+  _getRiceNews: `${host}/rise/sentimentList.dbys`,
 
   // 鱼塘历史接口
   _getFishPondList: `${host}/wechat/polist.dbys`,
