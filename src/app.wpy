@@ -8,9 +8,13 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
+      
       'pages/index',
+      'pages/rice/list',
+      'pages/rice/details',
+      'pages/rice/index',
+      
       'pages/logistics/logistics-update',
-
       'pages/logistics/index',
       'pages/logistics/driver-list',
       'pages/logistics/logistics-list',      

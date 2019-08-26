@@ -1,0 +1,249 @@
+<template>
+  <view class='rice-detail page'>
+    <view class="tip">此次收费由第八元素提供</view>
+    <view class="company margin-safe">
+      <view class="weui-flex">
+        <view class="name weui-flex__item">{{detail.custNname}}</view>
+        <view wx:if="{{detail.is_collection == 0}}" class="icon" bindtap="doCollection">
+          <!-- <image class="collection-icon" src="{{ detail.is_collection == 0 ? '/images/icon/collection_icon_HL.png' : '/images/icon/collection_icon.png' }}" /> -->
+        </view>
+        <view wx:else class="icon">已收藏</view>
+      </view>
+      <view class="weui-flex">
+        <view class="box weui-flex__item">
+          <view class="tit">企业法人</view>
+          <view class="des">{{detail.corporation}}</view>
+        </view>      
+        <view class="box weui-flex__item">
+          <view class="tit">注册资本</view>
+          <view class="des">{{detail.registeredCapital}}</view>
+        </view>       
+        <view class="box weui-flex__item">
+          <view class="tit">成立日期</view>
+          <view class="des">{{detail.establishingTime}}</view>
+        </view>      
+        <view class="box weui-flex__item">
+          <view class="tit">活跃度</view>
+          <view class="des">40</view>
+        </view>
+        
+      </view>
+    </view>
+    <view class="link margin-safe">
+      <view class="weui-flex item">
+        <view class="icon">G</view>
+        <view class="weui-flex__item"></view>
+      </view>
+      <view class="weui-flex item">
+        <view class="icon">1</view>
+        <view class="weui-flex__item">{{detail.place}}</view>
+      </view>
+      <view class="weui-flex item">
+        <view class="icon">1</view>
+        <view class="weui-flex__item">{{detail.mail}}</view>
+      </view>
+      <view class="weui-flex item">
+        <view class="icon">1</view>
+        <view class="weui-flex__item">{{detail.website}}</view>
+      </view>
+    </view>
+    <view class="direction margin-safe">
+      <view class="weui-flex item">
+        <view class="icon">主营产品：</view>
+        <view class="weui-flex__item">{{detail.mainProducts}}</view>
+      </view>
+      <view class="weui-flex item">
+        <view class="icon">主营行业：</view>
+        <view class="weui-flex__item">{{detail.mainIndustry}}</view>
+      </view>
+      <view class="weui-flex item">
+        <view class="icon">使用材料范围：</view>
+        <view class="weui-flex__item">{{detail.enMaterials}}</view>
+      </view>
+    </view>
+    <view class="scope shadow margin-safe">
+      <view class="title">经营范围</view>
+      <view class="scope-des">{{detail.scopebusiness}}</view>
+    </view>
+    <view class="risks shadow margin-safe">
+      <view class="title">风险信息</view>
+      <view class="item weui-flex">
+        <view class="weui-flex__item">
+          <view class="icon">ICON</view>
+          <view class="text">裁判文书</view>
+        </view>      
+        <view class="weui-flex__item">
+          <view class="icon">ICON</view>
+          <view class="text">失信信息</view>
+        </view>      
+        <view class="weui-flex__item">
+          <view class="icon">ICON</view>
+          <view class="text">法院公告</view>
+        </view>      
+        <view class="weui-flex__item">
+          <view class="icon">ICON</view>
+          <view class="text">企业年报</view>
+        </view>      
+      </view>
+    </view>
+    <view class="news shadow margin-safe">
+      <view class="title">企业关联舆情</view>
+      <view class="weui-flex">
+        <view class="weui-flex__item">
+          <view class="">2019年Q2印度智能手机出货量小米位居第一</view>
+          <view class="">#积极   #亏损盈利</view>
+          <view class="">来自站长之家</view>
+        </view> 
+        <view class="">
+          <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+        </view>          
+      </view>
+    </view>
+  </view>
+</template>
+
+<style lang='less'>
+@border: 1px solid #EDEDED;
+@colorBase:#080000;
+.item {
+  padding: 20rpx 0;
+  border-bottom: @border;
+  .icon {
+    margin-right: 20rpx;
+  }
+}
+.margin-safe {
+  margin-top: 10rpx;
+  padding: 0 30rpx;
+  background: #FFFFFF;
+}
+.rice-detail {
+  font-size: 14px;
+  color: #080000;
+  .tip {
+    height: 60rpx;
+    line-height: 60rpx;
+    background: #0E91FF;
+    text-align: center;
+    font-size: 20px;
+    color: #FFFFFF;
+  }
+  .company {
+    padding-bottom: 16rpx;
+    .name {
+      margin: 10rpx 0;
+      font-size: 18px;
+      color: #030000;
+      font-weight: bold;
+    }
+    .box {
+      margin: 6rpx 0;
+      border-right: @border;
+      &:last-child {
+        border-right: 0;
+      }
+      .tit {
+        text-align: center;
+        font-size: 14px;
+        color: #8E8E8E;
+      }
+      .des {
+        text-align: center;
+        font-size: 14px;
+        color: @border;
+      }
+    }
+
+  }
+  .link {
+    color: #080000;
+  }
+  .scope-des {
+    font-size: 14px;
+    color: #080000;
+    line-height: 40rpx;
+  }
+  .risks {
+    .item {
+      margin: 20rpx 0;
+      .icon {
+        background: #0E91FF;
+        height: 50px;
+      }
+    }
+  }
+}
+.title {
+  padding: 10rpx 0;
+  font-weight: bold;
+  font-size: 16px;
+  color: #080000;
+  border-bottom: @border;
+}
+</style>
+
+<script>
+import wepy from "wepy";
+import base from "../../mixins/base";
+import { __getApi } from "../../config.js";
+import http from "../../utils/Http";
+
+export default class riceDetails extends wepy.page {
+  mixins = [base];
+  config = {
+    navigationBarTitleText: "环球资源详情",
+    onReachBottomDistance: 50,
+  };
+  data = {
+    id: '',
+    token_access: '',
+    detail: {},
+    pageNum: 1,
+    pageSize: 15,
+    newList: [],
+  };
+  methods = {
+    async doCollection() {
+      const res = await http.get(__getApi._doCollection, {
+        token_access: this.token_access,
+        id: this.id
+      })
+      console.log(res.data)
+      this.detail.is_collection = this.detail.is_collection == 1 ? 0 : 1
+    },
+    makePhoneCall(e) {
+      // e.currentTarget.dataset.phone
+      wx.makePhoneCall({
+        phoneNumber: "400-888-9383"
+      });
+    },
+  }
+  async getRiceNews() {
+    const res = await http.get(__getApi._getRiceNews, {
+      token_access: this.token_access,
+      id: this.id,
+      pageNum: this.pageNum,
+      pageSize: this.pageSize
+    })
+    console.log(res.data)
+    this.pageNum++
+    
+  }
+  async onLoad(options) {
+    this.token_access = this.$parent.globalData.token_access || ''
+    this.id = options.id
+    const res = await http.get(__getApi._getRiceDetails, {
+      token_access: this.token_access,
+      id: options.id
+    })
+    this.detail = res.data
+    this.collectionBoolean = this.detail.collect == 0 ? false : true
+    this.$apply()
+  }
+  // 加载更多
+  onReachBottom() {
+    this.loading = true
+    this.getRiceNews()
+  }
+}
+</script>
