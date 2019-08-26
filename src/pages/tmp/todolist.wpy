@@ -13,7 +13,7 @@
             <text class="weui-label weui-cells__title">今日</text>
           </view>
           <view class="weui-cell__hd weui-flex__item" style="border: 1px solid #999;">
-            <textarea class="weui-input" data-index="{{index}}" value="{{now}}" bindinput="getNowValue" type="text"  placeholder="请输入" />
+            <textarea class="weui-input" maxlength="-1" data-index="{{index}}" value="{{now}}" bindinput="getNowValue" type="text"  placeholder="请输入" />
           </view>
         </view>
         <view class="weui-cell">
@@ -21,7 +21,7 @@
             <text class="weui-label weui-cells__title">明日</text>
           </view>
           <view class="weui-cell__hd weui-flex__item" style="border: 1px solid #999;">
-            <textarea class="weui-input" data-index="{{index}}" value="{{next}}" bindinput="getNextValue" type="text"  placeholder="请输入" />
+            <textarea class="weui-input" maxlength="-1" data-index="{{index}}" value="{{next}}" bindinput="getNextValue" type="text"  placeholder="请输入" />
           </view>
         </view>
         <view class="weui-cell">
@@ -30,7 +30,7 @@
     </view>
     <button type="primary" @tap="getAll">预览</button>
     <view class="" wx:if="{{allLog}}">
-      <view class="weui-cells__title">杭州团队开发进度{{day}}</view>
+      <view class="weui-cells__title">深圳团队开发进度{{day}}</view>
       <block wx:for="{{allLog}}" wx:for-index="index" wx:key="id" wx:for-item="single" >
         <view class="weui-cells__title">{{single.username}}: {{single.today}}</view>
       </block>
@@ -54,7 +54,7 @@ export default class todolist extends wepy.page {
     index: 0,
     now: '',
     next: '',
-    username: ['宓巧丽', '李发全', '许淑君', '周方东', '张帅', '王兵强'],
+    username: ['宓巧丽', '李发全', '许淑君', '周方东', '王兵强', '吴方涛'],
     allLog: [],
   }
   getNextValue(e) {
@@ -76,7 +76,7 @@ export default class todolist extends wepy.page {
         today = today + `${val.username}: ${val.today};\n`
         tomorrow = tomorrow + `${val.username}: ${val.tomorrow};\n`
       })
-      let data = `${title}${today}明日安排:\n ${tomorrow}`
+      let data = `${title}明日安排:\n ${tomorrow}\n今日开发：\n${today}`
       wx.setClipboardData({
         data: data,
         success (res) {
