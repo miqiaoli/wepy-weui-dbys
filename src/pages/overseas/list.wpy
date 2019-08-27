@@ -5,9 +5,9 @@
     </view>
     <view class="tips">- 第八元素再生资源全球分布图 -</view>
     <view class="tab weui-flex">
-      <view class="weui-flex__item" style="{{ tab == 0 ? 'color: #323972; font-weight: bold;' : '' }}" bindtap="changTabs" data-tab="0">再生塑料</view>
-      <view style="border-left: 1px solid #E4E7F0; height: 60rpx; margin-top: 30rpx;"></view>
       <view class="weui-flex__item" style="border-right: 1px solid #E4E7F0; {{ tab == 1 ? 'color: #323972; font-weight: bold;' : '' }}" bindtap="changTabs" data-tab="1">塑料原料</view>
+      <view style="border-left: 1px solid #E4E7F0; height: 60rpx; margin-top: 30rpx;"></view>
+      <view class="weui-flex__item" style="{{ tab == 0 ? 'color: #323972; font-weight: bold;' : '' }}" bindtap="changTabs" data-tab="0">再生塑料</view>
     </view>
     <view style="border-top: 1px solid #E4E7F0;">
       <view class="list" wx:if="{{tab == 1}}">
@@ -169,7 +169,7 @@ export default class overseasList extends wepy.page {
     bgColor: "#f0f",
     order: 0,
     country: "",
-    tab: 0
+    tab: 1
   };
   methods = {
     log() {
@@ -226,6 +226,7 @@ export default class overseasList extends wepy.page {
     this.imgHost = __getApi.imgHost;
     this.$apply();
     this.getList();
+    this.getNewList();
     this.getBanner();
 
   }

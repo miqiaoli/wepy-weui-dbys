@@ -1,5 +1,5 @@
-// const host = 'https://www.otimes.com/front'
-const host = 'https://dbys.otimes.info/front'
+const host = 'https://www.otimes.com/front'
+// const host = 'https://dbys.otimes.info/front'
 // const imgHost = 'https://dbys.otimes.info' // 测试图片地址
 const imgHost = 'https://www.otimes.com'
 const socketHost = 'wss://www.otimes.com' // websocket地址

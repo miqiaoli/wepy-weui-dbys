@@ -74,15 +74,15 @@
           <view class="text-left bold">样料邮寄地址</view>
           <view class="cont weui-flex">
             <view class="weui-cell__hd">收件人员</view>
-            <view class="weui-cell__bd">章文龙</view>
+            <view class="weui-cell__bd">王爽</view>
           </view>
           <view class="cont weui-flex">
             <view class="weui-cell__hd">联系方式</view>
-            <view class="weui-cell__bd">18356095286</view>
+            <view class="weui-cell__bd">15956936957</view>
           </view>
           <view class="cont weui-flex">
             <view class="weui-cell__hd">收件地址</view>
-            <view class="weui-cell__bd">安徽省合肥市高新区明珠大道与香樟大道交口西北200米厂房内</view>
+            <view class="weui-cell__bd">广东省佛山市顺德区北滘镇槎涌工业区工业二路西二号（合肥圆融仓库）</view>
           </view>
         </view>
       </view>
