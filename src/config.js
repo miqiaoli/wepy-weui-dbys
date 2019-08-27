@@ -188,6 +188,17 @@ export const __getApi = {
   _doCollection: `${host}/rise/collect.dbys`,
   _getRiceDetails: `${host}/rise/particulars.dbys`,
   _getRiceNews: `${host}/rise/sentimentList.dbys`,
+  _getAnnouncementList:`${host}/rise/announcementList.dbys`, // 获得企业的法院公告列表
+  _getAnnualReportList:`${host}//rise/annualReport.dbys.dbys`, // 获得企业年报列表
+
+  // 交易票据物流信息
+  _getOrderList: `${host}/orderb/erpddList.dbys`, //订单列表
+  _getOrderView: `${host}/orderb/checkht.dbys`, // 合同查看
+  _getOrderDownload: `${host}/orderb/downloadht.dbys`, // 合同下载
+  _getInvoiceList: `${host}/orderb/erpReceivList.dbys`, // 票据互联票据列表
+  _getInvoiceDetails: `${host}/orderb/erpWLlist..dbys`,  // 票据互联物流信息
+  _getOrderPositionList: `${host}/customerLogistics/findLogisticsByEntruId.dbys`, // 根据委托单ID获取物流定位信息接口
+  _getOrderPositionDetails: `${host}/customerLogistics/findLogisticsByEntruId.dbys`, // 根据委托单ID获取物流定位信息接口
 
   // 鱼塘历史接口
   _getFishPondList: `${host}/wechat/polist.dbys`,

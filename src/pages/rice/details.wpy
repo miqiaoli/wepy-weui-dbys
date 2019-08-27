@@ -5,9 +5,13 @@
       <view class="weui-flex">
         <view class="name weui-flex__item">{{detail.custNname}}</view>
         <view wx:if="{{detail.is_collection == 0}}" class="icon" bindtap="doCollection">
-          <!-- <image class="collection-icon" src="{{ detail.is_collection == 0 ? '/images/icon/collection_icon_HL.png' : '/images/icon/collection_icon.png' }}" /> -->
+          <image class="collection-icon" src="/images/icon/collection_icon.png" />
+          <text class="icon-text">收藏</text>
         </view>
-        <view wx:else class="icon">已收藏</view>
+        <view wx:else class="icon" bindtap="doCollection">
+          <image class="collection-icon" src="/images/icon/collection_icon_HL.png" />
+          已收藏
+        </view>
       </view>
       <view class="weui-flex">
         <view class="box weui-flex__item">
@@ -31,19 +35,19 @@
     </view>
     <view class="link margin-safe">
       <view class="weui-flex item">
-        <view class="icon">G</view>
-        <view class="weui-flex__item"></view>
+        <image class="icon" src="/images/icon/phone-channel@2x.png" />
+        <view class="" wx:for="{{splitPhone}}" wx:key="id" wx:for-item="single">{{single}}</view>
       </view>
       <view class="weui-flex item">
-        <view class="icon">1</view>
+        <image class="icon" src="/images/icon/address@2x.png" />
         <view class="weui-flex__item">{{detail.place}}</view>
       </view>
       <view class="weui-flex item">
-        <view class="icon">1</view>
+        <image class="icon" src="/images/icon/youxiang@2x.png" />
         <view class="weui-flex__item">{{detail.mail}}</view>
       </view>
       <view class="weui-flex item">
-        <view class="icon">1</view>
+        <image class="icon" src="/images/icon/wangzhi@2x.png" />
         <view class="weui-flex__item">{{detail.website}}</view>
       </view>
     </view>
@@ -69,19 +73,19 @@
       <view class="title">风险信息</view>
       <view class="item weui-flex">
         <view class="weui-flex__item">
-          <view class="icon">ICON</view>
+          <image class="icon" src="/images/icon/rice01.png" />
           <view class="text">裁判文书</view>
         </view>      
         <view class="weui-flex__item">
-          <view class="icon">ICON</view>
+          <image class="icon" src="/images/icon/rice02.png" />
           <view class="text">失信信息</view>
         </view>      
         <view class="weui-flex__item">
-          <view class="icon">ICON</view>
+          <image class="icon" src="/images/icon/rice03.png" />
           <view class="text">法院公告</view>
         </view>      
         <view class="weui-flex__item">
-          <view class="icon">ICON</view>
+          <image class="icon" src="/images/icon/rice04.png" />
           <view class="text">企业年报</view>
         </view>      
       </view>
@@ -136,6 +140,15 @@
       color: #030000;
       font-weight: bold;
     }
+    .icon {
+      line-height: 40rpx;
+      height: 40rpx;
+      .collection-icon {
+        width: 40rpx;
+        height: 40rpx;
+      }
+      
+    }
     .box {
       margin: 6rpx 0;
       border-right: @border;
@@ -157,6 +170,11 @@
   }
   .link {
     color: #080000;
+    .icon {
+      margin-top: 10rpx;
+      width: 20rpx;
+      height: 20rpx;
+    }
   }
   .scope-des {
     font-size: 14px;
@@ -166,9 +184,13 @@
   .risks {
     .item {
       margin: 20rpx 0;
+      justify-content: space-between;
+      text-align: center;
       .icon {
-        background: #0E91FF;
-        height: 50px;
+        // background: #0E91FF;
+        margin: 0 auto;
+        height: 56rpx;
+        width: 60rpx
       }
     }
   }
@@ -198,6 +220,7 @@ export default class riceDetails extends wepy.page {
     id: '',
     token_access: '',
     detail: {},
+    splitPhone: [],
     pageNum: 1,
     pageSize: 15,
     newList: [],
@@ -231,11 +254,13 @@ export default class riceDetails extends wepy.page {
   }
   async onLoad(options) {
     this.token_access = this.$parent.globalData.token_access || ''
-    this.id = options.id
+    this.id = options.id || '16291'
     const res = await http.get(__getApi._getRiceDetails, {
       token_access: this.token_access,
-      id: options.id
+      id: options.id || 16291
     })
+    this.splitPhone = res.data.phone.split(" ")
+    console.log(res.data.phone.split(" "))
     this.detail = res.data
     this.collectionBoolean = this.detail.collect == 0 ? false : true
     this.$apply()

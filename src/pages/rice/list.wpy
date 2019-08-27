@@ -10,23 +10,40 @@
   </view>
   <view class="filter weui-flex">
     <view class="weui-flex__item">
-      <view class="col-width active picker" style="text-align: center;" >
-        ddddddd
+      <view class="col-width active picker" style="" bindtap="riseModel">
+        {{chooseCitys ? chooseCitys : '全部'}}
         <text class="arrow-down arrow-pos"></text>
       </view>
     </view>
     <view class="weui-flex__item">
-      <view class="col-width active picker" style="text-align: center;" >
-        ddddddddcdfvfvfvfvf
-        <text class="arrow-down arrow-pos"></text>
+      <view class="col-width active picker" style="" >
+        <picker class="inline-block" style="" mode="selector" bindchange="sortTypeChange" value="{{sortIndex}}" range="{{sortType}}">
+          <view class="picker">
+            {{ sortType[sortIndex] }}
+            <text class="arrow-down arrow-pos"></text>
+          </view>
+        </picker>
       </view>
     </view>
-    <view class="weui-flex__item">
-      <view class="col-width active picker" style="text-align: center;" >
-        dddddddssss
-        <text class="arrow-down arrow-pos"></text>
+  </view>
+  <!-- 区域 -->
+  <view wx:if="{{!isCity}}" class="citys" catchtouchmove='preventTouchMove'>
+    <view class="inner_box">
+      <view class="header_box">
+        <view class="item l" data-act="cancel" data-mold="city" bindtap="chooseFalse">取消</view>
+        <view class="item c">请选择</view>
+        <view class="item r" data-act="confirm" data-mold="city" bindtap="chooseTrue">确定</view>
       </view>
+      <picker-view class="picker_box" indicator-class="selected" value="{{cityValue}}" bindchange="cityChange">
+        <picker-view-column>
+          <view wx:for="{{provices}}" wx:key='*this'>{{item.label}}</view>
+        </picker-view-column>
+        <picker-view-column>
+          <view wx:for="{{urban}}" wx:key='*this'>{{item.label}}</view>
+        </picker-view-column>
+      </picker-view>
     </view>
+    <view class="layer" catchtouchstart="removeLayer" data-type='isCity'></view>
   </view>
   <view class="list"> 
     <view wx:for="{{realList}}" wx:key="id" wx:for-item="single"  id="{{single.id}}" bindtap="todetail" class="single">
@@ -76,6 +93,32 @@ export default class RiceList extends wepy.page {
     }
   }
   data = {
+    sortType: ['智能排序', '距离优先'],
+    sortIndex: 1,
+    chooseCitys: '',
+    chooseCitysNum: [],
+    allType: [],
+    provices: [],
+    urban: [],
+    area: [],
+    provicesNum: '',
+    province: '',
+    city: '',
+    isCity: false,
+    cityValue: [0, 0],
+    /** 多少条数据 */
+    allCity: [{
+      value: '',
+      label: '全部',
+      children: [{
+        value: '',
+        label: '全部',
+        children: [{
+          value: '',
+          label: '全部'
+        }]
+      }]
+    }],
     loading: false,
     keyword: '冰箱',
     pageNum: 1,
@@ -89,6 +132,85 @@ export default class RiceList extends wepy.page {
     realList: []
   }
   methods = {
+    removeLayer(e) {
+      const type = e.currentTarget.dataset.type
+      this[type] = !this[type]
+    },
+     // 确认选择 处理
+    chooseTrue() {
+      this.isCity = true
+      if (this.cityValue[0] == 0) {
+        this.chooseCitys = ''
+      } else {
+        this.chooseCitys = this.provices[this.cityValue[0]].label + ' ' + this.urban[this.cityValue[1]].label
+      }
+      this.chooseCitysNum = this.provices[this.cityValue[0]].value + ' ' + this.urban[this.cityValue[1]].value
+      this.province = this.provices[this.cityValue[0]].label
+      this.city = this.urban[this.cityValue[1]].label.replace(/市|/, '')
+      this.pageNum = 1
+      this.list = []
+      this.getCompanyList()
+    },
+    // 城市级联数据改变处理
+    cityChange(e) {
+      let val = e.detail.value
+      var t = this.cityValue // 城市数据坐标 0 0 0
+      const allCity = this.allCity
+      if (val[0] !== t[0]) {
+        let urban = []
+        // 市处理
+        val[val[0], 0]
+        allCity[val[0]].children.forEach((val, index) => {
+          urban.push({
+            'value': val.value,
+            'label': val.label
+          })
+        })
+        const addAll = [{
+          value: '',
+          label: '全部'
+        }]
+        this.urban = [...addAll, ...urban]
+        this.cityValue = [e.detail.value[0], 0]      
+        this.$apply()
+      }
+      if (val[1] !== t[1]) {
+        let area = []
+        const addAll = [{
+          value: '',
+          label: '全部'
+        }]
+        val[val[0], val[1]]
+        allCity[val[0]].children[val[1] - 1].children.forEach((val, index) => {
+          area.push({
+            'value': val.value,
+            'label': val.label
+          })
+        })
+        this.area = [...addAll, ...area]
+        this.cityValue = [e.detail.value[0], e.detail.value[1]]
+        this.$apply()
+      }
+    },
+    preventTouchMove(e) {},
+    // 唤起城市选择
+    riseModel() {
+      this.isCity = false
+    },
+    chooseFalse() {
+      this.isCity = true
+    },
+    //省市
+    bindRegionChange(e) {
+      this.region = e.detail.value
+    },
+    // 排序规则改变
+    sortTypeChange(e) {
+      this.sortIndex = e.detail.value
+      this.pageNum = 1
+      this.list = []
+      this.getCompanyList()
+    },
     searchText(e) {
       this.keyword = e.detail.value
     },
@@ -110,6 +232,30 @@ export default class RiceList extends wepy.page {
   highLight(str) {
     let high = str.replace(/#--/g, "<span class='red'>").replace(/--#/g, "</span>")
     this.realList = JSON.parse(high)
+  }
+  // 城市数据获取
+  async getAllCity() {
+    const res = await http.get(__getApi._getAllCityList, {})
+    this.allCity = [...this.allCity, ...res.data]
+    this.allCity.forEach((val, index) => {
+      this.provices.push({
+        'value': val.value,
+        'label': val.label
+      })
+    })
+    this.allCity[0].children.forEach((val, index) => {
+      this.urban.push({
+        'value': val.value,
+        'label': val.label
+      })
+    })
+    this.allCity[0].children[0].children.forEach((val, index) => {
+      this.area.push({
+        'value': val.value,
+        'label': val.label
+      })
+    })
+    this.$apply()
   }
   // 公司列表数据
   async getCompanyList() {
@@ -149,6 +295,7 @@ export default class RiceList extends wepy.page {
   onLoad() {
     let self = this
     this.token_access = this.$parent.globalData.token_access
+    this.getAllCity()
     wx.getLocation({
       type: 'wgs84',
       success: function(res) {
@@ -160,6 +307,7 @@ export default class RiceList extends wepy.page {
   }
   // 加载更多
   async onReachBottom() {
+    console.log('111111')
     this.loading = true
     this.getCompanyList()
   }
@@ -200,6 +348,7 @@ export default class RiceList extends wepy.page {
   height: 80rpx;
   line-height: 80rpx;
   text-align: center;
+  justify-content: space-between;
   border-bottom: 1px solid #EDEDED;
   background: #ffffff;
   .col-width {
@@ -253,5 +402,65 @@ export default class RiceList extends wepy.page {
       height: 20rpx;
     }
   }
+}
+/*选择器*/
+.citys {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 999999;
+}
+.citys .inner_box {
+    position: relative;
+    z-index: 999999;
+}
+.citys .header_box {
+    padding: 25rpx 0;
+    overflow: hidden;
+    box-sizing: border-box;
+    background: #FBF9FE;
+}
+.citys .header_box .item {
+    float: left;
+    font-size: 34rpx;
+    color: #586C94;
+    box-sizing: border-box;
+}
+.citys .header_box .l {
+    width: 25%;
+    padding-left: 25rpx;
+}
+.citys .header_box .c {
+    width: 50%;
+    text-align: center;
+}
+.citys .header_box .r {
+    width: 25%;
+    text-align: right;
+    padding-right: 25rpx;
+}
+.citys .selected {
+    height: 90rpx;
+}
+.citys .picker_box {
+    width: 100%;
+    height: 485rpx;
+    background: #fff;
+}
+.citys .picker_box picker-view-column {
+    text-align: center;
+}
+.citys .picker_box picker-view-column view {
+    line-height: 90rpx;
+}
+.layer {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    background: rgba(0,0,0,0.5);
 }
 </style>
