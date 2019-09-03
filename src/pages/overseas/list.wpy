@@ -181,7 +181,6 @@ export default class overseasList extends wepy.page {
       this.tab = event.target.dataset.tab
       this.order = 0
       this.$apply()
-      // _getNewOverseasDetaails
       if (event.target.dataset.tab == 1 && !this.newList) {
         this.getNewList()
       }
@@ -202,7 +201,6 @@ export default class overseasList extends wepy.page {
   async getNewList() {
     const res = await http.get(__getApi._getNewOverseasList, {
     })
-    console.log(res.data)
     this.newList = res.data
     this.newItem = res.data[0].productName;
     this.country = res.data[0].countryName;
