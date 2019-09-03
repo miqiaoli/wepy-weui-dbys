@@ -1,0 +1,434 @@
+<template>
+  <view class="order-list page bg__white">
+    <view class="weui-flex search">
+      <view class="weui-search-bar__form" style="line-height: 60rpx; background: #FFFFFF; border-radius: 60rpx; border: 0">
+        <view class="weui-search-bar__box">
+          <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
+          <input type="text" class="weui-search-bar__input" style="height: 60rpx;line-height: 60rpx; text-align: left;" placeholder="搜索您想要的内容" bindconfirm bindinput="searchText" value="{{this.keyword}}" />
+        </view>
+      </view>
+      <view class="order-filter filter active" bindtap="riseFilter">
+        筛选
+        <image src='/images/icon/filter_HL.png' />
+      </view>
+    </view>
+    <view hidden='{{isFilter}}' class="selector">
+      <form bindsubmit="formSubmit" bindreset="formReset">
+        <view class="inner_box">
+          <view class="module-box">
+            <view class="top page__bd_spacing">订单时间</view>
+            <view class="content weui-flex">
+              <view class="input-border weui-flex__item active">
+                <picker
+                  mode="date"
+                  value="{{startdate}}"
+                  start="2016-09-01"
+                  end="{{nowDate}}"
+                  bindchange="bindStartDateChange"
+                >
+                  <view class="picker" style="height: 44rpx;">
+                    开始时间{{startdate}}
+                  </view>
+                </picker>
+              </view>
+              <text class="interval-line">~</text>
+              <view class="input-border weui-flex__item active">
+                <picker
+                  mode="date"
+                  value="{{enddate}}"
+                  start="2016-09-01"
+                  end="{{nowDate}}"
+                  bindchange="bindEndDateChange"
+                >
+                  <view class="picker" style="height: 44rpx;">
+                    结束时间{{enddate}}
+                  </view>
+                </picker>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="inner_btn weui-flex">
+          <button class="weui-flex__item" type="default" formType="reset">重置</button>
+          <button class="weui-flex__item" type="primary" formType="submit">确定</button>
+        </view>
+      </form>
+      <view class="layer" catchtouchstart="removeLayer" data-type='isFilter' catchtouchmove='preventTouchMove'></view>
+    </view>
+
+    <view class="tabs weui-flex">
+      <view class="tab weui-flex__item" wx:for="{{tabs}}" wx:key="index" wx:for-item="single">{{single.name}}</view>
+    </view>
+    
+    <view class="list">
+      <!-- <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id" data-discuss_id="{{single.discussid}}" @tap="toBuyDetails"> -->
+      <view class="single">
+        <view class="weui-cell__ft">2019年7月31日</view>
+        <view class="page__desc">WT20190429170815</view>
+        <view class="item">
+          <view class="name">ABS,GP22(韩国巴斯夫)</view>
+          <view class="weui-flex">
+            <view class="weui-flex__item">签单数量：8880kg</view>
+            <view class="weui-flex__item red margin-right">1000元/kg</view>
+          </view>
+          <view class="">金额（含税）：8880000元</view>
+          <view class="text">剩余未出库：8000kg</view>
+        </view>
+        <view class="item">
+          <view class="name">ABS,GP22(韩国巴斯夫)</view>
+          <view class="">签单数量：8880kg</view>
+          <view class="">金额（含税）：8880000元</view>
+          <view class="text">剩余未出库：8000kg</view>
+        </view>
+        <view class="item">
+          <view class="weui-flex margin-top">
+            <view class="weui-flex__item">结算方式：电汇</view>
+            <view class="weui-flex__item red">交易成功</view>
+          </view>
+          <view class="">配送方式：自提</view>
+          <view class="text">合同备注：尽快发货</view>
+          <view class="text weui-cell__ft">共5件商品  合计：<text class="price">¥888万元</text></view>
+        </view> 
+        <view class="item">
+          <view class="btn weui-flex">
+            <view class="weui-flex__item"></view>
+            <view class="weui-flex__item"></view>
+            <button class="btn-text weui-flex__item">合同预览</button>
+            <button class="btn-text weui-flex__item">货物信心</button>
+          </view>
+          
+        </view> 
+      </view>
+    </view>
+    <backIndex></backIndex>
+    <view wx:if="{{list.length <= 0 || count <= 0 }}" class="weui-loadmore weui-loadmore_line">
+      <text class="weui-loadmore__tips">暂无数据</text>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import backIndex from '../../components/backIndex'
+import {
+  __getApi
+} from "../../config.js";
+import http from '../../utils/Http';
+
+export default class buyList extends wepy.page {
+  components = {
+    backIndex,
+  }
+  config = {
+    navigationBarTitleText: '订单列表',
+    enablePullDownRefresh: true,
+    onReachBottomDistance: 100
+  }
+  data = {
+    isFilter: true,
+    index: 0,
+    startdate: '',
+    enddate: '',
+    nowDate: '',
+    value: '',  // 搜索
+    placeholder: '搜索订单号',
+    tabs: [{
+      name: '全部',
+      status: '',
+    }, {
+      name: '待确认',
+      status: 99,
+    }, {
+      name: '待发货',
+      status: -1,
+    }, {
+      name: '待收货',
+      status: -2,
+    }, {
+      name: '已完成',
+      status: 3,
+    }],
+    buyorsell: 1,
+    token_access: '',
+    list: [],
+    start: 1,
+    limit: 15,
+    count: 0
+  }
+
+  methods = {
+    preventTouchMove(e) {},
+    toBuyDetails(e) {
+      const discuss_id = e.currentTarget.dataset.discuss_id
+      wx.showToast({
+        title: '去查看',
+        icon: 'success',
+        duration: 2000
+      })
+      setTimeout(() => {
+        wx.navigateTo({
+          url: `./details?discuss_id=${discuss_id}&buyorsell=${this.buyorsell}`
+        })
+      }, 2000);
+    },
+    // 提交筛选
+    formSubmit(e) {
+      this.start = 1
+      this.isFilter = true
+      this.list = []
+      this.getOrderList()
+    },
+    // 条件重置
+    formReset() {
+      this.startdate = ''
+      this.enddate = ''
+      this.value = ''
+      this.isFilter = true
+      this.getOrderList()
+      this.$apply()
+    },
+    // 点击model
+    riseFilter() {
+      this.isFilter = false
+      this.$apply()
+    },
+    removeLayer(e) {
+      const type = e.currentTarget.dataset.type
+      this[type] = !this[type]
+    }
+  }
+  onLoad(e) {
+    this.token_access = this.$parent.globalData.token_access || ''
+    const date = new Date()
+    const month = date.getMonth()+1 <10 ? `0${date.getMonth()+1}` : `${date.getMonth()+1}`
+    const day = date.getDate() < 9 ? `${date.getDate()}` : date.getDate()
+    this.nowDate = `${date.getFullYear()}-${month}-${day}`
+    this.getOrderList()
+    this.$apply()
+  }
+  onPullDownRefresh() {
+    this.start = 1
+    this.startdate = ''
+    this.enddate = ''
+    this.value = ''
+    this.list = []
+    this.getOrderList()
+  }
+  async onReachBottom() {
+    if (this.start * this.limit < this.count) {
+      this.start += 1
+      this.getOrderList()
+    }
+  }
+  async getOrderList() {
+    let params = {
+      page_id: this.start,
+      page_limit: this.limit,
+      sdate: this.startdate,
+      edate: this.enddate,
+      name: this.value,
+      status: 'A'
+    }
+    // X,A,B,C A创建B待审核C已审核X待确认
+    const res = await http.get(__getApi._getOrderList, params)
+    if (res.false) return
+    if (res.meta.success) {
+      console.log(res.data)
+      // this.list = [...this.list, ...res.data.resultlist]
+      // this.count = res.data.rows_count
+      // this.$apply()
+    }
+  }
+  bindStartDateChange(e) {
+    this.startdate = e.detail.value
+  }
+  bindEndDateChange(e) {
+    this.enddate = e.detail.value
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.input-border {
+  padding:10rpx;
+  border:1px solid #979797;
+}
+.red {
+  color: red;
+  text-align: right;
+}
+.price {
+  font-size: 18px;
+  color: #080000;
+  // line-height: 25px;
+}
+.margin-top {
+  margin-top: 10rpx;
+}
+.margin-left {
+  margin-left: 30rpx;
+}
+.margin-right {
+  margin-right: 30rpx;
+}
+@borderLine: 1px solid #999;
+.tabs {
+  font-size: 14px;
+  text-align: center;
+  background: #FDFDFD;
+  height: 80rpx;
+  .tab {
+    margin: 10rpx 30rpx;
+    line-height: 70rpx;
+    border-bottom: 4px solid #0E91FF;
+  }
+}
+.search {
+  background: #A1A6BB;;
+  padding: 26rpx 30rpx;
+}
+.order-filter {
+  margin-left: 18rpx;
+  position: relative;
+  text-align: center;
+  line-height: 56rpx;
+  image {
+    position: relative;
+    top: 6rpx;
+    width: 28rpx;
+    height: 28rpx;
+  }
+}
+
+.order-list {
+  background: #cccccc;
+  .list {
+    margin-top: 20rpx;
+    background: #fff;
+    .single {
+      margin: 0 30rpx;
+      margin-bottom: 20rpx;
+      .item {
+        border-bottom: @borderLine;
+        font-size: 14px;
+        color: #080000;
+        .name {
+          margin: 10rpx 0;
+          font-weight: bold;
+          font-size: 16px;
+          color: #030000;
+        }
+        .text {
+          margin: 10rpx 0;
+        }
+        .btn {
+          margin: 16rpx 0;
+          .btn-text {
+            margin-right: 20rpx;
+            height: 60rpx;
+            line-height: 60rpx;
+            background: #ffffff;
+            border: 1px solid #0E91FF;
+            color: #0E91FF;
+            border-radius: 26rpx;
+          }
+        }
+      }
+    }
+  }
+}
+.icon-choose {
+  width: 48rpx
+}
+.title {
+  width: 120rpx;
+  color: #8F8E94;
+}
+
+.selector {
+  width: 100%;
+  height: 400px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 99;
+  .inner_box {
+    height: 100%;
+    background: #ffffff;
+    position: relative;
+    z-index: 99;
+  }
+  .inner_btn {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 99;
+  }
+  .top {
+    line-height: 60rpx;
+    background: #E4E7F0;
+    font-size: 28rpx;
+    color: #8F8E94;
+  }
+  .content {
+    padding: 40rpx 24rpx 0;
+  }
+  .input {
+    display: inline-block;
+    background: #ffffff;
+    border: 2rpx solid #9b9b9b;
+    border-radius: 8rpx;
+    width: 216rpx;
+    height: 52rpx;
+    line-height: 52rpx;
+    text-align: center;
+    font-size: 28rpx;
+  }
+  .items {
+    flex-wrap: wrap;
+  }
+  .item {
+    width: 50%;
+    padding: 40rpx 70rpx;
+    border-bottom: 2rpx solid #E4E7F0;
+    border-right: 2rpx solid #E4E7F0;
+    box-sizing: border-box;
+    align-items: center;
+  }
+  .item.active {
+    border: 2rpx solid #6A7EEE;
+    color: #3B55E7;
+    background: #D2D7FF;
+  }
+  .item.active .weui-cell__bd {
+    font-weight: bold;
+  }
+  .icon {
+    display: block;
+    width: 32rpx;
+    height: 32rpx;
+    margin-right: 20rpx;
+  }
+  .interval-line {
+    height: 52rpx;
+    vertical-align: top;
+    margin: 0 20rpx;
+  }
+  .module-box {
+    margin-bottom: 30rpx;
+  }
+  button {
+    border-radius: 0;
+  }
+}
+.layer {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  background: rgba(0,0,0,0.5);
+}
+</style>

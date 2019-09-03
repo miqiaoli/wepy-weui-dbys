@@ -1,0 +1,114 @@
+<template>
+  <view class="note-details page"> 
+    <view class="tips">两个快递已发出</view>   
+    <view class="list">
+      <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id">
+        <view class="weui-cell__ft blue">发票号：{{single.pbillno}}</view>
+        <view class="item" wx:for="{{single.pdetails}}" wx:for-item="item" wx:key="id">
+          <view class="name">{{item.flname}}</view>
+          <view class="weui-flex">
+            <view class="weui-flex__item">签单数量：{{item.fqty}}kg</view>
+            <view class="weui-flex__item">金额（含税）：{{item.fallamountfor}}元</view>
+          </view>
+        </view>
+        <view class="weui-flex" wx:for="{{single.kdinfo.data}}" wx:for-item="info" wx:key="id">
+          <view class="weui-flex__item">{{info.time}}</view>
+          <view class="weui-flex__item">{{info.remark}}</view>
+        </view>  
+      </view>
+    </view>
+
+    <backIndex></backIndex>
+    <view wx:if="{{list.length <= 0 || count <= 0 }}" class="weui-loadmore weui-loadmore_line">
+      <text class="weui-loadmore__tips">暂无数据</text>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import backIndex from '../../components/backIndex'
+import {
+  __getApi
+} from "../../config.js";
+import http from '../../utils/Http';
+
+export default class noteDetails extends wepy.page {
+  components = {
+    backIndex,
+  }
+  config = {
+    navigationBarTitleText: '快递信息',
+  }
+  data = {
+    index: 0,
+    token_access: '',
+    fbillno: '',
+    list: [],
+    count: 0
+  }
+
+  methods = {
+    
+  }
+  onLoad(e) {
+    this.token_access = this.$parent.globalData.token_access || ''
+    this.fbillno = e.fbillno
+    this.getNoteDetails()
+    this.$apply()
+  }
+  async getNoteDetails() {
+    const res = await http.get(__getApi._getInvoiceDetails, {
+      fbillno: '01YSD00005712',
+      token_access: this.token_access
+    })
+    if (res.false) return
+    if (res.meta.success) {
+      this.list = res.data.details
+      this.$apply()
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.blue {
+  color: #0E91FF;
+}
+.red {
+  color: #F52020;
+}
+.margin-10 {
+  margin: 20rpx 0;
+}
+.padding-8 {
+  padding: 16rpx 0;
+}
+.note-details {
+  background: #999;
+  .tips {
+    padding: 0 40rpx;
+    height: 56rpx;
+    color: #FFFFFF;
+    line-height: 56rpx;
+    background: #F58E55;
+  }
+  .list {
+    font-size: 14px;
+    font-weight: 500;
+    .single {
+      padding-right: 30rpx;
+      background: #ffffff;
+      .item {
+        padding: 0rpx 30rpx 20rpx 30rpx;
+        .name {
+          margin-bottom: 10rpx;
+          font-weight: 500;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+ 
+</style>

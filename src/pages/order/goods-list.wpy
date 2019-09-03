@@ -1,0 +1,149 @@
+<template>
+  <view class="note page">    
+    <view class="list">
+      <!-- <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id" data-discuss_id="{{single.discussid}}" @tap="toBuyDetails"> -->
+      <view class="single">
+        <view class="item">
+          <view class="weui-flex">
+            <view class="weui-flex__item">WT20190429170815</view>
+            <view class="weui-cell__ft">2019年7月31日</view>
+          </view>
+          <view class="name">ABS,GP22(韩国巴斯夫)：<text class="red">500kg</text></view>
+          <view class="name">EPP珠粒 HTKB60：<text class="red">500kg</text></view>
+          <view class="text">广东省广南东路珠海市香洲区康宁路79号</view>
+        </view>
+        <view class="show weui-flex">
+          <view class="weui-flex__item weui-cell__ft">已结束</view>
+          <button class="weui-cell__ft btn">查看物流</button>
+        </view>
+      </view>
+    </view>
+    <backIndex></backIndex>
+    <view wx:if="{{list.length <= 0 || count <= 0 }}" class="weui-loadmore weui-loadmore_line">
+      <text class="weui-loadmore__tips">暂无数据</text>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import backIndex from '../../components/backIndex'
+import {
+  __getApi
+} from "../../config.js";
+import http from '../../utils/Http';
+
+export default class goodsList extends wepy.page {
+  components = {
+    backIndex,
+  }
+  config = {
+    navigationBarTitleText: '货物信息',
+    enablePullDownRefresh: true,
+    onReachBottomDistance: 100
+  }
+  data = {
+    index: 0,
+    token_access: '',
+    list: [],
+    start: 1,
+    limit: 15,
+    startdate: '',
+    enddate: '',
+    count: 0
+  }
+
+  methods = {
+    toBuyDetails(e) {
+      const discuss_id = e.currentTarget.dataset.discuss_id
+      wx.showToast({
+        title: '去查看',
+        icon: 'success',
+        duration: 2000
+      })
+      setTimeout(() => {
+        wx.navigateTo({
+          url: `./details?discuss_id=${discuss_id}&buyorsell=${this.buyorsell}`
+        })
+      }, 2000);
+    },
+  }
+  onLoad(e) {
+    this.token_access = this.$parent.globalData.token_access || ''
+    this.getGoodsList()
+    this.$apply()
+  }
+  onPullDownRefresh() {
+    this.start = 1
+    this.list = []
+    this.getGoodsList()
+  }
+  async onReachBottom() {
+    if (this.start * this.limit < this.count) {
+      this.start += 1
+      this.getGoodsList()
+    }
+  }
+  async getGoodsList() {
+    let params = {
+      page_id: this.start,
+      page_limit: this.limit,
+      sdate: this.startdate,
+      edate: this.enddate,
+      fbillno: this.value,
+      token_access: this.token_access
+    }
+    const res = await http.get(__getApi._getInvoiceList, params)
+    if (res.false) return
+    if (res.meta.success) {
+      console.log(res.data)
+      // this.list = [...this.list, ...res.data.resultlist]
+      // this.count = res.data.rows_count
+      // this.$apply()
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.red {
+  color: #F52020;
+  font-weight: 500;
+  font-size: 16px;
+}
+.show {
+  border-top: 1px solid #999;
+  padding: 16rpx 30rpx;
+  align-items: center;
+  
+}
+.note {
+  background: #999;
+  .list {
+    font-size: 14px;
+    font-weight: 500;
+    color: #080000;
+    .single {
+      margin-top: 10rpx;
+      
+      background: #ffffff;
+      .item {
+        padding: 10rpx 30rpx;
+        .name {
+          font-weight: 500;
+          font-size: 16px;
+        }
+      }
+      .btn {
+        margin-left: 40rpx;
+        height: 60rpx;
+        line-height: 60rpx;
+        border: 1px solid #0E91FF;
+        color: #0E91FF;
+        background: #ffffff;
+        border-radius: 13px;
+      }
+    }
+  }
+}
+</style>

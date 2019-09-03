@@ -1,0 +1,143 @@
+<template>
+  <view class="note page">    
+    <view class="list">
+      <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id">
+        <view class="item weui-cell__ft">应收单号：{{single.fbillno}}</view>
+        <view class="item" wx:for="{{single.details}}" wx:for-item="item" wx:key="id" data-fbillno="{{single.fbillno}}" bindtap="toNoteDetails">
+          <view class="name">{{item.flname}}</view>
+          <view class="">签单数量：{{item.fxcfpsl}}{{item.fpriceunitid}}</view>
+          <view class="margin-10 weui-flex">
+            <view class="weui-flex__item">金额（含税）：{{item.fallamountfor}}元</view>
+            <view class="red">{{item.ftaxprice}}元/kg</view>
+            <view class="weui-cell__ft weui-cell__ft_in-access pos"></view>
+          </view>
+          <view class="text">已开票数量：{{item.fxcfpsl}}{{item.fpriceunitid}}</view>
+          <view class="text">已开票金额：{{item.fallamountfor}}元</view>
+        </view>
+        <view class="item">
+          <view class="padding-8 weui-flex margin-top">
+            <view class="weui-flex__item">共3张发票</view>
+            <view class="weui-cell__ft" wx:if="{{single.sfkp == 1}}">已开票</view>
+            <view class="weui-cell__ft" wx:if="{{single.sfkp == 2}}">部分开票</view>
+            <view class="weui-cell__ft" wx:if="{{single.sfkp == 3}}">未开票</view>
+          </view>
+        </view> 
+      </view>
+    </view>
+    <backIndex></backIndex>
+    <view wx:if="{{list.length <= 0 || count <= 0 }}" class="weui-loadmore weui-loadmore_line">
+      <text class="weui-loadmore__tips">暂无数据</text>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import backIndex from '../../components/backIndex'
+import {
+  __getApi
+} from "../../config.js";
+import http from '../../utils/Http';
+
+export default class noteList extends wepy.page {
+  components = {
+    backIndex,
+  }
+  config = {
+    navigationBarTitleText: '票据信息',
+    enablePullDownRefresh: true,
+    onReachBottomDistance: 100
+  }
+  data = {
+    index: 0,
+    token_access: '',
+    list: [],
+    value: '',
+    start: 1,
+    limit: 15,
+    startdate: '',
+    enddate: '',
+    count: 0
+  }
+
+  methods = {
+    toNoteDetails(e) {
+      const fbillno = e.currentTarget.dataset.fbillno
+      // wx.showToast({
+      //   title: '去详情',
+      //   icon: 'success',
+      //   duration: 2000
+      // })
+      // setTimeout(() => {
+        wx.navigateTo({
+          url: `./note-details?fbillno=${fbillno}`
+        })
+      // }, 2000);
+    },
+  }
+  onLoad(e) {
+    this.token_access = this.$parent.globalData.token_access || ''
+    this.getNoteList()
+    this.$apply()
+  }
+  onPullDownRefresh() {
+    this.start = 1
+    this.list = []
+    this.getNoteList()
+  }
+  async onReachBottom() {
+    if (this.start * this.limit < this.count) {
+      this.start += 1
+      this.getNoteList()
+    }
+  }
+  async getNoteList() {
+    let params = {
+      page_id: this.start,
+      page_limit: this.limit,
+      sdate: this.startdate,
+      edate: this.enddate,
+      fbillno: this.value,
+      token_access: this.token_access
+    }
+    const res = await http.get(__getApi._getInvoiceList, params)
+    if (res.false) return
+    if (res.meta.success) {
+      this.list = [...this.list, ...res.data.list]
+      this.count = res.data.total
+      this.$apply()
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.red {
+  color: #F52020;
+}
+.margin-10 {
+  margin: 20rpx 0;
+}
+.padding-8 {
+  padding: 16rpx 0;
+}
+.note {
+  .list {
+    font-size: 14px;
+    font-weight: 500;
+    .single {
+      margin-top: 10rpx;
+      background: #ffffff;
+      .item {
+        padding: 10rpx 30rpx;
+        border-top: 1px solid #ccc;
+        .name {
+          font-weight: 500;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+ 
+</style>
