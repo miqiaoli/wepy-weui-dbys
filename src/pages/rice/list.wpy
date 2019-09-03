@@ -9,6 +9,7 @@
     </view>
   </view>
   <view class="filter weui-flex">
+
     <view class="weui-flex__item">
       <view class="col-width active picker" style="" bindtap="riseModel">
         {{chooseCitys ? chooseCitys : '全部'}}
@@ -25,6 +26,7 @@
         </picker>
       </view>
     </view>
+
   </view>
   <!-- 区域 -->
   <view wx:if="{{!isCity}}" class="citys" catchtouchmove='preventTouchMove'>
@@ -36,17 +38,17 @@
       </view>
       <picker-view class="picker_box" indicator-class="selected" value="{{cityValue}}" bindchange="cityChange">
         <picker-view-column>
-          <view wx:for="{{provices}}" wx:key='*this'>{{item.label}}</view>
+          <view wx:for="{{provices}}" wx:key='index'>{{item.label}}</view>
         </picker-view-column>
         <picker-view-column>
-          <view wx:for="{{urban}}" wx:key='*this'>{{item.label}}</view>
+          <view wx:for="{{urban}}" wx:key='index'>{{item.label}}</view>
         </picker-view-column>
       </picker-view>
     </view>
     <view class="layer" catchtouchstart="removeLayer" data-type='isCity'></view>
   </view>
   <view class="list"> 
-    <view wx:for="{{realList}}" wx:key="id" wx:for-item="single"  id="{{single.id}}" bindtap="todetail" class="single">
+    <view wx:for="{{realList}}" wx:key="*this" wx:for-item="single"  id="{{single.id}}" bindtap="todetail" class="single">
       <view class="name">
         <rich-text nodes="{{single.custNname}}"></rich-text>
       </view>
@@ -85,9 +87,9 @@ import http from '../../utils/Http'
 
 export default class RiceList extends wepy.page {
   config = {
-    navigationBarTitleText: '早稻2.0',
+    navigationBarTitleText: '早稻',
     enablePullDownRefresh: true,
-    onReachBottomDistance: 100,
+    onReachBottomDistance: 50,
     usingComponents: {
       "rich-parse": "../rich-parse/rich-parse"
     }
@@ -96,7 +98,6 @@ export default class RiceList extends wepy.page {
     sortType: ['智能排序', '距离优先'],
     sortIndex: 1,
     chooseCitys: '',
-    chooseCitysNum: [],
     allType: [],
     provices: [],
     urban: [],
@@ -104,7 +105,7 @@ export default class RiceList extends wepy.page {
     provicesNum: '',
     province: '',
     city: '',
-    isCity: false,
+    isCity: true,
     cityValue: [0, 0],
     /** 多少条数据 */
     allCity: [{
@@ -142,11 +143,11 @@ export default class RiceList extends wepy.page {
       if (this.cityValue[0] == 0) {
         this.chooseCitys = ''
       } else {
-        this.chooseCitys = this.provices[this.cityValue[0]].label + ' ' + this.urban[this.cityValue[1]].label
+        this.chooseCitys = this.provices[this.cityValue[0]].label + ' ' + this.urban[this.cityValue[1]].label.replace(/市|全部/, '') + '  '
       }
-      this.chooseCitysNum = this.provices[this.cityValue[0]].value + ' ' + this.urban[this.cityValue[1]].value
+      // this.chooseCitysNum = this.provices[this.cityValue[0]].value + ' ' + this.urban[this.cityValue[1]].value
       this.province = this.provices[this.cityValue[0]].label
-      this.city = this.urban[this.cityValue[1]].label.replace(/市|/, '')
+      this.city = this.urban[this.cityValue[1]].label.replace(/市/, '')
       this.pageNum = 1
       this.list = []
       this.getCompanyList()
@@ -200,10 +201,6 @@ export default class RiceList extends wepy.page {
     chooseFalse() {
       this.isCity = true
     },
-    //省市
-    bindRegionChange(e) {
-      this.region = e.detail.value
-    },
     // 排序规则改变
     sortTypeChange(e) {
       this.sortIndex = e.detail.value
@@ -231,7 +228,8 @@ export default class RiceList extends wepy.page {
   // 高亮
   highLight(str) {
     let high = str.replace(/#--/g, "<span class='red'>").replace(/--#/g, "</span>")
-    this.realList = JSON.parse(high)
+    let realList = JSON.parse(high)
+    this.realList = [...this.realList, ...realList]
   }
   // 城市数据获取
   async getAllCity() {
@@ -326,6 +324,7 @@ export default class RiceList extends wepy.page {
   color: red;
 }
 .arrow-down {
+  margin-left: 8rpx;
   display: inline-block;
   vertical-align: top;
   border-top: 6px solid #353535;
@@ -345,16 +344,18 @@ export default class RiceList extends wepy.page {
   margin: 30rpx 120rpx;
 }
 .filter {
+  padding: 0 30rpx;
   height: 80rpx;
   line-height: 80rpx;
   text-align: center;
   justify-content: space-between;
   border-bottom: 1px solid #EDEDED;
+  font-size: 16px;
   background: #ffffff;
   .col-width {
     position: relative;
     padding: 0 6rpx;
-    width: 176rpx;
+    // width: 176rpx;
     text-align: center;
     overflow: hidden;
     white-space: nowrap;
@@ -362,7 +363,6 @@ export default class RiceList extends wepy.page {
     .arrow-pos {
       position: absolute;
       top: 38rpx;
-      right: 0rpx;
     }
   }
 }

@@ -5,11 +5,11 @@
       <view class="weui-flex">
         <view class="name weui-flex__item">{{detail.custNname}}</view>
         <view wx:if="{{detail.is_collection == 0}}" class="icon" bindtap="doCollection">
-          <image class="collection-icon" src="/images/icon/collection_icon.png" />
+          <image class="collection-icon" src="/images/icon/tap.png" />
           <text class="icon-text">收藏</text>
         </view>
         <view wx:else class="icon" bindtap="doCollection">
-          <image class="collection-icon" src="/images/icon/collection_icon_HL.png" />
+          <image class="collection-icon" src="/images/icon/taped.png" />
           已收藏
         </view>
       </view>
@@ -34,19 +34,19 @@
       </view>
     </view>
     <view class="link margin-safe">
-      <view class="weui-flex item">
+      <view class="weui-flex item" style="">
         <image class="icon" src="/images/icon/phone-channel@2x.png" />
-        <view class="" wx:for="{{splitPhone}}" wx:key="id" wx:for-item="single">{{single}}</view>
+        <view class="font-primary" wx:for="{{splitPhone}}" wx:key="id" wx:for-item="single" data-phone="{{single}}" bindtap="makePhoneCall">{{single}}</view>
       </view>
       <view class="weui-flex item">
         <image class="icon" src="/images/icon/address@2x.png" />
         <view class="weui-flex__item">{{detail.place}}</view>
       </view>
-      <view class="weui-flex item">
+      <view class="weui-flex item" wx:if="{{detail.mail}}">
         <image class="icon" src="/images/icon/youxiang@2x.png" />
         <view class="weui-flex__item">{{detail.mail}}</view>
       </view>
-      <view class="weui-flex item">
+      <view class="weui-flex item" wx:if="{{detail.website}}">
         <image class="icon" src="/images/icon/wangzhi@2x.png" />
         <view class="weui-flex__item">{{detail.website}}</view>
       </view>
@@ -69,7 +69,7 @@
       <view class="title">经营范围</view>
       <view class="scope-des">{{detail.scopebusiness}}</view>
     </view>
-    <view class="risks shadow margin-safe">
+    <!-- <view class="risks shadow margin-safe">
       <view class="title">风险信息</view>
       <view class="item weui-flex">
         <view class="weui-flex__item">
@@ -89,8 +89,8 @@
           <view class="text">企业年报</view>
         </view>      
       </view>
-    </view>
-    <view class="news shadow margin-safe">
+    </view> -->
+    <!-- <view class="news shadow margin-safe">
       <view class="title">企业关联舆情</view>
       <view class="weui-flex">
         <view class="weui-flex__item">
@@ -102,7 +102,7 @@
           <view class="weui-cell__ft weui-cell__ft_in-access"></view>
         </view>          
       </view>
-    </view>
+    </view> -->
   </view>
 </template>
 
@@ -141,9 +141,12 @@
       font-weight: bold;
     }
     .icon {
+      position: relative;
       line-height: 40rpx;
       height: 40rpx;
       .collection-icon {
+        position: relative;
+        top: 12rpx;
         width: 40rpx;
         height: 40rpx;
       }
@@ -213,8 +216,8 @@ import http from "../../utils/Http";
 export default class riceDetails extends wepy.page {
   mixins = [base];
   config = {
-    navigationBarTitleText: "环球资源详情",
-    onReachBottomDistance: 50,
+    navigationBarTitleText: "企业信息",
+    // onReachBottomDistance: 50,
   };
   data = {
     id: '',
@@ -231,13 +234,12 @@ export default class riceDetails extends wepy.page {
         token_access: this.token_access,
         id: this.id
       })
-      console.log(res.data)
       this.detail.is_collection = this.detail.is_collection == 1 ? 0 : 1
     },
     makePhoneCall(e) {
       // e.currentTarget.dataset.phone
       wx.makePhoneCall({
-        phoneNumber: "400-888-9383"
+        phoneNumber: e.currentTarget.dataset.phone
       });
     },
   }
@@ -259,16 +261,24 @@ export default class riceDetails extends wepy.page {
       token_access: this.token_access,
       id: options.id || 16291
     })
-    this.splitPhone = res.data.phone.split(" ")
-    console.log(res.data.phone.split(" "))
-    this.detail = res.data
-    this.collectionBoolean = this.detail.collect == 0 ? false : true
-    this.$apply()
+    if (!res.data) {
+      wx.navigateBack({
+        delta: 1
+      })
+    }
+    if (res.false) return
+    if (res.meta.success) {
+      // this.splitPhone = res.data.phone.split(" ")
+      this.splitPhone = res.data.mobileTelephone.split(" ")
+      this.detail = res.data
+      this.collectionBoolean = this.detail.collect == 0 ? false : true
+      this.$apply()
+    } 
   }
-  // 加载更多
-  onReachBottom() {
-    this.loading = true
-    this.getRiceNews()
-  }
+  // // 加载更多
+  // onReachBottom() {
+  //   this.loading = true
+  //   this.getRiceNews()
+  // }
 }
 </script>
