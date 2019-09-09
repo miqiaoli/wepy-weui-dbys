@@ -54,7 +54,7 @@ export default class todolist extends wepy.page {
     index: 0,
     now: '',
     next: '',
-    username: ['宓巧丽', '李发全', '许淑君', '周方东', '王兵强', '吴方涛'],
+    username: ['宓巧丽', '李发全', '许淑君', '周方东', '袁兴隆', '吴方涛'],
     allLog: [],
   }
   getNextValue(e) {
