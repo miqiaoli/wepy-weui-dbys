@@ -1,6 +1,6 @@
 <template>
-<view class="page bg">
-  <view class="page__bd_spacing info">
+<view class="page bg__white">
+  <view class="page__bd_spacing">
     <view class="userinfo weui-flex">
       <block wx:if="{{token_access}}">
         <view class="userinfo-avatar">
@@ -20,7 +20,6 @@
       </block>
     </view>
   </view>
-
   <view class="list-grid user-box">
     <view class="title">销售管理</view>
     <view class="weui-grids">
@@ -58,22 +57,27 @@
       </navigator>
     </view>
   </view>
-  <view class="line"></view>
   <view class="list-grid user-box">
     <view class="title">采购管理</view>
     <view class="weui-grids">
-      <navigator url="/pages/transaction/shelf/list?buyorsell=2">
+      <!-- <view class="weui-grid" @tap="aler">
+        <view class="weui-grid__icon">
+          <image class="img-icon" src="/images/icon/about6@2x.png" mode="scaleToFill" />
+        </view>
+        <view class="weui-grid__label">提货单管理</view>
+      </view> -->
+      <navigator url="/pages/transaction/talk/list?buyorsell=1">
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/about1@2x.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/about2@2x.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">洽谈管理</view>
       </view>
       </navigator>
-      <navigator url="/pages/order/list?istype=0">
+      <navigator url="/pages/transaction/buy/list?buyorsell=1">
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/about2@2x.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/about3@2x.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">订单管理</view>
       </view>
@@ -81,7 +85,7 @@
       <navigator url="/pages/transaction/contract/list?buyorsell=1">
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/about3@2x.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/about4@2x.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">合同管理</view>
       </view>
@@ -89,60 +93,54 @@
       <navigator url="/pages/transaction/todo/list?buyorsell=1">
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/about4@2x.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/about5@2x.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">采购单管理</view>
       </view>
       </navigator>
-      <navigator url="/pages/order/note-list">
-      <view class="weui-grid">
-        <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/about4@2x.png" mode="scaleToFill" />
+    </view>
+  </view>
+
+  <view class="user-box">
+    <view class="user-cells">
+      <navigator url="/pages/mine/report" class="user-cell weui-flex">
+        <view class="weui-cell__hd">
+          <image class="icon" src="/images/icon/mime2.png" />
         </view>
-        <view class="weui-grid__label">票据管理</view>
-      </view>
+        <view class="weui-cell__bd bold">检测报告</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+      </navigator>
+      <navigator url="/pages/company/collections" class="user-cell weui-flex">
+        <view class="weui-cell__hd">
+          <image class="icon" src="/images/icon/mime3.png" />
+        </view>
+        <view class="weui-cell__bd bold">我的收藏</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+      </navigator>
+      <!-- <navigator url="/pages/logistics/index" class="user-cell weui-flex">
+        <view class="weui-cell__hd">
+          <image class="icon" src="/images/icon/order.png" />
+        </view>
+        <view class="weui-cell__bd bold">小八物流</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+      </navigator> -->
+      <navigator url="/pages/mine/about-us" class="user-cell weui-flex">
+        <view class="weui-cell__hd">
+          <image class="icon" src="/images/icon/mime5.png" />
+        </view>
+        <view class="weui-cell__bd bold">关于我们</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
       </navigator>
     </view>
   </view>
-  <view class="ul">
-    <navigator url="/pages/mine/report" class="user-cell weui-flex">
-      <view class="weui-cell__hd">
-        <image class="icon" src="/images/icon/mime2.png" />
-      </view>
-      <view class="weui-cell__bd bold">检测报告</view>
-      <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-    </navigator>
-    <navigator url="/pages/company/collections" class="user-cell weui-flex">
-      <view class="weui-cell__hd">
-        <image class="icon" src="/images/icon/mime3.png" />
-      </view>
-      <view class="weui-cell__bd bold">我的收藏</view>
-      <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-    </navigator>
-    <navigator url="/pages/mine/about-us" class="user-cell weui-flex">
-      <view class="weui-cell__hd">
-        <image class="icon" src="/images/icon/mime5.png" />
-      </view>
-      <view class="weui-cell__bd bold">关于我们</view>
-      <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-    </navigator>
-    <navigator url="/pages/mine/about-us" class="user-cell weui-flex">
-      <view class="weui-cell__hd">
-        <image class="icon" src="/images/icon/mime5.png" />
-      </view>
-      <view class="weui-cell__bd bold">咨询客服</view>
-      <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-    </navigator>
-  </view>
-
-  <view class="login page__bd_spacing">
-    <!-- <view class="user-phone weui-flex" bindtap='makePhoneCall' data-phone='400-888-9383'>
+  <view class="page__bd_spacing">
+    <view class="user-phone weui-flex" bindtap='makePhoneCall' data-phone='400-888-9383'>
       <view class="weui-cell__hd">
         <image class="icon" src="/images/icon/icon-phone_HL.png" />
       </view>
       <view class="weui-cell__bd bold">咨询客服</view>
       <view class="weui-cell__ft weui-cell__ft_in-access">400-888-9383</view>
-    </view> -->
+    </view>
     <button class="button" type="primary" @tap='logout'>退出登录</button>
   </view>
 </view>
@@ -157,7 +155,7 @@ import base from "../../mixins/base";
 import user from "../../mixins/user";
 import http from "../../utils/Http";
 
-export default class about extends wepy.page {
+export default class mine extends wepy.page {
   mixins = [base, user];
   config = {
     navigationBarTitleText: "我的"
@@ -216,40 +214,23 @@ export default class about extends wepy.page {
 }
 </script>
 <style lang="less">
-.bg {
-  background: #EDEDED;
-}
 .weui-grids {
   border-top: 0rpx solid #D9D9D9;
   border-left:0rpx solid #D9D9D9;
 }
 .weui-grid {
-  width: 25%;
   border-right:0rpx solid #D9D9D9;
   border-bottom:0rpx solid #D9D9D9;
-}
 
-.line {
-  height: 8rpx;
-  background: #EDEDED;
-}
-.title {
-  padding: 24rpx 0 4rpx 30rpx;
-  color: #030000;
-  font-weight: bold;
 }
 .img-icon {
   height: 100%;
   width: 100%;
 }
-.info {
-  padding: 30rpx 70rpx;
-  background: #3E91F7;
-}
 .userinfo {
   .userinfo-avatar {
-    width: 116rpx;
-    height: 116rpx;
+    width: 96rpx;
+    height: 96rpx;
     border-radius: 50%;
     overflow: hidden;
   }
@@ -264,16 +245,17 @@ export default class about extends wepy.page {
   }
 }
 .user-box {
-  background: #ffffff;
-    // margin: 40rpx 24rpx;
-    // box-shadow: 0 2px 14px 0 #ECEFF6;
-    // border-radius: 4px;
+    margin: 40rpx 24rpx;
+    box-shadow: 0 2px 14px 0 #ECEFF6;
+    border-radius: 4px;
+}
+.user-cells {
+    padding: 24rpx 24rpx 60rpx;
 }
 .user-cell {
-  margin-top: 10rpx;
-  background: #ffffff;
-  padding: 30rpx;
-  align-items: center;
+    padding: 30rpx 0 10rpx;
+    border-bottom: 1px solid #E4E7F0;
+    align-items: center;
 }
 .user-phone {
     margin-top: 80rpx;
@@ -285,8 +267,5 @@ export default class about extends wepy.page {
     width: 40rpx;
     height: 40rpx;
     margin-right: 20rpx;
-}
-.login {
-  margin: 36rpx 60rpx;
 }
 </style>
