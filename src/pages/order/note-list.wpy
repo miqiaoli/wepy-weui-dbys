@@ -1,9 +1,9 @@
 <template>
   <view class="note page">    
     <view class="list">
-      <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id">
+      <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id" data-index="{{index}}" data-fbillno="{{single.fbillno}}" bindtap="toNoteDetails">
         <view class="item weui-cell__ft">应收单号：{{single.fbillno}}</view>
-        <view class="item" wx:for="{{single.details}}" wx:for-item="item" wx:key="id" data-fbillno="{{single.fbillno}}" bindtap="toNoteDetails">
+        <view class="item" wx:for="{{single.details}}" wx:for-item="item" wx:key="id">
           <view class="name">{{item.flname}}</view>
           <view class="">签单数量：{{item.fxcfpsl}}{{item.fpriceunitid}}</view>
           <view class="margin-10 weui-flex">
@@ -16,10 +16,10 @@
         </view>
         <view class="item">
           <view class="padding-8 weui-flex margin-top">
-            <view class="weui-flex__item">共3张发票</view>
-            <view class="weui-cell__ft" wx:if="{{single.sfkp == 1}}">已开票</view>
-            <view class="weui-cell__ft" wx:if="{{single.sfkp == 2}}">部分开票</view>
-            <view class="weui-cell__ft" wx:if="{{single.sfkp == 3}}">未开票</view>
+            <view class="weui-flex__item">共{{single.details.length}}张发票</view>
+            <view class="weui-cell__ft" style="color: #F58E55" wx:if="{{single.sfkp == 1}}">已开票</view>
+            <view class="weui-cell__ft" style="color: #3DE56D;" wx:if="{{single.sfkp == 2}}">部分开票</view>
+            <view class="weui-cell__ft" style="color: #0E91FF;" wx:if="{{single.sfkp == 3}}">未开票</view>
           </view>
         </view> 
       </view>
@@ -63,16 +63,18 @@ export default class noteList extends wepy.page {
   methods = {
     toNoteDetails(e) {
       const fbillno = e.currentTarget.dataset.fbillno
-      // wx.showToast({
-      //   title: '去详情',
-      //   icon: 'success',
-      //   duration: 2000
-      // })
-      // setTimeout(() => {
+      const index = e.currentTarget.dataset.index
+      if (JSON.stringify(this.list[index].details).includes(`"iskd":1`)) {
         wx.navigateTo({
           url: `./note-details?fbillno=${fbillno}`
         })
-      // }, 2000);
+      } else {
+          wx.showToast({
+            title: '暂无物流信息',
+            icon: 'none',
+            duration: 2000
+          })
+      }   
     },
   }
   onLoad(e) {
@@ -130,7 +132,7 @@ export default class noteList extends wepy.page {
       background: #ffffff;
       .item {
         padding: 10rpx 30rpx;
-        border-top: 1px solid #ccc;
+        border-top: 1px solid #EDEDED;
         .name {
           font-weight: 500;
           font-size: 16px;
