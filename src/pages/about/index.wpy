@@ -27,7 +27,7 @@
       <navigator url="/pages/transaction/shelf/list?buyorsell=2">
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/about1@2x.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/01.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">挂牌管理</view>
       </view>
@@ -35,7 +35,7 @@
       <navigator url="/pages/transaction/talk/list?buyorsell=2">
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/about2@2x.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/02.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">洽谈管理</view>
       </view>
@@ -43,7 +43,7 @@
       <navigator url="/pages/transaction/buy/list?buyorsell=2">
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/about3@2x.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/03.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">订单管理</view>
       </view>
@@ -51,7 +51,7 @@
       <navigator url="/pages/transaction/contract/list?buyorsell=2">
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/about4@2x.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/04.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">合同管理</view>
       </view>
@@ -62,10 +62,10 @@
   <view class="list-grid user-box">
     <view class="title">采购管理</view>
     <view class="weui-grids">
-      <navigator url="/pages/transaction/shelf/list?buyorsell=2">
+      <navigator url="/pages/transaction/talk/list?buyorsell=1">
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/about1@2x.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/11.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">洽谈管理</view>
       </view>
@@ -73,7 +73,7 @@
       <navigator url="/pages/order/list?istype=0">
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/about2@2x.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/12.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">订单管理</view>
       </view>
@@ -81,7 +81,7 @@
       <navigator url="/pages/transaction/contract/list?buyorsell=1">
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/about3@2x.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/13.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">合同管理</view>
       </view>
@@ -89,7 +89,7 @@
       <navigator url="/pages/transaction/todo/list?buyorsell=1">
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/about4@2x.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/14.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">采购单管理</view>
       </view>
@@ -97,7 +97,7 @@
       <navigator url="/pages/order/note-list">
       <view class="weui-grid">
         <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/about4@2x.png" mode="scaleToFill" />
+          <image class="img-icon" src="/images/icon/15.png" mode="scaleToFill" />
         </view>
         <view class="weui-grid__label">票据管理</view>
       </view>
@@ -107,31 +107,31 @@
   <view class="ul">
     <navigator url="/pages/mine/report" class="user-cell weui-flex">
       <view class="weui-cell__hd">
-        <image class="icon" src="/images/icon/mime2.png" />
+        <!-- <image class="icon" src="/images/icon/mime2.png" /> -->
       </view>
       <view class="weui-cell__bd bold">检测报告</view>
       <view class="weui-cell__ft weui-cell__ft_in-access"></view>
     </navigator>
     <navigator url="/pages/company/collections" class="user-cell weui-flex">
       <view class="weui-cell__hd">
-        <image class="icon" src="/images/icon/mime3.png" />
+        <!-- <image class="icon" src="/images/icon/mime3.png" /> -->
       </view>
       <view class="weui-cell__bd bold">我的收藏</view>
       <view class="weui-cell__ft weui-cell__ft_in-access"></view>
     </navigator>
     <navigator url="/pages/mine/about-us" class="user-cell weui-flex">
       <view class="weui-cell__hd">
-        <image class="icon" src="/images/icon/mime5.png" />
+        <!-- <image class="icon" src="/images/icon/mime5.png" /> -->
       </view>
       <view class="weui-cell__bd bold">关于我们</view>
       <view class="weui-cell__ft weui-cell__ft_in-access"></view>
     </navigator>
-    <navigator url="/pages/mine/about-us" class="user-cell weui-flex">
+    <navigator url="/pages/about/index" bindtap='makePhoneCall' data-phone='400-888-9383' class="user-cell weui-flex">
       <view class="weui-cell__hd">
-        <image class="icon" src="/images/icon/mime5.png" />
+        <!-- <image class="icon" src="/images/icon/mime5.png" /> -->
       </view>
       <view class="weui-cell__bd bold">咨询客服</view>
-      <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+      <view class="weui-cell__ft weui-cell__ft_in-access">400-888-9383</view>
     </navigator>
   </view>
 
