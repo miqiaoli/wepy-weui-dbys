@@ -4,7 +4,7 @@
       <view class="weui-search-bar__form" style="line-height: 60rpx; background: #FFFFFF; border-radius: 60rpx; border: 0">
         <view class="weui-search-bar__box">
           <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
-          <input type="text" class="weui-search-bar__input" style="height: 60rpx;line-height: 60rpx; text-align: left;" placeholder="搜索您想要的内容" bindconfirm bindinput="searchText" value="{{this.keyword}}" />
+          <input type="text" class="weui-search-bar__input" style="height: 60rpx;line-height: 60rpx; text-align: left;" placeholder="搜索您想要的内容" bindconfirm bindinput="searchText" value="{{this.value}}" />
         </view>
       </view>
       <view class="order-filter filter active" bindtap="riseFilter">
@@ -57,46 +57,42 @@
     </view>
 
     <view class="tabs weui-flex">
-      <view class="tab weui-flex__item" wx:for="{{tabs}}" wx:key="index" wx:for-item="single">{{single.name}}</view>
+      <view @tap="tabTap" class="tab weui-flex__item {{single.status == choosed ? 'choose' : ''}} " data-choosed="{{single.status}}" wx:for="{{tabs}}" wx:key="index" wx:for-item="single">
+        {{single.name}}
+      </view>
     </view>
     
     <view class="list">
-      <!-- <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id" data-discuss_id="{{single.discussid}}" @tap="toBuyDetails"> -->
-      <view class="single">
-        <view class="weui-cell__ft">2019年7月31日</view>
-        <view class="page__desc">WT20190429170815</view>
+      <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id">
+        <view class="weui-cell__ft">{{single.orderDate}}</view>
+        <view class="page__desc">{{single.orderId}}</view>
         <view class="item">
-          <view class="name">ABS,GP22(韩国巴斯夫)</view>
+          <view class="name">{{single.name}}</view>
           <view class="weui-flex">
-            <view class="weui-flex__item">签单数量：8880kg</view>
-            <view class="weui-flex__item red margin-right">1000元/kg</view>
+            <view class="weui-flex__item">签单数量：{{single.sl}}{{single.dw}}</view>
+            <view class="weui-flex__item red margin-right">{{single.dj}}元/kg</view>
           </view>
-          <view class="">金额（含税）：8880000元</view>
-          <view class="text">剩余未出库：8000kg</view>
-        </view>
-        <view class="item">
-          <view class="name">ABS,GP22(韩国巴斯夫)</view>
-          <view class="">签单数量：8880kg</view>
-          <view class="">金额（含税）：8880000元</view>
-          <view class="text">剩余未出库：8000kg</view>
+          <view class="">金额（含税）：{{single.je}}元</view>
+          <view class="text">剩余未出库：{{single.wcksl}}kg</view>
         </view>
         <view class="item">
           <view class="weui-flex margin-top">
-            <view class="weui-flex__item">结算方式：电汇</view>
-            <view class="weui-flex__item red">交易成功</view>
+            <view class="weui-flex__item">结算方式：{{single.jsType}}</view>
+            <!-- <view class="weui-flex__item red">交易成功</view> -->
           </view>
-          <view class="">配送方式：自提</view>
-          <view class="text">合同备注：尽快发货</view>
-          <view class="text weui-cell__ft">共5件商品  合计：<text class="price">¥888万元</text></view>
+          <view class="">配送方式：{{single.jhfs}}</view>
+          <view class="text">合同备注：{{single.des2}}</view>
+          <view class="text weui-cell__ft">共5件商品  合计：<text class="price">¥{{single.je}}元</text></view>
         </view> 
         <view class="item">
           <view class="btn weui-flex">
             <view class="weui-flex__item"></view>
             <view class="weui-flex__item"></view>
-            <button class="btn-text weui-flex__item">合同预览</button>
-            <button class="btn-text weui-flex__item">货物信心</button>
-          </view>
-          
+            <button @tap="eyeFile" data-orderid="{{single.orderId}}" class="btn-text weui-flex__item">合同预览</button>
+            <!-- <button wx:if="{{single.status == 'C'}}" @tap="toGoodsList" data-orderid="{{single.orderId}}" class="btn-text weui-flex__item">货物信息</button> -->
+            <button @tap="toGoodsList" data-orderid="{{single.orderId}}" class="btn-text weui-flex__item">货物信息</button>
+            <!-- <button wx:if="{{single.wtdinfo !== '0'}}" @tap="toGoodsList" data-orderid="{{single.orderId}}" class="btn-text weui-flex__item">货物信息</button> -->
+          </view>      
         </view> 
       </view>
     </view>
@@ -132,23 +128,23 @@ export default class buyList extends wepy.page {
     nowDate: '',
     value: '',  // 搜索
     placeholder: '搜索订单号',
+    choosed: '',
     tabs: [{
       name: '全部',
       status: '',
     }, {
+      name: '创建',
+      status: 'A',
+    }, {
+      name: '待审核',
+      status: 'B',
+    }, {
+      name: '已审核',
+      status: 'C',
+    }, {
       name: '待确认',
-      status: 99,
-    }, {
-      name: '待发货',
-      status: -1,
-    }, {
-      name: '待收货',
-      status: -2,
-    }, {
-      name: '已完成',
-      status: 3,
+      status: 'X',
     }],
-    buyorsell: 1,
     token_access: '',
     list: [],
     start: 1,
@@ -158,18 +154,45 @@ export default class buyList extends wepy.page {
 
   methods = {
     preventTouchMove(e) {},
-    toBuyDetails(e) {
-      const discuss_id = e.currentTarget.dataset.discuss_id
-      wx.showToast({
-        title: '去查看',
-        icon: 'success',
-        duration: 2000
+    searchText(e) {
+      this.value = e.detail.value
+    },
+    tabTap(e) {
+      this.choosed = e.currentTarget.dataset.choosed
+      this.list =[]
+      this.start = 1
+      this.getOrderList()
+      this.$apply()
+    },
+    async bindconfirm(e) {
+      this.value = e.detail.value
+      this.start = 1
+      this.list = []
+      this.getOrderList()
+    },
+    async eyeFile(e) {
+      const orderId = e.currentTarget.dataset.orderid
+      const downloadTask = wx.downloadFile({
+        url: `${__getApi._getOrderView}?orderId=${orderId}`,
+        success (res) {
+          if (res.statusCode === 200) {
+            const filePath = res.tempFilePath
+            wx.openDocument({
+              filePath: filePath,
+              fileType: 'doc',
+              success: function(res) {
+                  console.log('打开文档成功')
+              }
+            })
+          }
+        }
       })
-      setTimeout(() => {
-        wx.navigateTo({
-          url: `./details?discuss_id=${discuss_id}&buyorsell=${this.buyorsell}`
-        })
-      }, 2000);
+    },
+    toGoodsList(e) {
+      const orderId = e.currentTarget.dataset.orderid
+      wx.navigateTo({
+        url: `./goods-list?orderId=${orderId}`
+      })
     },
     // 提交筛选
     formSubmit(e) {
@@ -227,16 +250,16 @@ export default class buyList extends wepy.page {
       sdate: this.startdate,
       edate: this.enddate,
       name: this.value,
-      status: 'A'
+      status: this.choosed,
+      token_access: this.token_access
     }
-    // X,A,B,C A创建B待审核C已审核X待确认
+    // X,A,B,C  A创建B待审核C已审核X待确认
     const res = await http.get(__getApi._getOrderList, params)
     if (res.false) return
     if (res.meta.success) {
-      console.log(res.data)
-      // this.list = [...this.list, ...res.data.resultlist]
-      // this.count = res.data.rows_count
-      // this.$apply()
+      this.list = [...this.list, ...res.data.list]
+      this.count = res.data.total
+      this.$apply()
     }
   }
   bindStartDateChange(e) {
@@ -252,6 +275,9 @@ export default class buyList extends wepy.page {
 .input-border {
   padding:10rpx;
   border:1px solid #979797;
+}
+.success {
+  color: #F58E55;
 }
 .red {
   color: red;
@@ -271,7 +297,10 @@ export default class buyList extends wepy.page {
 .margin-right {
   margin-right: 30rpx;
 }
-@borderLine: 1px solid #999;
+@borderLine: 1px solid #EDEDED;
+.choose {
+  border-bottom: 4px solid #0E91FF;
+}
 .tabs {
   font-size: 14px;
   text-align: center;
@@ -280,11 +309,10 @@ export default class buyList extends wepy.page {
   .tab {
     margin: 10rpx 30rpx;
     line-height: 70rpx;
-    border-bottom: 4px solid #0E91FF;
   }
 }
 .search {
-  background: #A1A6BB;;
+  background: #EDEDED;
   padding: 26rpx 30rpx;
 }
 .order-filter {
@@ -301,12 +329,13 @@ export default class buyList extends wepy.page {
 }
 
 .order-list {
-  background: #cccccc;
+  background: #EDEDED;
   .list {
     margin-top: 20rpx;
-    background: #fff;
     .single {
-      margin: 0 30rpx;
+      // margin: 0 30rpx;
+      padding: 0 30rpx;
+      background: #fff;
       margin-bottom: 20rpx;
       .item {
         border-bottom: @borderLine;
