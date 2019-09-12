@@ -2,17 +2,21 @@
 import wepy from 'wepy'
 import {
   __getApi
-} from './config.js'
+} from '../config.js'
 import 'wepy-async-function'
 
 export default class extends wepy.app {
   config = {
     pages: [
-      
       'pages/index',
+      'pages/about/index',
+      'pages/order/goods-details',
+      'pages/order/note-details',
+      'pages/order/list',
+      'pages/order/goods-list',
+      'pages/order/note-list',
       'pages/rice/list',
       'pages/rice/details',
-      'pages/rice/index',
       
       'pages/logistics/logistics-update',
       'pages/logistics/index',
@@ -37,7 +41,6 @@ export default class extends wepy.app {
       'pages/transaction/talk/talk',
       'pages/transaction/talk/details',
 
-      'pages/about/index',
 
       'pages/fish/list',
       'pages/fish/details',

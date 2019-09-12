@@ -1,20 +1,23 @@
 <template>
   <view class="note page">    
     <view class="list">
-      <!-- <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id" data-discuss_id="{{single.discussid}}" @tap="toBuyDetails"> -->
-      <view class="single">
+      <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id" data-discuss_id="{{single.discussid}}" @tap="toBuyDetails">
+      <!-- <view class="single"> -->
         <view class="item">
           <view class="weui-flex">
-            <view class="weui-flex__item">WT20190429170815</view>
-            <view class="weui-cell__ft">2019年7月31日</view>
+            <view class="weui-flex__item">{{single.commissionNum}}</view>
+            <view class="weui-cell__ft">{{single.createDate}}</view>
           </view>
-          <view class="name">ABS,GP22(韩国巴斯夫)：<text class="red">500kg</text></view>
-          <view class="name">EPP珠粒 HTKB60：<text class="red">500kg</text></view>
-          <view class="text">广东省广南东路珠海市香洲区康宁路79号</view>
+          <view class="name">{{single.productName.buyer_department}}：<text class="red">{{single.quantity}}kg</text></view>
+          <view class="text">{{single.receiveAddress}}</view>
         </view>
         <view class="show weui-flex">
-          <view class="weui-flex__item weui-cell__ft">已结束</view>
-          <button class="weui-cell__ft btn">查看物流</button>
+          <view wx:if="{{single.status == '3'}}" style="color: #23E095;" class="weui-flex__item weui-cell__ft">运输中</view>
+          <view wx:if="{{single.status == '4'}}" style="color: #F58E56" class="weui-flex__item weui-cell__ft">已结束</view>
+          <view wx:if="{{single.status == '3'}}" class="weui-flex__item weui-cell__ft">已结算</view>
+          <view wx:if="{{single.status == '1' || single.status == '2'}}" style="color: #0E91FF;" class="weui-flex__item weui-cell__ft">待发货</view>
+          <!-- 1、2待发货，3运输中、4已结束、5已结算 -->
+          <button data-entru_id="{{single.entruId}}" @tap="toGoodsDetails" class="weui-cell__ft btn">查看物流</button>
         </view>
       </view>
     </view>
@@ -39,8 +42,6 @@ export default class goodsList extends wepy.page {
   }
   config = {
     navigationBarTitleText: '货物信息',
-    enablePullDownRefresh: true,
-    onReachBottomDistance: 100
   }
   data = {
     index: 0,
@@ -50,26 +51,21 @@ export default class goodsList extends wepy.page {
     limit: 15,
     startdate: '',
     enddate: '',
-    count: 0
+    count: 0,
+    orderNo: ''
   }
 
   methods = {
-    toBuyDetails(e) {
-      const discuss_id = e.currentTarget.dataset.discuss_id
-      wx.showToast({
-        title: '去查看',
-        icon: 'success',
-        duration: 2000
+    toGoodsDetails(e) {
+      const entru_id = e.currentTarget.dataset.entru_id
+      wx.navigateTo({
+        url: `./goods-details?entru_id=${entru_id}`
       })
-      setTimeout(() => {
-        wx.navigateTo({
-          url: `./details?discuss_id=${discuss_id}&buyorsell=${this.buyorsell}`
-        })
-      }, 2000);
     },
   }
   onLoad(e) {
     this.token_access = this.$parent.globalData.token_access || ''
+    this.orderNo = e.orderId
     this.getGoodsList()
     this.$apply()
   }
@@ -88,18 +84,15 @@ export default class goodsList extends wepy.page {
     let params = {
       page_id: this.start,
       page_limit: this.limit,
-      sdate: this.startdate,
-      edate: this.enddate,
-      fbillno: this.value,
+      orderNo: this.orderNo,
       token_access: this.token_access
     }
-    const res = await http.get(__getApi._getInvoiceList, params)
+    const res = await http.get(__getApi._getGoodsList, params)
     if (res.false) return
     if (res.meta.success) {
-      console.log(res.data)
-      // this.list = [...this.list, ...res.data.resultlist]
-      // this.count = res.data.rows_count
-      // this.$apply()
+      this.list = res.data.list
+      this.count = res.data.total
+      this.$apply()
     }
   }
 }
@@ -112,13 +105,13 @@ export default class goodsList extends wepy.page {
   font-size: 16px;
 }
 .show {
-  border-top: 1px solid #999;
+  border-top: 1px solid #EDEDED;
   padding: 16rpx 30rpx;
   align-items: center;
   
 }
 .note {
-  background: #999;
+  background: #EDEDED;
   .list {
     font-size: 14px;
     font-weight: 500;
