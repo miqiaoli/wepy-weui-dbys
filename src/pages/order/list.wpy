@@ -191,6 +191,7 @@ export default class buyList extends wepy.page {
     toGoodsList(e) {
       const orderId = e.currentTarget.dataset.orderid
       wx.navigateTo({
+        // url: `./goods-list?orderId=2019.04.151050`
         url: `./goods-list?orderId=${orderId}`
       })
     },

@@ -2,24 +2,29 @@
   <view class="note-details page">
     <view class="list">
       <!-- <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id"> -->
-        <!-- <view class="weui-cell__ft blue">发票号：{{single.pbillno}}</view>
-        <view class="{{getmore[0] ? 'product' : ''}} ">
-          <view class="item" wx:for="{{single.pdetails}}" wx:for-item="item" wx:key="id">
-            <view class="name">{{item.flname}}</view>
+        <view class="">{{commission_num}}</view>
+        <!-- <view class="{{getmore[0] ? 'product' : ''}} "> -->
+          <!-- <view class="item" wx:for="{{single.pdetails}}" wx:for-item="item" wx:key="id"> -->
+            <!-- <view class="name">{{item.flname}}</view> -->
             <view class="weui-flex">
-              <view class="weui-flex__item">签单数量：{{item.fqty}}kg</view>
-              <view class="weui-flex__item">金额（含税）：{{item.fallamountfor}}元</view>
+              <view class="weui-flex__item">{{product_name}}</view>
+              <view class="weui-flex__item">出库数量：{{quantity}}kg</view>
             </view>
-          </view>
-        </view>
-        <view @tap="getmore" data-index='0' wx:if="{{getmore[0]}}" class="tapmore">点击查看更多票单详情</view> -->
+          <!-- </view> -->
+        <!-- </view> -->
+        <!-- <view @tap="getmore" data-index='0' wx:if="{{getmore[0]}}" class="tapmore">点击查看更多票单详情</view> -->
         <!-- <view class="{{getmore[1] ? 'passport' : ''}} "> -->
           <!-- <view class="sf weui-flex">
             <view class="sf-name">顺丰快递</view>
             <view class="">快递单号:{{single.kdinfo.information.no}}</view>
           </view> -->
+          <map class="map_container" id="myMap" latitude="{{lat}}" longitude="{{lng}}" scale="14" markers="{{markers}}" polyline="{{polyline}}"  show-location="true">
+          </map>
+
+          <!-- <map id="map" longitude="113.324520" latitude="23.099994" scale="14" markers="{{markers}}" polyline="{{polyline}}"  show-location style="width: 100%; height: 300px;"></map> -->
+         
           <view class="sf weui-flex" wx:for="{{list}}" wx:for-item="info" wx:key="id">
-            <view class="weui-flex__item">{{info.timestamp}}</view>
+            <view class="time">{{info.timestamp}}</view>
             <view class="weui-flex__item">{{info.placeChina}}</view>
           </view>  
         <!-- </view> -->
@@ -50,14 +55,20 @@ export default class goodsDetails extends wepy.page {
     navigationBarTitleText: '物流信息',
   }
   data = {
+    commission_num: '',
+    product_name: '',
+    quantity: '',
     index: 0,
     token_access: '',
     list: [],
     count: 0,
     getmore: [true, true],
     entru_id: '',
+    markers: [],
+    lat: '',
+    lng: '',
+    polyline: [],
   }
-
   methods = {
     getmore(e) {
       const index = e.currentTarget.dataset.index
@@ -65,8 +76,12 @@ export default class goodsDetails extends wepy.page {
     }
   }
   onLoad(e) {
+    this.mapCtx = wx.createMapContext('myMap')
     this.token_access = this.$parent.globalData.token_access || ''
     this.entru_id = e.entru_id
+    this.commission_num = e.commission_num
+    this.product_name = e.product_name
+    this.quantity = e.quantity
     this.getGoodsDetails()
     this.$apply()
   }
@@ -77,16 +92,57 @@ export default class goodsDetails extends wepy.page {
     })
     if (res.false) return
     if (res.meta.success) {
-      this.list = res.data
+      let points = []
+
+      res.data.map((val, index) => {
+        points.push({
+          longitude: val.lng,
+          latitude: val.lat
+        })
+        this.list.push({
+          placeChina: val.placeChina,
+          timestamp: this.format(val.timestamp),
+          latitude: val.lat,
+          longitude: val.lng
+        })
+      })
+      const length = res.data.length
+      this.lng = this.list[length-1].longitude
+      this.lat = this.list[length-1].latitude
+      this.markers = [{
+        id: '99',
+        latitude: this.list[length-1].latitude,
+        longitude: this.list[length-1].longitude,
+        title: this.list[length-1].placeChina
+      }]
+
+      this.polyline =  [{
+        points: points,
+        color:"#048DFF",
+        width: 4,
+      }]
       this.$apply()
     }
+  }
+  format(timestamp) {
+    var date = new Date(timestamp)
+    let y = date.getFullYear(),
+　　  m = date.getMonth() + 1,
+　　  d = date.getDate();
+　  return y + "-" + (m < 10 ? "0" + m : m) + "-" + (d < 10 ? "0" + d : d) + " " + date.toTimeString().substr(0, 8);
   }
 }
 </script>
 
 <style lang="less" scoped>
+.page {
+  background: #FFFFFF;
+}
 .sf {
-  margin: 30rpx;
+  // margin: 30rpx;
+}
+.time {
+  margin-right: 30rpx;
 }
 .sf-name {
   margin-right: 20rpx;
@@ -99,6 +155,11 @@ export default class goodsDetails extends wepy.page {
 .product {
   height: 400rpx;
   overflow: hidden;
+}
+.map_container {
+  margin: 40rpx 0 40rpx -30rpx;
+  height: 500rpx;
+  width: 110%;
 }
 .passport {
   border-top: 1px solid #EDEDED;
@@ -118,7 +179,7 @@ export default class goodsDetails extends wepy.page {
   padding: 16rpx 0;
 }
 .note-details {
-  background: #EDEDED;
+  // background: #EDEDED;
   .tips {
     padding: 0 40rpx;
     height: 56rpx;
@@ -127,6 +188,7 @@ export default class goodsDetails extends wepy.page {
     background: #F58E55;
   }
   .list {
+    margin: 0 30rpx;
     font-size: 14px;
     font-weight: 500;
     .single {
