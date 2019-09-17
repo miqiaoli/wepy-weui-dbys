@@ -10,10 +10,11 @@ export default class extends wepy.app {
     pages: [
       'pages/index',
       'pages/about/index',
+
+      'pages/order/goods-list',
       'pages/order/goods-details',
       'pages/order/note-details',
       'pages/order/list',
-      'pages/order/goods-list',
       'pages/order/note-list',
       'pages/rice/list',
       'pages/rice/details',
@@ -40,7 +41,6 @@ export default class extends wepy.app {
       'pages/transaction/talk/list',
       'pages/transaction/talk/talk',
       'pages/transaction/talk/details',
-
 
       'pages/fish/list',
       'pages/fish/details',
