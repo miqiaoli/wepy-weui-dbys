@@ -2,7 +2,7 @@
 import wepy from 'wepy'
 import {
   __getApi
-} from '../config.js'
+} from './config.js'
 import 'wepy-async-function'
 
 export default class extends wepy.app {
