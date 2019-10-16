@@ -148,10 +148,15 @@ export default class Index extends wepy.page {
     })
     this.$parent.$updateGlobalData('token_access', this.token_access)
     setTimeout(function() {
-      wepy.switchTab({
-        url: '../mime'
-      })
-    }, 1000)
+        wepy.switchTab({
+          url: "/pages/about/index",
+          // success: function(e) {
+          //   var page = getCurrentPages().pop();
+          //   if (page == undefined || page == null) return;
+          //   page.onLoad();
+          // }
+        });
+      }, 1000);
   }
   methods = {
     makePhoneCall(e) {
@@ -234,6 +239,7 @@ export default class Index extends wepy.page {
   }
 }
 </script>
+
 <style lang="less">
 .page {
     height: 100vh;
