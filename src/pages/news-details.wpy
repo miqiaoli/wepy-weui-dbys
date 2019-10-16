@@ -15,13 +15,13 @@
     </view>
     <!-- <view class="gohome bg__primary">
       <navigator url="/pages/index" open-type="switchTab">
-        <image class="gohome-image" src="/images/icon/home.png"></image>
+        <image class="gohome-image" src="/images/icon/home.png" />
         <text class="gohome-text">返回首页</text>
       </navigator>
     </view> -->
     <view class="weui-index">
       <navigator url="/pages/index" open-type="reLaunch" hover-class="navigator-hover">
-        <image class="" src="/images/back_index.png"></image>
+        <image class="" src="/images/back_index.png" />
       </navigator>
     </view>
   </view>

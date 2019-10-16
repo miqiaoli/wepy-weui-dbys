@@ -85,7 +85,6 @@
   <view class="text">4、若本协议任何条款被裁定为无效，则该项条款应被撤销，而其余条款应予遵守和执行。</view>
   <view class="text">5、本协议可采用书面文本，作为电子文本的补充，由协议双方各执一份。</view>
 </view>
-</view>
 </template>
 
 <script>

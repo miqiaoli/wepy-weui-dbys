@@ -1,69 +1,72 @@
 <template>
-<view class="list" wx:if="{{listType}}">
-  <view class="weui-flex product-top page__bd_spacing">
-    <slot name="title">供应信息</slot>
-    <view class="weui-flex__item"></view>
-    <view class="font-desc" bindtap="getMore">更多 &gt;
-      <!-- <navigator url="/pages/information/list?index={{idType}}" open-type="switchTab" hover-class="navigator-hover">更多 &gt;</navigator> -->
-    </view>
-  </view>
-  <view class="list-cont">
-    <navigator wx:for="{{list}}" wx:key="id" url="/pages/information/details?id={{item.id}}" hover-class="navigator-hover">
-      <view class="item weui-flex">
-        <slot name="tips">供应</slot>
-        <view class="content weui-flex__item">
-          <view class="weui-flex title">
-            <view wx:if='{{item.variety === 1}}'>塑料原料/{{item.productName}}</view>
-            <view wx:else>再生塑料/{{item.productName}}</view>
-            <view class="weui-flex__item"></view>
-            <view>{{item.phone}}</view>
-          </view>
-          <view class="weui-flex desc" @tap='click' data-index='{{index}}' id="{{item.id}}">
-            <view class="font-desc">{{item.place}}</view>
-            <view class="weui-flex__item"></view>
-            <view class="font-desc">{{item.date}}</view>
-          </view>
-        </view>
+<view>
+  <view class="list" wx:if="{{listType}}">
+    <view class="weui-flex product-top page__bd_spacing">
+      <slot name="title">供应信息</slot>
+      <view class="weui-flex__item"></view>
+      <view class="font-desc" bindtap="getMore">更多 &gt;
+        <!-- <navigator url="/pages/information/list?index={{idType}}" open-type="switchTab" hover-class="navigator-hover">更多 &gt;</navigator> -->
       </view>
-    </navigator>
-  </view>
-</view>
-<view class="list" wx:else>
-  <slot name="pic-cont">
-    <image class="pic-cont" mode="widthFix" src='/images/index-prodect1.jpg'></image>
-  </slot>
-  <view class="picture-col">
-    <!-- <navigator url="/pages/product/list?goods_class_id={{idType}}" hover-class="navigator-hover"> -->
-      <slot name="pic-col">
-        <image class="pic-cont" mode="widthFix" src='/images/index-prodect1.jpg'></image>
-      </slot>
-    <!-- </navigator> -->
-    <view class="weui-flex pic-box">
-      <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?604:7}}" hover-class="navigator-hover"></navigator>
-      <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?601:5}}" hover-class="navigator-hover"> </navigator>
-      <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?124:91}}" hover-class="navigator-hover"> </navigator>
-      <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?602:121}}" hover-class="navigator-hover"> </navigator>
-      <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?605:14}}" hover-class="navigator-hover"> </navigator>
     </view>
-  </view>
-  <view class="list-cont bg__white">
-    <view class="item" wx:for="{{list}}" wx:key="id">
-      <navigator class="box" url="/pages/product/details?id={{item.order_id}}" hover-class="navigator-hover">
-        <view class="title bold">{{item.goods_class}}/{{item.goods_name}}/{{item.att2}}/{{item.att1}}</view>
-        <view class="font-desc">{{item.address}}</view>
-        <view class="content weui-flex">
-          <view class="weui-flex__item">
-            <view class="else">
-              <view class="tag orange">起批量：≥{{item.min_batch_qtt}}KG</view>
-              <view class="tag blue">可供量：{{item.amount}}KG</view>
+    <view class="list-cont">
+      <navigator wx:for="{{list}}" wx:key="id" url="/pages/information/details?id={{item.id}}" hover-class="navigator-hover">
+        <view class="item weui-flex">
+          <slot name="tips">供应</slot>
+          <view class="content weui-flex__item">
+            <view class="weui-flex title">
+              <view wx:if='{{item.variety === 1}}'>塑料原料/{{item.productName}}</view>
+              <view wx:else>再生塑料/{{item.productName}}</view>
+              <view class="weui-flex__item"></view>
+              <view>{{item.phone}}</view>
             </view>
-          </view>
-          <view class="price-cont font-red">
-            ￥
-            <view class='price'>{{item.order_price}}</view>元/kg
+            <view class="weui-flex desc" @tap='click' data-index='{{index}}' id="{{item.id}}">
+              <view class="font-desc">{{item.place}}</view>
+              <view class="weui-flex__item"></view>
+              <view class="font-desc">{{item.date}}</view>
+            </view>
           </view>
         </view>
       </navigator>
+    </view>
+  </view>
+  <view class="list" wx:else>
+    <slot name="pic-cont">
+      <image class="pic-cont" mode="widthFix" src='/images/index-prodect1.jpg' />
+    </slot>
+    <view class="picture-col">
+      <!-- <navigator url="/pages/product/list?goods_class_id={{idType}}" hover-class="navigator-hover"> -->
+        <slot name="pic-col">
+          <image class="pic-cont" mode="widthFix" src='/images/index-prodect1.jpg' />
+        </slot>
+      <!-- </navigator> -->
+      <view class="weui-flex pic-box">
+        <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?604:7}}" hover-class="navigator-hover"></navigator>
+        <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?601:5}}" hover-class="navigator-hover"> </navigator>
+        <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?124:91}}" hover-class="navigator-hover"> </navigator>
+        <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?602:121}}" hover-class="navigator-hover"> </navigator>
+        <navigator class="weui-flex__item" url="/pages/product/list?goods_class_id={{idType}}&goods_id={{idType==1?605:14}}" hover-class="navigator-hover"> </navigator>
+      </view>
+    </view>
+    <view class="list-cont bg__white">
+      <view class="item" wx:for="{{list}}" wx:key="id">
+        <navigator class="box" url="/pages/product/details?id={{item.order_id}}" hover-class="navigator-hover">
+          <view class="title bold">{{item.goods_class}}/{{item.goods_name}}/{{item.att2}}/{{item.att1}}</view>
+          <view class="font-desc">{{item.address}}</view>
+          <view class="content weui-flex">
+            <view class="weui-flex__item">
+              <view class="else">
+                <view class="tag orange">起批量：≥{{item.min_batch_qtt}}KG</view>
+                <view class="tag blue">可供量：{{item.amount}}KG</view>
+              </view>
+            </view>
+            <view class="price-cont font-red">
+              <!-- ￥ -->
+              <view class='price'>洽谈</view>元/kg
+              <!-- <view class='price'>{{item.order_price}}</view>元/kg -->
+            </view>
+          </view>
+        </navigator>
+      </view>
     </view>
   </view>
 </view>
@@ -109,6 +112,7 @@ export default class indexList extends wepy.component {
 
 .list {
   padding: 20rpx 0;
+}
   .supply-demand-title {
     font-size: 32rpx;
     color: #282828;
@@ -158,14 +162,15 @@ export default class indexList extends wepy.component {
     border-radius: 8rpx;
     /* margin-left: 24rpx; */
     /* padding-bottom: 30rpx; */
+  }
     .item {
-      padding: 0 20rpx;
+      padding: 0 20rpx;}
       .box {
         padding: 20rpx 0;
         border-bottom: 1rpx solid #E8E7E7;
       }
-    }
-  }
+    /* } */
+  /* } */
   .tag {
     display: inline-block;
     line-height: 30rpx;
@@ -204,7 +209,7 @@ export default class indexList extends wepy.component {
     display: inline-block;
     font-size: 36rpx;
   }
-}
+
 
 .picture {
   font-size: 0

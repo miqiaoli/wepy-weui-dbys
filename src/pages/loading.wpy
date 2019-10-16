@@ -34,7 +34,7 @@ export default class mine extends wepy.page {
     position: absolute;
     top: 0;
     left: 0;
-    right:;
+    right: 0;
     bottom: 0;
 }
 .loading image {

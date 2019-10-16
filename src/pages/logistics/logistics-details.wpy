@@ -76,7 +76,7 @@
         <view class="col-pic-name">回单</view>
         <view class="col-pic-des weui-flex__item">
           <block class="avatar" wx:for="{{info.list.end_img_paths}}" wx:key="index">
-            <image class="avatar" mode="" src="{{item}}" data-url='{{item}}' bindtap="previewImage"></image>
+            <image class="avatar" mode="" src="{{item}}" data-url='{{item}}' bindtap="previewImage" />
           </block>
         </view>
       </view>

@@ -4,7 +4,7 @@
       <search :value.sync="value" :placeholder="placeholder"></search>
       <view class="order-filter filter active" bindtap="riseFilter">
         筛选
-        <image src='/images/icon/filter_HL.png'></image>
+        <image src='/images/icon/filter_HL.png' />
       </view>
     </view>
     <!-- <tabs :tabs="tabs" :index.sync="index"></tabs> -->
@@ -49,32 +49,32 @@
             <view class="items weui-flex">
               <view class="item weui-flex {{goods_class_id==1 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='1'>
                 <view class="weui-cell__hd">
-                  <image wx:if="{{goods_class_id==1}}" src="/images/icon/active.png" class="icon"></image>
-                  <image wx:else src="/images/icon/su.png" class="icon"></image>
+                  <image wx:if="{{goods_class_id==1}}" src="/images/icon/active.png" class="icon" />
+                  <image wx:else src="/images/icon/su.png" class="icon" />
                 </view>
                 <view class="weui-cell__bd">塑料原料</view>
                 <view class="weui-cell__ft weui-cell__ft_in-access"></view>
               </view>
               <view class="item weui-flex {{goods_class_id==2 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='2'>
                 <view class="weui-cell__hd">
-                  <image wx:if="{{goods_class_id==2}}" src="/images/icon/active.png" class="icon"></image>
-                  <image wx:else src="/images/icon/zai.png" class="icon"></image>
+                  <image wx:if="{{goods_class_id==2}}" src="/images/icon/active.png" class="icon" />
+                  <image wx:else src="/images/icon/zai.png" class="icon" />
                 </view>
                 <view class="weui-cell__bd">再生塑料</view>
                 <view class="weui-cell__ft weui-cell__ft_in-access"></view>
               </view>
               <view class="item weui-flex {{goods_class_id==3 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='3'>
                 <view class="weui-cell__hd">
-                  <image wx:if="{{goods_class_id==3}}" src="/images/icon/active.png" class="icon"></image>
-                  <image wx:else src="/images/icon/gai.png" class="icon"></image>
+                  <image wx:if="{{goods_class_id==3}}" src="/images/icon/active.png" class="icon" />
+                  <image wx:else src="/images/icon/gai.png" class="icon" />
                 </view>
                 <view class="weui-cell__bd">改性塑料</view>
                 <view class="weui-cell__ft weui-cell__ft_in-access"></view>
               </view>
               <view class="item weui-flex {{goods_class_id==6 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='6'>
                 <view class="weui-cell__hd">
-                  <image wx:if="{{goods_class_id==6}}" src="/images/icon/active.png" class="icon"></image>
-                  <image wx:else src="/images/icon/zhu.png" class="icon"></image>
+                  <image wx:if="{{goods_class_id==6}}" src="/images/icon/active.png" class="icon" />
+                  <image wx:else src="/images/icon/zhu.png" class="icon" />
                 </view>
                 <view class="weui-cell__bd">助剂</view>
                 <view class="weui-cell__ft weui-cell__ft_in-access"></view>
@@ -131,7 +131,8 @@
         <view class="weui-flex flex-margin">
           <view class="weui-flex__item weui-flex">
             <view class="title">成交价格</view>
-            <view class="weui-flex__item">{{single.deal_price}}元/KG</view>
+            <view class="weui-flex__item">洽谈 元/KG</view>
+            <!-- <view class="weui-flex__item">{{single.deal_price}}元/KG</view> -->
           </view>
           <view class="weui-flex__item weui-flex">
             <view class="title">成交量</view>
@@ -141,7 +142,8 @@
         <view class="weui-flex">
           <view class="weui-flex__item weui-flex">
             <view class="title">成交金额</view>
-            <view class="weui-flex__item">{{single.deal_money}}元</view>
+            <view class="weui-flex__item">洽谈 元</view>
+            <!-- <view class="weui-flex__item">{{single.deal_money}}元</view> -->
           </view>
           <view class="weui-flex__item weui-flex">
             <view class="title">保证金</view>

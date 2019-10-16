@@ -581,9 +581,9 @@ export default class logisticsInput extends wepy.page {
   height: 30rpx;
 }
 
-.page {
-  // padding-bottom: 400rpx;
-}
+// .page {
+//   // padding-bottom: 400rpx;
+// }
 .module {
   padding: 16rpx 30rpx;
   .flex-btn {

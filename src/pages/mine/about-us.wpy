@@ -1,7 +1,7 @@
 <template>
 <view class="page bg__white">
   <view class="image">
-    <image class="img" src="/images/about-us.png"></image>
+    <image class="img" src="/images/about-us.png" />
     <view class="img-box bg__white">
       <view class="head weui-flex">
         <image class="weui-media-box__thumb" src="/images/about-us1.png" />

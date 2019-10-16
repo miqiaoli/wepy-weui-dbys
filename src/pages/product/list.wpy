@@ -1,5 +1,5 @@
 <template>
-<view class="page bg__white" style="{{isFilter ? '': 'height:100vh'}}">
+<view class="page bg__white" style="{{ isFilter ? '': 'height:100vh' }}">
   <view class="page__bd">
     <view class="weui-flex searchbar">
       <view class="weui-flex__item">
@@ -7,10 +7,10 @@
       </view>
       <view class="icon-switch" @tap='changeListType'>
         <block wx:if="{{listType}}">
-          <image src='/images/icon/icon-switch-pic.png'></image>
+          <image src='/images/icon/icon-switch-pic.png' />
         </block>
         <block wx:else>
-          <image src='/images/icon/icon-switch-list.png'></image>
+          <image src='/images/icon/icon-switch-list.png' />
         </block>
       </view>
     </view>
@@ -38,7 +38,7 @@
       </checkbox-group>
       <view class="weui-flex__item active" bindtap="riseFilter">
         筛选
-        <image src='/images/icon/filter_HL.png'></image>
+        <image src='/images/icon/filter_HL.png' />
       </view>
     </view>
     <ProductsList :list.sync="itemsList" :listType.sync="listType" :loading.sync="loading" :noMore.sync="noMoreList" :noList.sync="noList"></ProductsList>
@@ -59,32 +59,32 @@
           <view class="items weui-flex">
             <view class="item weui-flex {{goods_class_id==1 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='1'>
               <view class="weui-cell__hd">
-                <image wx:if="{{goods_class_id==1}}" src="/images/icon/active.png" class="icon"></image>
-                <image wx:else src="/images/icon/su.png" class="icon"></image>
+                <image wx:if="{{goods_class_id==1}}" src="/images/icon/active.png" class="icon"/>
+                <image wx:else src="/images/icon/su.png" class="icon" />
               </view>
               <view class="weui-cell__bd">塑料原料</view>
               <view class="weui-cell__ft weui-cell__ft_in-access"></view>
             </view>
             <view class="item weui-flex {{goods_class_id==2 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='2'>
               <view class="weui-cell__hd">
-                <image wx:if="{{goods_class_id==2}}" src="/images/icon/active.png" class="icon"></image>
-                <image wx:else src="/images/icon/zai.png" class="icon"></image>
+                <image wx:if="{{goods_class_id==2}}" src="/images/icon/active.png" class="icon"/>
+                <image wx:else src="/images/icon/zai.png" class="icon"/>
               </view>
               <view class="weui-cell__bd">再生塑料</view>
               <view class="weui-cell__ft weui-cell__ft_in-access"></view>
             </view>
             <view class="item weui-flex {{goods_class_id==3 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='3'>
               <view class="weui-cell__hd">
-                <image wx:if="{{goods_class_id==3}}" src="/images/icon/active.png" class="icon"></image>
-                <image wx:else src="/images/icon/gai.png" class="icon"></image>
+                <image wx:if="{{goods_class_id==3}}" src="/images/icon/active.png" class="icon"/>
+                <image wx:else src="/images/icon/gai.png" class="icon"/>
               </view>
               <view class="weui-cell__bd">改性塑料</view>
               <view class="weui-cell__ft weui-cell__ft_in-access"></view>
             </view>
             <view class="item weui-flex {{goods_class_id==6 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='6'>
               <view class="weui-cell__hd">
-                <image wx:if="{{goods_class_id==6}}" src="/images/icon/active.png" class="icon"></image>
-                <image wx:else src="/images/icon/zhu.png" class="icon"></image>
+                <image wx:if="{{goods_class_id==6}}" src="/images/icon/active.png" class="icon"/>
+                <image wx:else src="/images/icon/zhu.png" class="icon"/>
               </view>
               <view class="weui-cell__bd">助剂</view>
               <view class="weui-cell__ft weui-cell__ft_in-access"></view>
@@ -522,9 +522,8 @@ export default class ProductList extends wepy.page {
 </script>
 <style lang="less">
 .weui-agree {
-    font-size: 32rpx;
-    padding: 0 15px;
-
+  font-size: 32rpx;
+  padding: 0 15px;
 }
 .searchbar {
     border-bottom: 2rpx solid #e9e7e7;

@@ -141,12 +141,12 @@ export default class collection extends wepy.page {
         color: #4A4A4A;
       }
     }
-    .type {
+    // .type {
 
-    }
-    .des {
+    // }
+    // .des {
 
-    }
+    // }
     .dis {
       padding-top: 10rpx;
       border-top: 1px solid  #E4E7F0;

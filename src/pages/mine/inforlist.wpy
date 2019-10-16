@@ -12,9 +12,9 @@
         <!-- </view> -->
       </view>
       <view class="weui-btn-area">
-        <button class="weui-flex__item" type="primary" @tap='new'>
-        <image class="icon-supply" src="/images/icon/icon-add.png" />添加
-      </button>
+        <button class="weui-flex__item" type="primary" bindTap='new'>
+          <image class="icon-supply" src="/images/icon/icon-add.png" />添加
+        </button>
       </view>
     </view>
   </view>
