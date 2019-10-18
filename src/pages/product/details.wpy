@@ -8,7 +8,7 @@
         <view class="weui-media-box__title">{{itemData.goods_name}} {{itemData.att2}}/{{itemData.att1}}</view>
       </view>
       <view class="weui-flex__item text-right">
-        <view class="font-red">¥ <text class="font-50">洽谈</text> 元/kg</view>
+        <view class="font-red"><text class="font-50">洽谈</text> 元/kg</view>
         <!-- <view class="font-red">¥ <text class="font-50">{{itemData.order_price}}</text> 元/kg</view> -->
       </view>
     </view>
@@ -25,7 +25,8 @@
         <view class="weui-cell__hd">
           <image class="icon" src="/images/icon/product.png" />
         </view>
-        <view class="weui-cell__bd">可供量：{{itemData.amount}}kg</view>
+        <view class="weui-cell__bd">可供量: 有货</view>
+        <!-- <view class="weui-cell__bd">可供量：{{itemData.amount}}kg</view> -->
       </view>
       <view class="item weui-flex">
         <view class="weui-cell__hd">
@@ -495,7 +496,8 @@ export default class ProductDetails extends wepy.page {
   }
   onShareAppMessage(res) {
     return {
-      title: '第八元素，现货挂牌 ' + this.itemData.goods_name + '/' + this.itemData.att2 + '/' + this.itemData.att1 + '/￥' + this.itemData.order_price + '元/kg/' + this.itemData.address,
+      // title: '第八元素，现货挂牌 ' + this.itemData.goods_name + '/' + this.itemData.att2 + '/' + this.itemData.att1 + '/￥' + this.itemData.order_price + '元/kg/' + this.itemData.address,
+      title: '第八元素，现货挂牌 ' + this.itemData.goods_name + '/' + this.itemData.att2 + '/' + this.itemData.att1 + '/' + this.itemData.address,
       path: '/pages/product/details?id=' + this.id,
       success: function(res) {
         // 转发成功

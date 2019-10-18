@@ -45,7 +45,6 @@ export default class Filter extends wepy.page {
     changeGoodId(e) {
       this.goods_id = e.currentTarget.id
       this.goods_name = e.currentTarget.dataset.name
-      console.log(this.goods_name);
       this.getAdvOptionsList()
     },
     goChoose(e) {

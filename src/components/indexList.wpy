@@ -56,7 +56,8 @@
             <view class="weui-flex__item">
               <view class="else">
                 <view class="tag orange">起批量：≥{{item.min_batch_qtt}}KG</view>
-                <view class="tag blue">可供量：{{item.amount}}KG</view>
+                <view class="tag blue">可供量：有货</view>
+                <!-- <view class="tag blue">可供量：{{item.amount}}KG</view> -->
               </view>
             </view>
             <view class="price-cont font-red">

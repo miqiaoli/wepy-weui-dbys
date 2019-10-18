@@ -18,7 +18,8 @@
               <view class="weui-flex__item">
                 <view class="decs">
                   <image class="desc-img" src='/images/icon/gong.png' />
-                  <text class="desc-text">可供量：{{item.amount}}kg</text>
+                  <text class="desc-text">可供量：有货</text>
+                  <!-- <text class="desc-text">可供量：{{item.amount}}kg</text> -->
                 </view>
                 <view class="decs">
                   <image class="desc-img" src='/images/icon/pi.png' />
@@ -27,7 +28,7 @@
               </view>
               <!-- <view class="red bold">¥ -->
               <view class="red bold">
-                <text class="price bold">洽谈</text>元/kg
+                <text class="price bold">洽谈 </text>元/kg
                 <!-- <text class="price bold">{{item.order_price}}</text>元/kg -->
               </view>
             </view>
@@ -45,15 +46,18 @@
               <view class="weui-flex__item">
                 <view class="decs">
                   <image class="desc-img" src='/images/icon/gong.png' />
-                  <text class="desc-text">可供量：{{item.amount}}kg</text>
+                  <text class="desc-text">可供量：有货</text>
+                  <!-- <text class="desc-text">可供量：{{item.amount}}kg</text> -->
                 </view>
                 <view class="decs">
                   <image class="desc-img" src='/images/icon/pi.png' />
                   <text class="desc-text">起批量：≥{{item.min_batch_qtt}}kg</text>
                 </view>
               </view>
-              <view class="red bold">¥
-                <text class="price bold">{{item.order_price}}</text>元/kg
+              <view class="red bold">
+              <!-- <view class="red bold">¥ -->
+                <text class="price bold">洽谈 </text>元/kg
+                <!-- <text class="price bold">{{item.order_price}}</text>元/kg -->
               </view>
             </view>
             <view class="decs">{{item.address}}</view>
