@@ -87,7 +87,7 @@
         <view class="item">
           <view class="btn weui-flex">
             <view class="weui-flex__item"></view>
-            <view class="weui-flex__item"></view>
+            <!-- <view class="weui-flex__item"></view> -->
             <button @tap="eyeFile" data-orderid="{{single.orderId}}" class="btn-text weui-flex__item">合同预览</button>
             <!-- <button wx:if="{{single.status == 'C'}}" @tap="toGoodsList" data-orderid="{{single.orderId}}" class="btn-text weui-flex__item">货物信息</button> -->
             <button @tap="toGoodsList" data-orderid="{{single.orderId}}" class="btn-text weui-flex__item">货物信息</button>
