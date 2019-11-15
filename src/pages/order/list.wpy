@@ -171,15 +171,19 @@ export default class buyList extends wepy.page {
       this.getOrderList()
     },
     async eyeFile(e) {
+      
       const orderId = e.currentTarget.dataset.orderid
+      const res = await http.get(__getApi._getOrderView, {orderId: orderId})
+      // 获取合同地址
+      let pdf = res.data
+      let URL = `${__getApi.baseHrefUrl}${pdf}`
       const downloadTask = wx.downloadFile({
-        url: `${__getApi._getOrderView}?orderId=${orderId}`,
+        url: URL,
         success (res) {
           if (res.statusCode === 200) {
             const filePath = res.tempFilePath
             wx.openDocument({
               filePath: filePath,
-              fileType: 'doc',
               success: function(res) {
                   console.log('打开文档成功')
               }
