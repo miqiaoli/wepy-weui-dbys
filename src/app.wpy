@@ -18,11 +18,11 @@ export default class extends wepy.app {
       'pages/order/note-list',
       'pages/rice/list',
       'pages/rice/details',
-      
+
       'pages/logistics/logistics-update',
       'pages/logistics/index',
       'pages/logistics/driver-list',
-      'pages/logistics/logistics-list',      
+      'pages/logistics/logistics-list',
       'pages/logistics/logistics-input',
       'pages/logistics/car-list',
       'pages/logistics/logistics-details',
@@ -110,25 +110,25 @@ export default class extends wepy.app {
           selectedIconPath: '/images/tabbars/home_HL.png',
           iconPath: '/images/tabbars/home.png',
           text: '首页'
-        }, 
+        },
         // {
         //   pagePath: 'pages/fish/list',
         //   selectedIconPath: '/images/tabbars/information_HL.png',
         //   iconPath: '/images/tabbars/information.png',
         //   text: '鱼塘信息'
-        // }, 
+        // },
         {
           pagePath: 'pages/logistics/index',
           selectedIconPath: '/images/tabbars/order_HL.png',
           iconPath: '/images/tabbars/order.png',
           text: '小八物流'
-        }, 
+        },
         {
           pagePath: 'pages/company/list',
           selectedIconPath: '/images/tabbars/rice_HL.png',
           iconPath: '/images/tabbars/rice.png',
           text: '早稻'
-        }, 
+        },
         {
           pagePath: 'pages/about/index',
           selectedIconPath: '/images/tabbars/mime_HL.png',

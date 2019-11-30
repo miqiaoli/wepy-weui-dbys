@@ -198,7 +198,7 @@ export const __getApi = {
   _getInvoiceList: `${host}/orderb/erpReceivList.dbys`, // 票据互联票据列表
   _getInvoiceDetails: `${host}/orderb/erpWLlist.dbys`,  // 票据互联物流信息
   _getGoodsList: `${host}/customerLogistics/findEntruListByFOrderNo.dbys`,
-  // _getOrderPositionList: `${host}/customerLogistics/findLogisticsByEntruId.dbys`, // 根据委托单ID获取物流定位信息接口
+  _getSignEntruList: `${host}/customerLogistics/custSignForByEntruId.dbys`, // 确认签收接口
   _getOrderPositionDetails: `${host}/customerLogistics/findLogisticsByEntruId.dbys`, // 根据委托单ID获取物流定位信息接口
 
   // 鱼塘历史接口
