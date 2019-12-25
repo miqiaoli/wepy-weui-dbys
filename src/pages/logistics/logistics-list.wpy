@@ -156,7 +156,8 @@ export default class logisticsList extends wepy.page {
     if (res.false) return
     if (res.meta.success) {
       this.count = res.data.count
-      this.list = res.data.list
+      // this.list = res.data.list
+      this.list = [...this.list, ...res.data.list]
       this.$apply()
     }
   }
