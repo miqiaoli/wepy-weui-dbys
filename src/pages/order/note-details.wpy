@@ -1,6 +1,6 @@
 <template>
-  <view class="note-details page"> 
-    <view class="tips">{{list.length}}个快递已发出</view>   
+  <view class="note-details page">
+    <view class="tips">{{list.length}}个快递已发出</view>
     <view class="list">
       <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id">
         <view class="weui-cell__ft blue">发票号：{{single.pbillno}}</view>
@@ -24,7 +24,7 @@
           <view class="sf weui-flex" wx:for="{{single.kdinfo.data}}" wx:for-item="info" wx:key="id">
             <view class="weui-flex__item">{{info.time}}</view>
             <view class="weui-flex__item">{{info.remark}}</view>
-          </view>  
+          </view>
         </view>
         <!-- <view @tap="getmore" data-index='1' wx:if="{{getmore[1]}}" class="tapmore">点击查看更多票单详情</view> -->
       </view>
@@ -34,9 +34,9 @@
     <view wx:if="{{list.length <= 0 }}" class="weui-loadmore weui-loadmore_line">
       <text class="weui-loadmore__tips">暂无数据</text>
     </view>
-    <view wx:else class="weui-loadmore weui-loadmore_line">
+    <!-- <view wx:else class="weui-loadmore weui-loadmore_line">
       <text class="weui-loadmore__tips">已全部加载</text>
-    </view>
+    </view> -->
   </view>
 </template>
 
@@ -103,13 +103,13 @@ export default class noteDetails extends wepy.page {
   text-align: center;
 }
 .product {
-  height: 400rpx;
-  overflow: hidden;
+  // height: 400rpx;
+  // overflow: hidden;
 }
 .passport {
   border-top: 1px solid #EDEDED;
-  height: 300px;
-  overflow: hidden;
+  // height: 300px;
+  // overflow: hidden;
 }
 .blue {
   color: #0E91FF;
@@ -149,5 +149,5 @@ export default class noteDetails extends wepy.page {
     }
   }
 }
- 
+
 </style>

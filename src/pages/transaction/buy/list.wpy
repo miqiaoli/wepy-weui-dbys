@@ -1,21 +1,24 @@
 <template>
-  <view class="buy page bg__white">
-    <view class="weui-flex page__bd_spacing">
-      <search :value.sync="value" :placeholder="placeholder"></search>
+  <view class="order-list page bg__white">
+    <view class="weui-flex search">
+      <view class="weui-search-bar__form" style="line-height: 60rpx; background: #FFFFFF; border-radius: 60rpx; border: 0">
+        <view class="weui-search-bar__box">
+          <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
+          <input type="text" class="weui-search-bar__input" style="height: 60rpx;line-height: 60rpx; text-align: left;" placeholder="搜索您想要的内容" bindconfirm bindinput="searchText" value="{{this.value}}" />
+        </view>
+      </view>
       <view class="order-filter filter active" bindtap="riseFilter">
         筛选
         <image src='/images/icon/filter_HL.png' />
       </view>
     </view>
-    <tabs :tabs="tabs" :index.sync="index"></tabs>
-    
     <view hidden='{{isFilter}}' class="selector">
       <form bindsubmit="formSubmit" bindreset="formReset">
         <view class="inner_box">
           <view class="module-box">
             <view class="top page__bd_spacing">订单时间</view>
             <view class="content weui-flex">
-              <view class="weui-flex__item active">
+              <view class="input-border weui-flex__item active">
                 <picker
                   mode="date"
                   value="{{startdate}}"
@@ -29,7 +32,7 @@
                 </picker>
               </view>
               <text class="interval-line">~</text>
-              <view class="weui-flex__item active">
+              <view class="input-border weui-flex__item active">
                 <picker
                   mode="date"
                   value="{{enddate}}"
@@ -42,52 +45,6 @@
                   </view>
                 </picker>
               </view>
-
-            </view>
-          </view>
-          <view class="">
-            <view class="top page__bd_spacing">品种</view>
-            <view class="items weui-flex">
-              <view class="item weui-flex {{goods_class_id==1 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='1'>
-                <view class="weui-cell__hd">
-                  <image wx:if="{{goods_class_id==1}}" src="/images/icon/active.png" class="icon" />
-                  <image wx:else src="/images/icon/su.png" class="icon" />
-                </view>
-                <view class="weui-cell__bd">塑料原料</view>
-                <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-              </view>
-              <view class="item weui-flex {{goods_class_id==2 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='2'>
-                <view class="weui-cell__hd">
-                  <image wx:if="{{goods_class_id==2}}" src="/images/icon/active.png" class="icon" />
-                  <image wx:else src="/images/icon/zai.png" class="icon" />
-                </view>
-                <view class="weui-cell__bd">再生塑料</view>
-                <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-              </view>
-              <view class="item weui-flex {{goods_class_id==3 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='3'>
-                <view class="weui-cell__hd">
-                  <image wx:if="{{goods_class_id==3}}" src="/images/icon/active.png" class="icon" />
-                  <image wx:else src="/images/icon/gai.png" class="icon" />
-                </view>
-                <view class="weui-cell__bd">改性塑料</view>
-                <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-              </view>
-              <view class="item weui-flex {{goods_class_id==6 ? 'active' : ''}}" bindtap='chooseGoodsClassId' data-type='6'>
-                <view class="weui-cell__hd">
-                  <image wx:if="{{goods_class_id==6}}" src="/images/icon/active.png" class="icon" />
-                  <image wx:else src="/images/icon/zhu.png" class="icon" />
-                </view>
-                <view class="weui-cell__bd">助剂</view>
-                <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-              </view>
-            </view>
-          </view>
-          <view class="module-box">
-            <view class="top page__bd_spacing">品名 牌号</view>
-            <view class="content weui-flex">
-              <view class="font-primary" wx:if="{{chooseGrade.name}}">
-                {{chooseProduct.name}}/{{chooseGrade.name}}
-              </view>
             </view>
           </view>
         </view>
@@ -98,70 +55,46 @@
       </form>
       <view class="layer" catchtouchstart="removeLayer" data-type='isFilter' catchtouchmove='preventTouchMove'></view>
     </view>
-    
+
+    <view class="tabs weui-flex">
+      <view @tap="tabTap" class="tab weui-flex__item {{single.status == choosed ? 'choose' : ''}} " data-choosed="{{single.status}}" wx:for="{{tabs}}" wx:key="index" wx:for-item="single">
+        {{single.name}}
+      </view>
+    </view>
+
     <view class="list">
-      <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id" data-discuss_id="{{single.discussid}}" @tap="toBuyDetails">
-        <view class="weui-flex flex-margin flex-end">
-          <view class="weui-flex__item">订单号：{{single.deal_no}}</view>
+      <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id">
+        <view class="weui-cell__ft">{{single.orderDate}}</view>
+        <view class="page__desc">{{single.orderId}}</view>
+        <view class="item">
+          <view class="name">{{single.name}}</view>
+          <view class="weui-flex">
+            <view class="weui-flex__item">签单数量：{{single.sl}}{{single.dw}}</view>
+            <view class="weui-flex__item red margin-right">{{single.dj}}元/kg</view>
+          </view>
+          <!-- <view class="">金额（含税）：{{single.je}}元</view> -->
+          <view class="text">剩余未出库：{{single.wcksl}}kg</view>
         </view>
-        <view class="weui-flex">
-          <view class="weui-flex__item weui-flex">
-            <view class="title">品种</view>
-            <view class="weui-flex__item">{{single.goods_class}}</view>
+        <view class="item">
+          <view class="weui-flex margin-top">
+            <view class="weui-flex__item">结算方式：{{single.jsType}}</view>
+            <!-- <view class="weui-flex__item red">交易成功</view> -->
           </view>
-          <view class="weui-flex__item weui-flex">
-            <view class="title">品名</view>
-            <view class="weui-flex__item">{{single.goods_name}}</view>
-          </view>
+          <view class="">配送方式：{{single.jhfs}}</view>
+          <view class="text">合同备注：{{single.des2}}</view>
+          <view class="text weui-cell__ft">共5件商品  合计：<text class="price">¥{{single.je}}元</text></view>
         </view>
-        <view class="weui-flex">
-          <view class="weui-flex__item weui-flex">
-            <view class="title">牌号</view>
-            <view class="weui-flex__item">{{single.att2}}</view>
+        <view class="item">
+          <view class="btn weui-flex">
+            <view class="weui-flex__item"></view>
+            <view class="weui-flex__item btn-notext" wx:if="{{single.status == 'X'}}">待确认</view>
+            <!-- <button @tap="toGoodsList" data-orderid="{{single.orderId}}" class="btn-text weui-flex__item">货物信息</button> -->
+            <block wx:else>
+              <button @tap="eyeFile" data-orderid="{{single.orderId}}" class="btn-text weui-flex__item">合同预览</button>
+              <button wx:if="{{single.wtdinfo == '1'}}" @tap="toGoodsList" data-orderid="{{single.orderId}}" class="btn-text weui-flex__item">货物信息</button>
+              <view class="weui-flex__item btn-notext" wx:else>待发货</view>
+            </block>
           </view>
-          <view class="weui-flex__item weui-flex">
-            <view class="title">厂商</view>
-            <view class="weui-flex__item">{{single.att1}}</view>
-          </view>
-        </view>
-        <view class="weui-flex flex-padding">
-          <view class="title">存货地</view>
-          <view class="weui-flex__item">{{single.address}}</view>
-        </view>
-        <view class="weui-flex flex-margin">
-          <view class="weui-flex__item weui-flex">
-            <view class="title">成交价格</view>
-            <view class="weui-flex__item">洽谈 元/KG</view>
-            <!-- <view class="weui-flex__item">{{single.deal_price}}元/KG</view> -->
-          </view>
-          <view class="weui-flex__item weui-flex">
-            <view class="title">成交量</view>
-            <view class="weui-flex__item">{{single.deal_amount}}KG</view>
-          </view>
-        </view>
-        <view class="weui-flex">
-          <view class="weui-flex__item weui-flex">
-            <view class="title">成交金额</view>
-            <view class="weui-flex__item">洽谈 元</view>
-            <!-- <view class="weui-flex__item">{{single.deal_money}}元</view> -->
-          </view>
-          <view class="weui-flex__item weui-flex">
-            <view class="title">保证金</view>
-            <view class="weui-flex__item">{{single.other_value}}元</view>
-          </view>
-        </view>
-        <view class="weui-flex flex-margin">
-          <view class="title weui-flex__item">
-            <text class="tags tags-time-color">保证金截止时间：{{single.date4}}</text>
-          </view>
-        </view>
-        <view class="weui-flex ">
-          <view class="title weui-flex__item">
-            <text class="tags tags-status-color">状态：{{single.v_status}}</text>
-          </view>
-        </view>
-        <view class="weui-flex">
-        <view class="time">成交时间：{{single.deal_date}}</view>
         </view>
       </view>
     </view>
@@ -175,19 +108,14 @@
 <script>
 import wepy from 'wepy'
 import backIndex from '../../../components/backIndex'
-import tabs from '../../../components/transactions/tab'
-import search from '../../../components/transactions/search'
 import {
   __getApi
 } from "../../../config.js";
 import http from '../../../utils/Http';
-import events from '../../../utils/event';
 
 export default class buyList extends wepy.page {
   components = {
-    backIndex,
-    tabs,
-    search
+    backIndex
   }
   config = {
     navigationBarTitleText: '订单列表',
@@ -195,45 +123,33 @@ export default class buyList extends wepy.page {
     onReachBottomDistance: 100
   }
   data = {
+    istype: 1,
     isFilter: true,
-    /* 选择品名 */
-    chooseProduct: {
-      name: '',
-      id: ''
-    },
-    /* 选中的牌号 */
-    chooseGrade: {
-      name: '',
-      id: ''
-    },
-    /* 选中的厂商 */
-    chooseVendor: {
-      name: '',
-      id: ''
-    },
-    /* 选中的品种 */
-    goods_class_id: '',
-
     index: 0,
     startdate: '',
     enddate: '',
     nowDate: '',
     value: '',  // 搜索
     placeholder: '搜索订单号',
+    choosed: '',
     tabs: [{
       name: '全部',
       status: '',
+    },
+    // {
+    //   name: '创建',
+    //   status: 'A',
+    // }, {
+    //   name: '待审核',
+    //   status: 'B',
+    // },
+     {
+      name: '已审核',
+      status: 'C',
     }, {
-      name: '已生成合同',
-      status: 99,
-    }, {
-      name: '已取消',
-      status: -1,
-    }, {
-      name: '已撤销',
-      status: -2,
+      name: '待确认',
+      status: 'X',
     }],
-    buyorsell: 1,
     token_access: '',
     list: [],
     start: 1,
@@ -242,52 +158,66 @@ export default class buyList extends wepy.page {
   }
 
   methods = {
-    preventTouchMove(e) {
-
+    preventTouchMove(e) {},
+    searchText(e) {
+      this.value = e.detail.value
     },
-    toBuyDetails(e) {
-      const discuss_id = e.currentTarget.dataset.discuss_id
-      wx.showToast({
-        title: '去查看',
-        icon: 'success',
-        duration: 2000
-      })
-      setTimeout(() => {
-        wx.navigateTo({
-          url: `./details?discuss_id=${discuss_id}&buyorsell=${this.buyorsell}`
-        })
-      }, 2000);
-    },
-    // 选中品种跳转
-    chooseGoodsClassId(e) {
-      this.goods_class_id = e.currentTarget.dataset.type
-      this.chooseProduct.id = ''
-      this.chooseProduct.name = ''
-      this.chooseGrade.id = ''
-      this.chooseGrade.name = ''
-      wx.navigateTo({
-        url: './../../product/filter?goods_class_id=' + e.currentTarget.dataset.type
-      })
+    tabTap(e) {
+      this.choosed = e.currentTarget.dataset.choosed
+      this.list =[]
+      this.start = 1
+      this.getOrderList()
       this.$apply()
+    },
+    async bindconfirm(e) {
+      this.value = e.detail.value
+      this.start = 1
+      this.list = []
+      this.getOrderList()
+    },
+    async eyeFile(e) {
+
+      const orderId = e.currentTarget.dataset.orderid
+      const res = await http.get(__getApi._getOrderView, {orderId: orderId})
+      // 获取合同地址
+      let pdf = res.data
+      let URL = `${__getApi.baseHrefUrl}${pdf}`
+      const downloadTask = wx.downloadFile({
+        url: URL,
+        success (res) {
+          if (res.statusCode === 200) {
+            const filePath = res.tempFilePath
+            wx.openDocument({
+              filePath: filePath,
+              success: function(res) {
+                  console.log('打开文档成功')
+              }
+            })
+          }
+        }
+      })
+    },
+    toGoodsList(e) {
+      const orderId = e.currentTarget.dataset.orderid
+      wx.navigateTo({
+        // url: `./goods-list?orderId=2019.04.151050`
+        url: `../../order/goods-list?orderId=${orderId}`
+      })
     },
     // 提交筛选
     formSubmit(e) {
       this.start = 1
       this.isFilter = true
       this.list = []
-      this.chgBuyList()
+      this.getOrderList()
     },
     // 条件重置
     formReset() {
       this.startdate = ''
       this.enddate = ''
       this.value = ''
-      this.goods_class_id = ''
-      this.chooseProduct = {}
-      this.chooseGrade = {}
-      this.chooseVendor = {}
       this.isFilter = true
-      this.chgBuyList()
+      this.getOrderList()
       this.$apply()
     },
     // 点击model
@@ -300,102 +230,46 @@ export default class buyList extends wepy.page {
       this[type] = !this[type]
     }
   }
-  events = {
-    eventName: (p1, $event) => {
-      const firstName = this.sheetNameList[p1[0]].label;
-      const secondName = this.sheetNameList[p1[0]].children[p1[1]].label;
-      const thirdName = this.sheetNameList[p1[0]].children[p1[1]].children[
-        p1[2]
-      ].label;
-      this.sheetName = firstName + "/" + secondName + "/" + thirdName;
-      this.firstName = firstName;
-      this.secondName = secondName + "/" + thirdName;
-      this.$apply();
-    }
-  };
-  watch = {
-    'index': function(newValue, oldValue) {
-      if (newValue !== oldValue) {
-        this.start = 1
-        this.list = []
-        this.chgBuyList()
-      }
-    },
-    'value': function(newValue, oldValue) {
-      if (newValue !== oldValue && newValue) {
-        this.start = 1
-        this.list = []
-        this.chgBuyList()
-      }
-    }
-  }
   onLoad(e) {
-    this.buyorsell = e.buyorsell
     this.token_access = this.$parent.globalData.token_access || ''
     const date = new Date()
     const month = date.getMonth()+1 <10 ? `0${date.getMonth()+1}` : `${date.getMonth()+1}`
     const day = date.getDate() < 9 ? `${date.getDate()}` : date.getDate()
     this.nowDate = `${date.getFullYear()}-${month}-${day}`
-
-    events.addEvents("getChooseData", this.getChooseData, this);
-    this.chgBuyList()
+    this.getOrderList()
     this.$apply()
-  }
-  getChooseData(id1, name1, id2, name2) {
-    this.chooseProduct.id = id1
-    this.chooseProduct.name = name1
-    this.chooseGrade.id = id2
-    this.chooseGrade.name = name2
-    this.start = 1
-    this.isFilter = true
-    this.list = []
-    this.chgBuyList()
-  }
-
-  onShow() {
   }
   onPullDownRefresh() {
     this.start = 1
     this.startdate = ''
     this.enddate = ''
-    this.goods_class_id = ''
-    this.chooseProduct = {}
-    this.chooseGrade = {}
-    this.chooseVendor = {}
     this.value = ''
     this.list = []
-    this.chgBuyList()
+    this.getOrderList()
   }
   async onReachBottom() {
     if (this.start * this.limit < this.count) {
       this.start += 1
-      this.chgBuyList()
+      this.getOrderList()
     }
   }
-  async chgBuyList() {
+  async getOrderList() {
     let params = {
-      start: this.start,
-      limit: this.limit,
-      token_access: this.token_access,
-      buyorsell: this.buyorsell,
-      date_start: this.startdate,
-      date_end: this.enddate,
-      goods_class_id: this.goods_class_id,
-      goods_id: this.chooseProduct.id,
-      att2_id: this.chooseGrade.id
+      istype: this.istype,
+      page_id: this.start,
+      page_limit: this.limit,
+      sdate: this.startdate,
+      edate: this.enddate,
+      name: this.value,
+      status: this.choosed,
+      token_access: this.token_access
     }
-    if (this.value) {
-      params = Object.assign(params, {deal_no: this.value})
-    }
-    if (this.index !== 0) {
-      params = Object.assign(params, {status: this.tabs[this.index].status})
-    }
-    const res = await http.get(__getApi._getBuyList, params)
-    wx.stopPullDownRefresh()
+    // X,A,B,C  A创建B待审核C已审核X待确认
+    const res = await http.get(__getApi._getOrderList, params)
     if (res.false) return
     if (res.meta.success) {
-      this.list = [...this.list, ...res.data.resultlist]
-      this.count = res.data.rows_count
+      this.list = [...this.list, ...res.data.list]
+      this.count = res.data.total
       this.$apply()
     }
   }
@@ -409,62 +283,109 @@ export default class buyList extends wepy.page {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
+.input-border {
+  padding:10rpx;
+  border:1px solid #979797;
+}
+.success {
+  color: #F58E55;
+}
+.red {
+  color: red;
+  text-align: right;
+}
+.price {
+  font-size: 18px;
+  color: #080000;
+  // line-height: 25px;
+}
+.margin-top {
+  margin-top: 10rpx;
+}
+.margin-left {
+  margin-left: 30rpx;
+}
+.margin-right {
+  margin-right: 30rpx;
+}
+@borderLine: 1px solid #EDEDED;
+.choose {
+  border-bottom: 4px solid #0E91FF;
+}
+.tabs {
+  font-size: 14px;
+  text-align: center;
+  background: #FDFDFD;
+  height: 80rpx;
+  .tab {
+    margin: 10rpx 30rpx;
+    line-height: 70rpx;
+  }
+}
+.search {
+  background: #EDEDED;
+  padding: 26rpx 30rpx;
+}
 .order-filter {
+  margin-left: 18rpx;
+  position: relative;
   text-align: center;
   line-height: 56rpx;
-  // padding: 20rpx 0;
   image {
+    position: relative;
+    top: 6rpx;
     width: 28rpx;
     height: 28rpx;
   }
 }
-.arrow-down {
-  display: inline-block;
-  vertical-align: top;
-  border-top: 4px solid #353535;
-  border-right: 4px solid transparent;
-  border-left: 4px solid transparent;
-  content: "";
-  margin-top: 20rpx;
-  margin-left: 20rpx;
-}
-.active .arrow-down {
-  border-top: 4px solid #115bed;
-}
-.inline-block {
-  display: inline-block;
-}
 
-.flex-margin {
-  margin-top: 15rpx;
-}
-.flex-padding {
-  padding-bottom: 15rpx;
-  border-bottom: 1px solid #E4E7F0;
-}
-.flex-end {
-  justify-content: flex-end;
-}
-.buy {
-  font-size: 28rpx;
-  .buy-tab {
-    height: 48rpx;
-    line-height: 48rpx;
-    border-bottom: 1px solid #E4E7F0;
-    color: #A1A6BB;
-    font-size: 28rpx;
-    text-align: center;
-  }
+.order-list {
+  background: #EDEDED;
   .list {
-    padding: 20rpx 30rpx;
-    background: #f9f9f9;
+    margin-top: 20rpx;
     .single {
-      // margin: 10rpx 0;
-      padding: 20rpx;
-      margin-bottom: 20rpx;
+      // margin: 0 30rpx;
+      padding: 0 30rpx;
       background: #fff;
-      border-radius: 10rpx;
+      margin-bottom: 20rpx;
+      .item {
+        border-bottom: @borderLine;
+        font-size: 14px;
+        color: #080000;
+        .name {
+          margin: 10rpx 0;
+          font-weight: bold;
+          font-size: 16px;
+          color: #030000;
+        }
+        .text {
+          margin: 10rpx 0;
+        }
+        .btn {
+          margin: 16rpx 0;
+          .btn-text {
+            margin-right: 20rpx;
+            height: 60rpx;
+            line-height: 60rpx;
+            background: #ffffff;
+            border: 1px solid #0E91FF;
+            color: #0E91FF;
+            border-radius: 26rpx;
+          }
+          .btn-notext {
+            margin-right: 20rpx;
+            height: 60rpx;
+            line-height: 60rpx;
+            background: #ffffff;
+            border: 1px solid #999999;
+            color: #999999;
+            border-radius: 26rpx;
+            font-size: 18px;
+            text-align: center;
+          }
+        }
+      }
     }
   }
 }
@@ -472,28 +393,10 @@ export default class buyList extends wepy.page {
   width: 48rpx
 }
 .title {
-  // margin-left: 48rpx;
   width: 120rpx;
   color: #8F8E94;
 }
-.tags {
-  margin: 6rpx 0;
-  padding:0 12rpx;
-  border-radius: 2px;
-}
-.time {
-  font-size: 12px;
-  color: #8F8E94;
-  line-height: 200%;
-}
-.tags-time-color {
-  border: 1px solid #00B9E7;
-  color: #00B9E7;
-}
-.tags-status-color {
-  border: 1px solid #1FCC24;
-  color: #1FCC24;
-}
+
 .selector {
   width: 100%;
   height: 400px;

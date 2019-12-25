@@ -61,7 +61,7 @@
         {{single.name}}
       </view>
     </view>
-    
+
     <view class="list">
       <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id">
         <view class="weui-cell__ft">{{single.orderDate}}</view>
@@ -72,7 +72,7 @@
             <view class="weui-flex__item">签单数量：{{single.sl}}{{single.dw}}</view>
             <view class="weui-flex__item red margin-right">{{single.dj}}元/kg</view>
           </view>
-          <view class="">金额（含税）：{{single.je}}元</view>
+          <!-- <view class="">金额（含税）：{{single.je}}元</view> -->
           <view class="text">剩余未出库：{{single.wcksl}}kg</view>
         </view>
         <view class="item">
@@ -83,17 +83,24 @@
           <view class="">配送方式：{{single.jhfs}}</view>
           <view class="text">合同备注：{{single.des2}}</view>
           <view class="text weui-cell__ft">共5件商品  合计：<text class="price">¥{{single.je}}元</text></view>
-        </view> 
+        </view>
         <view class="item">
           <view class="btn weui-flex">
             <view class="weui-flex__item"></view>
+            <view class="weui-flex__item btn-notext" wx:if="{{single.status == 'X'}}">待确认</view>
+            <block wx:else>
+              <button @tap="eyeFile" data-orderid="{{single.orderId}}" class="btn-text weui-flex__item">合同预览</button>
+              <button wx:if="{{single.wtdinfo == '1'}}" @tap="toGoodsList" data-orderid="{{single.orderId}}" class="btn-text weui-flex__item">货物信息</button>
+              <view class="weui-flex__item btn-notext" wx:else>待发货</view>
+            </block>
+
             <!-- <view class="weui-flex__item"></view> -->
-            <button @tap="eyeFile" data-orderid="{{single.orderId}}" class="btn-text weui-flex__item">合同预览</button>
+            <!-- <button @tap="eyeFile" data-orderid="{{single.orderId}}" class="btn-text weui-flex__item">合同预览</button> -->
             <!-- <button wx:if="{{single.status == 'C'}}" @tap="toGoodsList" data-orderid="{{single.orderId}}" class="btn-text weui-flex__item">货物信息</button> -->
-            <button @tap="toGoodsList" data-orderid="{{single.orderId}}" class="btn-text weui-flex__item">货物信息</button>
+            <!-- <button @tap="toGoodsList" data-orderid="{{single.orderId}}" class="btn-text weui-flex__item">货物信息</button> -->
             <!-- <button wx:if="{{single.wtdinfo !== '0'}}" @tap="toGoodsList" data-orderid="{{single.orderId}}" class="btn-text weui-flex__item">货物信息</button> -->
-          </view>      
-        </view> 
+          </view>
+        </view>
       </view>
     </view>
     <backIndex></backIndex>
@@ -121,6 +128,7 @@ export default class buyList extends wepy.page {
     onReachBottomDistance: 100
   }
   data = {
+    istype: 0,
     isFilter: true,
     index: 0,
     startdate: '',
@@ -132,13 +140,15 @@ export default class buyList extends wepy.page {
     tabs: [{
       name: '全部',
       status: '',
-    }, {
-      name: '创建',
-      status: 'A',
-    }, {
-      name: '待审核',
-      status: 'B',
-    }, {
+    },
+    // {
+    //   name: '创建',
+    //   status: 'A',
+    // }, {
+    //   name: '待审核',
+    //   status: 'B',
+    // },
+     {
       name: '已审核',
       status: 'C',
     }, {
@@ -171,7 +181,7 @@ export default class buyList extends wepy.page {
       this.getOrderList()
     },
     async eyeFile(e) {
-      
+
       const orderId = e.currentTarget.dataset.orderid
       const res = await http.get(__getApi._getOrderView, {orderId: orderId})
       // 获取合同地址
@@ -250,6 +260,7 @@ export default class buyList extends wepy.page {
   }
   async getOrderList() {
     let params = {
+      istype: this.istype,
       page_id: this.start,
       page_limit: this.limit,
       sdate: this.startdate,
@@ -365,6 +376,17 @@ export default class buyList extends wepy.page {
             border: 1px solid #0E91FF;
             color: #0E91FF;
             border-radius: 26rpx;
+          }
+          .btn-notext {
+            margin-right: 20rpx;
+            height: 60rpx;
+            line-height: 60rpx;
+            background: #ffffff;
+            border: 1px solid #999999;
+            color: #999999;
+            border-radius: 26rpx;
+            font-size: 18px;
+            text-align: center;
           }
         }
       }
