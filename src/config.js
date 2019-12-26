@@ -4,7 +4,6 @@ const host = 'https://www.otimes.com/front'
 const imgHost = 'https://www.otimes.com'
 const socketHost = 'wss://www.otimes.com' // websocket地址
 // const socketHost = 'wss://dbys.otimes.info'
-
 export const __getApi = {
   host,
   imgHost,
