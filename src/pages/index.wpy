@@ -249,7 +249,7 @@ export default class pageIndex extends wepy.page {
 
     await this.getSheetNames()
     this.sheetName = this.sheetNameList[this.sheetNameIndex]
-    console.log(this.sheetName)
+    // console.log(this.sheetName)
 
     // let data = new Date()
     // let startDate = new Date(data)
@@ -279,7 +279,7 @@ export default class pageIndex extends wepy.page {
       ad_Model_id: 11
     })
     if (res.false) return
-    this.swipers = res.data
+    this.swipers = res.data.reverse()
     this.$apply()
   }
   async getSheetNames() {
