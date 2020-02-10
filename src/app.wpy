@@ -8,6 +8,7 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/about/info',
       'pages/index',
       'pages/about/index',
 
@@ -147,6 +148,7 @@ export default class extends wepy.app {
   globalData = {
     user: null,
     token_access: '',
+    user_phone: '',
     inforType: 0,
     historySearch: [],
     riceTypes: []
@@ -163,6 +165,7 @@ export default class extends wepy.app {
   }
   onShow(options) {
     this.$updateGlobalData('token_access', wepy.getStorageSync('token_access') || '')
+    this.$updateGlobalData('user_phone', wepy.getStorageSync('user_phone') || '')
   }
   onHide(options) {
     wx.setStorage({

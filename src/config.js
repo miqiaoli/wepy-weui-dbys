@@ -261,7 +261,12 @@ export const __getApi = {
   _addDriver: `${host}/logist/addDriver.dbys`,
   _delDirver: `${host}/logist/delete_driver.dbys`,
   _getCarList: `${host}/logist/getDriverCards.dbys`,
-  _updateCar: `${host}/logist/modifyDriverCards.dbys`
+  _updateCar: `${host}/logist/modifyDriverCards.dbys`,
+
+  // 个人信息
+  _getUser: 'http://xu2z34.natappfree.cc/hzdbys/front/orderb/chPersonnel.dbys',
+  _updateBase: 'http://xu2z34.natappfree.cc/hzdbys/front/orderb/upPersonnel.dbys', // 修改基本信息
+  _updateBack: 'http://xu2z34.natappfree.cc/hzdbys/front/orderb/upMarchinfo.dbys', // 返程信息
 }
 
 export default {

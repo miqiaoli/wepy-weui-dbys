@@ -1,0 +1,454 @@
+<template>
+<view class="detail">
+  <view class="more-info">
+
+    <view class="blod-title">
+      <text class="font-title">基本信息{{user_phone}}</text>
+      <button  wx:if="{{!info.name}}" bindtap="addUsername"  class="position" size="mini" type="primary">确定</button> 
+    </view>
+    <view class="weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 16px;">
+        <view class="color-left">姓名</view>
+        <view wx:if="{{info.name}}" class="weui-cell__ft color-right">{{info.name}}</view>
+        <input wx:else focus="{{true}}" bindinput="getUsername" placeholder="你的姓名(必填)不支持修改" class="weui-cell__ft color-right" value="{{getUsername}}" />
+      </view>
+    </view>
+    <view wx:if="{{info.id}}">
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell" style="font-size: 16px;">
+          <view class="color-left">身份证号码</view>
+          <view class="weui-cell__ft color-right">{{info.idCard}}</view>
+        </view>
+      </view>
+      <view class="weui-cells_after-title">
+        <view class="weui-cell" style="font-size: 16px;">
+          <view class="color-left">出生日期</view>
+          <view class="weui-cell__ft color-right">{{info.birthday}}</view>
+        </view>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell" style="font-size: 16px;">
+          <view class="color-left">性别</view>
+          <view class="weui-cell__ft color-right">{{info.gender}}</view>
+        </view>
+      </view>
+    </view>
+    
+<view wx:if="{{info.id}}">
+
+    <view class="blod-title">
+      <text class="font-title">联系方式</text>
+      <button class="position" size="mini" type="primary">添加</button>
+    </view>
+
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell" style="font-size: 16px;">
+          <view class="color-left">移动电话</view>
+          <view class="weui-cell__ft color-right">
+            <input bindinput="getUsername" placeholder="" value="{{link.mobile}}" />
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell" style="font-size: 16px;">
+          <view class="color-left">电子邮件</view>
+          <view class="weui-cell__ft color-right">
+            <input bindinput="getUsername" placeholder="" value="{{link.email}}" />
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell" style="font-size: 16px;">
+          <view class="color-left">紧急联系人</view>
+          <view class="weui-cell__ft color-right">
+            <input bindinput="getUsername" placeholder="" value="{{link.linkman}}" />
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell" style="font-size: 16px;">
+          <view class="color-left">联系电话</view>
+          <view class="weui-cell__ft color-right">
+            <input bindinput="getUsername" placeholder="" value="{{link.linkMobile}}" />
+          </view>
+        </view>
+      </view>
+
+    
+
+  
+    <view class="blod-title">
+      <text class="font-title">住址信息</text>
+      <button class="position" size="mini" type="primary">添加</button>
+    </view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 16px;">
+        <view class="color-left">现住址</view>
+        <view class="weui-cell__ft color-right">
+          <input bindinput="getUsername" placeholder="" value="{{getUsername}}" />
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 16px;">
+        <view class="color-left">身份证地址</view>
+        <view class="weui-cell__ft color-right">
+          <input bindinput="getUsername" placeholder="" value="{{getUsername}}" />
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 16px;">
+        <view class="color-left">其他地址</view>
+        <view class="weui-cell__ft color-right">
+          <input bindinput="getUsername" placeholder="" value="{{getUsername}}" />
+        </view>
+      </view>
+    </view>
+
+
+    <view class="blod-title"><text class="font-title">返程信息</text>
+    <button class="position" size="mini" type="primary">修改</button> </view>
+    <view class="weui-cells weui-cells_after-title">
+        <picker mode="date" value="{{returnInfo.date}}" bindchange="bindDateChange">
+          <view class="weui-cell" style="font-size: 16px;">
+            <view class="color-left">返程时间</view>
+              <view class="weui-cell__ft color-right">{{returnInfo.date}}</view>
+          </view>
+        </picker>
+    </view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 16px;">
+        <view class="color-left">返程方式</view>
+        <view class="weui-cell__ft color-right">
+          <input bindinput="getUsername" placeholder="" value="{{getUsername}}" />
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells weui-cells_after-title">
+      <picker mode="region" value="{{returnInfo.start}}" bindchange="bindStartChange">
+          <view class="weui-cell" style="font-size: 16px;">
+            <view class="color-left">返程起点</view>
+              <view class="weui-cell__ft color-right">{{returnInfo.start}}</view>
+          </view>
+        </picker>
+    </view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 16px;">
+        <view class="color-left">返程起点详细地址</view>
+        <view class="weui-cell__ft color-right">
+          <input bindinput="getUsername" placeholder="" value="{{info.id}}" />
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells weui-cells_after-title">
+      <picker mode="region" value="{{returnInfo.start}}" bindchange="bindEndChange">
+          <view class="weui-cell" style="font-size: 16px;">
+            <view class="color-left">返程终点</view>
+              <view class="weui-cell__ft color-right">{{returnInfo.end}}</view>
+          </view>
+        </picker>
+    </view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 16px;">
+        <view class="color-left">返程终点详细地址</view>
+        <view class="weui-cell__ft color-right">
+          <input bindinput="getUsername" placeholder="" value="{{getUsername}}" />
+        </view>
+      </view>
+    </view>
+
+
+</view>
+
+  </view>
+</view>
+</template>
+
+<style lang="less">
+.position {
+  position: absolute;
+  top: 20rpx;
+  right: 0;
+}
+.weui-cell {
+  padding:10px 0px;
+}
+.detail{
+  padding: 0 30rpx;
+  background: #fff;
+}
+.header {
+  position: relative;
+  width: 100%;
+  height: 180rpx;
+  color:#ffffff;
+  .alltype {
+    padding-left: 10rpx;
+    position: relative;
+    top: 144rpx;
+    left: 40rpx;
+    width: 300rpx;
+    height: 32rpx;
+    line-height: 32rpx;
+    background: rgba(0,0,0,0.50);
+    border-radius: 4rpx;
+    font-size: 20rpx;
+    color: #FFFFFF;
+    .left-icon {
+      position: absolute;
+      top: 10rpx;
+      right: 16rpx;
+      width: 18rpx;
+      height: 18rpx;
+    }
+  }
+  .collection {
+    position: absolute;
+    right: 12rpx;
+    top: 132rpx;
+    text-align: center;
+    .collection-icon {
+      width: 100rpx;
+      height: 100rpx;
+    }
+    .collection-text {
+      position: relative;
+      top: -10rpx;
+      font-size: 10px;
+      color: #3D3D3D;
+    }
+  }
+
+}
+.company {
+  margin-top: 40rpx;
+  .name {
+    position: relative;
+    font-size: 36rpx;
+    font-weight: bold;
+    margin-bottom: 36rpx;
+    .rice-icon {
+      position: relative;
+      top: 6rpx;
+      left: 4rpx;
+      width: 36rpx;
+      height: 36rpx;
+    }
+  }
+  .weui-flex {
+    margin-bottom: 8rpx;
+    vertical-align: middle;
+    line-height: 28rpx;
+    text-align: center;
+    .company-type {
+      background: #FFF3F2;
+      // border: 1px solid #F9E7E5;
+      border-radius: 4rpx;
+      width: 52rpx;
+      font-size: 20rpx;
+      color: #DD918D;
+    }
+    .company-name {
+      margin-left: 16rpx;
+      flex: 1;
+      text-align: left;
+      font-size: 28rpx;
+      color: #3D3D3D;
+    }
+  }
+}
+.details{
+  .display-flex{
+    display: flex;
+    // margin-left: 16rpx;
+    margin-right: 12rpx;
+    padding-top:24rpx;
+    padding-bottom:17rpx;
+    .des-name{
+      width: 115px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #000;
+    }
+    .des{
+      font-size: 14px;
+      color: #333;
+      flex: 1;
+      text-align:left;
+      white-space:wrap;
+      overflow:hidden;
+
+    }
+  }
+}
+.font-small{
+    font-size: 14px;
+  }
+.more-info{
+  .map_container {
+    margin-top: 40rpx;
+    height: 500rpx;
+    width: 100%;
+  }
+  .blod-title{
+    position: relative;
+    .font-title{
+      margin-top:16px;
+      margin-bottom:10px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #000;
+    }
+    .en-font{
+      padding-left: 10px;
+      color: #3d3d3d;
+      font-size: 10px;
+    }
+  }
+  .font-small{
+    font-size: 12px;
+  }
+}
+.color-left{
+  color: #8F8E94;
+  width: 104px;
+  font-size: 12px;
+}
+.color-right{
+  color: #333;
+  width: 100%;
+  text-align: left;
+
+}
+.user-choose {
+  position: relative;
+  margin-top: 30rpx;
+  margin-bottom: 6rpx;
+  height: 40rpx;
+  .user-choose-icon {
+    position: absolute;
+    width: 52rpx;
+    height: 48rpx;
+  }
+  .share-pos {
+    top: 0;
+    right: 124rpx;
+  }
+  .collection-pos {
+    top: 0;
+    right: 20rpx;
+  }
+}
+.back-index {
+  position: fixed;
+  bottom: 40rpx;
+  right: 20rpx;
+  width: 120rpx;
+  height: 120rpx;
+  background: url(http://imgs.afacode.top/back_index.png) no-repeat center center;
+  background-size: 100% auto;
+  border-radius: 50%;
+  z-index: 999;
+}
+</style>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import http from '../../utils/Http'
+
+export default class AboutInfo extends wepy.page {
+  config = {
+    navigationBarTitleText: '个人信息'
+  }
+  data = {
+    username: '',
+    getUsername: '',
+    user_phone: '',
+    link: {
+      mobile: '',
+      email: '',
+      linkman: '',
+      linkMobile: '',
+    },
+    address: {
+      nowAddress: '',
+      IDAddress: '',
+      otherAddress: '',
+    },
+    returnInfo: {
+      date: '',
+      type: '',
+      start: '',
+      startDetail: '',
+      end: '',
+      endDetail: '',
+    },
+    info: {},
+  }
+  methods = {
+    getUsername(e) {
+      this.getUsername = e.detail.value
+    },
+    // 添加姓名
+    async addUsername() {
+      // this.username = this.getUsername
+      const res = await http.get(__getApi._updateBase, {
+        doing: 0,
+        name: this.getUsername,
+        account: this.user_phone,
+        phone: this.user_phone,
+      });
+      console.log(res)
+      // wx.startPullDownRefresh()
+      if (res.data) {
+        this.getUser()
+      }
+    },
+    // 添加返程信息
+    async addBackInfo() {
+      const res = await http.get(__getApi._updateBack, {
+        doing: 1,
+        account: this.user_phone,
+        returnDate: this.info.returnDate,
+        returnStartPoint: this.info.returnStartPoint,
+        returnStartAddress: this.info.returnStartAddress,
+        returnEndPoint: this.info.returnEndPoint,
+        returnEndAddress: this.info.returnEndAddress,
+        returnWay: this.info.returnWay,
+// sid
+      });
+      console.log(res)
+    },
+
+
+    bindDateChange(e) {
+      this.returnInfo.date = e.detail.value
+    },
+    bindStartChange(e) {
+      this.returnInfo.start = e.detail.value
+    },
+    bindEndChange(e) {
+      this.returnInfo.end = e.detail.value
+    },
+    
+  }
+
+  async getUser() {
+    const res = await http.get(__getApi._getUser, {
+      account: this.$parent.globalData.user_phone
+    });
+    this.info = res.data
+    this.$apply()
+  }
+  
+  async onLoad(options) {
+    this.user_phone = this.$parent.globalData.user_phone || ''
+    this.getUser() 
+    
+  }
+}
+</script>

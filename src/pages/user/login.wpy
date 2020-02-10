@@ -102,7 +102,12 @@ export default class Index extends wepy.page {
         key: "token_access",
         data: this.token_access
       });
+      wepy.setStorage({
+        key: "user_phone",
+        data: e.detail.value.username
+      });
       this.$parent.$updateGlobalData("token_access", this.token_access);
+      this.$parent.$updateGlobalData("user_phone", e.detail.value.username);
 
       setTimeout(function() {
         wepy.switchTab({
