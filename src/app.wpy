@@ -30,15 +30,15 @@ export default class extends wepy.app {
       'pages/tmp/outer',
       'pages/tmp/todolist',
 
-      'pages/transaction/buy/list',
+     'pages/transaction/buy/list', //我的平台-销售订单管理
       'pages/transaction/buy/iccard',
-      'pages/transaction/todo/list',
-      'pages/transaction/contract/list',
-      'pages/transaction/shelf/list',
+      'pages/transaction/todo/list', //我的平台-进货单管理
+      'pages/transaction/contract/list', //我的平台-合同管理
+      'pages/transaction/shelf/list', //我的平台-挂牌管理
       'pages/transaction/shelf/success',
       'pages/transaction/shelf/details',
       'pages/transaction/buy/details',
-      'pages/transaction/talk/list',
+      'pages/transaction/talk/list',   //我的平台-洽谈管理
       'pages/transaction/talk/talk',
       'pages/transaction/talk/details',
 

@@ -33,8 +33,7 @@
         <view class="weui-flex flex-margin">
           <view class="weui-flex__item weui-flex">
             <view class="title">成交价格</view>
-            <view class="weui-flex__item">洽谈 元/KG</view>
-            <!-- <view class="weui-flex__item">{{details.deal_price}}元/KG</view> -->
+            <view class="weui-flex__item">{{details.deal_price}}元/KG</view>
           </view>
           <view class="weui-flex__item weui-flex">
             <view class="title">成交量</view>

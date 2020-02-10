@@ -8,8 +8,7 @@
         <view class="weui-media-box__title">{{itemData.goods_name}} {{itemData.att2}}/{{itemData.att1}}</view>
       </view>
       <view class="weui-flex__item text-right">
-        <view class="font-red"><text class="font-50">洽谈</text> 元/kg</view>
-        <!-- <view class="font-red">¥ <text class="font-50">{{itemData.order_price}}</text> 元/kg</view> -->
+        <view class="font-red">¥ <text class="font-50">{{itemData.order_price}}</text> 元/kg</view>
       </view>
     </view>
   </view>
@@ -25,7 +24,7 @@
         <view class="weui-cell__hd">
           <image class="icon" src="/images/icon/product.png" />
         </view>
-        <view class="weui-cell__bd">可供量: 有货</view>
+        <view class="weui-cell__bd">可供量: 货源充足</view>
         <!-- <view class="weui-cell__bd">可供量：{{itemData.amount}}kg</view> -->
       </view>
       <view class="item weui-flex">

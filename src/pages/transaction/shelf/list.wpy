@@ -42,7 +42,7 @@
           <!-- <view class="btn btn-color-eye" wx:if="{{single.v_status == '已下架' || single.v_status == '待上架'}}" data-order_id="{{single.order_id}}" @tap="doUp">上架</view> -->
           <view class="btn btn-color-eye" wx:if="{{single.v_status !== '已上架'}}" data-order_id="{{single.order_id}}" @tap="doUp">上架</view>
           <view class="btn btn-color-down" wx:if="{{single.v_status == '已上架'}}" data-order_id="{{single.order_id}}" @tap="doDown">下架</view>
-          <view class="btn btn-color-do" wx:if="{{single.v_status !== '已上架'}}" data-choose_index="{{index}}" data-order_id="{{single.order_id}}" @tap="doEdit">编辑</view>
+          <view class="btn btn-color-do" wx:if="{{single.v_status !== '已上架'}}" data-choose_index="{{index}}" data-provided_qtt="{{single.provided_qtt}}" data-order_price="{{single.order_price}}" data-order_id="{{single.order_id}}"  @tap="doEdit">编辑</view>
           <!-- <view class="btn btn-color-do" data-order_id="{{single.order_id}}" @tap="doDel">删除</view> -->
         </view>
       </view>
@@ -59,14 +59,14 @@
         <view class="weui-flex user-cell">
           <view class="weui-cell__hd tags">挂牌量</view>
           <view class="weui-cell__bd">
-            <input type="number" placeholder="请输入大于等于起批量的数" bindinput="amount" value="{{discuss_amount}}" />
+            <input type="number" placeholder="{{pla_qtt}}" bindinput="amount" value="{{discuss_amount}}" />
           </view>
           <view style="margin-left: 8rpx; margin-top: 4rpx; width: 100rpx;">(kg)</view>
         </view>
         <view class="weui-flex user-cell">
           <view class="weui-cell__hd tags">挂牌单价</view>
           <view class="col-des weui-flex__item">
-            <input type="digit" placeholder="请输入挂牌价格" bindinput="price" value="{{discuss_price}}" />
+            <input type="digit" placeholder="{{pla_price}}" bindinput="price" value="{{discuss_price}}" />
           </view>
           <view style="margin-left: 8rpx; margin-top: 4rpx; width: 100rpx;">(元/kg)</view>
         </view>
@@ -117,6 +117,8 @@ export default class shelfList extends wepy.page {
   }
   data = {
     placeholder: '搜索挂牌单号',
+    pla_qtt: '',
+    pla_price: '',
     value: '',
     tabs: [{
       name: '全部',
@@ -193,6 +195,8 @@ export default class shelfList extends wepy.page {
     doEdit(e) {
       this.chooseIndex = e.currentTarget.dataset.choose_index
       this.show = true
+      this.pla_qtt = e.currentTarget.dataset.provided_qtt
+      this.pla_price = e.currentTarget.dataset.order_price
       this.$apply()
     },
     async editSuccess() {
