@@ -34,7 +34,7 @@
       </view>
     </view>
     
-<view wx:if="{{info.id}}">
+<view style="padding-bottom: 80rpx;" wx:if="{{info.id}}">
 
     <view class="blod-title">
       <text class="font-title">联系方式</text>
