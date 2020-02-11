@@ -265,6 +265,8 @@ export const __getApi = {
   _updateCar: `${host}/logist/modifyDriverCards.dbys`,
 
   _getUser: `${host}/orderb/chPersonnel.dbys`,
+  // _getUser: `http://a7fgsa.natappfree.cc/hzdbys/front/orderb/chPersonnel.dbys`,
+  // _updateBase: `http://a7fgsa.natappfree.cc/hzdbys/front/orderb/upPersonnel.dbys`, // 修改基本信息
   _updateBase: `${host}/orderb/upPersonnel.dbys`, // 修改基本信息
   _updateBack: `${host}/orderb/upMarchinfo.dbys`, // 返程信息
 }

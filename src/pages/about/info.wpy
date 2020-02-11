@@ -40,8 +40,8 @@
       <text class="font-title">联系方式</text>
 
       <button wx:if="{{linkBool}}" bindtap="addLink" class="position" size="mini" type="primary">确定</button>
-      <button  bindtap="linkBool" wx:if="{{info.eMail && !linkBool}}" class="position" size="mini" type="primary">修改</button>
-      <button bindtap="linkBool" wx:if="{{!info.eMail && !linkBool}}" class="position" size="mini" type="primary">添加</button>
+      <button  bindtap="linkBool" wx:if="{{info.phone && !linkBool}}" class="position" size="mini" type="primary">修改</button>
+      <button bindtap="linkBool" wx:if="{{!info.phone && !linkBool}}" class="position" size="mini" type="primary">添加</button>
     </view>
   <!-- 联系方式 -->
       <view class="weui-cells weui-cells_after-title">
@@ -57,7 +57,7 @@
         <view class="weui-cell" style="font-size: 16px;">
           <view class="color-left">电子邮件</view>
           <view class="weui-cell__ft color-right">
-            <input wx:if="{{linkBool}}" bindinput="getInput('eMail')" placeholder="" value="{{info.eMail}}" />
+            <input wx:if="{{linkBool}}" focus="{{true}}" bindinput="getInput('eMail')" placeholder="" value="{{info.eMail}}" />
             <view wx:else>{{info.eMail}}</view>
           </view>
         </view>
@@ -110,7 +110,7 @@
       <view class="weui-cell" style="font-size: 16px;">
         <view class="color-left">现住址</view>
         <view class="weui-cell__ft color-right">
-          <input wx:if="{{addressBool}}" bindinput="getInput('address')"  placeholder="" value="{{info.address}}" />
+          <input wx:if="{{addressBool}}" focus="{{true}}" bindinput="getInput('address')"  placeholder="" value="{{info.address}}" />
           <view wx:else>{{info.address}}</view>
         </view>
       </view>
@@ -213,7 +213,7 @@
     <!-- 添加返程 -->
     <view wx:else>
       <view class="weui-cells weui-cells_after-title">
-        <picker mode="date" value="{{yrmlist.returnDate}}" bindchange="bindChange('returnDate')">
+        <picker wx:if="{{backBool}}" mode="date" value="{{yrmlist.returnDate}}" bindchange="bindChange('returnDate')">
           <view class="weui-cell" style="font-size: 16px;">
             <view class="color-left">返程时间</view>
               <view class="weui-cell__ft color-right">{{yrmlist.returnDate}}</view>
@@ -221,7 +221,7 @@
         </picker>
       </view>
       <view class="weui-cells weui-cells_after-title">
-        <view class="weui-cell" style="font-size: 16px;">
+        <view wx:if="{{backBool}}" class="weui-cell" style="font-size: 16px;">
           <view class="color-left">返程方式</view>
           <view class="weui-cell__ft color-right">
             <input bindinput="bindChange('returnWay')" placeholder="" value="{{yrmlist.returnWay}}" />
@@ -229,7 +229,7 @@
         </view>
       </view>
       <view class="weui-cells weui-cells_after-title">
-        <picker mode="region" value="{{yrmlist.returnStartPoint}}" bindchange="bindChange('returnStartPoint')">
+        <picker wx:if="{{backBool}}" mode="region" value="{{yrmlist.returnStartPoint}}" bindchange="bindChange('returnStartPoint')">
             <view class="weui-cell" style="font-size: 16px;">
               <view class="color-left">返程起点</view>
                 <view class="weui-cell__ft color-right">{{yrmlist.returnStartPoint}}</view>
@@ -237,7 +237,7 @@
           </picker>
       </view>
       <view class="weui-cells weui-cells_after-title">
-        <view class="weui-cell" style="font-size: 16px;">
+        <view wx:if="{{backBool}}" class="weui-cell" style="font-size: 16px;">
           <view class="color-left">返程起点详细地址</view>
           <view class="weui-cell__ft color-right">
             <input bindinput="bindChange('returnStartAddress')" placeholder="" value="{{yrmlist.returnStartAddress}}" />
@@ -245,7 +245,7 @@
         </view>
       </view>
       <view class="weui-cells weui-cells_after-title">
-        <picker mode="region" value="{{yrmlist.returnEndPoint}}" bindchange="bindChange('returnEndPoint')">
+        <picker wx:if="{{backBool}}" mode="region" value="{{yrmlist.returnEndPoint}}" bindchange="bindChange('returnEndPoint')">
             <view class="weui-cell" style="font-size: 16px;">
               <view class="color-left">返程终点</view>
                 <view class="weui-cell__ft color-right">{{yrmlist.returnEndPoint}}</view>
@@ -253,7 +253,7 @@
           </picker>
       </view>
       <view class="weui-cells weui-cells_after-title">
-        <view class="weui-cell" style="font-size: 16px;">
+        <view  wx:if="{{backBool}}" class="weui-cell" style="font-size: 16px;">
           <view class="color-left">返程终点详细地址</view>
           <view class="weui-cell__ft color-right">
             <input bindinput="bindChange('returnEndAddress')" placeholder="" value="{{yrmlist.returnEndAddress}}" />
@@ -261,9 +261,6 @@
         </view>
       </view>
   </view>
-
-    
-    
 
 
 </view>
@@ -561,7 +558,8 @@ export default class AboutInfo extends wepy.page {
         });
         if (res) {
           this.addressBool = false
-          wx.startPullDownRefresh()
+          this.getUser() 
+          // wx.startPullDownRefresh()
         }
       } else {
         wx.showToast({
@@ -600,7 +598,7 @@ export default class AboutInfo extends wepy.page {
           returnWay: this.yrmlist.returnWay,
         }
       }
-      
+      console.log(data)
       if (!data.returnDate || !data.returnStartPoint || !data.returnStartAddress ||  !data.returnEndPoint || !data.returnEndAddress || !data.returnWay) {
         wx.showToast({
             title: '缺少必要字段',
@@ -612,9 +610,10 @@ export default class AboutInfo extends wepy.page {
       const res = await http.get(__getApi._updateBack, data);
       if (res) {
         this.backBool = false
-        wx.startPullDownRefresh()
-        // this.getUser()
+        this.getUser() 
+        // wx.startPullDownRefresh()
       }
+      console.log(res)
     },
     // 联系方式
     async addLink() {
@@ -633,7 +632,9 @@ export default class AboutInfo extends wepy.page {
         });
         if (res) {
           this.linkBool = false
-          this.onLoad()
+          this.getUser() 
+          // wx.startPullDownRefresh()
+          // this.onLoad()
         }
       } else {
         wx.showToast({
@@ -663,20 +664,17 @@ export default class AboutInfo extends wepy.page {
     this.$apply()
   }
   async onShow() {
-//     let pages = getCurrentPages() //获取页面数组
-
-// let curPage = pages[pages.length - 1]  //获取当前页
-
-// curPage.onShow() //手动调用生命周期函数
+    // let pages = getCurrentPages() //获取页面数组
+    // let curPage = pages[pages.length - 1]  //获取当前页
+    // curPage.onShow() //手动调用生命周期函数
     if (!this.user_phone) {
       this.user_phone = this.$parent.globalData.user_phone || ''
     }
-    this.getUser() 
+    // this.getUser() 
   }
   async onLoad(options) {
     this.user_phone = this.$parent.globalData.user_phone || ''
-    this.getUser() 
-    
+    this.getUser()
   }
 }
 </script>
