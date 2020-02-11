@@ -1,4 +1,5 @@
-const host = 'https://www.otimes.com/front'
+// const host = 'https://www.otimes.com/front'
+const host = 'http://dbys.otimes.com/front'
 // const host = 'https://dbys.otimes.info/front'
 // const imgHost = 'https://dbys.otimes.info' // 测试图片地址
 const imgHost = 'https://www.otimes.com'
@@ -263,10 +264,9 @@ export const __getApi = {
   _getCarList: `${host}/logist/getDriverCards.dbys`,
   _updateCar: `${host}/logist/modifyDriverCards.dbys`,
 
-  // 个人信息
-  _getUser: 'http://xu2z34.natappfree.cc/hzdbys/front/orderb/chPersonnel.dbys',
-  _updateBase: 'http://xu2z34.natappfree.cc/hzdbys/front/orderb/upPersonnel.dbys', // 修改基本信息
-  _updateBack: 'http://xu2z34.natappfree.cc/hzdbys/front/orderb/upMarchinfo.dbys', // 返程信息
+  _getUser: `${host}/orderb/chPersonnel.dbys`,
+  _updateBase: `${host}/orderb/upPersonnel.dbys`, // 修改基本信息
+  _updateBack: `${host}/orderb/upMarchinfo.dbys`, // 返程信息
 }
 
 export default {
