@@ -8,7 +8,7 @@
     </view>
     <view class="weui-cells_after-title">
       <view class="weui-cell" style="font-size: 16px;">
-        <view class="color-left">姓名</view>
+        <view class="color-left">姓名<text class="tip-red">*</text></view>
         <view wx:if="{{info.name}}" class="weui-cell__ft color-right">{{info.name}}</view>
         <input wx:else focus="{{true}}" bindinput="getUsername" placeholder="你的姓名(必填)不支持修改" class="weui-cell__ft color-right" value="{{getUsername}}" />
       </view>
@@ -38,7 +38,6 @@
 
     <view class="blod-title">
       <text class="font-title">联系方式</text>
-
       <button wx:if="{{linkBool}}" bindtap="addLink" class="position" size="mini" type="primary">确定</button>
       <button  bindtap="linkBool" wx:if="{{info.phone && !linkBool}}" class="position" size="mini" type="primary">修改</button>
       <button bindtap="linkBool" wx:if="{{!info.phone && !linkBool}}" class="position" size="mini" type="primary">添加</button>
@@ -46,7 +45,7 @@
   <!-- 联系方式 -->
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell" style="font-size: 16px;">
-          <view class="color-left">移动电话</view>
+          <view class="color-left">移动电话<text class="tip-red">*</text></view>
           <view class="weui-cell__ft color-right">
             <input wx:if="{{linkBool}}" bindinput="getInput('phone')" placeholder="" value="{{info.phone}}" />
             <view wx:else>{{info.phone}}</view>
@@ -55,7 +54,7 @@
       </view>
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell" style="font-size: 16px;">
-          <view class="color-left">电子邮件</view>
+          <view class="color-left">电子邮件<text class="tip-red">*</text></view>
           <view class="weui-cell__ft color-right">
             <input wx:if="{{linkBool}}" focus="{{true}}" bindinput="getInput('eMail')" placeholder="" value="{{info.eMail}}" />
             <view wx:else>{{info.eMail}}</view>
@@ -64,7 +63,7 @@
       </view>
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell" style="font-size: 16px;">
-          <view class="color-left">紧急联系人1</view>
+          <view class="color-left">紧急联系人1<text class="tip-red">*</text></view>
           <view class="weui-cell__ft color-right">
             <input wx:if="{{linkBool}}" bindinput="getInput('contentName1')" placeholder="" value="{{info.contentName1}}" />
             <view wx:else>{{info.contentName1}}</view>
@@ -73,7 +72,7 @@
       </view>
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell" style="font-size: 16px;">
-          <view class="color-left">联系电话</view>
+          <view class="color-left">联系电话<text class="tip-red">*</text></view>
           <view class="weui-cell__ft color-right">
             <input wx:if="{{linkBool}}" bindinput="getInput('contentPhone1')" placeholder="" value="{{info.contentPhone1}}" />
             <view wx:else>{{info.contentPhone1}}</view>
@@ -82,7 +81,7 @@
       </view>
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell" style="font-size: 16px;">
-          <view class="color-left">紧急联系人2</view>
+          <view class="color-left">紧急联系人2<text class="tip-red">*</text></view>
           <view class="weui-cell__ft color-right">
             <input wx:if="{{linkBool}}" bindinput="getInput('contentName2')" placeholder="" value="{{info.contentName2}}" />
             <view wx:else>{{info.contentName2}}</view>
@@ -91,7 +90,7 @@
       </view>
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell" style="font-size: 16px;">
-          <view class="color-left">联系电话</view>
+          <view class="color-left">联系电话<text class="tip-red">*</text></view>
           <view class="weui-cell__ft color-right">
             <input wx:if="{{linkBool}}" bindinput="getInput('contentPhone2')" placeholder="" value="{{info.contentPhone2}}" />
             <view wx:else>{{info.contentPhone2}}</view>
@@ -108,7 +107,7 @@
     <!-- 住址 -->
     <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell" style="font-size: 16px;">
-        <view class="color-left">现住址</view>
+        <view class="color-left">现住址<text class="tip-red">*</text></view>
         <view class="weui-cell__ft color-right">
           <input wx:if="{{addressBool}}" focus="{{true}}" bindinput="getInput('address')"  placeholder="" value="{{info.address}}" />
           <view wx:else>{{info.address}}</view>
@@ -117,7 +116,7 @@
     </view>
     <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell" style="font-size: 16px;">
-        <view class="color-left">身份证地址</view>
+        <view class="color-left">身份证地址<text class="tip-red">*</text></view>
         <view class="weui-cell__ft color-right">
           <input wx:if="{{addressBool}}" bindinput="getInput('idAddress')" placeholder="" value="{{info.idAddress}}" />
           <view wx:else>{{info.idAddress}}</view>
@@ -147,19 +146,19 @@
       <view class="weui-cells weui-cells_after-title">
         <picker wx:if="{{backBool}}" mode="date" value="{{info.yrmlist[0].returnDate_}}" bindchange="bindListChange('returnDate_')">
           <view class="weui-cell" style="font-size: 16px;">
-            <view class="color-left">返程时间</view>
+            <view class="color-left">返程时间<text class="tip-red">*</text></view>
               <view class="weui-cell__ft color-right">{{info.yrmlist[0].returnDate_}}</view>
           </view>
         </picker>
         <view wx:else class="weui-cell" style="font-size: 16px;">
-            <view class="color-left">返程时间</view>
+            <view class="color-left">返程时间<text class="tip-red">*</text></view>
               <view class="weui-cell__ft color-right">{{info.yrmlist[0].returnDate_}}</view>
           </view>
       </view>
     
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell" style="font-size: 16px;">
-          <view class="color-left">返程方式</view>
+          <view class="color-left">返程方式<text class="tip-red">*</text></view>
           <view class="weui-cell__ft color-right">
             <input wx:if="{{backBool}}" bindinput="getListInput('returnWay')" placeholder="" value="{{info.yrmlist[0].returnWay}}" />
             <view wx:else>{{info.yrmlist[0].returnWay}}</view>
@@ -169,18 +168,18 @@
       <view class="weui-cells weui-cells_after-title">
         <picker wx:if="{{backBool}}" mode="region" value="{{info.yrmlist[0].returnStartPoint}}" bindchange="bindListChange('returnStartPoint')">
             <view class="weui-cell" style="font-size: 16px;">
-              <view class="color-left">返程起点</view>
+              <view class="color-left">返程起点<text class="tip-red">*</text></view>
                 <view class="weui-cell__ft color-right">{{info.yrmlist[0].returnStartPoint}}</view>
             </view>
           </picker>
           <view wx:else class="weui-cell" style="font-size: 16px;">
-            <view class="color-left">返程时间</view>
+            <view class="color-left">返程起点<text class="tip-red">*</text></view>
               <view class="weui-cell__ft color-right">{{info.yrmlist[0].returnStartPoint}}</view>
           </view>
       </view>
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell" style="font-size: 16px;">
-          <view class="color-left">返程起点详细地址</view>
+          <view class="color-left">返程起点详细地址<text class="tip-red">*</text></view>
           <view class="weui-cell__ft color-right">
             <input wx:if="{{backBool}}" bindinput="getListInput('returnStartAddress')" placeholder="" value="{{info.yrmlist[0].returnStartAddress}}" />
             <view wx:else>{{info.yrmlist[0].returnStartAddress}}</view>
@@ -190,18 +189,18 @@
       <view class="weui-cells weui-cells_after-title">
         <picker wx:if="{{backBool}}" mode="region" value="{{info.yrmlist[0].returnEndPoint}}" bindchange="bindListChange('returnEndPoint')">
             <view class="weui-cell" style="font-size: 16px;">
-              <view class="color-left">返程终点</view>
+              <view class="color-left">返程终点<text class="tip-red">*</text></view>
                 <view class="weui-cell__ft color-right">{{info.yrmlist[0].returnEndPoint}}</view>
             </view>
           </picker>
           <view wx:else class="weui-cell" style="font-size: 16px;">
-            <view class="color-left">返程时间</view>
+            <view class="color-left">返程终点<text class="tip-red">*</text></view>
               <view class="weui-cell__ft color-right">{{info.yrmlist[0].returnEndPoint}}</view>
           </view>
       </view>
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell" style="font-size: 16px;">
-          <view class="color-left">返程终点详细地址</view>
+          <view class="color-left">返程终点详细地址<text class="tip-red">*</text></view>
           <view class="weui-cell__ft color-right">
             <input wx:if="{{backBool}}" bindinput="getListInput('returnEndAddress')" placeholder="" value="{{info.yrmlist[0].returnEndAddress}}" />
             <view wx:else>{{info.yrmlist[0].returnEndAddress}}</view>
@@ -215,14 +214,14 @@
       <view class="weui-cells weui-cells_after-title">
         <picker wx:if="{{backBool}}" mode="date" value="{{yrmlist.returnDate}}" bindchange="bindChange('returnDate')">
           <view class="weui-cell" style="font-size: 16px;">
-            <view class="color-left">返程时间</view>
+            <view class="color-left">返程时间<text class="tip-red">*</text></view>
               <view class="weui-cell__ft color-right">{{yrmlist.returnDate}}</view>
           </view>
         </picker>
       </view>
       <view class="weui-cells weui-cells_after-title">
         <view wx:if="{{backBool}}" class="weui-cell" style="font-size: 16px;">
-          <view class="color-left">返程方式</view>
+          <view class="color-left">返程方式<text class="tip-red">*</text></view>
           <view class="weui-cell__ft color-right">
             <input bindinput="bindChange('returnWay')" placeholder="" value="{{yrmlist.returnWay}}" />
           </view>
@@ -231,14 +230,14 @@
       <view class="weui-cells weui-cells_after-title">
         <picker wx:if="{{backBool}}" mode="region" value="{{yrmlist.returnStartPoint}}" bindchange="bindChange('returnStartPoint')">
             <view class="weui-cell" style="font-size: 16px;">
-              <view class="color-left">返程起点</view>
+              <view class="color-left">返程起点<text class="tip-red">*</text></view>
                 <view class="weui-cell__ft color-right">{{yrmlist.returnStartPoint}}</view>
             </view>
           </picker>
       </view>
       <view class="weui-cells weui-cells_after-title">
         <view wx:if="{{backBool}}" class="weui-cell" style="font-size: 16px;">
-          <view class="color-left">返程起点详细地址</view>
+          <view class="color-left">返程起点详细地址<text class="tip-red">*</text></view>
           <view class="weui-cell__ft color-right">
             <input bindinput="bindChange('returnStartAddress')" placeholder="" value="{{yrmlist.returnStartAddress}}" />
           </view>
@@ -247,14 +246,14 @@
       <view class="weui-cells weui-cells_after-title">
         <picker wx:if="{{backBool}}" mode="region" value="{{yrmlist.returnEndPoint}}" bindchange="bindChange('returnEndPoint')">
             <view class="weui-cell" style="font-size: 16px;">
-              <view class="color-left">返程终点</view>
+              <view class="color-left">返程终点<text class="tip-red">*</text></view>
                 <view class="weui-cell__ft color-right">{{yrmlist.returnEndPoint}}</view>
             </view>
           </picker>
       </view>
       <view class="weui-cells weui-cells_after-title">
         <view  wx:if="{{backBool}}" class="weui-cell" style="font-size: 16px;">
-          <view class="color-left">返程终点详细地址</view>
+          <view class="color-left">返程终点详细地址<text class="tip-red">*</text></view>
           <view class="weui-cell__ft color-right">
             <input bindinput="bindChange('returnEndAddress')" placeholder="" value="{{yrmlist.returnEndAddress}}" />
           </view>
@@ -270,6 +269,10 @@
 </template>
 
 <style lang="less">
+.tip-red {
+  vertical-align:middle; 
+  color: red;
+}
 .position {
   position: absolute;
   top: 20rpx;
@@ -417,7 +420,8 @@
 .color-left{
   color: #8F8E94;
   width: 104px;
-  font-size: 12px;
+  text-align: center;
+  font-size: 16px;
 }
 .color-right{
   color: #333;
@@ -541,12 +545,17 @@ export default class AboutInfo extends wepy.page {
       console.log(res)
       // wx.startPullDownRefresh()
       if (res.data) {
+        wx.showToast({
+          title: '你的姓名已填写',
+          icon: 'success',
+          duration: 2000
+        })
         this.getUser()
       }
     },
     // 添加地址
     async addAddress() {
-      if (this.info.address && this.info.idAddress && this.info.elseAddress) {
+      if (this.info.address && this.info.idAddress) {
         const res = await http.get(__getApi._updateBase, {
           doing: 1,
           id: this.info.id,
@@ -617,7 +626,7 @@ export default class AboutInfo extends wepy.page {
     },
     // 联系方式
     async addLink() {
-      if (this.info.phone && this.info.eMail && this.info.contentName1 && this.info.contentPhone1) {
+      if (this.info.phone && this.info.eMail && this.info.contentName1 && this.info.contentPhone1 && this.info.contentName2 && this.info.contentPhone2) {
         const res = await http.get(__getApi._updateBase, {
           doing: 1,
           id: this.info.id,

@@ -193,6 +193,7 @@ export default class mine extends wepy.page {
       }
       wx.clearStorage();
       this.$parent.$updateGlobalData("token_access", "");
+      this.$parent.$updateGlobalData("user_phone", "");
       wx.showToast({
         title: "注销登录成功",
         icon: "success",
