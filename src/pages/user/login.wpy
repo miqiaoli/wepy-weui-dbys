@@ -20,7 +20,7 @@
         </view>
       </view>
       <view class="weui-btn-area">
-        <button class="weui-btn" type="primary" formType="submit">登录</button>
+        <button disabled="{{disabled}}" class="weui-btn" type="primary" formType="submit">登录</button>
       </view>
       <!-- <view class="item-input">
           <input type="text" name='username' placeholder="请输入用户名" />
@@ -70,7 +70,8 @@ export default class Index extends wepy.page {
   data = {
     token_access: "",
     username: "",
-    password: ""
+    password: "",
+    disabled: false,
   };
   methods = {
     makePhoneCall(e) {
@@ -87,11 +88,18 @@ export default class Index extends wepy.page {
         this.$alert("温馨提示", "请输入密码");
         return;
       }
+      let self = this
+      this.disabled = true
+      setTimeout(function() {
+        self.disabled = false
+        self.$apply()
+      }, 2000)
       const res = await http.post(__getApi._getLogin, {
         token_access: this.token_access,
         username: e.detail.value.username,
         password: e.detail.value.password
       });
+
       if (res.false) return;
       wepy.showToast({
         title: "登录成功",
