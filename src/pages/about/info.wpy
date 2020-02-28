@@ -1,0 +1,692 @@
+<template>
+<view class="detail">
+  <view class="more-info">
+
+    <view class="blod-title">
+      <text class="font-title">基本信息</text>
+      <button  wx:if="{{!info.name}}" bindtap="addUsername"  class="position" size="mini" type="primary">确定</button> 
+    </view>
+    <view class="weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 14px;">
+        <view class="color-left">姓名<text class="tip-red">*</text></view>
+        <view wx:if="{{info.name}}" class="weui-cell__ft color-right">{{info.name}}</view>
+        <input wx:else focus="{{true}}" bindinput="getUsername" placeholder="你的姓名(必填)不支持修改" class="weui-cell__ft color-right" value="{{getUsername}}" />
+      </view>
+    </view>
+    <view wx:if="{{info.id}}">
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell" style="font-size: 14px;">
+          <view class="color-left">身份证号码</view>
+          <view class="weui-cell__ft color-right">{{info.idCard}}</view>
+        </view>
+      </view>
+      <view class="weui-cells_after-title">
+        <view class="weui-cell" style="font-size: 14px;">
+          <view class="color-left">出生日期</view>
+          <view class="weui-cell__ft color-right">{{info.birthday}}</view>
+        </view>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell" style="font-size: 14px;">
+          <view class="color-left">性别</view>
+          <view class="weui-cell__ft color-right">{{info.gender}}</view>
+        </view>
+      </view>
+    </view>
+    
+<view style="padding-bottom: 80rpx;" wx:if="{{info.id}}">
+
+    <view class="blod-title">
+      <text class="font-title">联系方式</text>
+      <button wx:if="{{linkBool}}" bindtap="addLink" class="position" size="mini" type="primary">确定</button>
+      <button  bindtap="linkBool" wx:if="{{info.phone && !linkBool}}" class="position" size="mini" type="primary">修改</button>
+      <button bindtap="linkBool" wx:if="{{!info.phone && !linkBool}}" class="position" size="mini" type="primary">添加</button>
+    </view>
+  <!-- 联系方式 -->
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell" style="font-size: 14px;">
+          <view class="color-left">移动电话<text class="tip-red">*</text></view>
+          <view class="weui-cell__ft color-right">
+            <input wx:if="{{linkBool}}" bindinput="getInput('phone')" placeholder="" value="{{info.phone}}" />
+            <view wx:else>{{info.phone}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell" style="font-size: 14px;">
+          <view class="color-left">电子邮件<text class="tip-red">*</text></view>
+          <view class="weui-cell__ft color-right">
+            <input wx:if="{{linkBool}}" focus="{{true}}" bindinput="getInput('eMail')" placeholder="" value="{{info.eMail}}" />
+            <view wx:else>{{info.eMail}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell" style="font-size: 14px;">
+          <view class="color-left">紧急联系人<text class="tip-red">*</text></view>
+          <view class="weui-cell__ft color-right">
+            <input wx:if="{{linkBool}}" bindinput="getInput('contentName1')" placeholder="" value="{{info.contentName1}}" />
+            <view wx:else>{{info.contentName1}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell" style="font-size: 14px;">
+          <view class="color-left">联系电话<text class="tip-red">*</text></view>
+          <view class="weui-cell__ft color-right">
+            <input wx:if="{{linkBool}}" bindinput="getInput('contentPhone1')" placeholder="" value="{{info.contentPhone1}}" />
+            <view wx:else>{{info.contentPhone1}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell" style="font-size: 14px;">
+          <view class="color-left">紧急联系人<text class="tip-red">*</text></view>
+          <view class="weui-cell__ft color-right">
+            <input wx:if="{{linkBool}}" bindinput="getInput('contentName2')" placeholder="" value="{{info.contentName2}}" />
+            <view wx:else>{{info.contentName2}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell" style="font-size: 14px;">
+          <view class="color-left">联系电话<text class="tip-red">*</text></view>
+          <view class="weui-cell__ft color-right">
+            <input wx:if="{{linkBool}}" bindinput="getInput('contentPhone2')" placeholder="" value="{{info.contentPhone2}}" />
+            <view wx:else>{{info.contentPhone2}}</view>
+          </view>
+        </view>
+      </view>
+
+    <view class="blod-title">
+      <text class="font-title">住址信息</text>
+      <button wx:if="{{addressBool}}" bindtap="addAddress" class="position" size="mini" type="primary">确定</button>
+      <button wx:if="{{info.address && !addressBool}}" bindtap="addressBool" class="position" size="mini" type="primary">修改</button>
+      <button wx:if="{{!info.address && !addressBool}}" bindtap="addressBool" class="position" size="mini" type="primary">添加</button>
+    </view>
+    <!-- 住址 -->
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 14px;">
+        <view class="color-left">现住址<text class="tip-red">*</text></view>
+        <view class="weui-cell__ft color-right">
+          <input wx:if="{{addressBool}}" focus="{{true}}" bindinput="getInput('address')"  placeholder="" value="{{info.address}}" />
+          <view wx:else>{{info.address}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 14px;">
+        <view class="color-left">身份证地址<text class="tip-red">*</text></view>
+        <view class="weui-cell__ft color-right">
+          <input wx:if="{{addressBool}}" bindinput="getInput('idAddress')" placeholder="" value="{{info.idAddress}}" />
+          <view wx:else>{{info.idAddress}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell" style="font-size: 14px;">
+        <view class="color-left">其他地址</view>
+        <view class="weui-cell__ft color-right">
+          <input wx:if="{{addressBool}}" bindinput="getInput('elseAddress')" placeholder="" value="{{info.elseAddress}}" />
+          <view wx:else>{{info.elseAddress}}</view>
+        </view>
+      </view>
+    </view>
+
+
+    <view class="blod-title">
+      <text class="font-title">返程信息</text>
+      <button wx:if="{{backBool}}" bindtap="addBackInfo" class="position" size="mini" type="primary">确定</button> 
+      <button wx:if="{{!backBool && info.yrmlist.length > 0}}" bindtap="backBool" class="position" size="mini" type="primary">修改</button> 
+      <button wx:if="{{!backBool && info.yrmlist.length == 0}}" bindtap="backBool" class="position" size="mini" type="primary">添加</button> 
+    </view>
+    
+    <!-- // 修改返程 -->
+    <view wx:if="{{info.yrmlist.length > 0}}">
+      <view class="weui-cells weui-cells_after-title">
+        <picker wx:if="{{backBool}}" mode="date" value="{{info.yrmlist[0].returnDate_}}" bindchange="bindListChange('returnDate_')">
+          <view class="weui-cell" style="font-size: 14px;">
+            <view class="color-left">返程时间<text class="tip-red">*</text></view>
+              <view class="weui-cell__ft color-right">{{info.yrmlist[0].returnDate_}}</view>
+          </view>
+        </picker>
+        <view wx:else class="weui-cell" style="font-size: 14px;">
+            <view class="color-left">返程时间<text class="tip-red">*</text></view>
+              <view class="weui-cell__ft color-right">{{info.yrmlist[0].returnDate_}}</view>
+          </view>
+      </view>
+    
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell" style="font-size: 16px;">
+          <view class="color-left">返程方式<text class="tip-red">*</text></view>
+          <view class="weui-cell__ft color-right">
+            <input wx:if="{{backBool}}" bindinput="getListInput('returnWay')" placeholder="" value="{{info.yrmlist[0].returnWay}}" />
+            <view wx:else>{{info.yrmlist[0].returnWay}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <picker wx:if="{{backBool}}" mode="region" value="{{info.yrmlist[0].returnStartPoint}}" bindchange="bindListChange('returnStartPoint')">
+            <view class="weui-cell" style="font-size: 14px;">
+              <view class="color-left">返程起点<text class="tip-red">*</text></view>
+                <view class="weui-cell__ft color-right">{{info.yrmlist[0].returnStartPoint}}</view>
+            </view>
+          </picker>
+          <view wx:else class="weui-cell" style="font-size: 14px;">
+            <view class="color-left">返程起点<text class="tip-red">*</text></view>
+              <view class="weui-cell__ft color-right">{{info.yrmlist[0].returnStartPoint}}</view>
+          </view>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell" style="font-size: 14px;">
+          <view class="color-left">返程起点详细地址<text class="tip-red">*</text></view>
+          <view class="weui-cell__ft color-right">
+            <input wx:if="{{backBool}}" bindinput="getListInput('returnStartAddress')" placeholder="" value="{{info.yrmlist[0].returnStartAddress}}" />
+            <view wx:else>{{info.yrmlist[0].returnStartAddress}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <picker wx:if="{{backBool}}" mode="region" value="{{info.yrmlist[0].returnEndPoint}}" bindchange="bindListChange('returnEndPoint')">
+            <view class="weui-cell" style="font-size: 14px;">
+              <view class="color-left">返程终点<text class="tip-red">*</text></view>
+                <view class="weui-cell__ft color-right">{{info.yrmlist[0].returnEndPoint}}</view>
+            </view>
+          </picker>
+          <view wx:else class="weui-cell" style="font-size: 14px;">
+            <view class="color-left">返程终点<text class="tip-red">*</text></view>
+              <view class="weui-cell__ft color-right">{{info.yrmlist[0].returnEndPoint}}</view>
+          </view>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell" style="font-size: 14px;">
+          <view class="color-left">返程终点详细地址<text class="tip-red">*</text></view>
+          <view class="weui-cell__ft color-right">
+            <input wx:if="{{backBool}}" bindinput="getListInput('returnEndAddress')" placeholder="" value="{{info.yrmlist[0].returnEndAddress}}" />
+            <view wx:else>{{info.yrmlist[0].returnEndAddress}}</view>
+          </view>
+        </view>
+      </view>
+
+    </view> 
+    <!-- 添加返程 -->
+    <view wx:else>
+      <view class="weui-cells weui-cells_after-title">
+        <picker wx:if="{{backBool}}" mode="date" value="{{yrmlist.returnDate}}" bindchange="bindChange('returnDate')">
+          <view class="weui-cell" style="font-size: 14px;">
+            <view class="color-left">返程时间<text class="tip-red">*</text></view>
+              <view class="weui-cell__ft color-right">{{yrmlist.returnDate}}</view>
+          </view>
+        </picker>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <view wx:if="{{backBool}}" class="weui-cell" style="font-size: 14px;">
+          <view class="color-left">返程方式<text class="tip-red">*</text></view>
+          <view class="weui-cell__ft color-right">
+            <input bindinput="bindChange('returnWay')" placeholder="" value="{{yrmlist.returnWay}}" />
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <picker wx:if="{{backBool}}" mode="region" value="{{yrmlist.returnStartPoint}}" bindchange="bindChange('returnStartPoint')">
+            <view class="weui-cell" style="font-size: 14px;">
+              <view class="color-left">返程起点<text class="tip-red">*</text></view>
+                <view class="weui-cell__ft color-right">{{yrmlist.returnStartPoint}}</view>
+            </view>
+          </picker>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <view wx:if="{{backBool}}" class="weui-cell" style="font-size: 14px;">
+          <view class="color-left">返程起点详细地址<text class="tip-red">*</text></view>
+          <view class="weui-cell__ft color-right">
+            <input bindinput="bindChange('returnStartAddress')" placeholder="" value="{{yrmlist.returnStartAddress}}" />
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <picker wx:if="{{backBool}}" mode="region" value="{{yrmlist.returnEndPoint}}" bindchange="bindChange('returnEndPoint')">
+            <view class="weui-cell" style="font-size: 14px;">
+              <view class="color-left">返程终点<text class="tip-red">*</text></view>
+                <view class="weui-cell__ft color-right">{{yrmlist.returnEndPoint}}</view>
+            </view>
+          </picker>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <view  wx:if="{{backBool}}" class="weui-cell" style="font-size: 14px;">
+          <view class="color-left">返程终点详细地址<text class="tip-red">*</text></view>
+          <view class="weui-cell__ft color-right">
+            <input bindinput="bindChange('returnEndAddress')" placeholder="" value="{{yrmlist.returnEndAddress}}" />
+          </view>
+        </view>
+      </view>
+  </view>
+
+
+</view>
+
+  </view>
+</view>
+</template>
+
+<style lang="less">
+.size-14 {
+  font-size: 14px;
+}
+.tip-red {
+  vertical-align:middle; 
+  color: red;
+}
+.position {
+  position: absolute;
+  top: 20rpx;
+  right: 0;
+}
+.weui-cell {
+  padding:10px 0px;
+}
+.detail{
+  padding: 0 30rpx;
+  background: #fff;
+}
+.header {
+  position: relative;
+  width: 100%;
+  height: 180rpx;
+  color:#ffffff;
+  .alltype {
+    padding-left: 10rpx;
+    position: relative;
+    top: 144rpx;
+    left: 40rpx;
+    width: 300rpx;
+    height: 32rpx;
+    line-height: 32rpx;
+    background: rgba(0,0,0,0.50);
+    border-radius: 4rpx;
+    font-size: 20rpx;
+    color: #FFFFFF;
+    .left-icon {
+      position: absolute;
+      top: 10rpx;
+      right: 16rpx;
+      width: 18rpx;
+      height: 18rpx;
+    }
+  }
+  .collection {
+    position: absolute;
+    right: 12rpx;
+    top: 132rpx;
+    text-align: center;
+    .collection-icon {
+      width: 100rpx;
+      height: 100rpx;
+    }
+    .collection-text {
+      position: relative;
+      top: -10rpx;
+      font-size: 10px;
+      color: #3D3D3D;
+    }
+  }
+
+}
+.company {
+  margin-top: 40rpx;
+  .name {
+    position: relative;
+    font-size: 36rpx;
+    font-weight: bold;
+    margin-bottom: 36rpx;
+    .rice-icon {
+      position: relative;
+      top: 6rpx;
+      left: 4rpx;
+      width: 36rpx;
+      height: 36rpx;
+    }
+  }
+  .weui-flex {
+    margin-bottom: 8rpx;
+    vertical-align: middle;
+    line-height: 28rpx;
+    text-align: center;
+    .company-type {
+      background: #FFF3F2;
+      // border: 1px solid #F9E7E5;
+      border-radius: 4rpx;
+      width: 52rpx;
+      font-size: 20rpx;
+      color: #DD918D;
+    }
+    .company-name {
+      margin-left: 16rpx;
+      flex: 1;
+      text-align: left;
+      font-size: 28rpx;
+      color: #3D3D3D;
+    }
+  }
+}
+.details{
+  .display-flex{
+    display: flex;
+    // margin-left: 16rpx;
+    margin-right: 12rpx;
+    padding-top:24rpx;
+    padding-bottom:17rpx;
+    .des-name{
+      width: 115px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #000;
+    }
+    .des{
+      font-size: 14px;
+      color: #333;
+      flex: 1;
+      text-align:left;
+      white-space:wrap;
+      overflow:hidden;
+
+    }
+  }
+}
+.font-small{
+    font-size: 14px;
+  }
+.more-info{
+  .map_container {
+    margin-top: 40rpx;
+    height: 500rpx;
+    width: 100%;
+  }
+  .blod-title{
+    position: relative;
+    .font-title{
+      margin-top:16px;
+      margin-bottom:10px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #000;
+    }
+    .en-font{
+      padding-left: 10px;
+      color: #3d3d3d;
+      font-size: 10px;
+    }
+  }
+  .font-small{
+    font-size: 12px;
+  }
+}
+.color-left{
+  color: #8F8E94;
+  width: 104px;
+  text-align: center;
+  font-size: 14px;
+}
+.color-right{
+  color: #333;
+  width: 100%;
+  text-align: left;
+
+}
+.user-choose {
+  position: relative;
+  margin-top: 30rpx;
+  margin-bottom: 6rpx;
+  height: 40rpx;
+  .user-choose-icon {
+    position: absolute;
+    width: 52rpx;
+    height: 48rpx;
+  }
+  .share-pos {
+    top: 0;
+    right: 124rpx;
+  }
+  .collection-pos {
+    top: 0;
+    right: 20rpx;
+  }
+}
+.back-index {
+  position: fixed;
+  bottom: 40rpx;
+  right: 20rpx;
+  width: 120rpx;
+  height: 120rpx;
+  background: url(http://imgs.afacode.top/back_index.png) no-repeat center center;
+  background-size: 100% auto;
+  border-radius: 50%;
+  z-index: 999;
+}
+</style>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import http from '../../utils/Http'
+
+export default class AboutInfo extends wepy.page {
+  config = {
+    navigationBarTitleText: '个人信息'
+  }
+  data = {
+    linkBool: false,
+    addressBool: false,
+    backBool: false,
+    username: '',
+    getUsername: '',
+    user_phone: '',
+    link: {
+      mobile: '',
+      email: '',
+      linkman: '',
+      linkMobile: '',
+    },
+    address: {
+      nowAddress: '',
+      IDAddress: '',
+      otherAddress: '',
+    },
+    yrmlist: {
+      returnStartPoint: '',
+      returnDate: '',
+      returnStartAddress: '',
+      returnEndPoint: '',
+      returnEndAddress: '',
+      returnWay: '',
+    },
+    info: {},
+  }
+  methods = {
+    linkBool() {
+      this.linkBool = true
+    },
+    addressBool() {
+      this.addressBool = true
+    },
+    backBool() {
+      this.backBool = true
+    },
+    getInput(key, e) {
+      this.info[key] = e.detail.value
+    },
+    getListInput(key, e) {
+      this.info.yrmlist[0][key] = e.detail.value
+    },
+    bindChange(key, e) {
+      this.yrmlist[key] = e.detail.value
+    },
+    bindListChange(key, e) {
+      this.info.yrmlist[0][key] = e.detail.value
+    },
+    getUsername(e) {
+      this.getUsername = e.detail.value
+    },
+    // 添加姓名
+    async addUsername() {
+      // this.username = this.getUsername
+      if (!this.getUsername) {
+        wx.showToast({
+          title: '请填写姓名',
+          icon: 'none',
+          duration: 2000
+        })
+        return
+      }
+      const res = await http.get(__getApi._updateBase, {
+        doing: 0,
+        name: this.getUsername,
+        account: this.user_phone,
+        phone: this.user_phone,
+      });
+      console.log(res)
+      // wx.startPullDownRefresh()
+      if (res.data) {
+        wx.showToast({
+          title: '你的姓名已填写',
+          icon: 'success',
+          duration: 2000
+        })
+        this.getUser()
+      }
+    },
+    // 添加地址
+    async addAddress() {
+      if (this.info.address && this.info.idAddress) {
+        const res = await http.get(__getApi._updateBase, {
+          doing: 1,
+          id: this.info.id,
+          name: this.info.name,
+          account: this.user_phone,
+          address: this.info.address,
+          idAddress: this.info.idAddress,
+          elseAddress: this.info.elseAddress,
+        });
+        if (res) {
+          this.addressBool = false
+          this.getUser() 
+          // wx.startPullDownRefresh()
+        }
+      } else {
+        wx.showToast({
+          title: '缺少必要字段',
+          icon: 'none',
+          duration: 2000
+        })
+      }
+    },
+    // 添加返程信息
+    async addBackInfo() {
+      let data 
+      if (this.info.yrmlist.length > 0) {
+        data = {
+          doing: 1,
+          id: this.info.id,
+          sid: this.info.yrmlist[0].id,
+          account: this.user_phone,
+          returnDate: this.info.yrmlist[0].returnDate_,
+          returnStartPoint: this.info.yrmlist[0].returnStartPoint,
+          returnStartAddress: this.info.yrmlist[0].returnStartAddress,
+          returnEndPoint: this.info.yrmlist[0].returnEndPoint,
+          returnEndAddress: this.info.yrmlist[0].returnEndAddress,
+          returnWay: this.info.yrmlist[0].returnWay,
+        }
+      } else {
+        data = {
+          doing: 0,
+          id: this.info.id,
+          account: this.user_phone,
+          returnDate: this.yrmlist.returnDate,
+          returnStartPoint: this.yrmlist.returnStartPoint,
+          returnStartAddress: this.yrmlist.returnStartAddress,
+          returnEndPoint: this.yrmlist.returnEndPoint,
+          returnEndAddress: this.yrmlist.returnEndAddress,
+          returnWay: this.yrmlist.returnWay,
+        }
+      }
+      console.log(data)
+      if (!data.returnDate || !data.returnStartPoint || !data.returnStartAddress ||  !data.returnEndPoint || !data.returnEndAddress || !data.returnWay) {
+        wx.showToast({
+            title: '缺少必要字段',
+            icon: 'none',
+            duration: 2000
+          })
+          return 
+      }
+      const res = await http.get(__getApi._updateBack, data);
+      if (res) {
+        this.backBool = false
+        this.getUser() 
+        // wx.startPullDownRefresh()
+      }
+      console.log(res)
+    },
+    // 联系方式
+    async addLink() {
+      if (this.info.phone && this.info.eMail && this.info.contentName1 && this.info.contentPhone1 && this.info.contentName2 && this.info.contentPhone2) {
+        const res = await http.get(__getApi._updateBase, {
+          doing: 1,
+          id: this.info.id,
+          name: this.info.name,
+          account: this.user_phone,
+          phone: this.info.phone,
+          eMail: this.info.eMail,
+          contentName1: this.info.contentName1,
+          contentPhone1: this.info.contentPhone1,
+          contentName2: this.info.contentName2,
+          contentPhone2: this.info.contentPhone2,
+        });
+        if (res) {
+          this.linkBool = false
+          this.getUser() 
+          // wx.startPullDownRefresh()
+          // this.onLoad()
+        }
+      } else {
+        wx.showToast({
+          title: '缺少必要字段',
+          icon: 'none',
+          duration: 2000
+        })
+      }
+    },
+    bindDateChange(e) {
+      this.returnInfo.date = e.detail.value
+    },
+    bindStartChange(e) {
+      this.returnInfo.start = e.detail.value
+    },
+    bindEndChange(e) {
+      this.returnInfo.end = e.detail.value
+    },
+    
+  }
+
+  async getUser() {
+    const res = await http.get(__getApi._getUser, {
+      account: this.$parent.globalData.user_phone
+    });
+    this.info = res.data
+    this.$apply()
+  }
+  async onShow() {
+    // let pages = getCurrentPages() //获取页面数组
+    // let curPage = pages[pages.length - 1]  //获取当前页
+    // curPage.onShow() //手动调用生命周期函数
+    if (!this.user_phone) {
+      this.user_phone = this.$parent.globalData.user_phone || ''
+    }
+    // this.getUser() 
+  }
+  async onLoad(options) {
+    this.user_phone = this.$parent.globalData.user_phone || ''
+    this.getUser()
+  }
+}
+</script>
