@@ -175,6 +175,7 @@ export default class mine extends wepy.page {
     }
   }
   onShow() {
+    this.token_access = this.$parent.globalData.token_access;
     this.user_phone = this.$parent.globalData.user_phone;
     if (!this.token_access) {
       wepy.navigateTo({
