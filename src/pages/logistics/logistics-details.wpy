@@ -22,6 +22,10 @@
       <view class="col-des weui-flex__item">{{info.entru.quantity}}{{info.entru.qnunit}}</view>
     </view>
     <view class="weui-flex row">
+      <view class="col-name">车辆数</view>
+      <view class="col-des weui-flex__item">{{info.entru.car_num}}</view>
+    </view>
+    <view class="weui-flex row">
       <view class="col-name">提货时间</view>
       <view class="col-des weui-flex__item">{{pickupDate}}</view>
     </view>
