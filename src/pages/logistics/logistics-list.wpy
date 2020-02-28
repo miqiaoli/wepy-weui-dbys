@@ -30,6 +30,10 @@
         <view class="weui-flex__item">{{single.quantity}}KG</view>
       </view>
       <view class="weui-flex row">
+        <view class="title">车辆数</view>
+        <view class="weui-flex__item">{{single.car_num}}</view>
+      </view>
+      <view class="weui-flex row">
         <view class="title">接单日期</view>
         <view class="weui-flex__item">{{m1.dateFormat(single.createDate.time,'yyyy-MM-dd')}}</view>
       </view>
