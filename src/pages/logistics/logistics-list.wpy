@@ -127,8 +127,12 @@ export default class logisticsList extends wepy.page {
   }
   onLoad(e) {
     this.token_access = this.$parent.globalData.token_access || ""
+    // this.getLogisticsList()
+
   }
   onShow(e) {
+    this.start = 1
+    this.list = []
     this.getLogisticsList()
   }
   onPullDownRefresh() {
