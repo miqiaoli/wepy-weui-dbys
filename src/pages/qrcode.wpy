@@ -1,0 +1,59 @@
+<template>
+  <view class="page__bd">
+    <button type="primary" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">获取手机号码</button>
+    <view>
+      {{encryptedData}}
+    </view>
+    <view>
+      {{errMsg}}
+    </view>
+    <view>
+      二维码的参数
+      {{id}}
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from "wepy";
+export default class qrcode extends wepy.page {
+  config = {
+    navigationBarTitleText: "二维码测试"
+  };
+  data = {
+    encryptedData: '',
+    errMsg: '',
+    id: '',
+  }
+  methods = {
+    getPhoneNumber (e) {
+      console.log(e.detail)
+      this.encryptedData = e.detail.encryptedData
+      this.errMsg = e.detail.errMsg
+    }
+  }
+  gup(name, url) {
+    if (!url) url = location.href;
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regexS = "[\\?&]" + name + "=([^&#]*)";
+    var regex = new RegExp(regexS);
+    var results = regex.exec(url);
+    return results == null ? null : results[1];
+  }
+  onLoad(options) {
+    console.log('开始进入')
+    console.log(options)
+    if (options.q) {
+        let scan_url = decodeURIComponent(options.q);
+        console.log(scan_url)
+        this.id = scan_url
+        // let platform_id = this.gup('id', scan_url);
+        // console.log(platform_id, 'platform_id------')
+        // app.globalData.platId = platform_id;
+    }
+    
+    // const login = await wepy.login();
+    // console.log(login)
+  }
+}
+</script>
