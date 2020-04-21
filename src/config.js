@@ -1,10 +1,9 @@
-const host = 'https://www.otimes.com/front'
-// const host = 'http://dbys.otimes.com/front'
-// const host = 'https://dbys.otimes.info/front'
-// const imgHost = 'https://dbys.otimes.info' // 测试图片地址
-const imgHost = 'https://www.otimes.com'
-const socketHost = 'wss://www.otimes.com' // websocket地址
-// const socketHost = 'wss://dbys.otimes.info'
+// const host = 'https://www.otimes.com/front'
+const host = 'https://www.dbys.top/front'
+const imgHost = 'https://www.dbys.top' // 测试图片地址
+// const imgHost = 'https://www.otimes.com'
+// const socketHost = 'wss://www.otimes.com' // websocket地址
+const socketHost = 'wss://www.dbys.top'
 export const __getApi = {
   host,
   imgHost,
@@ -269,6 +268,13 @@ export const __getApi = {
   // _updateBase: `http://a7fgsa.natappfree.cc/hzdbys/front/orderb/upPersonnel.dbys`, // 修改基本信息
   _updateBase: `${host}/orderb/upPersonnel.dbys`, // 修改基本信息
   _updateBack: `${host}/orderb/upMarchinfo.dbys`, // 返程信息
+
+
+  //扫描二维码确认收票功能
+  _getPhone: `${host}//wxapp/getPhone.dbys`, // 授权获取手机号解密
+  _getfeedback: `${host}/orderb/feedback.dbys`, // 上报手机号和备注信息
+  _getfpInfo: `${host}/orderb/getfpInfo.dbys` // 获取发票信息
+
 }
 
 export default {

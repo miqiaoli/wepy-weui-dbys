@@ -1,37 +1,100 @@
 <template>
   <view class="page__bd">
-    <button type="primary" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">获取手机号码</button>
-    <view>
-      {{encryptedData}}
+    <view class="bg__white" wx:if="{{step1}}">
+      <view class="step1">
+        <view>尊敬的客户： </view>
+        <view>您好！为避免发票邮寄过程中丢失，烦请核对您收到发票，确认无误后扫描下方的二维码，如有问题请及时提交，非常感谢您的支持与配合！</view>
+        <button class="button" type="primary" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">获取手机号码</button>
+      </view>
     </view>
-    <view>
-      {{errMsg}}
-    </view>
-    <view>
-      二维码的参数
-      {{id}}
+    <view class="step2" wx:if="{{step2}}">
+      <view class="lists bg__white">
+        <view class="list">
+          <view class="list__hd">寄票公司：</view>
+          <view class="list__bd">合肥圆融供应链有限公司</view>
+        </view>
+        <view class="list">
+          <view class="list__hd">纳税人识别号：</view>
+          <view class="list__bd">合肥圆融供应链有限公司</view>
+        </view>
+      </view>
+      <view class="lists bg__white">
+        <view class="list">
+          <view class="list__hd">收票公司：</view>
+          <view class="list__bd">合肥圆融供应链有限公司</view>
+        </view>
+        <view class="list">
+          <view class="list__hd">纳税人识别号：</view>
+          <view class="list__bd">合肥圆融供应链有限公司</view>
+        </view>
+        <view class="list">
+          <view class="list__hd">寄票时间：</view>
+          <view class="list__bd">{{details.jptime}}</view>
+        </view>
+        <view class="list">
+          <view class="list__hd">发票代码：</view>
+          <view class="list__bd">{{details.fpdm}}</view>
+        </view>
+        <view class="list">
+          <view class="list__hd">发票号码：</view>
+          <view class="list__bd">{{details.fphm}}</view>
+        </view>
+        <view class="list">
+          <view class="list__hd">发票总计：</view>
+          <view class="list__bd">{{details.tol}}</view>
+        </view>
+        <view class="list">
+          <view class="list__hd">发票含税总额：</view>
+          <view class="list__bd">{{details.zje}}元</view>
+        </view>
+        <view class="section list">
+          <form bindsubmit="bindFormSubmit" style="width:100%">
+            <textarea class="textarea" placeholder="您有任何的意见跟建议都可以在这里提交，感谢您的支持与配合！" name="textarea"/>
+            <button type="primary" form-type="submit"> 提交 </button>
+          </form>
+        </view>
+      </view>
     </view>
   </view>
+
 </template>
 
 <script>
 import wepy from "wepy";
+import http from "../utils/Http";
+import { __getApi } from "../config.js";
+
 export default class qrcode extends wepy.page {
   config = {
-    navigationBarTitleText: "二维码测试"
+    navigationBarTitleText: "扫描二维码确认收票"
   };
   data = {
-    encryptedData: '',
-    errMsg: '',
     id: '',
+    token_access: '',
+    feedback: '',//填写备注,
+    step1: false,
+    step2: false,
+    details: null,
+    feedback: ""
   }
   methods = {
-    getPhoneNumber (e) {
-      console.log(e.detail)
-      this.encryptedData = e.detail.encryptedData
-      this.errMsg = e.detail.errMsg
+    async getPhoneNumber (e) {
+      if (e.detail.encryptedData == null || e.detail.errMsg == null) {
+         wx.showToast({
+            title: "授权失败,请重新授权！",
+            icon: 'none',
+         })
+         return false
+      }
+      const res = await http.get(__getApi._getPhone, {
+        token_access: this.token_access,
+　　　　　encryptedData: e.detail.encryptedData,
+　　　　　iv: e.detail.iv
+      })
+      this.getfeedback()
     }
   }
+  //分割字符串
   gup(name, url) {
     if (!url) url = location.href;
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -40,20 +103,105 @@ export default class qrcode extends wepy.page {
     var results = regex.exec(url);
     return results == null ? null : results[1];
   }
-  onLoad(options) {
+  //确认签收
+  getfeedback(){
+      this.step1 = false
+      this.step2 = true
+      const res = http.get(__getApi._getfeedback, {
+        id: this.id,
+        phone: '',
+        feedback: this.feedback
+      })
+      this.getfpInfo()
+      this.$apply()
+  }
+  //获取发票详情
+  async getfpInfo() {
+    const res = await http.get(__getApi._getfpInfo, {
+      id: this.id,
+    })
+    this.details = res.data
+    this.$apply()
+  }
+
+  bindFormSubmit(e) {
+    this.feedback = e.detail.value
+    const res = http.get(__getApi._getfeedback, {
+      id: this.id,
+      phone: '',
+      feedback: this.feedback
+    })
+    wx.showModal({
+      showCancel: false,
+      title: '提示',
+      content: "感谢您的反馈",
+      success(res) {
+        if (res.confirm) {
+          wx.switchTab({
+            url: './index'
+          })
+        }
+      }
+    })
+  }
+
+  async onLoad(options) {
     console.log('开始进入')
     console.log(options)
+
     if (options.q) {
+        // let scan_url = 'https://www.otimes.com/qrcode?id=1010';
         let scan_url = decodeURIComponent(options.q);
         console.log(scan_url)
-        this.id = scan_url
-        // let platform_id = this.gup('id', scan_url);
-        // console.log(platform_id, 'platform_id------')
-        // app.globalData.platId = platform_id;
+        this.id = this.gup('id', scan_url);
     }
     
-    // const login = await wepy.login();
-    // console.log(login)
-  }
+    this.token_access = this.$parent.globalData.token_access
+      const login = await wepy.login();
+      const res = await http.get(__getApi._getPrivacyToken, {
+        token_access: this.token_access,
+        code: login.code
+      })
+      this.token_access = res.data.token_access
+      if(res.data.phone) {   //如果这个微信号已经授权手机号，则无需再次授权
+        this.getfeedback()
+      } else {
+        this.step1 = true
+      }
+      this.$apply()
+  } 
 }
 </script>
+<style scoped>
+.page__bd {
+  min-height: 100vh;
+}
+.step1 {
+  padding: 30rpx;
+}
+.button {
+  margin-top: 200rpx;
+}
+.bg__white {
+  box-shadow: 0px 5px 10px rgba(0,0,0,15%);
+}
+.lists {
+  margin-bottom: 30rpx;
+  padding: 10rpx 0;
+}
+.list{
+  display: flex;
+  margin: 20rpx;
+}
+.list__hd {
+  color: #999;
+}
+.textarea {
+  width: 100%;
+  border: 1px solid #999;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  box-sizing: border-box;
+}
+</style>
