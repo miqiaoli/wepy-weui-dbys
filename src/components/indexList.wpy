@@ -63,7 +63,8 @@
             <view class="price-cont font-red">
               <!-- ￥ -->
               <!-- <view class='price'>洽谈</view>元/kg -->
-              <view class='price'>{{item.order_price}}</view>元/kg
+              <view class='price' wx:if="{{item.client_name === '第八元素环境技术有限公司' || item.client_name === '合肥圆融供应链管理有限公司' }}">洽谈</view>
+              <view class='price' wx:else>{{item.order_price}}元/kg</view>
             </view>
           </view>
         </navigator>

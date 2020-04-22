@@ -138,12 +138,12 @@
   </view>
 
   <view class="module-box page__bd_spacing">
-    <view class="user-phone weui-flex" bindtap='makePhoneCall' data-phone='400-888-9383'>
+    <view class="user-phone weui-flex" bindtap='makePhoneCall' data-phone='0755-83227395'>
       <view class="weui-cell__hd">
         <image class="icon" src="/images/icon/icon-phone_HL.png"></image>
       </view>
       <view class="weui-cell__bd bold">咨询客服</view>
-      <view class="weui-cell__ft weui-cell__ft_in-access">400-888-9383</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access">0755-83227395</view>
     </view>
     <button class="button" type="primary" @tap='checkReport'>查看检测报告</button>
   </view>

@@ -5,7 +5,7 @@
       <view class="success">下单成功</view>
       <view class="tips">请联系客户经理确认打款账户</view>
       <view class="tips">或联系客服</view>
-      <view class="tips phone">(400-888-9383)</view>
+      <view class="tips phone">(0755-83227395)</view>
       <view class="card-list weui-flex">
         <view class="point"></view>
         <view class="name">公司名称：</view>
@@ -146,7 +146,7 @@ export default class buyPrompt extends wepy.page {
   methods = {
     callPhone() {
       wx.makePhoneCall({
-        phoneNumber: '400-888-9383'
+        phoneNumber: '0755-83227395'
       })
     }
   }

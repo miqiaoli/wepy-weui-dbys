@@ -8,7 +8,8 @@
         <view class="weui-media-box__title">{{itemData.goods_name}} {{itemData.att2}}/{{itemData.att1}}</view>
       </view>
       <view class="weui-flex__item text-right">
-        <view class="font-red">¥ <text class="font-50">{{itemData.order_price}}</text> 元/kg</view>
+        <view class="font-red"  wx:if="{{itemData.client_name === '第八元素环境技术有限公司' || itemData.client_name === '合肥圆融供应链管理有限公司' }}">¥ <text class="font-50">洽谈</text> </view>
+        <view class="font-red" wx:else>¥ <text class="font-50">{{itemData.order_price}}</text> 元/kg</view>
       </view>
     </view>
   </view>
@@ -373,12 +374,12 @@
   对不起！该商品目前仅支持在PC端进行交易！
 </view> -->
   <view class="foot-btn bg__white">
-    <view class="user-phone weui-flex" bindtap='makePhoneCall' data-phone='400-888-9383'>
+    <view class="user-phone weui-flex" bindtap='makePhoneCall' data-phone='0755-83227395'>
       <view class="weui-cell__hd">
         <image class="icon" src="/images/icon/icon-phone_HL.png" />
       </view>
       <view class="weui-cell__bd bold">咨询客服</view>
-      <view class="weui-cell__ft weui-cell__ft_in-access text-right">400-888-9383</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access text-right">0755-83227395</view>
     </view>
     <view class="logo" plain @tap="goHome">
       <image class="logo-icon" mode="widthFix" src="/images/otimes-logo.png" />
@@ -496,7 +497,7 @@ export default class ProductDetails extends wepy.page {
   onShareAppMessage(res) {
     return {
       // title: '第八元素，现货挂牌 ' + this.itemData.goods_name + '/' + this.itemData.att2 + '/' + this.itemData.att1 + '/￥' + this.itemData.order_price + '元/kg/' + this.itemData.address,
-      title: '第八元素，现货挂牌 ' + this.itemData.goods_name + '/' + this.itemData.att2 + '/' + this.itemData.att1 + '/' + this.itemData.address,
+      title: '第八元素，现货挂牌 ' + this.itemData.goods_name + '/' + this.itemData.att2 + '/' + this.itemData.att1 + '/' + this.itemData.address + '/' + ((this.itemData.client_name === "第八元素环境技术有限公司" || this.itemData.client_name === "合肥圆融供应链管理有限公司") ? '洽谈' : this.itemData.order_price + '元/kg/'),
       path: '/pages/product/details?id=' + this.id,
       success: function(res) {
         // 转发成功

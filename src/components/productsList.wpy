@@ -27,7 +27,8 @@
                 </view>
               </view>
               <view class="red bold">¥
-                <text class="price bold">{{item.order_price}}</text>元/kg
+                <text class="price bold"  wx:if="{{item.client_name === '第八元素环境技术有限公司' || item.client_name === '合肥圆融供应链管理有限公司' }}">洽谈</text>
+                <text class="price bold" wx:else>{{item.order_price}}元/kg</text>
               </view>
             </view>
             <view class="decs">{{item.address}}</view>
@@ -53,7 +54,8 @@
                 </view>
               </view>
               <view class="red bold">¥
-                <text class="price bold">{{item.order_price}}</text>元/kg
+                <text class="price bold"  wx:if="{{item.client_name === '第八元素环境技术有限公司' || item.client_name === '合肥圆融供应链管理有限公司' }}">洽谈</text>
+                <text class="price bold" wx:else>{{item.order_price}}元/kg</text>
               </view>
             </view>
             <view class="decs">{{item.address}}</view>

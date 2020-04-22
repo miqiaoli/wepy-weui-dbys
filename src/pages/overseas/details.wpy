@@ -123,7 +123,7 @@ export default class overseasSingleDetails extends wepy.page {
   methods = {
     makePhoneCall(e) {
       wx.makePhoneCall({
-        phoneNumber: "400-888-9383"
+        phoneNumber: "0755-83227395"
       });
     },
     getName(e) {

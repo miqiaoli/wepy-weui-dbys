@@ -11,47 +11,49 @@
       <view class="lists bg__white">
         <view class="list">
           <view class="list__hd">寄票公司：</view>
-          <view class="list__bd">合肥圆融供应链有限公司</view>
+          <view class="list__bd">{{details[0].ztqy}}</view>
         </view>
         <view class="list">
           <view class="list__hd">纳税人识别号：</view>
-          <view class="list__bd">合肥圆融供应链有限公司</view>
+          <view class="list__bd">{{details[0].ztsbh}}</view>
         </view>
       </view>
-      <view class="lists bg__white">
-        <view class="list">
-          <view class="list__hd">收票公司：</view>
-          <view class="list__bd">合肥圆融供应链有限公司</view>
-        </view>
-        <view class="list">
-          <view class="list__hd">纳税人识别号：</view>
-          <view class="list__bd">合肥圆融供应链有限公司</view>
-        </view>
-        <view class="list">
-          <view class="list__hd">寄票时间：</view>
-          <view class="list__bd">{{details.jptime}}</view>
-        </view>
-        <view class="list">
-          <view class="list__hd">发票代码：</view>
-          <view class="list__bd">{{details.fpdm}}</view>
-        </view>
-        <view class="list">
-          <view class="list__hd">发票号码：</view>
-          <view class="list__bd">{{details.fphm}}</view>
-        </view>
-        <view class="list">
-          <view class="list__hd">发票总计：</view>
-          <view class="list__bd">{{details.tol}}</view>
-        </view>
-        <view class="list">
-          <view class="list__hd">发票含税总额：</view>
-          <view class="list__bd">{{details.zje}}元</view>
-        </view>
-        <view class="section list">
-          <form bindsubmit="bindFormSubmit" style="width:100%">
-            <textarea class="textarea" placeholder="您有任何的意见跟建议都可以在这里提交，感谢您的支持与配合！" name="textarea"/>
-            <button type="primary" form-type="submit"> 提交 </button>
-          </form>
+      <view wx:for="{{details}}" wx:for-item="item" wx:key="index">
+        <view class="lists bg__white">
+          <view class="list">
+            <view class="list__hd">收票公司：</view>
+            <view class="list__bd">{{item.khqy}}</view>
+          </view>
+          <view class="list">
+            <view class="list__hd">纳税人识别号：</view>
+            <view class="list__bd">{{item.khsbh}}</view>
+          </view>
+          <view class="list">
+            <view class="list__hd">寄票时间：</view>
+            <view class="list__bd">{{item.jptime}}</view>
+          </view>
+          <view class="list">
+            <view class="list__hd">发票代码：</view>
+            <view class="list__bd">{{item.fpdm}}</view>
+          </view>
+          <view class="list">
+            <view class="list__hd">发票号码：</view>
+            <view class="list__bd">{{item.fphm}}</view>
+          </view>
+          <view class="list">
+            <view class="list__hd">发票总计：</view>
+            <view class="list__bd">{{item.tol}}张</view>
+          </view>
+          <view class="list">
+            <view class="list__hd">发票含税总额：</view>
+            <view class="list__bd">{{item.zje}}元</view>
+          </view>
+          <view class="section list">
+            <form bindsubmit="bindFormSubmit" style="width:100%">
+              <textarea class="textarea" placeholder="您有任何的意见跟建议都可以在这里提交，感谢您的支持与配合！" name="textarea"/>
+              <button type="primary" form-type="submit"> 提交 </button>
+            </form>
+          </view>
         </view>
       </view>
     </view>
@@ -71,6 +73,7 @@ export default class qrcode extends wepy.page {
   data = {
     id: '',
     token_access: '',
+    phone: '',
     feedback: '',//填写备注,
     step1: false,
     step2: false,
@@ -91,6 +94,7 @@ export default class qrcode extends wepy.page {
 　　　　　encryptedData: e.detail.encryptedData,
 　　　　　iv: e.detail.iv
       })
+      this.phone = res.data
       this.getfeedback()
     }
   }
@@ -104,14 +108,29 @@ export default class qrcode extends wepy.page {
     return results == null ? null : results[1];
   }
   //确认签收
-  getfeedback(){
+  async getfeedback(){
       this.step1 = false
       this.step2 = true
-      const res = http.get(__getApi._getfeedback, {
-        id: this.id,
-        phone: '',
-        feedback: this.feedback
+      const res = await wepy.request({
+        url: __getApi._getreceive,
+        data: {
+          id: this.id,
+          phone: this.phone
+        }
       })
+      if(res.data.meta.success) {
+        wepy.showToast({
+          title: "感谢您的签收",
+          icon: "success",
+          duration: 1000
+        })
+      } else {
+        wepy.showToast({
+          title: res.data.meta.message,
+          icon: "none",
+          duration: 1000
+        })
+      }
       this.getfpInfo()
       this.$apply()
   }
@@ -120,41 +139,46 @@ export default class qrcode extends wepy.page {
     const res = await http.get(__getApi._getfpInfo, {
       id: this.id,
     })
-    this.details = res.data
+    this.details = res.data.data
     this.$apply()
   }
 
-  bindFormSubmit(e) {
-    this.feedback = e.detail.value
-    const res = http.get(__getApi._getfeedback, {
-      id: this.id,
-      phone: '',
-      feedback: this.feedback
-    })
-    wx.showModal({
-      showCancel: false,
-      title: '提示',
-      content: "感谢您的反馈",
-      success(res) {
-        if (res.confirm) {
-          wx.switchTab({
-            url: './index'
-          })
-        }
+  async bindFormSubmit(e) {
+    this.feedback = e.detail.value.textarea
+    const res = await wepy.request({
+      url: __getApi._getfeedback,
+      data: {
+        id: this.id,
+        phone: this.phone,
+        feedback: this.feedback
       }
     })
+    if (res.statusCode == 200) {
+      wx.showModal({
+        showCancel: false,
+        title: '提示',
+        content: res.data.meta.success ? "感谢您的反馈!" : res.data.meta.message + ",感谢您的反馈!",
+        success(res) {
+          if (res.confirm) {
+            wx.switchTab({
+              url: './index'
+            })
+          }
+        }
+      })
+    }
   }
 
   async onLoad(options) {
     console.log('开始进入')
     console.log(options)
 
-    if (options.q) {
-        // let scan_url = 'https://www.otimes.com/qrcode?id=1010';
-        let scan_url = decodeURIComponent(options.q);
+    // if (options.q) {
+        let scan_url = 'https://www.otimes.com/qrcode?id=4466';
+        // let scan_url = decodeURIComponent(options.q);
         console.log(scan_url)
         this.id = this.gup('id', scan_url);
-    }
+    // }
     
     this.token_access = this.$parent.globalData.token_access
       const login = await wepy.login();
@@ -163,11 +187,12 @@ export default class qrcode extends wepy.page {
         code: login.code
       })
       this.token_access = res.data.token_access
-      if(res.data.phone) {   //如果这个微信号已经授权手机号，则无需再次授权
-        this.getfeedback()
-      } else {
+      // if(res.data.phone) {   //如果这个微信号已经授权手机号，则无需再次授权
+      //   this.phone = res.data.phone
+      //   this.getfeedback()
+      // } else {
         this.step1 = true
-      }
+      // }
       this.$apply()
   } 
 }
@@ -178,15 +203,16 @@ export default class qrcode extends wepy.page {
 }
 .step1 {
   padding: 30rpx;
+  margin: 25% 0;
 }
 .button {
   margin-top: 200rpx;
 }
 .bg__white {
-  box-shadow: 0px 5px 10px rgba(0,0,0,15%);
+  box-shadow: 0px 5px 10px rgba(0,0,0,15%),0 -15px 10px -10px rgba(0,0,0,15%);
 }
 .lists {
-  margin-bottom: 30rpx;
+  margin-bottom: 10rpx;
   padding: 10rpx 0;
 }
 .list{
