@@ -173,12 +173,12 @@ export default class qrcode extends wepy.page {
     console.log('开始进入')
     console.log(options)
 
-    // if (options.q) {
-        let scan_url = 'https://www.otimes.com/qrcode?id=4466';
-        // let scan_url = decodeURIComponent(options.q);
+    if (options.q) {
+        // let scan_url = 'https://www.otimes.com/qrcode?id=4466';
+        let scan_url = decodeURIComponent(options.q);
         console.log(scan_url)
         this.id = this.gup('id', scan_url);
-    // }
+    }
     
     this.token_access = this.$parent.globalData.token_access
       const login = await wepy.login();
@@ -187,12 +187,12 @@ export default class qrcode extends wepy.page {
         code: login.code
       })
       this.token_access = res.data.token_access
-      // if(res.data.phone) {   //如果这个微信号已经授权手机号，则无需再次授权
-      //   this.phone = res.data.phone
-      //   this.getfeedback()
-      // } else {
+      if(res.data.phone) {   //如果这个微信号已经授权手机号，则无需再次授权
+        this.phone = res.data.phone
+        this.getfeedback()
+      } else {
         this.step1 = true
-      // }
+      }
       this.$apply()
   } 
 }
