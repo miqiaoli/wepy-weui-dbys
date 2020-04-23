@@ -48,6 +48,9 @@
             <view class="list__hd">发票含税总额：</view>
             <view class="list__bd">{{item.zje}}元</view>
           </view>
+        </view>
+      </view>
+      <view class="lists bg__white">
           <view class="section list">
             <form bindsubmit="bindFormSubmit" style="width:100%">
               <textarea class="textarea" placeholder="您有任何的意见跟建议都可以在这里提交，感谢您的支持与配合！" name="textarea"/>
@@ -55,7 +58,6 @@
             </form>
           </view>
         </view>
-      </view>
     </view>
   </view>
 
@@ -174,7 +176,7 @@ export default class qrcode extends wepy.page {
     console.log(options)
 
     if (options.q) {
-        // let scan_url = 'https://www.otimes.com/qrcode?id=4466';
+        // let scan_url = 'https://www.otimes.com/qrcode?id=4439';
         let scan_url = decodeURIComponent(options.q);
         console.log(scan_url)
         this.id = this.gup('id', scan_url);
@@ -209,7 +211,7 @@ export default class qrcode extends wepy.page {
   margin-top: 200rpx;
 }
 .bg__white {
-  box-shadow: 0px 5px 10px rgba(0,0,0,15%),0 -15px 10px -10px rgba(0,0,0,15%);
+  box-shadow: 0px 5px 10px rgba(0,0,0,10%),0 -15px 10px -10px rgba(0,0,0,5%);
 }
 .lists {
   margin-bottom: 10rpx;
@@ -218,9 +220,16 @@ export default class qrcode extends wepy.page {
 .list{
   display: flex;
   margin: 20rpx;
+  align-items: center;
 }
 .list__hd {
+  min-width: 160rpx;
   color: #999;
+  text-align: center;
+}
+.list__bd {
+  flex: 1;
+  word-break:break-all;  /* 强制换行 */
 }
 .textarea {
   width: 100%;
