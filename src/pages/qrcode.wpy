@@ -97,7 +97,14 @@ export default class qrcode extends wepy.page {
 　　　　　iv: e.detail.iv
       })
       this.phone = res.data
-      this.getfeedback()
+      if(this.phone) {
+        this.getfeedback()
+      } else {
+         wx.showToast({
+            title: "授权失败,请重新授权！",
+            icon: 'none',
+         })
+      }
     }
   }
   //分割字符串
