@@ -51,10 +51,11 @@ export default class todolist extends wepy.page {
   };
   data = {
     day: new Date(),
+    nextDay: new Date(),
     index: 0,
     now: '',
     next: '',
-    username: ['', '宓巧丽', '李发全', '周方东', '吴方涛', '胡雪'],
+    username: ['', '宓巧丽', '李发全', '吴方涛', '胡雪', '谭志斌', '王爽', '巩诗情'],
     allLog: [],
   }
   getNextValue(e) {
@@ -76,7 +77,7 @@ export default class todolist extends wepy.page {
         today = today + `${val.username}: ${val.today};\n`
         tomorrow = tomorrow + `${val.username}: ${val.tomorrow};\n`
       })
-      let data = `${title}明日安排:\n ${tomorrow}\n今日开发：\n${today}`
+      let data = `${title}\n ${this.nextDay}工作安排:\n ${tomorrow}\n今日开发：\n${today}`
       wx.setClipboardData({
         data: data,
         success (res) {
@@ -110,7 +111,26 @@ export default class todolist extends wepy.page {
         tomorrow: this.next,
         userID: Number(this.index) + 1
       }
+      if (!data.username) {
+        wx.showToast({
+          title: '请选择提交人',
+          icon: 'none',
+          duration: 2000
+        })
+        return 
+      }
+      if (!data.today) {
+        wx.showToast({
+          title: '请输入今日开发内容',
+          icon: 'none',
+          duration: 2000
+        })
+        return 
+      }
       const self = this
+      self.next = ''
+      self.now = ''
+      self.$apply()
       wx.request({
         url: 'http://api.afacode.top/uplog',
         method: 'POST',
@@ -120,9 +140,6 @@ export default class todolist extends wepy.page {
         },
         success: (res) => {
           if (res.data.data) {
-            self.next = ''
-            self.now = ''
-            self.$apply()
             wx.showModal({
               title: '提示',
               showCancel: false,
@@ -140,6 +157,7 @@ export default class todolist extends wepy.page {
   }
   onLoad(e) {
     this.day = new Date().getFullYear() + '年' + (new Date().getMonth() + 1) + '月' + new Date().getDate() + '日' 
+    this.nextDay = (new Date().getMonth() + 1) + '月' + (Number(new Date().getDate()) + 1) + '日' 
   }
 }
 </script>
