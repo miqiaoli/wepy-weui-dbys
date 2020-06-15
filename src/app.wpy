@@ -15,6 +15,7 @@ export default class extends wepy.app {
 
       'pages/order/goods-list',
       'pages/order/goods-details',
+      'pages/order/note-detail',
       'pages/order/note-details',
       'pages/order/list',
       'pages/order/note-list',

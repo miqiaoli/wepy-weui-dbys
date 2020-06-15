@@ -1,0 +1,154 @@
+<template>
+  <view class="note-details page">
+    <view class="tips">{{list.length}}个快递已发出</view>
+    <view class="list">
+      <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id">
+        <view class="weui-cell__ft blue">发票号：{{single.pbillno}}</view>
+        <!-- <view class="{{getmore[0] ? 'product' : ''}} "> -->
+        <view class="product">
+          <view class="item" wx:for="{{single.pdetails}}" wx:for-item="item" wx:key="id">
+            <view class="name">{{item.flname}}</view>
+            <view class="weui-flex">
+              <view class="weui-flex__item">签单数量：{{item.fqty}}kg</view>
+              <view class="weui-flex__item">金额（含税）：{{item.fallamountfor}}元</view>
+            </view>
+          </view>
+        </view>
+        <!-- <view @tap="getmore" data-index='0' wx:if="{{getmore[0]}}" class="tapmore">点击查看更多票单详情</view> -->
+        <!-- <view class="{{getmore[1] ? 'passport' : ''}} "> -->
+        <view class="passport" wx:if="{{single.kdinfo.mailno}}">
+          <view class="sf weui-flex">
+            <view class="sf-name">顺丰快递</view>
+            <view class="">快递单号:{{single.kdinfo.mailno}}</view>
+          </view>
+          <view class="sf weui-flex" wx:for="{{single.kdinfo.Route}}" wx:for-item="info" wx:key="id">
+            <view class="weui-flex__item">{{info.accept_time}}</view>
+            <view class="weui-flex__item">[{{info.accept_address}}]{{info.remark}}</view>
+          </view>
+        </view>
+        <view wx:else class="weui-loadmore weui-loadmore_line"><text class="weui-loadmore__tips">暂无快递信息</text></view>
+        <!-- <view @tap="getmore" data-index='1' wx:if="{{getmore[1]}}" class="tapmore">点击查看更多票单详情</view> -->
+      </view>
+    </view>
+
+    <backIndex></backIndex>
+    <view wx:if="{{list.length <= 0 }}" class="weui-loadmore weui-loadmore_line">
+      <text class="weui-loadmore__tips">暂无数据</text>
+    </view>
+    <!-- <view wx:else class="weui-loadmore weui-loadmore_line">
+      <text class="weui-loadmore__tips">已全部加载</text>
+    </view> -->
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import backIndex from '../../components/backIndex'
+import {
+  __getApi
+} from "../../config.js";
+import http from '../../utils/Http';
+
+export default class NoteDetail extends wepy.page {
+  components = {
+  }
+  config = {
+    navigationBarTitleText: '快递信息',
+  }
+  data = {
+    index: 0,
+    token_access: '',
+    fbillno: '',
+    list: [],
+    count: 0,
+    getmore: [true, true]
+  }
+
+  methods = {
+    getmore(e) {
+      const index = e.currentTarget.dataset.index
+      this.getmore[index] = false
+    }
+  }
+  onLoad(e) {
+    this.token_access = this.$parent.globalData.token_access || ''
+    this.fbillno = '03YSD00011848'
+    // this.fbillno = e.fbillno
+    this.$apply()
+    this.getNoteDetails()
+  }
+  async getNoteDetails() {
+    const res = await http.get(__getApi._getInvoiceDetails, {
+      fbillno: this.fbillno,
+      token_access: this.token_access
+    })
+    if (res.false) return
+    if (res.meta.success) {
+      this.list = res.data.details
+      this.$apply()
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.sf {
+  margin: 30rpx;
+}
+.sf-name {
+  margin-right: 20rpx;
+  font-weight: bold;
+}
+.tapmore {
+  padding: 20rpx 0;
+  text-align: center;
+}
+.product {
+  // height: 400rpx;
+  // overflow: hidden;
+}
+.passport {
+  border-top: 1px solid #EDEDED;
+  // height: 300px;
+  // overflow: hidden;
+}
+.blue {
+  color: #0E91FF;
+}
+.red {
+  color: #F52020;
+}
+.margin-10 {
+  margin: 20rpx 0;
+}
+.padding-8 {
+  padding: 16rpx 0;
+}
+.note-details {
+  background: #EDEDED;
+  .tips {
+    padding: 0 40rpx;
+    height: 56rpx;
+    color: #FFFFFF;
+    line-height: 56rpx;
+    background: #F58E55;
+  }
+  .list {
+    font-size: 14px;
+    font-weight: 500;
+    .single {
+      padding-right: 30rpx;
+      background: #ffffff;
+      .item {
+        padding: 0rpx 30rpx 20rpx 30rpx;
+        .name {
+          margin-bottom: 10rpx;
+          font-weight: 500;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+
+</style>

@@ -1,5 +1,5 @@
-const host = 'https://www.otimes.com/front'
-// const host = 'https://www.dbys.top/front'
+// const host = 'https://www.otimes.com/front'
+const host = 'https://www.dbys.top/front'
 // const imgHost = 'https://www.dbys.top' // 测试图片地址
 const imgHost = 'https://www.otimes.com'
 const socketHost = 'wss://www.otimes.com' // websocket地址
@@ -195,7 +195,8 @@ export const __getApi = {
   _getOrderView: `${host}/orderb/checkht.dbys`, // 合同查看
   _getOrderDownload: `${host}/orderb/downloadht.dbys`, // 合同下载
   _getInvoiceList: `${host}/orderb/erpReceivList.dbys`, // 票据互联票据列表
-  _getInvoiceDetails: `${host}/orderb/erpWLlist.dbys`,  // 票据互联物流信息
+  _getInvoiceDetails: `${host}/orderb/erpWLlist_.dbys`,  // 票据互联物流信息
+  // _getInvoiceDetails: `${host}/orderb/erpWLlist.dbys`,  // 票据互联物流信息
   _getGoodsList: `${host}/customerLogistics/findEntruListByFOrderNo.dbys`,
   _getSignEntruList: `${host}/customerLogistics/custSignForByEntruId.dbys`, // 确认签收接口
   _getOrderPositionDetails: `${host}/customerLogistics/findLogisticsByEntruId.dbys`, // 根据委托单ID获取物流定位信息接口
