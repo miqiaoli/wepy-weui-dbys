@@ -1,6 +1,7 @@
 <template>
   <view wx:if="{{hasUnionID == 0}}" class="login page login-bg">
     <button class="btn" type="primary" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">授权登录</button>
+    <button class="btn" type="default" @tap="toCancel">取消</button>
   </view>
 </template>
 
@@ -44,6 +45,16 @@ export default class getUserInfo extends wepy.page {
         }, 1000)
       }
     }
+  }
+  toCancel() {
+    wepy.switchTab({
+      url: "/pages/index",
+      success: function(e) {
+        var page = getCurrentPages().pop();
+        if (page == undefined || page == null) return;
+        page.onLoad();
+      }
+    });
   }
   async getCodeei() {
     const login = await wepy.login();
