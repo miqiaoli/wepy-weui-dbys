@@ -7,8 +7,10 @@
             <view class="weui-flex__item">{{single.commissionNum}}</view>
             <view class="weui-cell__ft">{{single.createDate}}</view>
           </view>
-          <view class="name">{{single.productName.product_name}}：<text class="red">{{single.quantity}}kg</text></view>
-          <view class="text">{{single.receiveAddress}}</view>
+          <block wx:for="{{single.productName}}" wx:for-item="s" wx:key="id">
+            <view class="name">{{s.product_name}}：<text class="red">{{s.quantity}}kg</text></view>
+            <view class="text">{{single.receiveAddress}}</view>
+          </block>
           <view class="name">
             <text style="color: #23E095;" wx:if="{{single.status === 1 }}">待揽收</text>
             <text style="color: #F58E56;" wx:elif="{{single.status === 2 }}">待发货</text>
@@ -48,7 +50,6 @@
 
 <script>
 import wepy from 'wepy'
-import backIndex from '../../components/backIndex'
 import {
   __getApi
 } from "../../config.js";
@@ -56,7 +57,6 @@ import http from '../../utils/Http';
 
 export default class goodsList extends wepy.page {
   components = {
-    backIndex,
   }
   config = {
     navigationBarTitleText: '货物信息',
@@ -75,16 +75,6 @@ export default class goodsList extends wepy.page {
   }
 
   methods = {
-    // toGoodsDetails(e) {
-    //   let entru_id = e.currentTarget.dataset.entru_id
-    //   let index = e.currentTarget.dataset.index
-    //   let commission_num = this.list[index].commissionNum
-    //   let product_name = this.list[index].productName.product_name
-    //   let quantity = this.list[index].quantity
-    //   wx.navigateTo({
-    //     url: `./goods-details?entru_id=${entru_id}&commission_num=${commission_num}&product_name=${product_name}&quantity=${quantity}`
-    //   })
-    // },
     toGoodsDetails(e) {
       let entru_id = e.currentTarget.dataset.entru_id
       this.getGoodsDetails(entru_id)
@@ -92,8 +82,7 @@ export default class goodsList extends wepy.page {
   }
   onLoad(e) {
     this.token_access = this.$parent.globalData.token_access || ''
-    // this.orderNo = '2019.04.151050'
-    // this.orderNo = 'XD032019112001173'
+    // this.orderNo = 'XD032020060405082'
     this.orderNo = e.orderId
     this.getGoodsList()
     this.$apply()
@@ -114,7 +103,6 @@ export default class goodsList extends wepy.page {
       page_id: this.start,
       page_limit: this.limit,
       orderNo: this.orderNo,
-      token_access: this.token_access
     }
     const res = await http.get(__getApi._getGoodsList, params)
     if (res.false) return
