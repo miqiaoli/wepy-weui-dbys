@@ -8,6 +8,9 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/group/index',
+      'pages/group/list',
+
       'pages/index',
       'pages/qrcode',
       'pages/about/info',

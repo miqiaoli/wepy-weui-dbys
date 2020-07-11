@@ -1,0 +1,98 @@
+<template>
+<view class="page">
+  <view class="search weui-flex">
+    <view class="weui-search-bar__form" style="line-height: 60rpx; background: #FFFFFF; border-radius: 60rpx; border:1px solid #EFEFEF;">
+      <view class="weui-search-bar__box">
+        <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
+        <input type="text" class="weui-search-bar__input" style="height: 60rpx;line-height: 60rpx; text-align: left;" placeholder="有序石墨烯热管理应用" bindconfirm bindinput="searchText" value="{{this.keyword}}" />
+      </view>
+    </view>
+  </view>
+  <view class="list">
+    <view class="weui-flex single">
+      <view class="left-img"></view>
+      <view class="weui-flex__item right-flex">
+        <view class="title">有序石墨烯结构【热管理辛国庆】</view>
+        <view class="weui-flex" style="align-items: center;">
+          <view class="weui-flex__item" style="color:#999999;font-size:12px;font-weight:400;">¥299
+            <text style="color:#FF0000;font-size:16px;font-weight:400;">¥99</text></view>
+          <view class="" style="color: #666666;font-size:12px;font-weight:400;">2020-08-23</view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-flex single">
+      <view class="left-img"></view>
+      <view class="weui-flex__item right-flex">
+        <view class="title">有序石墨烯结构有序石墨烯结构有序石墨烯结构有序石墨烯结构有序石墨烯结构【热管理辛国庆】</view>
+        <view class="weui-flex" style="align-items: center;">
+          <view class="weui-flex__item" style="color:#999999;font-size:12px;font-weight:400;">¥299
+            <text style="color:#FF0000;font-size:16px;font-weight:400;">¥99</text></view>
+          <view class="" style="color: #666666;font-size:12px;font-weight:400;">2020-08-23</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import http from '../../utils/Http'
+
+export default class GroupList extends wepy.page {
+  config = {
+    navigationBarTitleText: '列表',
+  };
+  data = {
+    
+  };
+  methods = {
+    scroll(e) {
+      console.log(e)
+    },
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.page {
+  min-height: 100vh;
+  background: white;
+}
+.search {
+  margin: 0px 16px;
+  height: 30px;
+}
+.list {
+  margin: 10px 15px;
+  .single {
+    margin-top: 10px;
+    .left-img {
+      width:80px;
+      height:80px;
+      background: #000;
+    }
+    .right-flex {
+      margin-left: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: space-between;
+      align-content: space-between;
+    }
+    .title {
+      overflow : hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      font-size:14px;
+      font-weight: 500;
+      color: #302424;
+    }
+  }
+}
+</style>

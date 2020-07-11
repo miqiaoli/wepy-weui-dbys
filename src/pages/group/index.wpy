@@ -1,0 +1,257 @@
+<template>
+<view class="page">
+  <view class="search weui-flex">
+    <view class="weui-search-bar__form" style="line-height: 60rpx; background: #FFFFFF; border-radius: 60rpx; border:1px solid #EFEFEF;">
+      <view class="weui-search-bar__box">
+        <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
+        <input type="text" class="weui-search-bar__input" style="height: 60rpx;line-height: 60rpx; text-align: left;" placeholder="有序石墨烯热管理应用" bindconfirm bindinput="searchText" value="{{this.keyword}}" />
+      </view>
+    </view>
+    <view class="" style="margin-left: 10px;margin-top: 2px;width:25px; height:25px; background:rgba(153,153,153,1);"></view>
+  </view>
+  <view class="banner">
+    <swiper indicator-dots="{{indicatorDots}}"
+      autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+      <block wx:for="{{background}}" wx:key="*this">
+        <swiper-item>
+          <view class="swiper-item {{item}}">{{item}}</view>
+        </swiper-item>
+      </block>
+    </swiper>
+  </view>  
+  <view class="all-course">
+    <view class="top weui-flex" style="justify-content: space-between;">
+      <view class="nav">所有课程</view>
+      <view class="more">更多</view>
+    </view>
+    <view class="single-course">
+      <view class="img"></view>
+      <view class="sub-title">有序石墨烯结构在热管理方面的应用【热管有序石墨烯结构在热管理方面的应用【热管理有序石墨烯结构在热管理方面的应用【热</view>
+      <view class="weui-flex" style="justify-content: space-between;align-items:center; height:16px;">
+        <view class="date">2020-04-09 <text style="padding-left:10px;">856次观看</text></view>
+        <view class="price">
+          <text style="font-size:8px;color:#999999;">¥299</text>
+          <text style="padding-left:4px; font-size:12px;color:#FF0000;">¥99</text>
+        </view>
+      </view>
+    </view>    
+  </view>
+  <view class="line"></view>
+  <view class="product-recommended">
+    <view class="top weui-flex" style="justify-content: space-between;">
+      <view class="nav">产品推荐</view>
+      <view class="more">更多</view>
+    </view>
+    <view class="weui-flex" style="justify-content: space-between;">
+      <view class="single-product">
+        <view class="img"></view>
+        <view class="sub-title">有序石墨烯结构有序石墨烯结构在热</view>
+      </view>
+      <view class="single-product">
+        <view class="img"></view>
+        <view class="sub-title">有序石墨烯结构在热管理方……</view>
+      </view>
+      <view class="single-product">
+        <view class="img"></view>
+        <view class="sub-title">有序石墨烯结构在热管理方……</view>
+      </view>
+    </view>
+  </view>
+  <view class="line"></view>
+  <view class="hot-news">
+    <view class="top weui-flex" style="justify-content: space-between; margin-bottom: 0;">
+      <view class="nav">热门文章</view>
+      <view class="more">更多</view>
+    </view>
+    <view class="single-news weui-flex" style="justify-content: space-between;">
+      <view class="weui-flex__item left-flex">
+        <view class="sub-title">有序石墨烯结构在热管理方面的应用热管理方面的应用【热管理辛国庆】</view>
+        <view class="" style="font-size:12px;font-weight:500;color:#333333;">牛人名称 
+          <text style="margin-left:10px;color:#666666;">2020-04-09</text>
+        </view>
+      </view>
+      <view class="img"></view>
+    </view>
+    <view class="single-news weui-flex" style="justify-content: space-between;">
+      <view class="weui-flex__item left-flex">
+        <view class="sub-title">有序石墨烯结构在热管理方面的应用热管理方面的应用【热管理辛国庆】</view>
+        <view class="" style="font-size:12px;font-weight:500;color:#333333;">牛人名称 
+          <text style="margin-left:10px;color:#666666;">2020-04-09</text>
+        </view>
+      </view>
+      <view class="img"></view>
+    </view>
+  </view>
+  <view class="" style="padding: 20px 10px 34px 10px;">
+    <view class="" style="height:110px;background:red;"></view>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import http from '../../utils/Http'
+
+export default class GroupIndex extends wepy.page {
+  config = {
+    navigationBarTitleText: '牛人圈',
+  };
+  data = {
+    background: ['demo-text-1', 'demo-text-2', 'demo-text-3'],
+    indicatorDots: false,
+    vertical: false,
+    autoplay: true,
+    interval: 2000,
+    duration: 500,
+    toView: 'green',
+  };
+  methods = {
+    scroll(e) {
+      console.log(e)
+    },
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.hot-news {
+  margin: 0 16px;
+  .left-flex {
+    display: flex; flex-direction: column;align-items: stretch;justify-content: space-between;align-content: space-between;
+  }
+  .single-news {
+    border-bottom: 1px solid red; // #EFEFEF
+    padding: 10px 0;
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  .sub-title {
+    overflow : hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    color: #333333;
+    font-size:14px;
+    font-weight:500;
+  }
+  .img {
+    margin-left: 10px;
+    height: 80px;
+    width: 80px;
+    background: #000;
+  }
+}
+.top {
+  margin: 8px 0;
+  .nav {
+    font-size:18px;
+    font-weight: 500;
+    color: #333333;
+  }
+  .more {
+    color: #302424;
+    font-weight: 400;
+    font-size:16px;
+  }
+}
+.line {
+  height: 5px;
+  background: #000;
+}
+.product-recommended {
+  margin: 0 16px;
+  .single-product {
+    margin: 0 3px;
+    .img {
+      height: 110px;
+      // width:100%;
+      width: 110px;
+      background: #666666;
+    }
+    .sub-title {
+      overflow : hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      color: #333333;
+      font-size:14px;
+      font-weight:500;
+    }
+  }
+  
+}
+.all-course {
+  margin: 0 16px;
+  .single-course {
+    margin: 10px 0;
+    .img {
+      height: 122px;
+      width: 100%;
+      background: #ffeeff;
+    }
+    .sub-title {
+      overflow : hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      color: #333333;
+      font-size:14px;
+      font-weight:500;
+    }
+    .date {
+      font-size:8px;
+      font-weight:400;
+      color: #666666;
+    }
+  }
+}
+
+
+.page {
+  min-height: 100vh;
+  background: white;
+}
+.search {
+  margin: 0px 16px;
+  padding-top: 10px;
+  height: 30px;
+}
+.banner {
+  margin: 8px 16px;
+  background: #999;
+  height: 180px;
+}
+
+.sub-title {
+  font-size:14px;
+  font-weight:500;
+  color: #333333;
+  overflow: hidden;
+  text-overflow: none;
+}
+// .live-online {
+
+// }
+
+.scroll-view_H{
+  white-space: nowrap;
+}
+.scroll-view-item{
+  height: 300rpx;
+}
+.scroll-view-item_H{
+  display: inline-block;
+  width: 100%;
+  height: 300rpx;
+}
+</style>
+
+
