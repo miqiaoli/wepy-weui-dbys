@@ -22,7 +22,7 @@
   <view class="all-course">
     <view class="top weui-flex" style="justify-content: space-between;">
       <view class="nav">所有课程</view>
-      <view class="more">更多</view>
+      <view @tap="toList" class="more">更多</view>
     </view>
     <view class="single-course">
       <view class="img"></view>
@@ -109,6 +109,11 @@ export default class GroupIndex extends wepy.page {
     toView: 'green',
   };
   methods = {
+    toList() {
+      wx.navigateTo({
+        url: `./list`
+      })
+    },
     scroll(e) {
       console.log(e)
     },

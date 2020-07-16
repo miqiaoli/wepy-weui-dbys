@@ -8,6 +8,11 @@
       </view>
     </view>
   </view>
+  <view class="tabs weui-flex" style="justify-content: space-between;">
+    <block wx:for="{{tabs}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+      <view @tap="chgTab" data-index="{{index}}" class="tab" style="{{tabIndex == index ? 'color:#0078DD' : ''}}">{{item}}</view>
+    </block>
+  </view>
   <view class="list">
     <view class="weui-flex single">
       <view class="left-img"></view>
@@ -47,12 +52,17 @@ export default class GroupList extends wepy.page {
     navigationBarTitleText: '列表',
   };
   data = {
-    
+    tabs: ['所有课程', '产品推荐', '热门文章', '全部文章'],
+    tabIndex: 0,
   };
   methods = {
     scroll(e) {
       console.log(e)
     },
+    chgTab(e) {
+      const index = e.currentTarget.dataset.index
+      this.tabIndex = index
+    }
   }
 }
 </script>
@@ -65,6 +75,15 @@ export default class GroupList extends wepy.page {
 .search {
   margin: 0px 16px;
   height: 30px;
+}
+.tabs {
+  margin: 10px 15px;
+  .tab {
+    color: #333333;
+    // color: #0078DD;
+    font-size:16px;
+    font-weight: 400;
+  }
 }
 .list {
   margin: 10px 15px;
