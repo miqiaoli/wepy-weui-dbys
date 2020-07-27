@@ -9,7 +9,9 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/group/index',
+      'pages/group/news',
       'pages/group/list',
+      'pages/group/video',
 
       'pages/index',
       'pages/qrcode',

@@ -12,9 +12,9 @@
   <view class="banner">
     <swiper indicator-dots="{{indicatorDots}}"
       autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
-      <block wx:for="{{background}}" wx:key="*this">
+      <block wx:for="{{swipers}}" wx:key="*this">
         <swiper-item>
-          <view class="swiper-item {{item}}">{{item}}</view>
+          <image src="{{imgHost+item.image_url}}" style="height:100%;width:100%;" />
         </swiper-item>
       </block>
     </swiper>
@@ -22,11 +22,11 @@
   <view class="all-course">
     <view class="top weui-flex" style="justify-content: space-between;">
       <view class="nav">所有课程</view>
-      <view @tap="toList" class="more">更多</view>
+      <view @tap="toList" data-tag="0" class="more">更多</view>
     </view>
-    <view class="single-course">
+    <view @tap="toPlay" class="single-course" wx:for="{{replayList}}" wx:key="index" wx:for-index="index" wx:for-item="play">
       <view class="img"></view>
-      <view class="sub-title">有序石墨烯结构在热管理方面的应用【热管有序石墨烯结构在热管理方面的应用【热管理有序石墨烯结构在热管理方面的应用【热</view>
+      <view class="sub-title">{{play.webinar_subject}}</view>
       <view class="weui-flex" style="justify-content: space-between;align-items:center; height:16px;">
         <view class="date">2020-04-09 <text style="padding-left:10px;">856次观看</text></view>
         <view class="price">
@@ -40,7 +40,7 @@
   <view class="product-recommended">
     <view class="top weui-flex" style="justify-content: space-between;">
       <view class="nav">产品推荐</view>
-      <view class="more">更多</view>
+      <view @tap="toList" data-tag="1" class="more">更多</view>
     </view>
     <view class="weui-flex" style="justify-content: space-between;">
       <view class="single-product">
@@ -61,25 +61,18 @@
   <view class="hot-news">
     <view class="top weui-flex" style="justify-content: space-between; margin-bottom: 0;">
       <view class="nav">热门文章</view>
-      <view class="more">更多</view>
+      <view @tap="toList" data-tag="2" class="more">更多</view>
     </view>
-    <view class="single-news weui-flex" style="justify-content: space-between;">
+    <view @tap="toNewsDls" data-id="{{news.id}}" wx:for="{{hotNewsList}}" wx:key="index" wx:for-index="index" wx:for-item="news" class="single-news weui-flex" style="justify-content: space-between;">
       <view class="weui-flex__item left-flex">
-        <view class="sub-title">有序石墨烯结构在热管理方面的应用热管理方面的应用【热管理辛国庆】</view>
-        <view class="" style="font-size:12px;font-weight:500;color:#333333;">牛人名称 
-          <text style="margin-left:10px;color:#666666;">2020-04-09</text>
+        <view class="sub-title">{{news.title}}</view>
+        <view class="" style="font-size:12px;font-weight:500;color:#333333;">{{news.author || '未知'}} 
+          <text style="margin-left:10px;color:#666666;">{{news.date}}</text>
         </view>
       </view>
-      <view class="img"></view>
-    </view>
-    <view class="single-news weui-flex" style="justify-content: space-between;">
-      <view class="weui-flex__item left-flex">
-        <view class="sub-title">有序石墨烯结构在热管理方面的应用热管理方面的应用【热管理辛国庆】</view>
-        <view class="" style="font-size:12px;font-weight:500;color:#333333;">牛人名称 
-          <text style="margin-left:10px;color:#666666;">2020-04-09</text>
-        </view>
+      <view class="img">
+        <image style="height:100%;width:100%;" src="{{news.typeImg ? imgHost+news.typeImg : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFit" />
       </view>
-      <view class="img"></view>
     </view>
   </view>
   <view class="" style="padding: 20px 10px 34px 10px;">
@@ -107,16 +100,67 @@ export default class GroupIndex extends wepy.page {
     interval: 2000,
     duration: 500,
     toView: 'green',
+    imgHost: 'https://www.otimes.com',
+    replayList: [],
+    hotNewsList: [],
+    swipers: [],
   };
   methods = {
-    toList() {
+    toList(e) {
+      const index = e.currentTarget.dataset.tag
       wx.navigateTo({
-        url: `./list`
+        url: `./list?index=${index}`
       })
     },
-    scroll(e) {
-      console.log(e)
+    toNewsDls(e) {
+      const id = e.currentTarget.dataset.id
+      wx.navigateTo({
+        url: `./news?id=${id}`
+      })
     },
+    toPlay() {
+      wx.navigateTo({
+        url: './video'
+      })
+    },
+  }
+  onLoad() {
+    this.getHotNews()
+    this.getADList()
+    this.replayList()
+  }
+  async getHotNews() {
+    const res = await http.get(__getApi._getHotNews, {
+      type_id: 1,
+      page_id: 1,
+      page_limit: 4,
+    })
+    if (res.meta.success) {
+      this.hotNewsList = res.data.list
+    }
+  }
+  async getADList() {
+    const res = await http.get(__getApi._getADList, {
+      ad_Model_id: 11
+    })
+    if (res.false) return
+    this.swipers = res.data.reverse()
+    this.$apply()
+  }
+  async replayList() {
+    const res = await http.post(__getApi._getReplayList, {
+      auth_type: 1,
+      account: 'v54441313',
+      password: 'dbys@123456',
+      limit: 2,
+      // app_key: '9dc4743d69387ce9fcb2db52380f6b8e',
+      // secret_key: '2a09e819b8de5aab6b671d7c1efe0224AppSecretKey',
+      // signed_at: Date.now(),
+    })
+    if (res.code == '200') {
+      this.replayList = res.data.lists
+      this.$apply()
+    }
   }
 }
 </script>
@@ -149,7 +193,7 @@ export default class GroupIndex extends wepy.page {
     margin-left: 10px;
     height: 80px;
     width: 80px;
-    background: #000;
+    // background: #000;
   }
 }
 .top {
@@ -231,7 +275,7 @@ export default class GroupIndex extends wepy.page {
 }
 .banner {
   margin: 8px 16px;
-  background: #999;
+  // background: #999;
   height: 180px;
 }
 

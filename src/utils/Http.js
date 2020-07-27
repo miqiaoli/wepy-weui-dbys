@@ -12,6 +12,9 @@ export default class http {
             header: header
         }
         const res = await wepy.request(param);
+        if (url.includes("https://e.vhall.com/api")) {
+            return res.data
+        }
         if (this.isSuccess(res)) {
             return res.data;
         } else {

@@ -276,7 +276,19 @@ export const __getApi = {
   _getPhone: `${host}//wxapp/getPhone.dbys`, // 授权获取手机号解密
   _getfeedback: `${host}/orderb/feedback.dbys`, // 上报手机号和备注信息
   _getreceive: `${host}/orderb/receive.dbys`, // 上报手机号和备注信息
-  _getfpInfo: `${host}/orderb/getfpInfo.dbys` // 获取发票信息
+  _getfpInfo: `${host}/orderb/getfpInfo.dbys`, // 获取发票信息
+
+  // 播放
+  // 获取回访列表
+  _getReplayList: `https://e.vhall.com/api/vhallapi/v2/record/list`,
+  // 获取直播活动列表 历史数据
+  _getOnlineList: `https://e.vhall.com/api/vhallapi/v2/webinar/list`,
+  // 获取直播详情
+
+  // 获取热门文章
+  _getHotNews: `${host}/news/title.dbys`,
+  // 文章详情
+  _getNewsDls: `${host}/cpc/articleDetail.dbys`,
 
 }
 
