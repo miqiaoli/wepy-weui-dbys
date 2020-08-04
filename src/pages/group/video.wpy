@@ -9,11 +9,13 @@ export default class Video extends wepy.page {
     navigationBarTitleText: "视屏播放"
   };
   data = {
-    link: 'https://e.vhall.com/webinar/record/2259306'
+    link: ''
   }
   onLoad(e) {
+    this.link = 'https://wx.otimes.com/watch/1855273'
+    // this.link = e.link ? e.link : 'https://wx.otimes.com/watch/1855273'
     // this.link = e.link ? e.link : 'https://mp.weixin.qq.com/s/Qq23aIV323DK9G3NnqXiwQ'
-    // this.$apply()
+    this.$apply()
   }
 }
 </script>

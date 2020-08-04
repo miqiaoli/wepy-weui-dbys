@@ -1,50 +1,61 @@
 <template>
 <view class="page__bd bg__white">
-  <view class="weui-article">
-    <view class="weui-article__h1">{{productDetails.article_title.title}}</view>
-    <view class="weui-media-box__info">
-      <view class="weui-media-box__info__meta">作者：{{productDetails.article_title.author}}</view>
-      <view class="weui-media-box__info__meta">{{productDetails.article_title.date}}</view>
-    </view>
-    <view class="weui-article__section">
-      <view class="weui-article__p">
-        <rich-parse content="{{ textContent }}" type="html" />
+  <view hidden="{{showCommit}}">
+    <view class="weui-article">
+      <view class="weui-article__h1">{{productDetails.article_title.title}}</view>
+      <view class="weui-media-box__info">
+        <view class="weui-media-box__info__meta">作者：{{productDetails.article_title.author}}</view>
+        <view class="weui-media-box__info__meta">{{productDetails.article_title.date}}</view>
       </view>
-    </view>
-    <view class="author">
-      <image class="avatar" src="/images/collection_icon_HL.png" />
-      <view class="username">牛人牛</view>
-    </view>
-  </view>
-  <view class="hot-news">
-    <view class="top weui-flex" style="justify-content: space-between; margin-bottom: 0;">
-      <view class="nav">热门文章</view>
-      <view @tap="toList" data-tag="2" class="more">更多</view>
-    </view>
-    <view @tap="toNewsDls" data-id="{{news.id}}" wx:for="{{hotNewsList}}" wx:key="id" wx:for-index="i" wx:for-item="news" class="single-news weui-flex" style="justify-content: space-between;">
-      <view class="weui-flex__item left-flex">
-        <view class="sub-title">{{news.title}}</view>
-        <view class="" style="font-size:12px;font-weight:500;color:#333333;">{{news.author || '未知'}} 
-          <text style="margin-left:10px;color:#666666;">{{news.date}}</text>
+      <view class="weui-article__section">
+        <view class="weui-article__p">
+          <rich-parse content="{{ textContent }}" type="html" />
         </view>
       </view>
-      <view class="img">
-        <image style="height:100%;width:100%;" src="{{news.typeImg ? imgHost+news.typeImg : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFit" />
+      <view class="author">
+        <image class="avatar" src="/images/collection_icon_HL.png" />
+        <view class="username">牛人牛</view>
+      </view>
+    </view>
+    <view class="hot-news">
+      <view class="top weui-flex" style="justify-content: space-between; margin-bottom: 0;">
+        <view class="nav">热门文章</view>
+        <view @tap="toList" data-tag="2" class="more">更多</view>
+      </view>
+      <view @tap="toNewsDls" data-id="{{news.id}}" wx:for="{{hotNewsList}}" wx:key="id" wx:for-index="i" wx:for-item="news" class="single-news weui-flex" style="justify-content: space-between;">
+        <view class="weui-flex__item left-flex">
+          <view class="sub-title">{{news.title}}</view>
+          <view class="" style="font-size:12px;font-weight:500;color:#333333;">{{news.author || '未知'}} 
+            <text style="margin-left:10px;color:#666666;">{{news.date}}</text>
+          </view>
+        </view>
+        <view class="img">
+          <image style="height:100%;width:100%;" src="{{news.typeImg ? imgHost+news.typeImg : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFit" />
+        </view>
+      </view>
+    </view>
+    <view class="comment">
+      <view class="weui-flex" style="justify-content: space-between; margin-bottom: 10px;font-size:12px;">
+        <view class="" style="color:#999;">精选评论</view>
+        <view @tap="showComment" class="" style="padding-right:8px;color:#333;">评论</view>
+      </view>
+      <view class="weui-flex" style="margin-bottom:20px;">
+        <image style="height:32px;width:32px;min-width:32px;" src="/images/collection_icon_HL.png" />
+        <view class="comment-text">我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论</view>
       </view>
     </view>
   </view>
-  <view class="comment">
-    <view class="weui-flex" style="justify-content: space-between; margin-bottom: 10px;font-size:12px;">
-      <view class="" style="color:#999;">精选评论</view>
-      <view @tap="showComment" class="" style="padding-right:8px;color:#333;">评论</view>
-    </view>
-    <view class="weui-flex" style="margin-bottom:20px;">
-      <image style="height:32px;width:32px;min-width:32px;" src="/images/collection_icon_HL.png" />
-      <view class="comment-text">我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论</view>
-    </view>
-  </view>
-  <view class="" style="margin: 0 10px;border:1px solid #979797;height:174px;">
-    <textarea  style="padding:10px;" placeholder="自动变高" />
+  <view hidden="{{!showCommit}}" class="commit">
+    <textarea
+      type="text" 
+      value="{{commit}}"
+      bindinput="commitValue"
+      bindblur='hideCommit'
+      bindconfirm="send"
+      confirm-type="send"
+      auto-focus style="padding:10px;width:96%;" placeholder="评论" />
+
+    <button type="primary" style="width: 180px;" hover-class="other-button-hover" bindtap="send">评论</button>
   </view>
 </view>
 </template>
@@ -74,10 +85,54 @@ export default class NewsDls extends wepy.page {
     commons: [],
     imgHost: 'https://www.otimes.com',
     hotNewsList: [],
+    showCommit: false,
+    commit: '',
   }
   methods = {
     showComment(e) {
-
+      this.showCommit = true
+    },
+    commitValue(e) {
+      this.commit = e.detail.value
+    },
+    // 评论
+    async send(e) {
+      // let val = e.detail.value
+      let val = this.commit
+      let self = this
+      if (!val) {
+        wx.showToast({
+          title: '评论不能为空',
+          icon: 'none',
+          duration: 2000
+        })
+        return
+      } else {
+        // 请求接口,返回提示
+        const res = await http.post(__getApi._toCommit, {
+          contentId:  this.id,
+          content: val,
+          name: '阿发',
+        })
+        if (res.meta.success) {
+          this.commit = ''
+          wx.showToast({
+            title: res.data,
+            icon: 'none',
+            duration: 2000
+          })
+          setTimeout(() => {
+            self.showCommit = false
+          }, 2000);
+        }
+      }
+    },
+    hideCommit(e) {
+      let self = this
+      setTimeout(() => {
+        self.showCommit = false
+        self.$apply()
+      }, 500)
     },
     toList(e) {
       const index = e.currentTarget.dataset.tag
@@ -137,6 +192,16 @@ export default class NewsDls extends wepy.page {
 </script>
 
 <style lang="less" scoped>
+.commit {
+  border:1px solid #979797;
+  background: white;
+  height:174px;
+  width:96%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
 .weui-index image {
     width: 100rpx;
     height: 100rpx;

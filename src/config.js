@@ -289,6 +289,8 @@ export const __getApi = {
   _getHotNews: `${host}/news/title.dbys`,
   // 文章详情
   _getNewsDls: `${host}/cpc/articleDetail.dbys`,
+  // 文章评论
+  _toCommit: `${host}/cpc/addCommon.dbys`,
 
 }
 

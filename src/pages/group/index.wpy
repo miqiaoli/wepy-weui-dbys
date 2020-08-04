@@ -25,13 +25,15 @@
       <view @tap="toList" data-tag="0" class="more">更多</view>
     </view>
     <view @tap="toPlay" class="single-course" wx:for="{{replayList}}" wx:key="index" wx:for-index="index" wx:for-item="play">
-      <view class="img"></view>
+      <view class="img">
+        <image style="width:100%;height:100%;" src="{{play.thumb}}" mode="scaleToFill" />
+      </view>
       <view class="sub-title">{{play.webinar_subject}}</view>
       <view class="weui-flex" style="justify-content: space-between;align-items:center; height:16px;">
-        <view class="date">2020-04-09 <text style="padding-left:10px;">856次观看</text></view>
+        <view class="date">{{play.start_time}} <text style="padding-left:10px;">{{play.pv}}次观看</text></view>
         <view class="price">
-          <text style="font-size:8px;color:#999999;">¥299</text>
-          <text style="padding-left:4px; font-size:12px;color:#FF0000;">¥99</text>
+          <text style="font-size:8px;color:#999999;"></text>
+          <text style="padding-left:4px; font-size:12px;color:#FF0000;"></text>
         </view>
       </view>
     </view>    
@@ -148,7 +150,8 @@ export default class GroupIndex extends wepy.page {
     this.$apply()
   }
   async replayList() {
-    const res = await http.post(__getApi._getReplayList, {
+    const res = await http.post(__getApi._getOnlineList, {
+    // const res = await http.post(__getApi._getReplayList, {
       auth_type: 1,
       account: 'v54441313',
       password: 'dbys@123456',
@@ -158,6 +161,13 @@ export default class GroupIndex extends wepy.page {
       // signed_at: Date.now(),
     })
     if (res.code == '200') {
+      res.data.lists.forEach(element => {
+        if (element.thumb) {
+          element.thumb = 'https:' + element.thumb.split(':')[1]
+        } else {
+          element.thumb = 'https://cnstatic01.e.vhall.com/upload/webinars/img_url/d3/e0/d3e08304a3a9949a59937a6ba47b1891.jpg'
+        }
+      });
       this.replayList = res.data.lists
       this.$apply()
     }
