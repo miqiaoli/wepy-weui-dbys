@@ -10,8 +10,8 @@ export default class extends wepy.app {
     pages: [
       'pages/index',
       'pages/group/index',
-      'pages/group/news',
       'pages/group/list',
+      'pages/group/news',
       'pages/group/video',
 
       'pages/qrcode',

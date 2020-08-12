@@ -1,4 +1,5 @@
 const host = 'https://www.otimes.com/front'
+// const host = 'http://afa.blxf.vip/front'
 // const host = 'https://www.dbys.top/front'
 // const imgHost = 'https://www.dbys.top' // 测试图片地址
 const imgHost = 'https://www.otimes.com'
@@ -291,6 +292,13 @@ export const __getApi = {
   _getNewsDls: `${host}/cpc/articleDetail.dbys`,
   // 文章评论
   _toCommit: `${host}/cpc/addCommon.dbys`,
+  // 产品推荐
+  _getNewsProductList: `${host}/cpc/product/list.dbys`,
+  // 自有视频
+  _getSelfVideoList: `${host}/cpc/vedio/list.dbys`,
+  // 视频详情
+  _getSelfVideoDetails: `${host}/cpc/vedio/detail.dbys`,
+  // 
 
 }
 

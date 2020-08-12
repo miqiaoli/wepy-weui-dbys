@@ -37,7 +37,7 @@ export default class Video extends wepy.page {
     src: '',
     mute: true,
     title: '',
-    autoplay: false,
+    autoplay: true,
     playGesture: true,
     vslideGesture: true,
     content: '',

@@ -4,7 +4,13 @@
     <view class="weui-search-bar__form" style="line-height: 60rpx; background: #FFFFFF; border-radius: 60rpx; border:1px solid #EFEFEF;">
       <view class="weui-search-bar__box">
         <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
-        <input type="text" class="weui-search-bar__input" style="height: 60rpx;line-height: 60rpx; text-align: left;" placeholder="有序石墨烯热管理应用" bindconfirm bindinput="searchText" value="{{this.keyword}}" />
+        <input 
+          type="text" 
+          class="weui-search-bar__input" 
+          style="height: 60rpx;line-height: 60rpx; text-align: left;" 
+          placeholder="有序石墨烯热管理应用"  
+          bindconfirm="search"
+          confirm-type="search" value="{{this.keyword}}" />
       </view>
     </view>
   </view>
@@ -13,19 +19,37 @@
       <view @tap="chgTab" data-index="{{index}}" class="tab" style="{{tabIndex == index ? 'color:#0078DD' : ''}}">{{item}}</view>
     </block>
   </view>
-  <view class="list">
-    <view class="weui-flex single">
-      <view class="weui-flex__item right-flex">
-        <view class="title">有序石墨烯结构【热管理辛国庆】</view>
-        <view class="weui-flex" style="align-items: center;">
-          <view class="weui-flex__item" style="color: #666666;font-size:12px;font-weight:400;">2020-08-23</view>
-          <view class="" style="color:#999999;font-size:12px;font-weight:400;">¥299
-            <text style="color:#FF0000;font-size:16px;font-weight:400;">¥99</text></view>
+  <view class="list" wx:if="{{tabIndex == 0}}">
+    <view class="weui-flex" style="flex-wrap: wrap;justify-content:space-between;">
+      <block wx:for="{{list}}" wx:key="id" wx:for-index="index" wx:for-item="item">
+        <view  @tap="toPlay" data-id="{{item.id}}" class="item">
+          <image class="product-img" src="{{item.coverImg}}" />
+          <view class="sub-title">{{item.title}}</view>
         </view>
-      </view>
-      <view class="left-img"></view>
+      </block>
     </view>
   </view>
+  <view class="list" wx:else>
+    <block wx:for="{{list}}" wx:key="id" wx:for-index="index" wx:for-item="item">
+      <view @tap="toNewsDls" data-id="{{item.id}}" class="weui-flex single">
+        <view class="weui-flex__item right-flex">
+          <view class="title">{{item.title}}</view>
+          <view class="weui-flex" style="align-items: center;">
+            <view class="weui-flex__item" style="color: #666666;font-size:12px;font-weight:400;">{{item.date}}</view>
+            <!-- <view class="" style="color:#999999;font-size:12px;font-weight:400;">¥299
+              <text style="color:#FF0000;font-size:16px;font-weight:400;">¥99</text></view> -->
+          </view>
+        </view>
+        <view class="left-img">
+        <image style="height:100%;width:100%;" src="{{item.typeImg ? imgHost+item.typeImg : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFit" />
+        </view>
+      </view>
+    </block>
+  </view>
+  <view
+        style="text-align: center;"
+        wx:if="{{list.length >= count && list.length > 0}}"
+      >- 我也是有底线的！ -</view>
 </view>
 </template>
 
@@ -41,59 +65,102 @@ export default class GroupList extends wepy.page {
     navigationBarTitleText: '列表',
   };
   data = {
+    imgHost: 'https://www.otimes.com',
     tabs: ['所有课程', '产品推荐', '热门文章', '全部文章'],
     tabIndex: 0,
-    hotNewsList: [],
     replayIndex: 1,
+    page: 1,
     page_limit: 15,
-    replayList: [],
+    keyword: '',
+    list: [],
+    count: 0,
   };
   methods = {
-    scroll(e) {
-      console.log(e)
+    search(e){
+      this.page = 1
+      this.list = []
+      this.keyword = e.detail.value
+      this.getList()
     },
     chgTab(e) {
       const index = e.currentTarget.dataset.index
       this.tabIndex = index
-    }
+      this.count = 0
+      this.page = 1
+      this.list = []
+      this.getList()
+    },
+    toNewsDls(e) {
+      const id = e.currentTarget.dataset.id
+      wx.navigateTo({
+        url: `./news?id=${id}`
+      })
+    },
+    toPlay(e) {
+      const id = e.currentTarget.dataset.id
+      wx.navigateTo({
+        url: `./video?id=${id}`
+      })
+    },
   }
   onLoad(e) {
     this.tabIndex = e.index ? e.index : 0
-    if (this.tabIndex == 0) {
-      this.replayList()
-    } else if (this.tabIndex == 1) {
-
-    } else if (this.tabIndex == 2){
-      this.getHotNews()
+    this.$apply()
+    this.getList()
+  }
+  async getList() {
+    // 产品
+    if (this.tabIndex == 1) {
+      const res = await http.post(__getApi._getNewsProductList, {
+        id: 96,
+        page_id: 1,
+        page_limit: this.page_limit,
+        keyword: this.keyword,
+      })
+      if (res.meta.success) {
+        this.count = res.data.count
+        this.list = [...this.list, ...res.data.list]; 
+        this.$apply()
+      }
+      // 课程
+    } else if (this.tabIndex == 0) {
+      const res = await http.post(__getApi._getSelfVideoList, {
+        page_id: 1,
+        page_limit: 10,
+        keyword: this.keyword,
+      })
+      if (res.meta.success) {
+        this.list = [...this.list, ...res.data.list];
+        this.count = res.data.count
+        this.$apply()
+      }
     } else {
-      
+      // 文章
+      const res = await http.get(__getApi._getHotNews, {
+        type_id: 7,
+        page_id: 1,
+        page_limit: this.page_limit,
+        keyword: this.keyword,
+      })
+      if (res.meta.success) {
+        this.list = [...this.list, ...res.data.list];
+        this.count = res.data.count
+        this.$apply()
+      }
     }
   }
-  async replayList() {
-    const res = await http.post(__getApi._getReplayList, {
-      auth_type: 1,
-      account: 'v54441313',
-      password: 'dbys@123456',
-      limit: this.page_limit,
-      // app_key: '9dc4743d69387ce9fcb2db52380f6b8e',
-      // secret_key: '2a09e819b8de5aab6b671d7c1efe0224AppSecretKey',
-      // signed_at: Date.now(),
-    })
-    if (res.code == '200') {
-      this.replayList = res.data.lists
-      this.$apply()
+  onReachBottom() {
+    if (this.count > this.list.length) {
+      this.page++;
+      this.getList();
     }
   }
-  async getHotNews() {
-    const res = await http.get(__getApi._getHotNews, {
-      type_id: 1,
-      page_id: 1,
-      page_limit: 10,
-    })
-    if (res.meta.success) {
-      this.hotNewsList = res.data.list
-    }
+  onPullDownRefresh() {
+    this.page = 1;
+    this.list = [];
+    this.getList();
   }
+
 }
 </script>
 
@@ -101,6 +168,23 @@ export default class GroupList extends wepy.page {
 .page {
   min-height: 100vh;
   background: white;
+}
+.item { 
+  width: 48%;
+}
+.product-img {
+  height: 99px;
+  width: 100%;
+}
+.sub-title {
+  overflow : hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  color: #333333;
+  font-size:14px;
+  font-weight:500;
 }
 .search {
   margin: 0px 16px;

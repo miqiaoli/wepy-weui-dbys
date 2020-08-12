@@ -22,15 +22,15 @@
   <view class="all-course">
     <view class="top weui-flex" style="justify-content: space-between;">
       <view class="nav">所有课程</view>
-      <view @tap="toList" data-tag="0" class="more">更多</view>
+      <view @tap="toList" data-tag="0" class="more">更多>></view>
     </view>
-    <view @tap="toPlay" class="single-course" wx:for="{{replayList}}" wx:key="index" wx:for-index="index" wx:for-item="play">
+    <view @tap="toPlay" data-id="{{play.id}}" class="single-course" wx:for="{{replayList}}" wx:key="index" wx:for-index="index" wx:for-item="play">
       <view class="img">
-        <image style="width:100%;height:100%;" src="{{play.thumb}}" mode="scaleToFill" />
+        <image style="width:100%;height:100%;" src="{{play.coverImg}}" mode="scaleToFill" />
       </view>
-      <view class="sub-title">{{play.webinar_subject}}</view>
+      <view class="sub-title">{{play.title}}</view>
       <view class="weui-flex" style="justify-content: space-between;align-items:center; height:16px;">
-        <view class="date">{{play.start_time}} <text style="padding-left:10px;">{{play.pv}}次观看</text></view>
+        <view class="date">{{play.time}} <text style="padding-left:10px;">{{play.views}}次观看</text></view>
         <view class="price">
           <text style="font-size:8px;color:#999999;"></text>
           <text style="padding-left:4px; font-size:12px;color:#FF0000;"></text>
@@ -42,20 +42,14 @@
   <view class="product-recommended">
     <view class="top weui-flex" style="justify-content: space-between;">
       <view class="nav">产品推荐</view>
-      <view @tap="toList" data-tag="1" class="more">更多</view>
+      <view @tap="toList" data-tag="1" class="more">更多>></view>
     </view>
     <view class="weui-flex" style="justify-content: space-between;">
-      <view class="single-product">
-        <view class="img"></view>
-        <view class="sub-title">有序石墨烯结构有序石墨烯结构在热</view>
-      </view>
-      <view class="single-product">
-        <view class="img"></view>
-        <view class="sub-title">有序石墨烯结构在热管理方……</view>
-      </view>
-      <view class="single-product">
-        <view class="img"></view>
-        <view class="sub-title">有序石墨烯结构在热管理方……</view>
+      <view @tap="toNewsDls" data-id="{{product.id}}" class="single-product weui-flex__item" wx:for="{{productList}}" wx:key="index" wx:for-index="index" wx:for-item="product">
+        <view class="img">
+          <image style="height:100%;width:100%;" src="{{product.typeImg ? imgHost+product.typeImg : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFit" />
+        </view>
+        <view class="sub-title weui-flex__item">{{product.title}}</view>
       </view>
     </view>
   </view>
@@ -63,7 +57,7 @@
   <view class="hot-news">
     <view class="top weui-flex" style="justify-content: space-between; margin-bottom: 0;">
       <view class="nav">热门文章</view>
-      <view @tap="toList" data-tag="2" class="more">更多</view>
+      <view @tap="toList" data-tag="2" class="more">更多>></view>
     </view>
     <view @tap="toNewsDls" data-id="{{news.id}}" wx:for="{{hotNewsList}}" wx:key="index" wx:for-index="index" wx:for-item="news" class="single-news weui-flex" style="justify-content: space-between;">
       <view class="weui-flex__item left-flex">
@@ -78,7 +72,7 @@
     </view>
   </view>
   <view class="" style="padding: 20px 10px 34px 10px;">
-    <view class="" style="height:110px;background:red;"></view>
+    <view class="" style="height:110px;background:#EFEFEF;text-align:center;vertical-align:middle;">广告位</view>
   </view>
 </view>
 </template>
@@ -105,6 +99,7 @@ export default class GroupIndex extends wepy.page {
     imgHost: 'https://www.otimes.com',
     replayList: [],
     hotNewsList: [],
+    productList: [],
     swipers: [],
   };
   methods = {
@@ -120,20 +115,22 @@ export default class GroupIndex extends wepy.page {
         url: `./news?id=${id}`
       })
     },
-    toPlay() {
+    toPlay(e) {
+      const id = e.currentTarget.dataset.id
       wx.navigateTo({
-        url: './video'
+        url: `./video?id=${id}`
       })
     },
   }
   onLoad() {
-    this.getHotNews()
     this.getADList()
     this.replayList()
+    this.getProduct() 
+    this.getHotNews()
   }
   async getHotNews() {
     const res = await http.get(__getApi._getHotNews, {
-      type_id: 1,
+      type_id: 7,
       page_id: 1,
       page_limit: 4,
     })
@@ -150,25 +147,23 @@ export default class GroupIndex extends wepy.page {
     this.$apply()
   }
   async replayList() {
-    const res = await http.post(__getApi._getOnlineList, {
-    // const res = await http.post(__getApi._getReplayList, {
-      auth_type: 1,
-      account: 'v54441313',
-      password: 'dbys@123456',
-      limit: 2,
-      // app_key: '9dc4743d69387ce9fcb2db52380f6b8e',
-      // secret_key: '2a09e819b8de5aab6b671d7c1efe0224AppSecretKey',
-      // signed_at: Date.now(),
+    const res = await http.post(__getApi._getSelfVideoList, {
+      page_id: 1,
+      page_limit: 2,
     })
-    if (res.code == '200') {
-      res.data.lists.forEach(element => {
-        if (element.thumb) {
-          element.thumb = 'https:' + element.thumb.split(':')[1]
-        } else {
-          element.thumb = 'https://cnstatic01.e.vhall.com/upload/webinars/img_url/d3/e0/d3e08304a3a9949a59937a6ba47b1891.jpg'
-        }
-      });
-      this.replayList = res.data.lists
+    if (res.meta.success) {
+      this.replayList = res.data.list
+      this.$apply()
+    }
+  }
+  async getProduct() {
+    const res = await http.post(__getApi._getNewsProductList, {
+      id: 96,
+      page_id: 1,
+      page_limit: 3,
+    })
+    if (res.meta.success) {
+      this.productList = res.data.list 
       this.$apply()
     }
   }
@@ -182,7 +177,7 @@ export default class GroupIndex extends wepy.page {
     display: flex; flex-direction: column;align-items: stretch;justify-content: space-between;align-content: space-between;
   }
   .single-news {
-    border-bottom: 1px solid red; // #EFEFEF
+    border-bottom: 1px solid #EFEFEF;
     padding: 10px 0;
     &:last-child {
       border-bottom: 0;
@@ -203,7 +198,6 @@ export default class GroupIndex extends wepy.page {
     margin-left: 10px;
     height: 80px;
     width: 80px;
-    // background: #000;
   }
 }
 .top {
@@ -221,17 +215,15 @@ export default class GroupIndex extends wepy.page {
 }
 .line {
   height: 5px;
-  background: #000;
+  background: #EFEFEF;
 }
 .product-recommended {
-  margin: 0 16px;
+  margin: 0 16px 4px 16px;
   .single-product {
     margin: 0 3px;
     .img {
       height: 110px;
-      // width:100%;
       width: 110px;
-      background: #666666;
     }
     .sub-title {
       overflow : hidden;
@@ -253,7 +245,7 @@ export default class GroupIndex extends wepy.page {
     .img {
       height: 122px;
       width: 100%;
-      background: #ffeeff;
+      // background: #ffeeff;
     }
     .sub-title {
       overflow : hidden;
@@ -285,7 +277,6 @@ export default class GroupIndex extends wepy.page {
 }
 .banner {
   margin: 8px 16px;
-  // background: #999;
   height: 180px;
 }
 
