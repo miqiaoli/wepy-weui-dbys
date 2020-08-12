@@ -1,21 +1,79 @@
 <template>
-  <web-view src="{{link}}"></web-view>
+<view class="page bg__white">
+ <video class="video"
+   src="{{src}}"
+   show-mute-btn="{{mute}}"
+   title="{{title}}"
+   autoplay="{{autoplay}}"
+   enable-play-gesture="{{playGesture}}"
+   vslide-gesture="{{vslideGesture}}"
+   enable-auto-rotation="true"
+   show-screen-lock-button="true"
+   ></video>
+   <view class="title">{{title}}</view>
+   <view class="weui-article__section" style="margin: 0 15px;">
+        <view class="weui-article__p">
+          <rich-parse content="{{ content }}" type="html" />
+        </view>
+      </view>
+</view>
 </template>
 
 <script>
 import wepy from "wepy";
+import {
+  __getApi
+} from '../../config.js'
+import http from '../../utils/Http'
 export default class Video extends wepy.page {
   config = {
-    navigationBarTitleText: "视屏播放"
+    navigationBarTitleText: "视频播放",
+    usingComponents: {
+      "rich-parse": "../../rich-parse/rich-parse"
+    }
   };
   data = {
-    link: ''
+    link: '',
+    src: '',
+    mute: true,
+    title: '',
+    autoplay: false,
+    playGesture: true,
+    vslideGesture: true,
+    content: '',
+    id: 1,
   }
   onLoad(e) {
-    this.link = 'https://wx.otimes.com/watch/1855273'
-    // this.link = e.link ? e.link : 'https://wx.otimes.com/watch/1855273'
-    // this.link = e.link ? e.link : 'https://mp.weixin.qq.com/s/Qq23aIV323DK9G3NnqXiwQ'
+    console.log(e)
+    this.id = e.id
+    this.getVideo()
     this.$apply()
+  }
+  async getVideo() {
+    const res = await http.post(__getApi._getSelfVideoDetails, {
+      id: this.id,
+    })
+    if (res.meta.success) {
+      this.content = res.data.content
+      this.src = res.data.mediaPath
+      this.title = res.data.title
+      this.$apply()
+    }
   }
 }
 </script>
+
+<style lang="less" scoped>
+.video {
+  width: 100%;
+}
+.page {
+  height: 100vh;
+}
+.title {
+  font-weight: 500;
+  font-size: 18px;
+  color: #000;
+  margin: 0 15px;
+}
+</style>
