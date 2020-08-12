@@ -23,7 +23,7 @@
     <view class="weui-flex" style="flex-wrap: wrap;justify-content:space-between;">
       <block wx:for="{{list}}" wx:key="id" wx:for-index="index" wx:for-item="item">
         <view  @tap="toPlay" data-id="{{item.id}}" class="item">
-          <image class="product-img" src="{{item.coverImg}}" />
+          <image class="product-img" src="{{item.typeImg ? imgHost+item.typeImg : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" />
           <view class="sub-title">{{item.title}}</view>
         </view>
       </block>

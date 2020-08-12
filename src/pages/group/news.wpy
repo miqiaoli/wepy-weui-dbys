@@ -57,7 +57,7 @@
       bindblur='hideCommit'
       bindconfirm="send"
       confirm-type="send"
-      auto-focus style="padding:10px;width:96%;" placeholder="评论" />
+      style="padding:10px;width:96%;" placeholder="评论" />
 
     <button type="primary" style="width: 180px;" hover-class="other-button-hover" bindtap="send">评论</button>
   </view>
