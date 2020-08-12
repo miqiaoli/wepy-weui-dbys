@@ -1,10 +1,10 @@
 <template>
-<view class="page__bd bg__white">
+<view class="page page__bd bg__white">
   <view hidden="{{showCommit}}">
     <view class="weui-article">
       <view class="weui-article__h1">{{productDetails.article_title.title}}</view>
       <view class="weui-media-box__info">
-        <view class="weui-media-box__info__meta">作者：{{productDetails.article_title.author}}</view>
+        <view class="weui-media-box__info__meta">作者：{{productDetails.article_title.author || '未知'}}</view>
         <view class="weui-media-box__info__meta">{{productDetails.article_title.date}}</view>
       </view>
       <view class="weui-article__section">
@@ -13,11 +13,14 @@
         </view>
       </view>
       <view class="author">
-        <image class="avatar" src="/images/collection_icon_HL.png" />
-        <view class="username">牛人牛</view>
+        <!-- <view style="height: 60px;width: 60px;background: #D8D8D8;border-radius: 50%;display:text-align: center; flex;flex-direction: column;justify-content: center;">
+          <image class="avatar" src="/images/collection_icon_HL.png" />
+        </view> -->
+        <image class="avatar"  />
+        <view class="username">{{productDetails.article_title.author || '未知'}}</view>
       </view>
     </view>
-    <view class="hot-news">
+    <view hidden="{{true}}" class="hot-news">
       <view class="top weui-flex" style="justify-content: space-between; margin-bottom: 0;">
         <view class="nav">热门文章</view>
         <view @tap="toList" data-tag="2" class="more">更多</view>
@@ -30,7 +33,7 @@
           </view>
         </view>
         <view class="img">
-          <image style="height:100%;width:100%;" src="{{news.typeImg ? imgHost+news.typeImg : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFit" />
+          <!-- <image style="height:100%;width:100%;" src="{{news.typeImg ? imgHost+news.typeImg : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFit" /> -->
         </view>
       </view>
     </view>
@@ -39,9 +42,10 @@
         <view class="" style="color:#999;">精选评论</view>
         <view @tap="showComment" class="" style="padding-right:8px;color:#333;">评论</view>
       </view>
-      <view class="weui-flex" style="margin-bottom:20px;">
-        <image style="height:32px;width:32px;min-width:32px;" src="/images/collection_icon_HL.png" />
-        <view class="comment-text">我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论我的评论</view>
+      <view class="weui-flex" style="margin-bottom:20px;" wx:for="{{commons}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+        <view style="height:32px;width:32px;min-width:32px;background: #D8D8D8;border-radius: 50%;"></view>
+        <!-- <image style="height:32px;width:32px;min-width:32px;" src="/images/collection_icon_HL.png" /> -->
+        <view class="comment-text">{{item.content}}</view>
       </view>
     </view>
   </view>
@@ -160,8 +164,11 @@ export default class NewsDls extends wepy.page {
   }
   onLoad(options) {
     this.id = options.id || 9655
+    // wx.setNavigationBarTitle({
+    //   title: '页面标题为路由参数'
+    // })
     this.getNewsDetails()
-    this.getHotNews()
+    // this.getHotNews()
   }
   async getHotNews() {
     const res = await http.get(__getApi._getHotNews, {
@@ -174,20 +181,6 @@ export default class NewsDls extends wepy.page {
       this.$apply()
     }
   }
-  // onShareAppMessage(res) {
-  //   return {
-  //     title: '第八元素，环球塑讯 ' + this.productDetails.article_title.title + '/ 作者：' + this.productDetails.article_title.author + '/ 时间：' + this.productDetails.article_title.date,
-  //     path: '/pages/news-details?id=' + this.id,
-  //     success: function(res) {
-  //       // 转发成功
-  //       console.log('转发成功')
-  //     },
-  //     fail: function(res) {
-  //       // 转发失败
-  //       console.log('转发失败')
-  //     }
-  //   }
-  // }
 }
 </script>
 
@@ -214,6 +207,8 @@ export default class NewsDls extends wepy.page {
   .avatar {
     height: 60px; 
     width:60px;
+    background: #D8D8D8;
+    border-radius: 50%;
   }
   .username {
     font-weight: 500; font-size: 14px;
@@ -257,9 +252,10 @@ export default class NewsDls extends wepy.page {
   }
   .img {
     margin-left: 10px;
-    height: 80px;
-    width: 80px;
-    // background: #000;
+    height: 60px;
+    width: 60px;
+    background: #D8D8D8;
+    border-radius: 50%;
   }
 }
 .comment {
