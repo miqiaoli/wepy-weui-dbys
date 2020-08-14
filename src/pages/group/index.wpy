@@ -12,7 +12,7 @@
   <view class="banner">
     <swiper indicator-dots="{{indicatorDots}}"
       autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
-      <block wx:for="{{swipers}}" wx:key="*this">
+      <block wx:for="{{swipers}}" wx:key="id">
         <swiper-item>
           <image src="{{imgHost+item.image_url}}" style="height:100%;width:100%;" />
         </swiper-item>
@@ -124,7 +124,7 @@ export default class GroupIndex extends wepy.page {
   }
   onLoad() {
     this.getADList()
-    this.replayList()
+    this.getReplayList()
     this.getProduct() 
     this.getHotNews()
   }
@@ -146,7 +146,7 @@ export default class GroupIndex extends wepy.page {
     this.swipers = res.data.reverse()
     this.$apply()
   }
-  async replayList() {
+  async getReplayList() {
     const res = await http.post(__getApi._getSelfVideoList, {
       page_id: 1,
       page_limit: 2,
