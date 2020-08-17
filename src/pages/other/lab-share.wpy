@@ -80,10 +80,10 @@
             <view class="weui-cell__hd">联系方式</view>
             <view class="weui-cell__bd">15956936957</view>
           </view>
-          <view class="cont weui-flex">
+          <!-- <view class="cont weui-flex">
             <view class="weui-cell__hd">收件地址</view>
             <view class="weui-cell__bd">广东省佛山市顺德区北滘镇槎涌工业区工业二路西二号（合肥圆融仓库）</view>
-          </view>
+          </view> -->
         </view>
       </view>
     </view>

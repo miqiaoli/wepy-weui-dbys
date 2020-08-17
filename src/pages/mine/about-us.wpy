@@ -81,9 +81,9 @@
         <view class="bold">安徽运营中心</view>
         <view>电话：0551-65771653</view>
         <view>地址：安徽省合肥市高新区天智路14号时代智谷创业园208室</view>
-        <view class="bold">广东佛山运营中心</view>
+        <!-- <view class="bold">广东佛山运营中心</view>
         <view>电话：0755-83227395</view>
-        <view>地址：广东省佛山顺德北滘美的全球创新中心旧美的总部大楼3楼</view>
+        <view>地址：广东省佛山顺德北滘美的全球创新中心旧美的总部大楼3楼</view> -->
       </view>
     </view>
   </view>
