@@ -105,6 +105,7 @@ export default class GroupList extends wepy.page {
   }
   onLoad(e) {
     this.tabIndex = e.index ? e.index : 0
+    this.keyword = e.keyword ? e.keyword : ''
     this.$apply()
     this.getList()
   }

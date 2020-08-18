@@ -4,10 +4,16 @@
     <view class="weui-search-bar__form" style="line-height: 60rpx; background: #FFFFFF; border-radius: 60rpx; border:1px solid #EFEFEF;">
       <view class="weui-search-bar__box">
         <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
-        <input type="text" class="weui-search-bar__input" style="height: 60rpx;line-height: 60rpx; text-align: left;" placeholder="有序石墨烯热管理应用" bindconfirm bindinput="searchText" value="{{this.keyword}}" />
+        <input type="text" 
+          class="weui-search-bar__input" 
+          style="height: 60rpx;line-height: 60rpx; text-align: left;" 
+          placeholder="有序石墨烯热管理应用" 
+          bindconfirm="search" 
+          confirm-type="search"
+          value="{{this.keyword}}" />
       </view>
     </view>
-    <view class="" style="margin-left: 10px;margin-top: 2px;width:25px; height:25px; background:rgba(153,153,153,1);"></view>
+    <!-- <view class="" style="margin-left: 10px;margin-top: 2px;width:25px; height:25px; background:rgba(153,153,153,1);"></view> -->
   </view>
   <view class="banner">
     <swiper indicator-dots="{{indicatorDots}}"
@@ -101,8 +107,15 @@ export default class GroupIndex extends wepy.page {
     hotNewsList: [],
     productList: [],
     swipers: [],
+    keyword: '',
   };
   methods = {
+    search(e){
+      this.keyword = e.detail.value
+      wx.navigateTo({
+        url: `./list?keyword=${e.detail.value}`
+      })
+    },
     toList(e) {
       const index = e.currentTarget.dataset.tag
       wx.navigateTo({
