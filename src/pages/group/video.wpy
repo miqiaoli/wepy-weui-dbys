@@ -164,7 +164,7 @@ export default class Video extends wepy.page {
 }
 .input {
   margin-right: @base-gap;
-  padding-left: 36px;
+  padding-left: 20px;
   padding-right: @base-gap;
   height: 72rpx;
   border-radius: 36rpx;

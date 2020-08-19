@@ -1,6 +1,5 @@
 <template>
 <view class="page page__bd bg__white">
-  <view hidden="{{showCommit}}">
     <view class="weui-article">
       <view class="weui-article__h1">{{productDetails.article_title.title}}</view>
       <view class="weui-media-box__info">
@@ -13,9 +12,6 @@
         </view>
       </view>
       <view class="author">
-        <!-- <view style="height: 60px;width: 60px;background: #D8D8D8;border-radius: 50%;display:text-align: center; flex;flex-direction: column;justify-content: center;">
-          <image class="avatar" src="/images/collection_icon_HL.png" />
-        </view> -->
         <image class="avatar"  />
         <view class="username">{{productDetails.article_title.author || '未知'}}</view>
       </view>
@@ -33,35 +29,9 @@
           </view>
         </view>
         <view class="img">
-          <!-- <image style="height:100%;width:100%;" src="{{news.typeImg ? imgHost+news.typeImg : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFit" /> -->
         </view>
       </view>
     </view>
-    <view class="comment">
-      <view class="weui-flex" style="justify-content: space-between; margin-bottom: 10px;font-size:12px;">
-        <view class="" style="color:#999;">精选评论</view>
-        <view @tap="showComment" class="" style="padding-right:8px;color:#333;">评论</view>
-      </view>
-      <view class="weui-flex" style="margin-bottom:20px;" wx:for="{{commons}}" wx:key="index" wx:for-index="index" wx:for-item="item">
-        <!-- <view style="height:32px;width:32px;min-width:32px;background: #D8D8D8;border-radius: 50%;"></view> -->
-        <!-- <image style="height:32px;width:32px;min-width:32px;" src="/images/collection_icon_HL.png" /> -->
-        <image style="height:32px;width:32px;min-width:32px;" src="{{item.namePic}}" />
-        <view class="comment-text">{{item.content}}</view>
-      </view>
-    </view>
-  </view>
-  <!-- <view hidden="{{!showCommit}}" class="commit">
-    <textarea
-      type="text" 
-      value="{{commit}}"
-      bindinput="commitValue"
-      bindblur='hideCommit'
-      bindconfirm="send"
-      confirm-type="send"
-      style="padding:10px;width:96%;" placeholder="评论" />
-
-    <button type="primary" style="width: 180px;" hover-class="other-button-hover" bindtap="send">评论</button>
-  </view> -->
   <view wx:if="{{showFocus}}" class="fix-bootom weui-flex">
     <view class="weui-flex__item">
       <input 
@@ -114,14 +84,12 @@ export default class NewsDls extends wepy.page {
     commons: [],
     imgHost: 'https://www.otimes.com',
     hotNewsList: [],
-    showCommit: false,
     commit: '',
     showFocus: false,
     user: null,
   }
   methods = {
     showComment(e) {
-      // this.showCommit = true
       this.showFocus = true
     },
     commitValue(e) {
@@ -214,16 +182,6 @@ export default class NewsDls extends wepy.page {
 
 <style lang="less" scoped>
 @base-gap: 20rpx;
-.commit {
-  border:1px solid #979797;
-  background: white;
-  height:174px;
-  width:96%;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
 .weui-index image {
     width: 100rpx;
     height: 100rpx;
@@ -287,13 +245,6 @@ export default class NewsDls extends wepy.page {
     border-radius: 50%;
   }
 }
-.comment {
-  background: #efefef;
-  padding: 10px 10px 10px 10px;
-  .comment-text {
-    margin-left: 10px; font-size: 12px; font-weight: 400; color: #666666;
-  }
-}
 .fix-bootom {
   padding: 4px 10px;
   position: fixed;
@@ -305,7 +256,7 @@ export default class NewsDls extends wepy.page {
 }
 .input {
   margin-right: @base-gap;
-  padding-left: 36px;
+  padding-left: 20px;
   padding-right: @base-gap;
   height: 72rpx;
   border-radius: 36rpx;
