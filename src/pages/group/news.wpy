@@ -43,13 +43,14 @@
         <view @tap="showComment" class="" style="padding-right:8px;color:#333;">评论</view>
       </view>
       <view class="weui-flex" style="margin-bottom:20px;" wx:for="{{commons}}" wx:key="index" wx:for-index="index" wx:for-item="item">
-        <view style="height:32px;width:32px;min-width:32px;background: #D8D8D8;border-radius: 50%;"></view>
+        <!-- <view style="height:32px;width:32px;min-width:32px;background: #D8D8D8;border-radius: 50%;"></view> -->
         <!-- <image style="height:32px;width:32px;min-width:32px;" src="/images/collection_icon_HL.png" /> -->
+        <image style="height:32px;width:32px;min-width:32px;" src="{{item.namePic}}" />
         <view class="comment-text">{{item.content}}</view>
       </view>
     </view>
   </view>
-  <view hidden="{{!showCommit}}" class="commit">
+  <!-- <view hidden="{{!showCommit}}" class="commit">
     <textarea
       type="text" 
       value="{{commit}}"
@@ -60,6 +61,30 @@
       style="padding:10px;width:96%;" placeholder="评论" />
 
     <button type="primary" style="width: 180px;" hover-class="other-button-hover" bindtap="send">评论</button>
+  </view> -->
+  <view wx:if="{{showFocus}}" class="fix-bootom weui-flex">
+    <view class="weui-flex__item">
+      <input 
+        class="input weui-search-bar__form weui-icon-search" 
+        placeholder="评论"
+        type="text"
+        value="{{commit}}"
+        focus="{{showFocus}}"
+        bindinput="commitValue"
+        bindblur='hideCommit'
+        />
+    </view>
+    <view @tap="send" class=""><text class="commit">发送</text></view>
+  </view>
+  <view class="comment">
+    <view class="weui-flex" style="justify-content: space-between; margin-bottom: 10px;font-size:12px;">
+      <view class="" style="color:#999;">精选评论</view>
+      <view @tap="showComment" class="" style="padding-right:8px;color:#333;">评论</view>
+    </view>
+    <view class="weui-flex" style="margin-bottom:20px;" wx:for="{{commons}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+      <image style="height:32px;width:32px;min-width:32px;" src="{{item.namePic}}" />
+      <view class="comment-text">{{item.content}}</view>
+    </view>
   </view>
 </view>
 </template>
@@ -91,17 +116,19 @@ export default class NewsDls extends wepy.page {
     hotNewsList: [],
     showCommit: false,
     commit: '',
+    showFocus: false,
+    user: null,
   }
   methods = {
     showComment(e) {
-      this.showCommit = true
+      // this.showCommit = true
+      this.showFocus = true
     },
     commitValue(e) {
       this.commit = e.detail.value
     },
     // 评论
     async send(e) {
-      // let val = e.detail.value
       let val = this.commit
       let self = this
       if (!val) {
@@ -116,7 +143,7 @@ export default class NewsDls extends wepy.page {
         const res = await http.post(__getApi._toCommit, {
           contentId:  this.id,
           content: val,
-          name: '阿发',
+          openId: this.user.openId,
         })
         if (res.meta.success) {
           this.commit = ''
@@ -126,7 +153,7 @@ export default class NewsDls extends wepy.page {
             duration: 2000
           })
           setTimeout(() => {
-            self.showCommit = false
+            self.showFocus = false
           }, 2000);
         }
       }
@@ -134,7 +161,7 @@ export default class NewsDls extends wepy.page {
     hideCommit(e) {
       let self = this
       setTimeout(() => {
-        self.showCommit = false
+        self.showFocus = false
         self.$apply()
       }, 500)
     },
@@ -164,6 +191,7 @@ export default class NewsDls extends wepy.page {
   }
   onLoad(options) {
     this.id = options.id || 9655
+    this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : ''
     // wx.setNavigationBarTitle({
     //   title: '页面标题为路由参数'
     // })
@@ -185,6 +213,7 @@ export default class NewsDls extends wepy.page {
 </script>
 
 <style lang="less" scoped>
+@base-gap: 20rpx;
 .commit {
   border:1px solid #979797;
   background: white;
@@ -257,6 +286,36 @@ export default class NewsDls extends wepy.page {
     background: #D8D8D8;
     border-radius: 50%;
   }
+}
+.comment {
+  background: #efefef;
+  padding: 10px 10px 10px 10px;
+  .comment-text {
+    margin-left: 10px; font-size: 12px; font-weight: 400; color: #666666;
+  }
+}
+.fix-bootom {
+  padding: 4px 10px;
+  position: fixed;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  background: #efefef;
+  z-index: 8;
+}
+.input {
+  margin-right: @base-gap;
+  padding-left: 36px;
+  padding-right: @base-gap;
+  height: 72rpx;
+  border-radius: 36rpx;
+}
+.commit {
+  margin: 6px 0;
+  padding: 0 6px;
+  background: #1aad19;
+  color: white;
+  border-radius: 2px;
 }
 .comment {
   background: #efefef;

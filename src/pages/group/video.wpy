@@ -12,10 +12,34 @@
    ></video>
    <view class="title">{{title}}</view>
    <view class="weui-article__section" style="margin: 0 15px;">
-        <view class="weui-article__p">
-          <rich-parse content="{{ content }}" type="html" />
-        </view>
-      </view>
+    <view class="weui-article__p">
+      <rich-parse content="{{ content }}" type="html" />
+    </view>
+  </view>
+  <view wx:if="{{showFocus}}" class="fix-bootom weui-flex">
+    <view class="weui-flex__item">
+      <input 
+        class="input weui-search-bar__form weui-icon-search" 
+        placeholder="评论"
+        type="text"
+        value="{{commit}}"
+        focus="{{showFocus}}"
+        bindinput="commitValue"
+        bindblur='hideCommit'
+        />
+    </view>
+    <view @tap="send" class=""><text class="commit">发送</text></view>
+  </view>
+  <view class="comment">
+    <view class="weui-flex" style="justify-content: space-between; margin-bottom: 10px;font-size:12px;">
+      <view class="" style="color:#999;">精选评论</view>
+      <view @tap="showComment" class="" style="padding-right:8px;color:#333;">评论</view>
+    </view>
+    <view class="weui-flex" style="margin-bottom:20px;" wx:for="{{commons}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+      <image style="height:32px;width:32px;min-width:32px;" src="{{item.namePic}}" />
+      <view class="comment-text">{{item.content}}</view>
+    </view>
+  </view>
 </view>
 </template>
 
@@ -37,15 +61,65 @@ export default class Video extends wepy.page {
     src: '',
     mute: true,
     title: '',
+    commons: [],
     autoplay: true,
     playGesture: true,
     vslideGesture: true,
     imgHost: 'https://www.otimes.com',
     content: '',
     id: 1,
+    showFocus: false,
+    commit: '',
+    user: null,
   }
+  methods = {
+    showComment(e) {
+      this.showFocus = true
+    },
+    commitValue(e) {
+      this.commit = e.detail.value
+    },
+    // 评论
+    async send(e) {
+      let val = this.commit
+      let self = this
+      if (!val) {
+        wx.showToast({
+          title: '评论不能为空',
+          icon: 'none',
+          duration: 2000
+        })
+        return
+      } else {
+        // 请求接口,返回提示
+        const res = await http.post(__getApi._toCommit, {
+          contentId:  this.id,
+          content: val,
+          openId: this.user.openId,
+        })
+        if (res.meta.success) {
+          this.commit = ''
+          wx.showToast({
+            title: res.data,
+            icon: 'none',
+            duration: 2000
+          })
+          setTimeout(() => {
+            self.showFocus = false
+          }, 2000);
+        }
+      }
+    },
+    hideCommit(e) {
+      let self = this
+      setTimeout(() => {
+        self.showFocus = false
+        self.$apply()
+      }, 500)
+    },
+  };
   onLoad(e) {
-    console.log(e)
+    this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : ''
     this.id = e.id
     this.getVideo()
     this.$apply()
@@ -58,6 +132,7 @@ export default class Video extends wepy.page {
       this.content = res.data.content
       this.src =  this.imgHost + res.data.mediaPath
       this.title = res.data.title
+      this.commons = res.data.commons
       this.$apply()
     }
   }
@@ -65,6 +140,7 @@ export default class Video extends wepy.page {
 </script>
 
 <style lang="less" scoped>
+@base-gap: 20rpx;
 .video {
   width: 100%;
 }
@@ -76,5 +152,35 @@ export default class Video extends wepy.page {
   font-size: 18px;
   color: #000;
   margin: 0 15px;
+}
+.fix-bootom {
+  padding: 4px 10px;
+  position: fixed;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  background: #efefef;
+  z-index: 8;
+}
+.input {
+  margin-right: @base-gap;
+  padding-left: 36px;
+  padding-right: @base-gap;
+  height: 72rpx;
+  border-radius: 36rpx;
+}
+.commit {
+  margin: 6px 0;
+  padding: 0 6px;
+  background: #1aad19;
+  color: white;
+  border-radius: 2px;
+}
+.comment {
+  background: #efefef;
+  padding: 10px 10px 10px 10px;
+  .comment-text {
+    margin-left: 10px; font-size: 12px; font-weight: 400; color: #666666;
+  }
 }
 </style>

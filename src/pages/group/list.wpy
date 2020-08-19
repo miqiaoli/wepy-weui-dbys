@@ -10,7 +10,7 @@
           style="height: 60rpx;line-height: 60rpx; text-align: left;" 
           placeholder="有序石墨烯热管理应用"  
           bindconfirm="search"
-          confirm-type="search" value="{{this.keyword}}" />
+          confirm-type="search" value="{{keyword}}" />
       </view>
     </view>
   </view>
@@ -41,7 +41,7 @@
           </view>
         </view>
         <view class="left-img">
-        <image style="height:100%;width:100%;" src="{{item.typeImg ? imgHost+item.typeImg : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFit" />
+          <image style="height:100%;width:100%;border-radius:5px;" src="{{item.typeImg ? imgHost+item.typeImg : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFit" />
         </view>
       </view>
     </block>
@@ -206,9 +206,10 @@ export default class GroupList extends wepy.page {
     margin-top: 10px;
     .left-img {
       margin-left: 10px;
-      width:80px;
+      // width:80px;
       height:80px;
-      background: #000;
+      width: 130px;
+      border-radius:5px;
     }
     .right-flex {
       // margin-left: 10px;
