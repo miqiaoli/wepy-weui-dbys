@@ -7,7 +7,7 @@
         <input type="text" 
           class="weui-search-bar__input" 
           style="height: 60rpx;line-height: 60rpx; text-align: left;" 
-          placeholder="有序石墨烯热管理应用" 
+          placeholder="请输入关键字搜索" 
           bindconfirm="search" 
           confirm-type="search"
           value="{{keyword}}" />
@@ -18,23 +18,24 @@
   <view class="banner">
     <swiper indicator-dots="{{indicatorDots}}"
       circular="{{true}}"
-    style="height:180px;border-radius:8px;"
+    style="min-height:200px;border-radius:8px;"
       autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
       <block wx:for="{{swipers}}" wx:key="id">
         <swiper-item>
-          <image src="{{imgHost+item.image_url}}" style="height:100%;width:100%;border-radius:8px;" />
+          <image src="{{imgHost+item.image_url}}" style="width:100%;border-radius:8px;" mode="widthFix" />
         </swiper-item>
       </block>
     </swiper>
   </view>  
-  <view class="all-course" style="margin-top:20px;">
+  <view class="line"></view>
+  <view class="all-course" style="margin-top:10px;">
     <view class="top weui-flex" style="justify-content: space-between;">
       <view class="nav">所有课程</view>
       <view @tap="toList" data-tag="0" class="more">更多>></view>
     </view>
     <view @tap="toPlay" data-id="{{play.id}}" class="single-course" wx:for="{{replayList}}" wx:key="index" wx:for-index="index" wx:for-item="play">
       <view class="img">
-        <image style="width:100%;height:100%;" src="{{play.typeImg ? imgHost+play.typeImg : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFill" />
+        <image style="width:100%;height:100%;border-radius: 8px;" src="{{play.typeImg ? imgHost+play.typeImg : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFill" />
       </view>
       <view class="sub-title">{{play.title}}</view>
       <view class="weui-flex" style="justify-content: space-between;align-items:center; height:16px;">
@@ -294,7 +295,7 @@ export default class GroupIndex extends wepy.page {
   }
 }
 .top {
-  margin: 14px 0;
+  margin: 10px 0 14px 0;
   .nav {
     font-size:18px;
     font-weight: 500;
@@ -376,8 +377,8 @@ export default class GroupIndex extends wepy.page {
   height: 30px;
 }
 .banner {
-  margin: 8px 16px;
-  height: 180px;
+  margin: 8px 16px 10px 16px;
+  // height: 180px;
   border-radius:8px;
 }
 

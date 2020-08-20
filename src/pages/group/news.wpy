@@ -1,5 +1,5 @@
 <template>
-<view class="page page__bd bg__white">
+<view wx:if="{{productDetails.article_title.title}}" class="page page__bd bg__white">
     <view class="weui-article">
       <view class="weui-article__h1">{{productDetails.article_title.title}}</view>
       <view class="weui-media-box__info">

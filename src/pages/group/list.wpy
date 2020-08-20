@@ -8,7 +8,7 @@
           type="text" 
           class="weui-search-bar__input" 
           style="height: 60rpx;line-height: 60rpx; text-align: left;" 
-          placeholder="有序石墨烯热管理应用"  
+          placeholder="请输入关键字搜索"  
           bindconfirm="search"
           confirm-type="search" value="{{keyword}}" />
       </view>
@@ -140,7 +140,7 @@ export default class GroupList extends wepy.page {
       // 课程
     } else if (this.tabIndex == 0) {
       const res = await http.post(__getApi._getSelfVideoList, {
-        page_id: 1,
+        page_id: this.page,
         page_limit: 10,
         keyword: this.keyword,
       })
@@ -153,7 +153,7 @@ export default class GroupList extends wepy.page {
       // 文章
       const res = await http.get(__getApi._getHotNews, {
         type_id: 16,
-        page_id: 1,
+        page_id: this.page,
         page_limit: this.page_limit,
         keyword: this.keyword,
       })
