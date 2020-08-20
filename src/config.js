@@ -274,7 +274,7 @@ export const __getApi = {
 
 
   //扫描二维码确认收票功能
-  _getPhone: `${host}//wxapp/getPhone.dbys`, // 授权获取手机号解密
+  _getPhone: `${host}/wxapp/getPhone.dbys`, // 授权获取手机号解密
   _getfeedback: `${host}/orderb/feedback.dbys`, // 上报手机号和备注信息
   _getreceive: `${host}/orderb/receive.dbys`, // 上报手机号和备注信息
   _getfpInfo: `${host}/orderb/getfpInfo.dbys`, // 获取发票信息
@@ -298,7 +298,8 @@ export const __getApi = {
   _getSelfVideoList: `${host}/cpc/vedio/list.dbys`,
   // 视频详情
   _getSelfVideoDetails: `${host}/cpc/vedio/detail.dbys`,
-  // 
+  // 微信文章
+  _getWeixinArticleList: `${host}/weixin/getArticle.dbys`,
 
 }
 

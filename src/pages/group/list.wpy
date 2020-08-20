@@ -20,14 +20,21 @@
     </block>
   </view>
   <view class="list" wx:if="{{tabIndex == 0}}">
-    <view class="weui-flex" style="flex-wrap: wrap;justify-content:space-between;">
+    <!-- <view class="weui-flex" style="flex-wrap: wrap;justify-content:space-between;"> -->
       <block wx:for="{{list}}" wx:key="id" wx:for-index="index" wx:for-item="item">
-        <view  @tap="toPlay" data-id="{{item.id}}" class="item">
-          <image class="product-img" src="{{item.typeImg ? imgHost+item.typeImg : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" />
+        <view @tap="toPlay" data-id="{{item.id}}" class="" style="margin-bottom:10px;">
+          <image class="product-img" src="{{item.typeImg ? imgHost+item.typeImg : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFill"/>
           <view class="sub-title">{{item.title}}</view>
+          <view class="weui-flex" style="justify-content: space-between;align-items:center; height:16px;">
+            <view class="date">{{item.time}} <text style="padding-left:10px;">{{item.views}}次观看</text></view>
+            <view class="price">
+              <text style="font-size:8px;color:#999999;"></text>
+              <text style="padding-left:4px; font-size:12px;color:#FF0000;"></text>
+            </view>
+          </view>
         </view>
       </block>
-    </view>
+    <!-- </view> -->
   </view>
   <view class="list" wx:else>
     <block wx:for="{{list}}" wx:key="id" wx:for-index="index" wx:for-item="item">
@@ -41,11 +48,16 @@
           </view>
         </view>
         <view class="left-img">
-          <image style="height:100%;width:100%;border-radius:5px;" src="{{item.typeImg ? imgHost+item.typeImg : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFit" />
+          <image wx:if="{{tabIndex == 2}}" style="height:100%;width:100%;border-radius:5px;" src="{{item.typeImg ? item.typeImg : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFit" />
+          <image wx:else style="height:100%;width:100%;border-radius:5px;" src="{{item.typeImg ? imgHost+item.typeImg : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFit" />
         </view>
       </view>
     </block>
   </view>
+  <view
+        style="text-align: center;"
+        wx:if="{{list.length == 0}}"
+      >- 暂无数据~ -</view>
   <view
         style="text-align: center;"
         wx:if="{{list.length >= count && list.length > 0}}"
@@ -66,7 +78,7 @@ export default class GroupList extends wepy.page {
   };
   data = {
     imgHost: 'https://www.otimes.com',
-    tabs: ['所有课程', '产品推荐', '热门文章', '全部文章'],
+    tabs: ['所有课程', '产品推荐', '热门文章'],
     tabIndex: 0,
     replayIndex: 1,
     page: 1,
@@ -112,17 +124,19 @@ export default class GroupList extends wepy.page {
   async getList() {
     // 产品
     if (this.tabIndex == 1) {
-      const res = await http.post(__getApi._getNewsProductList, {
-        id: 96,
-        page_id: 1,
-        page_limit: this.page_limit,
-        keyword: this.keyword,
-      })
-      if (res.meta.success) {
-        this.count = res.data.count
-        this.list = [...this.list, ...res.data.list]; 
-        this.$apply()
-      }
+      this.count = 0
+      this.$apply()
+      // const res = await http.post(__getApi._getHotNews, {
+      //   type_id: 12,
+      //   page_id: 1,
+      //   page_limit: this.page_limit,
+      //   keyword: this.keyword,
+      // })
+      // if (res.meta.success) {
+      //   this.count = res.data.count
+      //   this.list = [...this.list, ...res.data.list]; 
+      //   this.$apply()
+      // }
       // 课程
     } else if (this.tabIndex == 0) {
       const res = await http.post(__getApi._getSelfVideoList, {
@@ -138,13 +152,22 @@ export default class GroupList extends wepy.page {
     } else {
       // 文章
       const res = await http.get(__getApi._getHotNews, {
-        type_id: 7,
+        type_id: 16,
         page_id: 1,
         page_limit: this.page_limit,
         keyword: this.keyword,
       })
       if (res.meta.success) {
-        this.list = [...this.list, ...res.data.list];
+        let list = []
+      res.data.list.forEach(element => {
+        if (element['typeImg'].startsWith('http')) {
+          element['typeImg'] = element['typeImg']
+        } else {
+          element['typeImg'] = 'https://www.otimes.com' + element['typeImg']
+        }
+        list.push(element)
+      });
+        this.list = [...this.list, ...list];
         this.count = res.data.count
         this.$apply()
       }
@@ -161,6 +184,18 @@ export default class GroupList extends wepy.page {
     this.list = [];
     this.getList();
   }
+  onShareAppMessage(e) {
+    return {
+      title: '汇聚牛人智慧，链接产业资源',
+      path: `/pages/group/list?index=${this.tabIndex}`
+    }
+  }
+  onShareTimeline(e) {
+    return {
+      title: '汇聚牛人智慧，链接产业资源',
+      path: `/pages/group/list?index=${this.tabIndex}`
+    }
+  }
 
 }
 </script>
@@ -174,7 +209,7 @@ export default class GroupList extends wepy.page {
   width: 48%;
 }
 .product-img {
-  height: 99px;
+  height: 122px;
   width: 100%;
 }
 .sub-title {
@@ -186,6 +221,11 @@ export default class GroupList extends wepy.page {
   color: #333333;
   font-size:14px;
   font-weight:500;
+}
+.date {
+  font-size:8px;
+  font-weight:400;
+  color: #666666;
 }
 .search {
   margin: 0px 16px;

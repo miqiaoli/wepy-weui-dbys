@@ -11,6 +11,9 @@
    show-screen-lock-button="true"
    ></video>
    <view class="title">{{title}}</view>
+   <view class="weui-flex" 
+    style="margin: 0 15px;font-size: 10px;font-weight: 400;color: #666666;">
+    2020-08-23 <text style="padding-left:10px;">{{views}}次播放</text></view>
    <view class="weui-article__section" style="margin: 0 15px;">
     <view class="weui-article__p">
       <rich-parse content="{{ content }}" type="html" />
@@ -32,8 +35,10 @@
   </view>
   <view class="comment">
     <view class="weui-flex" style="justify-content: space-between; margin-bottom: 10px;font-size:12px;">
-      <view class="" style="color:#999;">精选评论</view>
-      <view @tap="showComment" class="" style="padding-right:8px;color:#333;">评论</view>
+      <view class="weui-flex__item" style="color:#999;">精选评论</view>
+      <view wx:if="{{user}}" @tap="showComment" class="" style="padding:0 8px;color:#333;">评论</view>
+      <button wx:else open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo" 
+        style="padding:0 8px;color:#333;font-size:12px;background-color: #efefef;">评论</button>
     </view>
     <view class="weui-flex" style="margin-bottom:20px;" wx:for="{{commons}}" wx:key="index" wx:for-index="index" wx:for-item="item">
       <image style="height:32px;width:32px;min-width:32px;" src="{{item.namePic}}" />
@@ -62,7 +67,8 @@ export default class Video extends wepy.page {
     mute: true,
     title: '',
     commons: [],
-    autoplay: true,
+    views: 0,
+    autoplay: false,
     playGesture: true,
     vslideGesture: true,
     imgHost: 'https://www.otimes.com',
@@ -71,8 +77,28 @@ export default class Video extends wepy.page {
     showFocus: false,
     commit: '',
     user: null,
+    token_access: '',
   }
   methods = {
+    async bindGetUserInfo(e) {
+      const self = this
+      const res = await wepy.request({
+        url: __getApi._getUnionID,
+        data: {
+          token_access: self.token_access,
+　　　　　 encryptedData: e.detail.encryptedData,
+　　　　　 iv: e.detail.iv
+        }
+      })
+      const userInfo = res.data.data
+      wepy.setStorage({
+        key: "user_info",
+        data: JSON.stringify(userInfo)
+      });
+      this.user = userInfo
+      this.showFocus = true
+      this.$parent.$updateGlobalData("user_info", JSON.stringify(userInfo));
+    },
     showComment(e) {
       this.showFocus = true
     },
@@ -121,7 +147,22 @@ export default class Video extends wepy.page {
   onLoad(e) {
     this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : ''
     this.id = e.id
+    this.$apply()
     this.getVideo()
+    if (!this.user) {
+      this.getCodeei()
+    }
+  }
+  async getCodeei() {
+    const login = await wepy.login();
+    const res = await wepy.request({
+      url: __getApi._getPrivacyToken,
+      data: {
+        token_access: this.token_access,
+        code: login.code
+      }
+    })
+    this.token_access = res.data.data.token_access
     this.$apply()
   }
   async getVideo() {
@@ -132,8 +173,21 @@ export default class Video extends wepy.page {
       this.content = res.data.content
       this.src =  this.imgHost + res.data.mediaPath
       this.title = res.data.title
+      this.views = res.data.views
       this.commons = res.data.commons
       this.$apply()
+    }
+  }
+  onShareAppMessage(e) {
+    return {
+      title: this.title,
+      path: `/pages/group/video?id=${this.id}`
+    }
+  }
+  onShareTimeline(e) {
+    return {
+      title: this.title,
+      path: `/pages/group/video?id=${this.id}`
     }
   }
 }

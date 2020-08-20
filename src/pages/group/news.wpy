@@ -12,7 +12,7 @@
         </view>
       </view>
       <view class="author">
-        <image class="avatar"  />
+        <image class="avatar" src="/images/author.png" />
         <view class="username">{{productDetails.article_title.author || '未知'}}</view>
       </view>
     </view>
@@ -48,8 +48,10 @@
   </view>
   <view class="comment">
     <view class="weui-flex" style="justify-content: space-between; margin-bottom: 10px;font-size:12px;">
-      <view class="" style="color:#999;">精选评论</view>
-      <view @tap="showComment" class="" style="padding-right:8px;color:#333;">评论</view>
+      <view class="weui-flex__item" style="color:#999;">精选评论</view>
+      <view wx:if="{{user}}" @tap="showComment" class="" style="padding:0 8px;color:#333;">评论</view>
+      <button wx:else open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo" 
+        style="padding:0 8px;color:#333;font-size:12px;background-color: #efefef;">评论</button>
     </view>
     <view class="weui-flex" style="margin-bottom:20px;" wx:for="{{commons}}" wx:key="index" wx:for-index="index" wx:for-item="item">
       <image style="height:32px;width:32px;min-width:32px;" src="{{item.namePic}}" />
@@ -81,14 +83,33 @@ export default class NewsDls extends wepy.page {
     productDetails: {},
     // name: 'myHtmlParserKiner',
     textContent: '',
-    commons: [],
     imgHost: 'https://www.otimes.com',
     hotNewsList: [],
     commit: '',
     showFocus: false,
     user: null,
+    token_access: '',
   }
   methods = {
+    async bindGetUserInfo(e) {
+      const self = this
+      const res = await wepy.request({
+        url: __getApi._getUnionID,
+        data: {
+          token_access: self.token_access,
+  　　　　 encryptedData: e.detail.encryptedData,
+  　　　　 iv: e.detail.iv,
+        }
+      })
+      const userInfo = res.data.data
+      wepy.setStorage({
+        key: "user_info",
+        data: JSON.stringify(userInfo)
+      });
+      this.user = userInfo
+      this.showFocus = true
+      this.$parent.$updateGlobalData("user_info", JSON.stringify(userInfo));
+    },
     showComment(e) {
       this.showFocus = true
     },
@@ -146,6 +167,12 @@ export default class NewsDls extends wepy.page {
       })
     },
   }
+  async getList() {
+    const res = await http.get('https://www.otimes.com/front/weixin/getArticle.dbys?count=1&offset=0')
+    console.log(res.data.list[0].content.news_item[0].content)
+    this.textContent = res.data.list[0].content.news_item[1].content
+    this.$apply()
+  }
   async getNewsDetails() {
     const res = await http.get(__getApi._getNewsDls, {
     // const res = await http.get(__getApi._getNewsDetails, {
@@ -158,23 +185,36 @@ export default class NewsDls extends wepy.page {
     this.$apply()
   }
   onLoad(options) {
-    this.id = options.id || 9655
+    this.id = options.id || 11706
     this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : ''
-    // wx.setNavigationBarTitle({
-    //   title: '页面标题为路由参数'
-    // })
+    this.$apply()
     this.getNewsDetails()
-    // this.getHotNews()
+    if (!this.user) {
+      this.getCodeei()
+    }
   }
-  async getHotNews() {
-    const res = await http.get(__getApi._getHotNews, {
-      type_id: 1,
-      page_id: 1,
-      page_limit: 2,
+  async getCodeei() {
+    const login = await wepy.login();
+    const res = await wepy.request({
+      url: __getApi._getPrivacyToken,
+      data: {
+        token_access: this.token_access,
+        code: login.code
+      }
     })
-    if (res.meta.success) {
-      this.hotNewsList = res.data.list
-      this.$apply()
+    this.token_access = res.data.data.token_access
+    this.$apply()
+  }
+  onShareAppMessage(e) {
+    return {
+      title: this.productDetails.article_title.title,
+      path: `/pages/group/news?id=${this.id}`
+    }
+  }
+  onShareTimeline(e) {
+    return {
+      title: this.productDetails.article_title.title,
+      path: `/pages/group/news?id=${this.id}`
     }
   }
 }
@@ -194,8 +234,8 @@ export default class NewsDls extends wepy.page {
   .avatar {
     height: 60px; 
     width:60px;
-    background: #D8D8D8;
-    border-radius: 50%;
+    // background: #D8D8D8;
+    // border-radius: 50%;
   }
   .username {
     font-weight: 500; font-size: 14px;
