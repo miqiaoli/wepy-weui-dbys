@@ -6,13 +6,13 @@
         <view class="weui-flex__item"></view>
       </view>
       <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id">
-          <view class="weui-flex row">
-            <view class="title">车牌号</view>
-            <view class="weui-flex__item">{{single}}</view>
-            <view class="weui-cell__ft" data-car="{{single}}" data-index="{{index}}" bindtap="delCar">
-              <image class="icon-del" src="/images/icon/order-del.png" />
-            </view>
+        <view class="weui-flex row">
+          <view class="title">车牌号</view>
+          <view class="weui-flex__item">{{single}}</view>
+          <view class="weui-cell__ft" data-car="{{single}}" data-index="{{index}}" bindtap="delCar">
+            <image class="icon-del" src="/images/icon/order-del.png" />
           </view>
+        </view>
       </view>
     </view>
     <view wx:if="{{list.length <= 0 || count <= 0 }}" class="weui-loadmore weui-loadmore_line">
@@ -24,133 +24,155 @@
     <view class="model" wx:if="{{model}}">
       <view class="add-driver">
         <view class="weui-flex">
-          <view class="weui-flex__item" style="text-align: right;"><icon type="clear" size="20" bindtap="model" /></view>
+          <view class="weui-flex__item" style="text-align: right;">
+            <icon type="clear" size="20" bindtap="model" />
+          </view>
         </view>
         <view class="weui-flex row">
-          <view class="col-name"><text class="text-color">车牌号</text></view>
+          <view class="col-name">
+            <text class="text-color">车牌号</text>
+          </view>
           <view class="col-des weui-flex__item">
-            <input type="text" confirm-type="确定" placeholder="请输入车牌号" bindinput="carname" value="{{this.carname}}" />
+            <input
+              type="text"
+              confirm-type="确定"
+              placeholder="请输入车牌号"
+              bindinput="carname"
+              value="{{this.carname}}"
+            />
           </view>
         </view>
         <view class="weui-flex btn-confirm">
-          <button class="weui-flex__item" style="margin-right: 40rpx;" type="primary" @tap="newCar">确认提交</button>
+          <button
+            class="weui-flex__item"
+            style="margin-right: 40rpx;"
+            type="primary"
+            @tap="newCar"
+          >确认提交</button>
         </view>
       </view>
-      <view class="layer" catchtouchstart="model" catchtouchmove='preventTouchMove'></view>      
+      <view class="layer" catchtouchstart="model" catchtouchmove="preventTouchMove"></view>
     </view>
   </view>
 </template>
 
 <script>
 import wepy from "wepy";
-import {
-  __getApi
-} from "../../config.js";
+import { __getApi } from "../../config.js";
 import base from "../../mixins/base";
 import http from "../../utils/Http";
 export default class carList extends wepy.page {
   config = {
-    navigationBarTitleText: "车号信息维护",
-
-  }
+    navigationBarTitleText: "车号信息维护"
+  };
   data = {
-    carname: '',
-    token_access: '',
+    carname: "",
+    token_access: "",
     list: [],
     start: 1,
     limit: 100,
     count: 0,
     model: false,
     updateList: []
-  }
+  };
   methods = {
-    preventTouchMove(e) {
-
-    },
+    preventTouchMove(e) {},
     carname(e) {
-      this.carname = e.detail.value
-      this.$apply()
+      this.carname = e.detail.value;
+      this.$apply();
     },
     model() {
-      this.model = !this.model
+      this.model = !this.model;
     },
     async delCar(e) {
-      const self = this
-      const car = e.currentTarget.dataset.car
-      const index = e.currentTarget.dataset.index
+      const self = this;
+      const car = e.currentTarget.dataset.car;
+      const index = e.currentTarget.dataset.index;
       wx.showModal({
-        title: '提示',
+        title: "提示",
         content: `确定删除${car}`,
         success: function(res) {
           if (res.confirm) {
-            self.list.splice(index, 1)
-            self.updateCar(self.list)
+            self.list.splice(index, 1);
+            self.updateCar(self.list);
           }
         }
-      })
+      });
     },
     async newCar(e) {
       if (!this.carname) {
         wx.showToast({
-          title: '请输入车牌',
-          icon: 'none',
+          title: "请输入车牌",
+          icon: "none",
           duration: 2000
-        })
-        return
+        });
+        return;
       }
-      const carReg = /^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/
-      if (!carReg.test(this.carname)) {
-        wx.showToast({
-          title: '请输入正确车牌',
-          icon: 'none',
-          duration: 2000
-        })
-        return
+      const carReg = /^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/;
+      const xreg = /^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}(([0-9]{5}[DF]$)|([DF][A-HJ-NP-Z0-9][0-9]{4}$))/;  //新能源车牌号校验规则
+      if (this.carname.length == 7) {
+        if (!carReg.test(this.carname)) {
+          wx.showToast({
+            title: "请输入正确车牌",
+            icon: "none",
+            duration: 2000
+          });
+          return;
+        }
+      } else if(this.carname.length == 8){
+        if (!xreg.test(this.carname)) {
+          wx.showToast({
+            title: "请输入正确车牌",
+            icon: "none",
+            duration: 2000
+          });
+          return;
+        }
       }
-      this.list.push(this.carname)
-      const updateList = this.list
-      this.updateCar(updateList)
+
+      this.list.push(this.carname);
+      const updateList = this.list;
+      this.updateCar(updateList);
     }
-  }
+  };
   onLoad(e) {
-    this.token_access = this.$parent.globalData.token_access || ""
-    this.getCarList()
+    this.token_access = this.$parent.globalData.token_access || "";
+    this.getCarList();
   }
   async updateCar(list) {
     const res = await http.post(__getApi._updateCar, {
       token_access: this.token_access,
       driverCards: JSON.stringify(Array.from(list))
-    })
-    if (res.false) return
+    });
+    if (res.false) return;
     if (res.meta.success) {
-      this.getCarList()
+      this.getCarList();
       // wx.showToast({
       //   title: '成功添加车牌',
       //   icon: 'none',
       //   duration: 2000
       // })
     }
-
   }
   async getCarList() {
     const res = await http.get(__getApi._getCarList, {
       page_id: this.start || 1,
       page_limit: this.limit || 15,
       token_access: this.token_access
-    })
-    if (res.false) return
+    });
+    if (res.false) return;
     if (res.meta.success) {
-      this.count = res.data.length
-      this.list = []
+      this.count = res.data.length;
+      this.list = [];
       res.data.forEach(item => {
         if (item.indexOf('"') == 0) {
-          this.list.push(item.substring(1, item.length-1))
+          this.list.push(item.substring(1, item.length - 1));
         } else {
-          this.list.push(item)
+          this.list.push(item);
         }
-      })
-      this.model = false
-      this.$apply()
+      });
+      this.model = false;
+      this.$apply();
     }
   }
 }
@@ -180,7 +202,7 @@ export default class carList extends wepy.page {
     left: 0;
     top: 0;
     z-index: -1;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
   }
   .add-driver {
     padding: 20rpx;
@@ -193,21 +215,21 @@ export default class carList extends wepy.page {
   font-size: 14px;
   // border-bottom: 1px solid #E4E7F0;
   .col-name {
-    color: #8F8E94;
+    color: #8f8e94;
     width: 160rpx;
     text-align: center;
     .text-color {
       padding: 0rpx 8rpx;
-      color: #EB4E35;
-      background: rgba(235,78,53,0.15);
-      border: 1px solid rgba(235,78,53,0.65);
+      color: #eb4e35;
+      background: rgba(235, 78, 53, 0.15);
+      border: 1px solid rgba(235, 78, 53, 0.65);
       border-radius: 2px;
     }
   }
   .col-des {
-    color: #3D3D3D;
+    color: #3d3d3d;
   }
-} 
+}
 .list {
   font-size: 28rpx;
   padding: 20rpx 30rpx;
@@ -217,13 +239,13 @@ export default class carList extends wepy.page {
   padding: 20rpx;
   margin-bottom: 20rpx;
   background: #fff;
-  box-shadow: 0 2px 8px 0 #EAEAEA;
+  box-shadow: 0 2px 8px 0 #eaeaea;
   border-radius: 10rpx;
 }
 .new-driver {
   border-radius: 4rpx;
   padding: 10rpx 30rpx;
-  background: #6A7EEE;
+  background: #6a7eee;
   color: #ffffff;
 }
 .row {
@@ -233,6 +255,6 @@ export default class carList extends wepy.page {
 .title {
   /*margin-left: 48rpx; */
   width: 120rpx;
-  color: #8F8E94;
+  color: #8f8e94;
 }
 </style>
