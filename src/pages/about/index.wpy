@@ -32,12 +32,12 @@
         </view>
       </navigator>
       <navigator url="/pages/order/note-list">
-      <view class="weui-grid">
-        <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/about2@2x.png" mode="scaleToFill" />
+        <view class="weui-grid">
+          <view class="weui-grid__icon">
+            <image class="img-icon" src="/images/icon/about2@2x.png" mode="scaleToFill" />
+          </view>
+          <view class="weui-grid__label">票据管理</view>
         </view>
-        <view class="weui-grid__label">票据管理</view>
-      </view>
       </navigator>
       <navigator url="/pages/transaction/buy/list?buyorsell=2">
         <view class="weui-grid">
@@ -48,29 +48,58 @@
         </view>
       </navigator>
       <navigator url="/pages/mine/report">
-      <view class="weui-grid">
-        <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/about4@2x.png" mode="scaleToFill" />
+        <view class="weui-grid">
+          <view class="weui-grid__icon">
+            <image class="img-icon" src="/images/icon/about4@2x.png" mode="scaleToFill" />
+          </view>
+          <view class="weui-grid__label">检测报告</view>
         </view>
-        <view class="weui-grid__label">检测报告</view>
-      </view>
       </navigator>
       <navigator url="/pages/company/collections">
-      <view class="weui-grid">
-        <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/about5@2x.png" mode="scaleToFill" />
+        <view class="weui-grid">
+          <view class="weui-grid__icon">
+            <image class="img-icon" src="/images/icon/about5@2x.png" mode="scaleToFill" />
+          </view>
+          <view class="weui-grid__label">我的收藏</view>
         </view>
-        <view class="weui-grid__label">我的收藏</view>
-      </view>
       </navigator>
       <navigator url="/pages/transaction/shelf/list?buyorsell=2">
-      <view class="weui-grid">
-        <view class="weui-grid__icon">
-          <image class="img-icon" src="/images/icon/about6@2x.png" mode="scaleToFill" />
-          <!-- <image class="img-icon" src="/images/icon/01.png" mode="scaleToFill" /> -->
+        <view class="weui-grid">
+          <view class="weui-grid__icon">
+            <image class="img-icon" src="/images/icon/about6@2x.png" mode="scaleToFill" />
+            <!-- <image class="img-icon" src="/images/icon/01.png" mode="scaleToFill" /> -->
+          </view>
+          <view class="weui-grid__label">挂牌管理</view>
         </view>
-        <view class="weui-grid__label">挂牌管理</view>
-      </view>
+      </navigator>
+    </view>
+  </view>
+
+  <view class="list-grid user-box">
+    <view class="weui-grids">
+      <navigator url="/pages/shop/about">
+        <view class="weui-grid">
+          <view class="weui-grid__icon">
+            <image class="img-icon" src="/images/icon/score.png" mode="scaleToFill" />
+          </view>
+          <view class="weui-grid__label">我的积分</view>
+        </view>
+      </navigator>
+      <navigator url="/pages/shop/gift">
+        <view class="weui-grid">
+          <view class="weui-grid__icon">
+            <image class="img-icon" src="/images/icon/gift.png" mode="scaleToFill" />
+          </view>
+          <view class="weui-grid__label">我的礼品</view>
+        </view>
+      </navigator>
+      <navigator url="/pages/shop/address">
+        <view class="weui-grid">
+          <view class="weui-grid__icon">
+            <image class="img-icon" src="/images/icon/address1.png" mode="scaleToFill" />
+          </view>
+          <view class="weui-grid__label">我的地址</view>
+        </view>
       </navigator>
     </view>
   </view>
@@ -158,7 +187,7 @@ export default class mine extends wepy.page {
         icon: "success",
         duration: 1000
       });
-      setTimeout(function() {
+      setTimeout(function () {
         wepy.redirectTo({
           url: "/pages/user/getUserInfo"
         });
@@ -185,74 +214,90 @@ export default class mine extends wepy.page {
   }
 }
 </script>
+
 <style lang="less">
 .weui-grids {
   border-top: 0rpx solid #D9D9D9;
-  border-left:0rpx solid #D9D9D9;
+  border-left: 0rpx solid #D9D9D9;
 }
+
 .weui-grid {
-  border-right:0rpx solid #D9D9D9;
-  border-bottom:0rpx solid #D9D9D9;
+  border-right: 0rpx solid #D9D9D9;
+  border-bottom: 0rpx solid #D9D9D9;
   padding: 20rpx;
 }
+
 .img-icon {
   height: 100%;
   width: 100%;
 }
+
 .page-title {
   margin: 40rpx 40rpx 10rpx;
 }
+
 .userinfo {
   color: #FFFFFF;
   background: -webkit-linear-gradient(top, #6A7EEE, #C86DD7);
   background: -o-linear-gradient(top, #6A7EEE, #C86DD7);
   background: linear-gradient(to top, #6A7EEE, #C86DD7);
   padding: 40rpx;
+
   .userinfo-avatar {
     width: 96rpx;
     height: 96rpx;
     border-radius: 50%;
     overflow: hidden;
   }
+
   .userinfo-avatar image {
     width: 100%;
     height: 100%;
   }
+
   .userinfo-nickname {
     margin-left: 20rpx;
     align-self: center;
   }
 }
+
 .user-box {
-    margin: 20rpx 40rpx 40rpx;
-    box-shadow: 4px 4px 14px 4px #ECEFF6;
-    border-radius: 4px;
+  margin: 20rpx 40rpx 40rpx;
+  box-shadow: 4px 4px 14px 4px #ECEFF6;
+  border-radius: 4px;
 }
+
 .user-cells {
-    padding: 24rpx 40rpx;
+  padding: 24rpx 40rpx;
 }
+
 .user-cell {
-    font-size: 32rpx;
-    padding: 16rpx;
-    border-bottom: 1px solid #E4E7F0;
-    align-items: center;
+  font-size: 32rpx;
+  padding: 16rpx;
+  border-bottom: 1px solid #E4E7F0;
+  align-items: center;
 }
+
 .user-cell:last-child {
   border-bottom: none;
 }
+
 .weui-grid__icon {
   width: 40rpx;
   height: 40rpx;
 }
+
 .icon {
-    display: block;
-    width: 40rpx;
-    height: 40rpx;
-    margin-right: 20rpx;
+  display: block;
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 20rpx;
 }
+
 .logout {
   padding-top: 40rpx;
 }
+
 .weui-cell__ft_in-access {
   font-size: 28rpx;
 }
