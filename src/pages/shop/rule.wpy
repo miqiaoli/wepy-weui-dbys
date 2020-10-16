@@ -1,0 +1,38 @@
+<template>
+<view class="page bg__white">
+  <view class="item">1.凡在第八元素平台会员均可获得积分；</view>
+  <view class="item">2.注册认证成为平台会员积分+10；</view>
+  <view class="item">3.会员自主交易按照1积分/吨核算，上不封顶，建议吨数按天累计核算；</view>
+  <view class="item">4.需买方当天完成自主操作，客服或客服经理代操作的不纳入积分统计；</view>
+  <view class="item">5.积分时效期为一年，每年3月1日清零上一年积分；</view>
+  <view class="item">6.以上规则自2019年1月1日起执行，最终解释权归第八元素环境技术有限公司所有</view>
+</view>
+</template> 
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import base from '../../mixins/base'
+import http from '../../utils/Http'
+import listStates from '../../components/listStates'
+
+export default class ShopRule extends wepy.page {
+  mixins = [base]
+  components = {
+    listStates
+  }
+  config = {
+    navigationBarTitleText: '积分规则',
+  } 
+}
+</script>
+
+<style lang="less">
+.item {
+  padding: 10px 40px;
+  font-size: 16px;
+  color: #333333;
+}
+</style>
