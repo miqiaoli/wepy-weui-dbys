@@ -1,0 +1,180 @@
+<template>
+<view class="page bg__white">
+  <view class="banner">
+    <swiper indicator-dots="{{indicatorDots}}" circular="{{true}}" style="min-height:374px;" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+      <block wx:for="{{swipers}}" wx:key="index">
+        <swiper-item>
+          <image src="{{imgHost+item}}" style="height:374px;width:100%;" />
+        </swiper-item>
+      </block>
+    </swiper>
+  </view>
+  <view class="" style="padding: 10px 16px;">
+    <view class="score">{{details.redeem}}积分</view>
+    <view class="title">{{details.skuname}}</view>
+    <view class="weui-flex" style="margin-top:6px;font-size: 10px;color: #999999;">
+      <view class="weui-flex__item">库存量：{{details.stock}}</view>
+      <view class="">兑换量{{details.amount}}</view>
+    </view>
+  </view>
+  <view style="padding: 10px 16px; border-top:4px solid #efefef;">
+    <view class="title">商品描述</view>
+    <rich-parse content="{{ details.goodsdesc }}" type="html" />
+  </view>
+  <view class="btn-fix-module weui-flex">
+    <view @tap="tocar" style="background: #D5D5D5;color: #000;" class="btn weui-flex__item">加入礼品车</view>
+    <view @tap="topay" class="btn weui-flex__item">积分兑换</view>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import http from '../../utils/Http'
+import base from '../../mixins/base'
+export default class ShopDetails extends wepy.page {
+  mixins = [base]
+  config = {
+    navigationBarTitleText: '商品详情',
+    usingComponents: {
+      "rich-parse": "../../rich-parse/rich-parse"
+    }
+  }
+  data = {
+    isIpx: false,
+    indicatorDots: false,
+    vertical: false,
+    autoplay: true,
+    interval: 2000,
+    duration: 500,
+    swipers: [],
+    token_access: '',
+    imgHost: 'http://39.96.94.221:8088/filepool',
+    user: null,
+    details: {},
+  }
+  methods = {
+    async tocar() {
+      const res = await http.get(__getApi._getShopList, {
+        serverName: 'TRADE_CMS_SCORE_GIFT_CAR_ADD',
+        username: 18211001672,
+        skuid: this.details.skuid,
+        buy_number: 1,
+        token_access: this.token_access,
+      })
+      if (res.meta.success) {
+        wx.navigateTo({
+          url: `./car`
+        })
+      }
+    },
+    topay() {
+      wx.navigateTo({
+        // url: `./pay?id=${this.details.skuid}&redeem=${this.details.redeem}&skuname=${this.details.skuname}&img=${this.details.imglist[0]}`
+        url: `./pay?id=${this.details.skuid}&redeem=${this.details.redeem}&skuname=${this.details.skuname}&img=${this.details.imglist[0]}`
+      })
+    }
+  }
+  onLoad(e) {
+    this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : null
+    this.token_access = this.$parent.globalData.token_access || ''
+    this.getList(e.id)
+  }
+  async getList(id) {
+    const res = await http.get(__getApi._getShopList, {
+      serverName: 'TRADE_CMS_SCORE_GOODS_DETAIL',
+      skuId: id,
+      token_access: this.token_access,
+    })
+    if (res.meta.success) {
+      this.details = res.data.body
+      this.swipers = res.data.body.imglist
+      this.$apply()
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.score {
+  font-size: 22px;
+  font-weight: 500;
+  color: #E94300;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333333;
+}
+
+.ipx-btn-fix-module {
+  justify-content: space-around;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9;
+
+  .btn {
+    padding-top: 13px;
+    height: 57px;
+    color: #ffffff;
+    background: #0078DD;
+    font-weight: 500;
+    font-size: 16px;
+    text-align: center;
+  }
+}
+
+.ipx-btn-bottom-module {
+  justify-content: space-around;
+
+  .btn {
+    padding-top: 13px;
+    height: 57px;
+    line-height: 50px;
+    color: #ffffff;
+    background: #0078DD;
+    font-weight: 500;
+    font-size: 16px;
+    text-align: center;
+  }
+}
+
+.btn-fix-module {
+  justify-content: space-around;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9;
+
+  .btn {
+    height: 50px;
+    line-height: 50px;
+    color: #ffffff;
+    background: #0078DD;
+    font-weight: 500;
+    font-size: 16px;
+    text-align: center;
+  }
+}
+
+.btn-bottom-module {
+  justify-content: space-around;
+
+  .btn {
+    height: 50px;
+    line-height: 50px;
+    color: #ffffff;
+    background: #0078DD;
+    font-weight: 500;
+    font-size: 16px;
+    text-align: center;
+  }
+}
+</style>
