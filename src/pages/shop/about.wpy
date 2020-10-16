@@ -1,0 +1,128 @@
+<template>
+<view class="page bg__white">
+  <view class="panel">
+    <view class="weui-flex" style="padding-top: 4px;justify-content: space-between;align-items: flex-start;">
+      <view></view>
+      <view class="circle">{{custscores}}</view>
+      <navigator url="./rule">
+        <view class="" style="font-size:8px;color: #0078DD;font-weight: 500;">积分规则</view>
+      </navigator>
+    </view>
+    <view class="des weui-flex" style="justify-content:space-around;">
+      <view class="cell weui-flex__item">
+        <view class="" style="color: #999999;">本月积分</view>
+        <view class="" style="color: #666666;">{{monthscores}}</view>
+      </view>
+      <view class="cell weui-flex__item" style="border-left:2px solid #EFEFEF;">
+        <view class="" style="color: #999999;">本周积分</view>
+        <view class="" style="color: #666666;">{{weekscores}}</view>
+      </view>
+    </view>
+  </view>
+  <view class="list">
+    <view class="weui-flex" style="padding:10px 0;">
+      <view class="weui-flex__item" style="font-size: 18px;color: #333333;font-weight: 500;">积分明细</view>
+      <navigator url="./integral">
+        <view class="" style="color: #0078DD;padding-right: 10px;">更多</view>
+      </navigator>
+    </view>
+    <block wx:for="{{list}}" wx:key="id" wx:for-index="index" wx:for-item="item">
+      <view class="item weui-flex" style="align-items: center;">
+        <view class="weui-flex__item">
+          <view class="" style="font-size: 16px;font-weight: 500;color: #666666;">{{item.reason}}</view>
+          <view class="" style="color: #666666;font-size: 12px;">{{item.revisetime}}</view>
+        </view>
+        <view class="" style="font-size: 18px;color: #D50000;font-weight: 500;">{{item.revisescores}}</view>
+      </view>
+    </block>
+  </view>
+</view>
+</template>
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import http from '../../utils/Http'
+export default class ShopAbout extends wepy.page {
+  config = {
+    navigationBarTitleText: '我的积分',
+  }
+  data = {
+    isIpx: false,
+    token_access: '',
+    user: null,
+    page_num: 1,
+    page_size: 30,
+    list: [],
+    custscores: 0,
+    monthscores: 0,
+    weekscores: 0,
+  }
+  onLoad() {
+    this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : null
+    this.token_access = this.$parent.globalData.token_access || ''
+    this.getList()
+  }
+  async getList() {
+    const res = await http.get(__getApi._getShopList, {
+      serverName: 'TRADE_CMS_SCORE_LIST',
+      username: 18211001672,
+      pageno: this.page_num,
+      pagesize: this.page_size,
+      token_access: this.token_access,
+    })
+    if (res.meta.success) {
+      this.custscores = res.data.body.custscores
+      this.monthscores = res.data.body.monthscores || 0
+      this.weekscores = res.data.body.weekscores || 0
+      this.list = [...this.list, ...res.data.body.detailedlist]
+      this.$apply()
+    }
+  }
+
+  //  39.96.94.221:8088/filepool/wxhddata/2020/08/04/1596549924104.jpg
+  
+}
+</script>
+<style lang="less" scoped>
+.panel {
+  margin-top: 2px;
+  padding: 16px;
+  border-bottom: 3px solid #EFEFEF;
+  .circle {
+    height: 120px;
+    width: 120px;
+    line-height: 120px;
+    text-align: center;
+    color: #FFFFFF;
+    font-size: 24px;
+    background: #0078DD;
+    border-radius: 50%;
+    box-shadow: 2px 1px 29px 1px #0078DD;
+  }
+  .des {
+    margin-top: 25px;
+  }
+  .cell {
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+  }
+}
+.list {
+  margin: 0 16px;
+  .item {
+    margin: 0 12px;
+    padding:10px;
+    border-bottom: 1px solid #EFEFEF;
+    // &:first-child {
+    //   border-top: 1px solid #EFEFEF;
+    // }
+    &:nth-child(2 ) {
+      border-top: 1px solid #EFEFEF;
+    }
+  } 
+}
+</style>
+
