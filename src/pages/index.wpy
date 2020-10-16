@@ -40,11 +40,11 @@
       </navigator>
     </view>
     <view class="weui-flex__item">
-      <navigator url="/pages/overseas/list" hover-class="navigator-hover">
+      <navigator url="/pages/shop/index" hover-class="navigator-hover">
         <view class="tab-image">
-          <image class="image" src="../images/tabbars/center_tab_03.png" />
+          <image class="image" src="../images/tabbars/center_tab_06.png" />
         </view>
-        <text class="tab-text">环球资源</text>
+        <text class="tab-text">积分商城</text>
       </navigator>
     </view>
     <view class="weui-flex__item">
@@ -102,11 +102,11 @@
   <view class="module-box bg__gary">
     <PlasticRawMaterials :list.sync="plasticRawMaterials" idType='1' listType="false">
       <view class="product-title" slot="product-title">塑料原料</view>
-        <view class="picture page__bd_spacing" slot="pic-cont">
+      <view class="picture page__bd_spacing" slot="pic-cont">
         <navigator url="/pages/product/list?goods_class_id=1" hover-class="navigator-hover">
           <image class="pic-cont" mode="widthFix" src='{{col1Img}}' />
         </navigator>
-        </view>
+      </view>
       <image slot="pic-col" class="pic-cont" mode="widthFix" src='{{type1Img}}' />
     </PlasticRawMaterials>
   </view>
@@ -132,7 +132,7 @@
     <view @tap="toNewsDls" data-id="{{news.id}}" wx:for="{{hotNewsList}}" wx:key="index" wx:for-index="index" wx:for-item="news" class="single-news weui-flex" style="justify-content: space-between;">
       <view class="weui-flex__item left-flex">
         <view class="sub-title">{{news.title}}</view>
-        <view class="" style="font-size:12px;font-weight:500;color:#333333;">{{news.author || '未知'}} 
+        <view class="" style="font-size:12px;font-weight:500;color:#333333;">{{news.author || '未知'}}
           <text style="margin-left:10px;color:#666666;">{{news.date}}</text>
         </view>
       </view>
@@ -408,194 +408,234 @@ export default class pageIndex extends wepy.page {
 .hot-news {
   margin: 0 10px;
   padding: 0 10px;
-  box-shadow:0px 0px 8px 0px rgba(0,0,0,0.1);
-  border-radius:4px;
+  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+
   .left-flex {
-    display: flex; flex-direction: column;align-items: stretch;justify-content: space-between;align-content: space-between;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: space-between;
+    align-content: space-between;
   }
+
   .single-news {
     border-bottom: 1px solid #EFEFEF;
     // padding-bottom: 10px;
     padding: 10px 0;
+
     &:last-child {
       border-bottom: 0;
     }
   }
+
   .sub-title {
-    overflow : hidden;
+    overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     color: #333333;
-    font-size:16px;
-    font-weight:500;
+    font-size: 16px;
+    font-weight: 500;
   }
+
   .img {
     margin-left: 10px;
     height: 80px;
     width: 130px;
-    border-radius:5px;
+    border-radius: 5px;
   }
 }
+
 .product-title .desc {
-    font-family: PingFangSC-Regular;
-    font-size: 24rpx;
-    color: #A1A6BB;
-    line-height: 1em;
+  font-family: PingFangSC-Regular;
+  font-size: 24rpx;
+  color: #A1A6BB;
+  line-height: 1em;
 }
+
 .picture-col {
-    padding: 0 10rpx;
-    position: relative;
+  padding: 0 10rpx;
+  position: relative;
 }
 
 .weui-tab__panel {
-    padding-top: 42px;
-    font-size: 30rpx;
-    background: #F9F9F9;
-    padding-top: 0;
+  padding-top: 42px;
+  font-size: 30rpx;
+  background: #F9F9F9;
+  padding-top: 0;
 }
+
 .weui-navbar {
-    border-bottom: none;
-    justify-content: space-around;
-    position: inherit;
+  border-bottom: none;
+  justify-content: space-around;
+  position: inherit;
 }
+
 .weui-navbar__item {
-    flex: none;
-    padding: 0;
+  flex: none;
+  padding: 0;
 }
+
 .weui-navbar__title {
-    padding: 12px 10px 4px;
-    font-size: 32rpx;
-    color: #323972;
+  padding: 12px 10px 4px;
+  font-size: 32rpx;
+  color: #323972;
 }
+
 .weui-navbar__slider {
-    width: 0;
+  width: 0;
 }
+
 .weui-navbar__item.weui-bar__item_on .weui-navbar__title {
-    font-weight: bold;
-    border-bottom: 8rpx solid #323972;
+  font-weight: bold;
+  border-bottom: 8rpx solid #323972;
 }
+
 .font-rise {
-    color: #eb4e35;
+  color: #eb4e35;
 }
+
 .font-decline {
-    color: #00d946;
+  color: #00d946;
 }
+
 .font-level {
-    color: #999;
+  color: #999;
 }
+
 .tabs-name {
-    width: 300rpx;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  width: 300rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .filter {
+  padding: 10rpx 0 20rpx;
+  font-size: 30rpx;
+}
+
+.li-cicle {
+  width: 4rpx;
+  height: 4rpx;
+  background: #555;
+  border-radius: 50%;
+  margin-right: 12rpx;
+  vertical-align: middle;
+}
+
+.input-data {
+  height: 50rpx;
+  line-height: 50rpx;
+  border: 1px solid #9b9b9b;
+  border-radius: 8rpx;
+  margin: 0 14rpx;
+}
+
+.button-data button {
+  height: 50rpx;
+  line-height: 50rpx;
+  margin: 0 14rpx;
+  font-size: 30rpx;
+}
+
+.page {
+  position: relative;
+}
+
+.searchbar {
+  width: 100%;
+  height: 100rpx;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.weui-search-bar__label {
+  opacity: 0.8;
+}
+
+.center_tab {
+  background-color: #fff;
+  text-align: center;
+  font-size: 32rpx;
+  padding-top: 20rpx;
+  margin: 0 30rpx;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08);
+
+  .tab-image {
+    font-size: 0;
+
+    .image {
+      width: 100rpx;
+      height: 100rpx;
+    }
+  }
+
+  .tab-text {
     padding: 10rpx 0 20rpx;
     font-size: 30rpx;
+    font-weight: bold;
+  }
 }
-.li-cicle {
-    width: 4rpx;
-    height: 4rpx;
-    background: #555;
-    border-radius: 50%;
-    margin-right: 12rpx;
-    vertical-align: middle;
-}
-.input-data {
-    height: 50rpx;
-    line-height: 50rpx;
-    border: 1px solid #9b9b9b;
-    border-radius: 8rpx;
-    margin: 0 14rpx;
-}
-.button-data button {
-    height: 50rpx;
-    line-height: 50rpx;
-    margin: 0 14rpx;
-    font-size: 30rpx;
-}
-.page {
-    position: relative;
-}
-.searchbar {
-    width: 100%;
-    height: 100rpx;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-.weui-search-bar__label {
-    opacity: 0.8;
-}
-.center_tab {
-    background-color: #fff;
-    text-align: center;
-    font-size: 32rpx;
-    padding-top: 20rpx;
-    margin: 0 30rpx;
-    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08);
-    .tab-image {
-        font-size: 0;
-        .image {
-            width: 100rpx;
-            height: 100rpx;
-        }
-    }
-    .tab-text {
-        padding: 10rpx 0 20rpx;
-        font-size: 30rpx;
-        font-weight: bold;
-    }
-}
+
 .module-box {
-    // background-color: #fff;
-    margin-top: 20rpx;
+  // background-color: #fff;
+  margin-top: 20rpx;
 }
+
 .broadcast {
-    .image {
-        width: 32rpx;
-        height: 32rpx;
-        margin-top: 16rpx;
-    }
-    .content {
-        padding-left: 10rpx;
-        height: 60rpx;
-    }
-    .more {
-        width: 14px;
-        height: 12px;
-        align-self: center;
-    }
-}
-.list .content .tag {
-    height: 28rpx;
-    line-height: 28rpx;
-}
-canvas {
-    width: 100%;
-}
-.title-icon {
-    width: 40rpx;
-    height: 40rpx;
-    margin-left: 10rpx;
-    margin-top: 6rpx;
-}
-.list-box {
-    line-height: 60rpx;
-    border-bottom: 2rpx solid #E4E7F0;
-}
-.li-cicle {
-    width: 12rpx;
-    height: 12rpx;
-    background: #323972;
-    border-radius: 50%;
-    margin-right: 16rpx;
+  .image {
+    width: 32rpx;
+    height: 32rpx;
+    margin-top: 16rpx;
+  }
+
+  .content {
+    padding-left: 10rpx;
+    height: 60rpx;
+  }
+
+  .more {
+    width: 14px;
+    height: 12px;
     align-self: center;
+  }
 }
+
+.list .content .tag {
+  height: 28rpx;
+  line-height: 28rpx;
+}
+
+canvas {
+  width: 100%;
+}
+
+.title-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-left: 10rpx;
+  margin-top: 6rpx;
+}
+
+.list-box {
+  line-height: 60rpx;
+  border-bottom: 2rpx solid #E4E7F0;
+}
+
+.li-cicle {
+  width: 12rpx;
+  height: 12rpx;
+  background: #323972;
+  border-radius: 50%;
+  margin-right: 16rpx;
+  align-self: center;
+}
+
 .cur {
-    color: #115bed;
+  color: #115bed;
 }
 </style>
