@@ -1,0 +1,74 @@
+<template>
+<view class="page bg__white">
+  <view class="list">
+    <block wx:for="{{list}}" wx:key="id" wx:for-index="index" wx:for-item="item">
+      <view class="item weui-flex" style="align-items: center;">
+        <view class="weui-flex__item">
+          <view class="" style="font-size: 16px;font-weight: 500;color: #666666;">{{item.reason}}</view>
+          <view class="" style="color: #666666;font-size: 12px;">{{item.revisetime}}</view>
+        </view>
+        <view class="" style="font-size: 18px;color: #D50000;font-weight: 500;">{{item.revisescores}}</view>
+      </view>
+    </block>
+  </view>
+</view>
+</template>
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import http from '../../utils/Http'
+export default class ShopIntegral extends wepy.page {
+  config = {
+    navigationBarTitleText: '积分明细',
+  }
+  data = {
+    token_access: '',
+    user: null,
+    page_num: 1,
+    page_size: 30,
+    list: [],
+  }
+  onLoad() {
+    this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : null
+    this.token_access = this.$parent.globalData.token_access || ''
+    this.getList()
+  }
+  async getList() {
+    const res = await http.get(__getApi._getShopList, {
+      serverName: 'TRADE_CMS_SCORE_LIST',
+      username: 18211001672,
+      pageno: this.page_num,
+      pagesize: this.page_size,
+      token_access: this.token_access,
+    })
+    if (res.meta.success) {
+      this.list = [...this.list, ...res.data.body.detailedlist]
+      this.$apply()
+    }
+  }
+  onPullDownRefresh() {
+  }
+  onReachBottom() {
+    ++this.page_num
+    this.getList()
+    this.$apply()
+  }
+}
+</script>
+<style lang="less" scoped>
+.list {
+  margin: 0 16px;
+  .item {
+    margin: 0 12px;
+    padding:10px;
+    border-bottom: 1px solid #EFEFEF;
+    &:first-child {
+      border-top: 1px solid #EFEFEF;
+    }
+  }
+  
+}
+</style>
+
