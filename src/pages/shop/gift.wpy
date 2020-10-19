@@ -1,0 +1,140 @@
+<template>
+<view class="page">
+  <view class="search weui-flex">
+    <view class="weui-search-bar__form" style="line-height: 60rpx; background: #FFFFFF; border-radius: 60rpx; border:1px solid #EFEFEF;">
+      <view class="weui-search-bar__box">
+        <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
+        <input type="text" class="weui-search-bar__input" style="height: 60rpx;line-height: 60rpx; text-align: left;" placeholder="请输入关键字搜索" bindconfirm="search" confirm-type="search" value="{{keyword}}" />
+      </view>
+    </view>
+  </view>
+  <view class="list">
+    <block wx:for="{{list}}" wx:key="id" wx:for-index="index" wx:for-item="item">
+      <block wx:for="{{item.goodslist}}" wx:key="skuid" wx:for-index="index" wx:for-item="i">
+        <view class="item">
+          <view class="weui-flex">
+            <image class="img" src="{{i.img ? 'http://39.96.94.221:8088/filepool'+ i.img : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" />
+            <view class="rflex weui-flex weui-flex__item">
+              <view class="">
+                <view class="title">{{i.skuname}}</view>
+                <view class="time">{{item.buy_time}}</view>
+              </view>
+              <view class="weui-flex" style="justify-content: space-between;align-items: flex-end;">
+                <view class="" style="color: #999999;font-size: 14px;">{{i.redeem}}积分x{{i.buy_number}}</view>
+                <view @tap="tobuy" data-id="{{i.skuid}}" class="btn">再次购买</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </block>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import http from '../../utils/Http'
+export default class ShopGift extends wepy.page {
+  config = {
+    navigationBarTitleText: '我的礼品',
+  }
+  data = {
+    token_access: '',
+    user: null,
+    page_num: 1,
+    page_size: 30,
+    list: [],
+    state: 0,
+  }
+  methods = {
+    tobuy(e) {
+      const id = e.currentTarget.dataset.id
+      wx.navigateTo({
+        url: `./details?id=${id}`
+      })
+    }
+  }
+  onLoad() {
+    this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : null
+    this.token_access = this.$parent.globalData.token_access || ''
+    this.getList()
+  }
+  async getList() {
+    const res = await http.get(__getApi._getShopList, {
+      serverName: 'TRADE_CMS_SCORE_ORDER_LIST',
+      username: 18211001672,
+      pageno: this.page_num,
+      pagesize: this.page_size,
+      state: 0,
+      token_access: this.token_access,
+    })
+    if (res.meta.success) {
+      this.list = [...this.list, ...res.data.body.orderlist]
+      this.$apply()
+    }
+  }
+  onPullDownRefresh() {}
+  onReachBottom() {
+    ++this.page_num
+    this.getList()
+    this.$apply()
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.search {
+  margin: 0px 16px;
+  padding-top: 10px;
+  height: 30px;
+}
+
+.list {
+  margin: 10px 16px;
+
+  .item {
+    margin-bottom: 10px;
+    padding: 28px 10px;
+    background: white;
+    border-radius: 13px;
+
+    .img {
+      min-width: 100px;
+      width: 100px;
+      height: 100px;
+      // background: #000;
+    }
+
+    .rflex {
+      margin-left: 10px;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .title {
+        font-size: 14px;
+        color: #333;
+      }
+
+      .time {
+        color: #999999;
+        font-size: 12px;
+      }
+
+      .btn {
+        color: #F96D00;
+        font-size: 14px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        width: 74px;
+        border-radius: 20px;
+        border: 1px solid #F96D00;
+      }
+    }
+  }
+}
+</style>
