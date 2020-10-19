@@ -1,0 +1,229 @@
+<template>
+<view class="page">
+  <view class="addr">
+    <view @tap="toChooseAddr" class="item weui-flex">
+      <view wx:if="{{addr.name}}">
+        <view class="img"></view>
+        <view class="rflex weui-flex">
+          <view class="title">{{addr.name}} <text style="font-size: 14px;color: #999999;font-weight: 400;">{{addr.phone}}</text></view>
+          <view class="address">{{addr.address}}</view>
+        </view>
+      </view>
+      <view wx:else>
+        <image class="add-icon" src="/images/icon/add.png" />
+      </view>
+    </view>
+  </view>
+  <view class="list">
+    <block wx:for="{{list}}" wx:key="id" wx:for-index="index" wx:for-item="item">
+      <view class="item weui-flex">
+        <image class="img" src="{{item.img ? 'http://39.96.94.221:8088/filepool'+ item.img : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" />
+        <view class="rflex weui-flex">
+          <view class="title">{{item.skuname}}</view>
+          <view class="d">{{item.redeem}}积分<text style="padding-left:5px;color: #999999;font-size: 14px;">x{{item.buy_number}}</text></view>
+        </view>
+      </view>
+    </block>
+  </view>
+  <view class="confirm weui-flex">
+    <view class="total weui-flex__item">
+      共{{num}}件 合计：<text style="color:#E94300;">{{score}}积分</text>
+    </view>
+    <view @tap="pay" class="btn">提交订单</view>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import http from '../../utils/Http'
+import events from '../../utils/event'
+export default class ShopPay extends wepy.page {
+  config = {
+    navigationBarTitleText: '确认订单',
+  }
+  data = {
+    token_access: '',
+    user: null,
+    addr: {},
+    list: [],
+    score: 0,
+    num: 0
+  }
+  methods = {
+    toChooseAddr() {
+      events.addEvents("getBackAddr", this.getChooseAddr, this);
+      wx.navigateTo({
+        url: './address?type=choose',
+      })
+    },
+    async pay(e) {
+      if (!this.addr.name) {
+        wx.showToast({
+          title: '请选择地址',
+          icon: 'none',
+          duration: 2000
+        })
+        return
+      }
+      // 循环提交支付
+      this.list.forEach(item => {
+        const res = await http.get(__getApi._getShopList, {
+          token_access: this.token_access,
+          serverName: 'TRADE_CMS_SCORE_GOODS_ORDER',
+          username: 18211001672,
+          linkman: this.addr.name,
+          linkman_tel: this.addr.phone,
+          addres: '330000,330100,330108',
+          minute_addres: '浙江杭州市滨江区滨江',
+
+          skuid: item.skuid,
+          buy_number: item.buy_number,
+          redeem: item.redeem,
+          order_code: '',
+          state: 2,
+        })
+      })
+
+    },
+  }
+  onLoad(e) {
+    this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : null
+    this.token_access = this.$parent.globalData.token_access || ''
+    // const eventChannel = this.$scope.getOpenerEventChannel()
+    // const eventChannel = this.$wx.getOpenerEventChannel()
+    if (e.id) {
+      this.score = e.redeem
+      this.num = 1
+      this.list.push({
+        buy_number: 1,
+        skuid: e.id,
+        redeem: e.redeem,
+        skuname: e.skuname,
+        img: e.img
+      })
+    } else {
+      let self = this
+      const eventChannel = this.$wxpage.getOpenerEventChannel()
+      eventChannel.on('acceptDataFromOpenerPage', function (data) {
+        self.num = data.num
+        self.score = data.score
+        self.list = data.list
+      })
+      this.$apply()
+    }
+  }
+  getChooseAddr(addr) {
+    this.addr = addr
+    this.$apply()
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.addr {
+  margin: 10px 16px;
+
+  .add-icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .item {
+    margin-bottom: 10px;
+    padding: 18px 10px;
+    background: white;
+    border-radius: 13px;
+
+    .img {
+      min-width: 48px;
+      width: 48px;
+      height: 48px;
+      background: #000;
+      border-radius: 50%;
+    }
+
+    .rflex {
+      margin-left: 10px;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .title {
+        font-size: 16px;
+        color: #333;
+        font-weight: 500;
+      }
+
+      .address {
+        color: #333333;
+        ;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+.list {
+  margin: 10px 16px;
+
+  .item {
+    margin-bottom: 10px;
+    padding: 28px 10px;
+    background: white;
+    border-radius: 13px;
+
+    .img {
+      min-width: 100px;
+      width: 100px;
+      height: 100px;
+      // background: #000;
+    }
+
+    .rflex {
+      margin-left: 10px;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .title {
+        font-size: 14px;
+        color: #333;
+      }
+
+      .d {
+        text-align: right;
+        color: #E94300;
+        font-size: 18px;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.confirm {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 6px 16px 40px 16px;
+
+  .total {
+    line-height: 40px;
+    color: #333333;
+    font-size: 16px;
+  }
+
+  .btn {
+    padding: 0 18px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    color: #FFFFFF;
+    background: linear-gradient(180deg, #FC9600 0%, #F75D00 100%);
+    border-radius: 20px;
+  }
+}
+</style>
