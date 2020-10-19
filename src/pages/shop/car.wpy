@@ -1,0 +1,364 @@
+<template>
+<view class="page">
+  <view class="list">
+    <block wx:for="{{list}}" wx:key="id" wx:for-index="index" wx:for-item="item">
+      <view class="item weui-flex" style="align-items:center;">
+        <view data-index="{{index}}" @tap="choose" class="choose {{item.choosed ? '' : 'falseChoose'}}"></view>
+        <image class="img" src="{{item.img ? 'http://39.96.94.221:8088/filepool'+ item.img : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" />
+        <view class="rflex">
+          <view class="title">{{item.skuname}}</view>
+          <view class="weui-flex" style="justify-content: space-between;align-items: flex-end;">
+            <view class="d">{{item.redeem}}积分</view>
+            <view class="rc">
+              <text data-index="{{index}}" @tap="reduce" style="padding: 0 10px; border-right: 1px solid #E9E9E9;">-</text>
+              <text style="padding: 0 14px;">{{item.buy_number}}</text>
+              <text data-index="{{index}}" @tap="add" style="padding: 0 10px; border-left: 1px solid #E9E9E9;">+</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+  <view class="confirm weui-flex">
+    <view @tap="allChoose" class="">全选</view>
+    <view @tap="del" class="" style="margin: 0 40px; 0 20px;">删除</view>
+    <view class="total weui-flex__item">
+      合计：<text style="color:#E94300;">{{score}}积分</text>
+    </view>
+    <view @tap="toPay" class="btn">兑换({{num}})</view>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import {
+  __getApi
+} from '../../config.js'
+import http from '../../utils/Http'
+import events from '../../utils/event'
+export default class ShopCar extends wepy.page {
+  config = {
+    navigationBarTitleText: '礼品车',
+  }
+
+  data = {
+    isIpx: false,
+    token_access: '',
+    user: null,
+    list: [],
+    score: 0,
+    num: 0,
+
+    user: null,
+    addr: {},
+  }
+
+  methods = {
+    choose(e) {
+      // 计算 积分 暂定
+      let index = e.currentTarget.dataset.index;
+      if (this.list[index].choosed) {
+        this.list[index].choosed = false
+        this.num = this.num - 1
+      } else {
+        this.list[index].choosed = true
+        this.num = this.num + 1
+      }
+      this.getTotalPrice()
+      this.$apply()
+    },
+    allChoose() {
+      // 计算 积分 暂定
+      this.num = this.list.length
+      let list = []
+      this.list.map((item, index) => {
+        list.push(Object.assign({}, item, {
+          choosed: true
+        }))
+      })
+      this.list = list
+      this.getTotalPrice()
+      this.$apply()
+    },
+    del() {
+      // 展示虚假删除
+      let chooseList = this.list.filter(item => item.choosed == true)
+      this.list = chooseList
+      this.$apply()
+      let self = this
+      // 循环删除
+      chooseList.forEach((val, index) => {
+        self.delCar(val.skuid)
+      })
+    },
+    // 增加商品数量
+    reduce(e) {
+      let index = e.currentTarget.dataset.index
+      if (this.list[index].buy_number > 1) {
+        --this.list[index].buy_number
+        this.getTotalPrice()
+        this.$apply()
+      }
+    },
+    // 增加商品数量
+    add(e) {
+      let index = e.currentTarget.dataset.index
+        ++this.list[index].buy_number
+      this.getTotalPrice()
+      this.$apply()
+    },
+    // 去支付
+    toPay() {
+      let self = this
+      wx.setNavigationBarTitle({
+        title: '确认订单'
+      })
+      wx.navigateTo({
+        url: `./pay`,
+        events: {},
+        success: function (res) {
+          res.eventChannel.emit('acceptDataFromOpenerPage', {
+            score: self.score,
+            num: self.num,
+            list: self.list.filter(val => val.choosed == true)
+          })
+        }
+      })
+    },
+  }
+  onLoad(e) {
+    this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : null
+    this.token_access = this.$parent.globalData.token_access || ''
+    this.getList()
+  }
+  async getList() {
+    const res = await http.get(__getApi._getShopList, {
+      serverName: 'TRADE_CMS_SCORE_GIFT_CAR',
+      username: 18211001672,
+      token_access: this.token_access,
+    })
+    if (res.meta.success) {
+      let list = []
+      res.data.body.giftlist.map((item, index) => {
+        list.push(Object.assign({}, item, {
+          choosed: false
+        }))
+      })
+      this.list = list
+      this.$apply()
+    }
+  }
+  getTotalPrice() {
+    let chooseArr = this.list.filter(val => val.choosed == true)
+    let getTotalPrice = 0
+    chooseArr.forEach(val => {
+      getTotalPrice += Number(val.buy_number) * Number(val.redeem)
+    });
+    this.score = getTotalPrice
+  }
+  delCar(skuid) {
+    http.get(__getApi._getShopList, {
+      serverName: 'TRADE_CMS_SCORE_GIFT_CAR_ADD',
+      username: 18211001672,
+      skuid: skuid,
+      buy_number: 0,
+      token_access: this.token_access,
+    })
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.page {
+  margin-bottom: 80px;
+}
+
+.list {
+  margin: 10px 16px 10px 16px;
+
+  .item {
+    margin-bottom: 10px;
+    padding: 28px 10px;
+    background: white;
+    border-radius: 13px;
+
+    .choose {
+      height: 16px;
+      min-width: 16px;
+      width: 16px;
+      background: #0078DD;
+      border: 1px solid #0078DD;
+      border-radius: 50%;
+    }
+
+    .falseChoose {
+      border: 1px solid #E9E9E9;
+      background: white;
+    }
+
+    .img {
+      margin-left: 10px;
+      min-width: 100px;
+      width: 100px;
+      height: 100px;
+      background: #000;
+    }
+
+    .rflex {
+      height: 100px;
+      display: flex;
+      margin-left: 10px;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .title {
+        font-size: 14px;
+        color: #333;
+      }
+
+      .d {
+        color: #E94300;
+        font-size: 18px;
+        font-weight: 500;
+      }
+
+      .rc {
+        line-height: 22px;
+        height: 22px;
+        font-size: 14px;
+        color: #999999;
+        border: 1px solid #E9E9E9;
+        border-radius: 11px;
+      }
+    }
+  }
+}
+
+.confirm {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  line-height: 40px;
+  padding: 6px 16px 40px 16px;
+  color: #999999;
+  font-size: 16px;
+
+  .total {
+    color: #333333;
+    font-size: 16px;
+  }
+
+  .btn {
+    padding: 0 22px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    color: #FFFFFF;
+    background: linear-gradient(180deg, #FC9600 0%, #F75D00 100%);
+    border-radius: 20px;
+  }
+}
+
+.pay {
+  .addr {
+    margin: 10px 16px;
+
+    .item {
+      margin-bottom: 10px;
+      padding: 18px 10px;
+      background: white;
+      border-radius: 13px;
+
+      .img {
+        min-width: 48px;
+        width: 48px;
+        height: 48px;
+        background: #000;
+        border-radius: 50%;
+      }
+
+      .rflex {
+        margin-left: 10px;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .title {
+          font-size: 16px;
+          color: #333;
+          font-weight: 500;
+        }
+
+        .address {
+          color: #333333;
+          ;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .list {
+    margin: 10px 16px;
+
+    .item {
+      margin-bottom: 10px;
+      padding: 28px 10px;
+      background: white;
+      border-radius: 13px;
+
+      .img {
+        min-width: 100px;
+        width: 100px;
+        height: 100px;
+        // background: #000;
+      }
+
+      .rflex {
+        margin-left: 10px;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .title {
+          font-size: 14px;
+          color: #333;
+        }
+
+        .d {
+          text-align: right;
+          color: #E94300;
+          font-size: 18px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  .confirm {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 6px 16px 40px 16px;
+
+    .total {
+      line-height: 40px;
+      color: #333333;
+      font-size: 16px;
+    }
+
+    .btn {
+      padding: 0 18px;
+      height: 40px;
+      line-height: 40px;
+      font-size: 16px;
+      color: #FFFFFF;
+      background: linear-gradient(180deg, #FC9600 0%, #F75D00 100%);
+      border-radius: 20px;
+    }
+  }
+}
+</style>
