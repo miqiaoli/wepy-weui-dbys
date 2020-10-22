@@ -1,15 +1,15 @@
 <template>
 <view class="page">
   <view class="addr">
-    <view @tap="toChooseAddr" class="item weui-flex">
-      <view wx:if="{{addr.name}}">
+    <view @tap="toChooseAddr" class="item">
+      <view wx:if="{{addr.name}}" class="weui-flex">
         <view class="img"></view>
         <view class="rflex weui-flex">
           <view class="title">{{addr.name}} <text style="font-size: 14px;color: #999999;font-weight: 400;">{{addr.phone}}</text></view>
           <view class="address">{{addr.address}}</view>
         </view>
       </view>
-      <view wx:else>
+      <view wx:else class="weui-flex">
         <image class="add-icon" src="/images/icon/add.png" />
       </view>
     </view>
@@ -51,7 +51,8 @@ export default class ShopPay extends wepy.page {
     addr: {},
     list: [],
     score: 0,
-    num: 0
+    num: 0,
+    addres: '',
   }
   methods = {
     toChooseAddr() {
@@ -69,24 +70,25 @@ export default class ShopPay extends wepy.page {
         })
         return
       }
+      let self = this
       // 循环提交支付
+      let index = 0
       this.list.forEach(item => {
-        const res = await http.get(__getApi._getShopList, {
-          token_access: this.token_access,
-          serverName: 'TRADE_CMS_SCORE_GOODS_ORDER',
-          username: 18211001672,
-          linkman: this.addr.name,
-          linkman_tel: this.addr.phone,
-          addres: '330000,330100,330108',
-          minute_addres: '浙江杭州市滨江区滨江',
-
-          skuid: item.skuid,
-          buy_number: item.buy_number,
-          redeem: item.redeem,
-          order_code: '',
-          state: 2,
-        })
+        index++;
+        self.payLoop(item)
       })
+      if (index >= this.list.length) {
+        wx.showToast({
+          title: '支付完成',
+          icon: 'success',
+          duration: 2000
+        })
+        setTimeout(() => {
+          wx.redirectTo({
+            url: './gift'
+          })
+        }, 800)
+      }
 
     },
   }
@@ -116,8 +118,26 @@ export default class ShopPay extends wepy.page {
       this.$apply()
     }
   }
+  async payLoop(item) {
+    const res = await http.get(__getApi._getShopList, {
+      token_access: this.token_access,
+      serverName: 'TRADE_CMS_SCORE_GOODS_ORDER',
+      username: 18211001672,
+      linkman: this.addr.name,
+      linkman_tel: this.addr.phone,
+      addres: this.addres,
+      minute_addres: this.addr.address,
+
+      skuid: item.skuid,
+      buy_number: item.buy_number,
+      redeem: item.redeem,
+      order_code: '',
+      state: 2,
+    })
+  }
   getChooseAddr(addr) {
     this.addr = addr
+    this.addres = `${addr.sheng.split('_')[0]},${addr.shi.split('_')[0]},${addr.qu.split('_')[0]}`
     this.$apply()
   }
 }
@@ -128,6 +148,7 @@ export default class ShopPay extends wepy.page {
   margin: 10px 16px;
 
   .add-icon {
+    margin: 0 auto;
     width: 25px;
     height: 25px;
   }

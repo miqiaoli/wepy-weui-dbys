@@ -49,8 +49,16 @@ export default class ShopGift extends wepy.page {
     page_size: 30,
     list: [],
     state: 0,
+    keyword: '',
+    hasNextPage: false,
   }
   methods = {
+    search(e) {
+      this.keyword = e.detail.value
+      this.page_num = 1
+      this.list = []
+      this.getList()
+    },
     tobuy(e) {
       const id = e.currentTarget.dataset.id
       wx.navigateTo({
@@ -69,19 +77,25 @@ export default class ShopGift extends wepy.page {
       username: 18211001672,
       pageno: this.page_num,
       pagesize: this.page_size,
-      state: 0,
+      state: 1,
+      gsearch: encodeURI(encodeURI(this.keyword)),
       token_access: this.token_access,
     })
     if (res.meta.success) {
       this.list = [...this.list, ...res.data.body.orderlist]
+      if (res.data.body.goodslist.length >= this.page_size) {
+        this.hasNextPage = true
+      }
       this.$apply()
     }
   }
   onPullDownRefresh() {}
   onReachBottom() {
-    ++this.page_num
-    this.getList()
-    this.$apply()
+    if (this.hasNextPage) {
+      ++this.page_num
+      this.getList()
+      this.$apply()
+    }
   }
 }
 </script>

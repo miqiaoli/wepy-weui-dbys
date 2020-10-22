@@ -13,6 +13,7 @@
   </view>
 </view>
 </template>
+
 <script>
 import wepy from 'wepy'
 import {
@@ -29,6 +30,7 @@ export default class ShopIntegral extends wepy.page {
     page_num: 1,
     page_size: 30,
     list: [],
+    hasNextPage: false,
   }
   onLoad() {
     this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : null
@@ -45,30 +47,36 @@ export default class ShopIntegral extends wepy.page {
     })
     if (res.meta.success) {
       this.list = [...this.list, ...res.data.body.detailedlist]
+      if (res.data.body.goodslist.length >= this.page_size) {
+        this.hasNextPage = true
+      }
       this.$apply()
     }
   }
-  onPullDownRefresh() {
-  }
+  onPullDownRefresh() {}
   onReachBottom() {
-    ++this.page_num
-    this.getList()
-    this.$apply()
+    if (this.hasNextPage) {
+      ++this.page_num
+      this.getList()
+      this.$apply()
+    }
   }
 }
 </script>
+
 <style lang="less" scoped>
 .list {
   margin: 0 16px;
+
   .item {
     margin: 0 12px;
-    padding:10px;
+    padding: 10px;
     border-bottom: 1px solid #EFEFEF;
+
     &:first-child {
       border-top: 1px solid #EFEFEF;
     }
   }
-  
+
 }
 </style>
-
