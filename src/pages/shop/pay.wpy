@@ -53,6 +53,7 @@ export default class ShopPay extends wepy.page {
     score: 0,
     num: 0,
     addres: '',
+    user_phone: '',
   }
   methods = {
     toChooseAddr() {
@@ -92,37 +93,52 @@ export default class ShopPay extends wepy.page {
 
     },
   }
-  onLoad(e) {
+  async onLoad(e) {
     this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : null
     this.token_access = this.$parent.globalData.token_access || ''
     // const eventChannel = this.$scope.getOpenerEventChannel()
     // const eventChannel = this.$wx.getOpenerEventChannel()
-    if (e.id) {
-      this.score = e.redeem
-      this.num = 1
-      this.list.push({
-        buy_number: 1,
-        skuid: e.id,
-        redeem: e.redeem,
-        skuname: e.skuname,
-        img: e.img
+    this.user_phone = this.$parent.globalData.user_phone ? this.$parent.globalData.user_phone : ''
+    if (!this.$parent.globalData.user_phone) {
+      const resModal = await wepy.showModal({
+        title: '提示',
+        content: '无登录信息，请登录',
+        showCancel: false
       })
+      if (resModal.confirm) {
+        wepy.redirectTo({
+          url: '/pages/user/login'
+        })
+      }
     } else {
-      let self = this
-      const eventChannel = this.$wxpage.getOpenerEventChannel()
-      eventChannel.on('acceptDataFromOpenerPage', function (data) {
-        self.num = data.num
-        self.score = data.score
-        self.list = data.list
-      })
-      this.$apply()
+      if (e.id) {
+        this.score = e.redeem
+        this.num = 1
+        this.list.push({
+          buy_number: 1,
+          skuid: e.id,
+          redeem: e.redeem,
+          skuname: e.skuname,
+          img: e.img
+        })
+      } else {
+        let self = this
+        const eventChannel = this.$wxpage.getOpenerEventChannel()
+        eventChannel.on('acceptDataFromOpenerPage', function (data) {
+          self.num = data.num
+          self.score = data.score
+          self.list = data.list
+        })
+        this.$apply()
+      }
     }
+
   }
   async payLoop(item) {
     const res = await http.get(__getApi._getShopList, {
       token_access: this.token_access,
       serverName: 'TRADE_CMS_SCORE_GOODS_ORDER',
-      username: 18211001672,
+      username: this.user_phone,
       linkman: this.addr.name,
       linkman_tel: this.addr.phone,
       addres: this.addres,

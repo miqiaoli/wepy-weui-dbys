@@ -38,6 +38,7 @@
   </view>
 </view>
 </template>
+
 <script>
 import wepy from 'wepy'
 import {
@@ -58,16 +59,31 @@ export default class ShopAbout extends wepy.page {
     custscores: 0,
     monthscores: 0,
     weekscores: 0,
+    user_phone: '',
   }
-  onLoad() {
+  async onLoad() {
     this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : null
     this.token_access = this.$parent.globalData.token_access || ''
-    this.getList()
+    this.user_phone = this.$parent.globalData.user_phone ? this.$parent.globalData.user_phone : ''
+    if (!this.$parent.globalData.user_phone) {
+      const resModal = await wepy.showModal({
+        title: '提示',
+        content: '无登录信息，请登录',
+        showCancel: false
+      })
+      if (resModal.confirm) {
+        wepy.redirectTo({
+          url: '/pages/user/login'
+        })
+      }
+    } else {
+      this.getList()
+    }
   }
   async getList() {
     const res = await http.get(__getApi._getShopList, {
       serverName: 'TRADE_CMS_SCORE_LIST',
-      username: 18211001672,
+      username: this.user_phone,
       pageno: this.page_num,
       pagesize: this.page_size,
       token_access: this.token_access,
@@ -82,14 +98,16 @@ export default class ShopAbout extends wepy.page {
   }
 
   //  39.96.94.221:8088/filepool/wxhddata/2020/08/04/1596549924104.jpg
-  
+
 }
 </script>
+
 <style lang="less" scoped>
 .panel {
   margin-top: 2px;
   padding: 16px;
   border-bottom: 3px solid #EFEFEF;
+
   .circle {
     height: 120px;
     width: 120px;
@@ -101,28 +119,32 @@ export default class ShopAbout extends wepy.page {
     border-radius: 50%;
     box-shadow: 2px 1px 29px 1px #0078DD;
   }
+
   .des {
     margin-top: 25px;
   }
+
   .cell {
     font-size: 16px;
     font-weight: 500;
     text-align: center;
   }
 }
+
 .list {
   margin: 0 16px;
+
   .item {
     margin: 0 12px;
-    padding:10px;
+    padding: 10px;
     border-bottom: 1px solid #EFEFEF;
+
     // &:first-child {
     //   border-top: 1px solid #EFEFEF;
     // }
-    &:nth-child(2 ) {
+    &:nth-child(2) {
       border-top: 1px solid #EFEFEF;
     }
-  } 
+  }
 }
 </style>
-

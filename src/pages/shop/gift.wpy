@@ -51,6 +51,7 @@ export default class ShopGift extends wepy.page {
     state: 0,
     keyword: '',
     hasNextPage: false,
+    user_phone: '',
   }
   methods = {
     search(e) {
@@ -66,24 +67,38 @@ export default class ShopGift extends wepy.page {
       })
     }
   }
-  onLoad() {
+  async onLoad() {
     this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : null
+    this.user_phone = this.$parent.globalData.user_phone ? this.$parent.globalData.user_phone : ''
+    if (!this.$parent.globalData.user_phone) {
+      const resModal = await wepy.showModal({
+        title: '提示',
+        content: '无登录信息，请登录',
+        showCancel: false
+      })
+      if (resModal.confirm) {
+        wepy.redirectTo({
+          url: '/pages/user/login'
+        })
+      }
+    } else {
+      this.getList()
+    }
     this.token_access = this.$parent.globalData.token_access || ''
-    this.getList()
   }
   async getList() {
     const res = await http.get(__getApi._getShopList, {
       serverName: 'TRADE_CMS_SCORE_ORDER_LIST',
-      username: 18211001672,
+      username: this.user_phone,
       pageno: this.page_num,
       pagesize: this.page_size,
-      state: 1,
+      state: 0,
       gsearch: encodeURI(encodeURI(this.keyword)),
       token_access: this.token_access,
     })
     if (res.meta.success) {
       this.list = [...this.list, ...res.data.body.orderlist]
-      if (res.data.body.goodslist.length >= this.page_size) {
+      if (res.data.body.orderlist.length >= this.page_size) {
         this.hasNextPage = true
       }
       this.$apply()

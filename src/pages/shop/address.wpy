@@ -36,6 +36,7 @@ export default class ShopAddress extends wepy.page {
   data = {
     list: [],
     choose: false,
+    user_phone: '',
   }
   methods = {
     toDes(e) {
@@ -74,12 +75,26 @@ export default class ShopAddress extends wepy.page {
     this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : null
     this.token_access = this.$parent.globalData.token_access || ''
   }
-  onShow() {
-    this.getList()
+  async onShow() {
+    this.user_phone = this.$parent.globalData.user_phone ? this.$parent.globalData.user_phone : ''
+    if (!this.$parent.globalData.user_phone) {
+      const resModal = await wepy.showModal({
+        title: '提示',
+        content: '无登录信息，请登录',
+        showCancel: false
+      })
+      if (resModal.confirm) {
+        wepy.redirectTo({
+          url: '/pages/user/login'
+        })
+      }
+    } else {
+      this.getList()
+    }
   }
   async getList() {
     const res = await http.get(__getApi._getAddrList, {
-      username: '18211001672',
+      username: this.user_phone,
     })
     if (res.meta.success) {
       this.list = res.data;

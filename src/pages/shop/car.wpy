@@ -49,9 +49,7 @@ export default class ShopCar extends wepy.page {
     list: [],
     score: 0,
     num: 0,
-
-    user: null,
-    addr: {},
+    user_phone: '',
   }
 
   methods = {
@@ -82,14 +80,18 @@ export default class ShopCar extends wepy.page {
       this.$apply()
     },
     del() {
+      if (this.num <= 0) {
+        return
+      }
       // 展示虚假删除
       let chooseList = this.list.filter(item => item.choosed == true)
-      this.list = chooseList
+      let carList = this.list.filter(item => item.choosed == false)
+      this.list = carList
       this.$apply()
       let self = this
       // 循环删除
       chooseList.forEach((val, index) => {
-        self.delCar(val.skuid)
+        self.delCar(val.skuid, val.buy_number)
       })
     },
     // 增加商品数量
@@ -110,6 +112,9 @@ export default class ShopCar extends wepy.page {
     },
     // 去支付
     toPay() {
+      if (this.num <= 0) {
+        return
+      }
       let self = this
       wx.setNavigationBarTitle({
         title: '确认订单'
@@ -127,15 +132,29 @@ export default class ShopCar extends wepy.page {
       })
     },
   }
-  onLoad(e) {
+  async onLoad(e) {
     this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : null
     this.token_access = this.$parent.globalData.token_access || ''
-    this.getList()
+    this.user_phone = this.$parent.globalData.user_phone ? this.$parent.globalData.user_phone : ''
+    if (!this.$parent.globalData.user_phone) {
+      const resModal = await wepy.showModal({
+        title: '提示',
+        content: '无登录信息，请登录',
+        showCancel: false
+      })
+      if (resModal.confirm) {
+        wepy.redirectTo({
+          url: '/pages/user/login'
+        })
+      }
+    } else {
+      this.getList()
+    }
   }
   async getList() {
     const res = await http.get(__getApi._getShopList, {
       serverName: 'TRADE_CMS_SCORE_GIFT_CAR',
-      username: 18211001672,
+      username: this.user_phone,
       token_access: this.token_access,
     })
     if (res.meta.success) {
@@ -157,12 +176,13 @@ export default class ShopCar extends wepy.page {
     });
     this.score = getTotalPrice
   }
-  delCar(skuid) {
-    http.get(__getApi._getShopList, {
+  delCar(skuid, buy_number) {
+    const res = http.get(__getApi._getShopList, {
       serverName: 'TRADE_CMS_SCORE_GIFT_CAR_ADD',
-      username: 18211001672,
+      username: this.user_phone,
       skuid: skuid,
-      buy_number: 0,
+      buy_number: buy_number,
+      operate: 1,
       token_access: this.token_access,
     })
   }
