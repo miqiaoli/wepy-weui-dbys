@@ -95,7 +95,7 @@
       </navigator>
       <navigator url="/pages/shop/address">
         <view class="weui-grid">
-          <view class="weui-grid__icon">
+          <view class="weui-grid__icon" style="width: 32rpx;">
             <image class="img-icon" src="/images/icon/address1.png" mode="scaleToFill" />
           </view>
           <view class="weui-grid__label">我的地址</view>
