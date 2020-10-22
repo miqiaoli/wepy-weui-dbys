@@ -63,6 +63,7 @@ export default class ShopDetails extends wepy.page {
         username: 18211001672,
         skuid: this.details.skuid,
         buy_number: 1,
+        operate: 0,
         token_access: this.token_access,
       })
       if (res.meta.success) {
