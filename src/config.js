@@ -1,5 +1,5 @@
 const host = 'https://www.otimes.com/front'
-// const host = 'http://afa.blxf.vip/front'
+// const host = 'http://admin.blxf.vip/front'
 // const host = 'https://www.dbys.top/front'
 // const imgHost = 'https://www.dbys.top' // 测试图片地址
 const imgHost = 'https://www.otimes.com'
@@ -301,6 +301,15 @@ export const __getApi = {
   // 微信文章
   _getWeixinArticleList: `${host}/weixin/getArticle.dbys`,
 
+  // 积分商城
+  _getShopList: `${host}/outsource/goodsList.dbys`, // 商品列表 serverName
+
+  // 地址
+  _getCities: `${host}/registup/getcitis.dbys`,
+  _newAddr: `${host}/outsource/addAddress.dbys`,
+  _getAddrList: `${host}/outsource/addressList.dbys`,
+  _getAddrDes: `${host}/outsource/addressDetail.dbys`,
+  _delAddr: `${host}/outsource/deleteAddress.dbys`,
 }
 
 export default {
