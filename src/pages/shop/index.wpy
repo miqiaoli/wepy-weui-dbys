@@ -31,7 +31,7 @@
           <image style="height:100%;width:100%;" src="{{product.img_add ? 'http://39.96.94.221:8088/filepool'+ product.img_add : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFill" />
         </view>
         <view class="sub-title">{{product.skuname}}</view>
-        <view class="weui-flex" style="justify-content: space-between;font-size:10px; padding: 0 2px;">
+        <view class="weui-flex" style="justify-content: space-between;font-size:10px; padding: 0 10px;">
           <view style="color: #999999;">{{product.amount}}人已购</view>
           <view style="color: #E94300;">{{product.redeem}}积分</view>
         </view>
@@ -48,7 +48,7 @@
     <view class="item" @tap="toNewsDls" data-id="{{item.skuid}}" wx:for="{{list}}" wx:key="index" wx:for-index="index" wx:for-item="item">
       <image style="height:166px;width:100%;" src="{{item.img_add ? 'http://39.96.94.221:8088/filepool'+ item.img_add : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFill" />
       <view class="title">{{item.skuname}}</view>
-      <view class="weui-flex" style="font-size: 10px;">
+      <view class="weui-flex" style="font-size: 10px;padding: 0 10px;">
         <view class="weui-flex__item" style="color: #999999;">{{item.amount}}人已购</view>
         <view class="" style="color: #E94300;font-weight: 500;">{{item.redeem}}积分</view>
       </view>
@@ -190,7 +190,7 @@ export default class ShopIndex extends wepy.page {
   margin-right: 6px;
   display: inline-block;
   width: 110px;
-
+  background: #fff;
   .img {
     width: 110px;
     height: 110px
@@ -210,6 +210,7 @@ export default class ShopIndex extends wepy.page {
     font-size: 14px;
     font-weight: 500;
     height: 44px;
+    padding: 0 10px;
   }
 }
 
@@ -219,7 +220,7 @@ export default class ShopIndex extends wepy.page {
   .item {
     margin-top: 10px;
     width: 48%;
-
+    background: #fff;
     .title {
       overflow: hidden;
       text-overflow: ellipsis;
@@ -228,6 +229,7 @@ export default class ShopIndex extends wepy.page {
       -webkit-box-orient: vertical;
       color: #333333;
       font-size: 16px;
+      padding: 0 10px;
       font-weight: 500;
     }
   }
