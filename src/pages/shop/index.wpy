@@ -12,10 +12,10 @@
     </navigator>
   </view>
   <view class="banner">
-    <swiper indicator-dots="{{indicatorDots}}" circular="{{true}}" style="min-height:200px;border-radius:8px;" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+    <swiper indicator-dots="{{indicatorDots}}" circular="{{true}}" style="height:181px;border-radius:8px;" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
       <block wx:for="{{swipers}}" wx:key="id">
         <swiper-item>
-          <image src="{{imgHost+item.image_url}}" style="width:100%;border-radius:8px;" mode="widthFix" />
+          <image src="{{imgHost+item.image_url}}" style="width:100%;min-height:181px;height:181px;border-radius:8px;" mode="widthFix" />
         </swiper-item>
       </block>
     </swiper>
@@ -251,7 +251,8 @@ export default class ShopIndex extends wepy.page {
 
 .page {
   min-height: 100vh;
-  background: white;
+  background: #efefef;
+  // background: white;
   padding-bottom: 34px;
 }
 
@@ -270,7 +271,7 @@ export default class ShopIndex extends wepy.page {
 
 .banner {
   margin: 8px 16px 10px 16px;
-  // height: 180px;
+  height: 181px;
   border-radius: 8px;
 }
 
