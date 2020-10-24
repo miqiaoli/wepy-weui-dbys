@@ -3,7 +3,8 @@
   <view class="list">
     <block wx:for="{{list}}" wx:key="id" wx:for-index="index" wx:for-item="item">
       <view class="item weui-flex" style="align-items:center;">
-        <view data-index="{{index}}" @tap="choose" class="choose {{item.choosed ? '' : 'falseChoose'}}"></view>
+        <!-- <view data-index="{{index}}" @tap="choose" class="choose {{item.choosed ? '' : 'falseChoose'}}"></view> -->
+        <icon data-index="{{index}}" @tap="choose" color="{{item.choosed ? 'red' : ''}}" type="{{item.choosed ? 'success' : 'circle'}}" size="20"></icon>
         <image class="img" src="{{item.img ? 'http://39.96.94.221:8088/filepool'+ item.img : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" />
         <view class="rflex">
           <view class="title">{{item.skuname}}</view>
@@ -158,14 +159,22 @@ export default class ShopCar extends wepy.page {
       token_access: this.token_access,
     })
     if (res.meta.success) {
-      let list = []
-      res.data.body.giftlist.map((item, index) => {
-        list.push(Object.assign({}, item, {
-          choosed: false
-        }))
-      })
-      this.list = list
-      this.$apply()
+      if (res.data.success == '0000') {
+        let list = []
+        res.data.body.giftlist.map((item, index) => {
+          list.push(Object.assign({}, item, {
+            choosed: false
+          }))
+        })
+        this.list = list
+        this.$apply()
+      } else {
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none',
+          duration: 2000
+        })
+      }
     }
   }
   getTotalPrice() {

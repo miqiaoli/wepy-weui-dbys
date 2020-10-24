@@ -89,11 +89,19 @@ export default class ShopAbout extends wepy.page {
       token_access: this.token_access,
     })
     if (res.meta.success) {
-      this.custscores = res.data.body.custscores
-      this.monthscores = res.data.body.monthscores || 0
-      this.weekscores = res.data.body.weekscores || 0
-      this.list = [...this.list, ...res.data.body.detailedlist]
-      this.$apply()
+      if (res.data.success == '0000') {
+        this.custscores = res.data.body.custscores
+        this.monthscores = res.data.body.monthscores || 0
+        this.weekscores = res.data.body.weekscores || 0
+        this.list = [...this.list, ...res.data.body.detailedlist]
+        this.$apply()
+      } else {
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none',
+          duration: 2000
+        })
+      }
     }
   }
 

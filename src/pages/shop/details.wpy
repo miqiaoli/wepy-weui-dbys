@@ -59,23 +59,44 @@ export default class ShopDetails extends wepy.page {
   }
   methods = {
     async tocar() {
-      const res = await http.get(__getApi._getShopList, {
-        serverName: 'TRADE_CMS_SCORE_GIFT_CAR_ADD',
-        username: this.user_phone,
-        skuid: this.details.skuid,
-        buy_number: 1,
-        operate: 0,
-        token_access: this.token_access,
-      })
-      if (res.meta.success) {
-        wx.navigateTo({
-          url: `./car`
+      if (this.user_phone) {
+        const res = await http.get(__getApi._getShopList, {
+          serverName: 'TRADE_CMS_SCORE_GIFT_CAR_ADD',
+          username: this.user_phone,
+          skuid: this.details.skuid,
+          buy_number: 1,
+          operate: 0,
+          token_access: this.token_access,
         })
+        if (res.meta.success) {
+          if (res.data.success == '0000') {
+            wx.navigateTo({
+              url: `./car`
+            })
+          } else {
+            wx.showToast({
+              title: res.data.msg,
+              icon: 'none',
+              duration: 2000
+            })
+          }
+        }
+      } else {
+        const resModal = await wepy.showModal({
+          title: '提示',
+          content: '无登录信息，请登录',
+          showCancel: false
+        })
+        if (resModal.confirm) {
+          wepy.redirectTo({
+            url: '/pages/user/login'
+          })
+        }
       }
+
     },
     topay() {
       wx.navigateTo({
-        // url: `./pay?id=${this.details.skuid}&redeem=${this.details.redeem}&skuname=${this.details.skuname}&img=${this.details.imglist[0]}`
         url: `./pay?id=${this.details.skuid}&redeem=${this.details.redeem}&skuname=${this.details.skuname}&img=${this.details.imglist[0]}`
       })
     }
@@ -84,21 +105,7 @@ export default class ShopDetails extends wepy.page {
     this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : null
     this.token_access = this.$parent.globalData.token_access || ''
     this.user_phone = this.$parent.globalData.user_phone ? this.$parent.globalData.user_phone : ''
-    if (!this.$parent.globalData.user_phone) {
-      const resModal = await wepy.showModal({
-        title: '提示',
-        content: '无登录信息，请登录',
-        showCancel: false
-      })
-      if (resModal.confirm) {
-        wepy.redirectTo({
-          url: '/pages/user/login'
-        })
-      }
-    } else {
-      this.getList(e.id)
-    }
-
+    this.getList(e.id)
   }
   async getList(id) {
     const res = await http.get(__getApi._getShopList, {
