@@ -70,9 +70,14 @@ export default class ShopDetails extends wepy.page {
         })
         if (res.meta.success) {
           if (res.data.success == '0000') {
-            wx.navigateTo({
-              url: `./car`
+            wx.showToast({
+              title: '添加礼品车成功',
+              icon: 'success',
+              duration: 2000
             })
+            // wx.navigateTo({
+            //   url: `./car`
+            // })
           } else {
             wx.showToast({
               title: res.data.msg,

@@ -3,7 +3,6 @@
   <view class="list">
     <block wx:for="{{list}}" wx:key="id" wx:for-index="index" wx:for-item="item">
       <view class="item weui-flex" style="align-items:center;">
-        <!-- <view data-index="{{index}}" @tap="choose" class="choose {{item.choosed ? '' : 'falseChoose'}}"></view> -->
         <icon data-index="{{index}}" @tap="choose" color="{{item.choosed ? 'red' : ''}}" type="{{item.choosed ? 'success' : 'circle'}}" size="20"></icon>
         <image class="img" src="{{item.img ? 'http://39.96.94.221:8088/filepool'+ item.img : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" />
         <view class="rflex">
@@ -99,6 +98,7 @@ export default class ShopCar extends wepy.page {
     reduce(e) {
       let index = e.currentTarget.dataset.index
       if (this.list[index].buy_number > 1) {
+        this.carNum(this.list[index].skuid, this.list[index].buy_number - 1)
         --this.list[index].buy_number
         this.getTotalPrice()
         this.$apply()
@@ -107,6 +107,7 @@ export default class ShopCar extends wepy.page {
     // 增加商品数量
     add(e) {
       let index = e.currentTarget.dataset.index
+      this.carNum(this.list[index].skuid, this.list[index].buy_number + 1)
         ++this.list[index].buy_number
       this.getTotalPrice()
       this.$apply()
@@ -195,12 +196,23 @@ export default class ShopCar extends wepy.page {
       token_access: this.token_access,
     })
   }
+  // 商品数量增减
+  carNum(skuid, buy_number) {
+    http.get(__getApi._getShopList, {
+      serverName: 'TRADE_CMS_SCORE_GIFT_CAR_ADD',
+      username: this.user_phone,
+      skuid: skuid,
+      buy_number: buy_number,
+      operate: 0,
+      token_access: this.token_access,
+    })
+  }
 }
 </script>
 
 <style lang="less" scoped>
 .page {
-  margin-bottom: 80px;
+  margin-bottom: 100px;
 }
 
 .list {
@@ -235,7 +247,7 @@ export default class ShopCar extends wepy.page {
     }
 
     .rflex {
-      height: 100px;
+      // height: 100px;
       display: flex;
       margin-left: 10px;
       flex-direction: column;
@@ -289,106 +301,6 @@ export default class ShopCar extends wepy.page {
     color: #FFFFFF;
     background: linear-gradient(180deg, #FC9600 0%, #F75D00 100%);
     border-radius: 20px;
-  }
-}
-
-.pay {
-  .addr {
-    margin: 10px 16px;
-
-    .item {
-      margin-bottom: 10px;
-      padding: 18px 10px;
-      background: white;
-      border-radius: 13px;
-
-      .img {
-        min-width: 48px;
-        width: 48px;
-        height: 48px;
-        background: #000;
-        border-radius: 50%;
-      }
-
-      .rflex {
-        margin-left: 10px;
-        flex-direction: column;
-        justify-content: space-between;
-
-        .title {
-          font-size: 16px;
-          color: #333;
-          font-weight: 500;
-        }
-
-        .address {
-          color: #333333;
-          ;
-          font-size: 14px;
-        }
-      }
-    }
-  }
-
-  .list {
-    margin: 10px 16px;
-
-    .item {
-      margin-bottom: 10px;
-      padding: 28px 10px;
-      background: white;
-      border-radius: 13px;
-
-      .img {
-        min-width: 100px;
-        width: 100px;
-        height: 100px;
-        // background: #000;
-      }
-
-      .rflex {
-        margin-left: 10px;
-        flex-direction: column;
-        justify-content: space-between;
-
-        .title {
-          font-size: 14px;
-          color: #333;
-        }
-
-        .d {
-          text-align: right;
-          color: #E94300;
-          font-size: 18px;
-          font-weight: 500;
-        }
-      }
-    }
-  }
-
-  .confirm {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: white;
-    padding: 6px 16px 40px 16px;
-
-    .total {
-      line-height: 40px;
-      color: #333333;
-      font-size: 16px;
-    }
-
-    .btn {
-      padding: 0 18px;
-      height: 40px;
-      line-height: 40px;
-      font-size: 16px;
-      color: #FFFFFF;
-      background: linear-gradient(180deg, #FC9600 0%, #F75D00 100%);
-      border-radius: 20px;
-    }
   }
 }
 </style>
