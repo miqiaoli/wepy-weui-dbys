@@ -20,7 +20,7 @@
                 <view class="time">{{item.buy_time}}</view>
               </view>
               <view class="weui-flex" style="justify-content: space-between;align-items: flex-end;">
-                <view class="" style="color: #999999;font-size: 14px;">{{i.redeem}}积分x{{i.buy_number}}</view>
+                <view class="" style="color: #999999;font-size: 10px;"><text style="font-size:12px;">{{i.redeem * i.buy_number}}积分</text>={{i.redeem}}积分x{{i.buy_number}}</view>
                 <view @tap="tobuy" data-id="{{i.skuid}}" class="btn">再次购买</view>
               </view>
             </view>
