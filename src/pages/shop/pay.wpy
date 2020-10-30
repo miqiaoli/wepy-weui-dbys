@@ -54,6 +54,7 @@ export default class ShopPay extends wepy.page {
     num: 0,
     addres: '',
     user_phone: '',
+    custscores: 0,
   }
   methods = {
     toChooseAddr() {
@@ -66,6 +67,14 @@ export default class ShopPay extends wepy.page {
       if (!this.addr.name) {
         wx.showToast({
           title: '请选择地址',
+          icon: 'none',
+          duration: 2000
+        })
+        return
+      }
+      if (this.custscores < this.score) {
+        wx.showToast({
+          title: '你的积分不足',
           icon: 'none',
           duration: 2000
         })
@@ -108,6 +117,7 @@ export default class ShopPay extends wepy.page {
         })
       }
     } else {
+      this.getList()
       if (e.id) {
         this.score = e.redeem
         this.num = 1
@@ -151,6 +161,27 @@ export default class ShopPay extends wepy.page {
     this.addr = addr
     this.addres = `${addr.sheng.split('_')[0]},${addr.shi.split('_')[0]},${addr.qu.split('_')[0]}`
     this.$apply()
+  }
+  async getList() {
+    const res = await http.get(__getApi._getShopList, {
+      serverName: 'TRADE_CMS_SCORE_LIST',
+      username: this.user_phone,
+      pageno: 1,
+      pagesize: 15,
+      token_access: this.token_access,
+    })
+    if (res.meta.success) {
+      if (res.data.success == '0000') {
+        this.custscores = res.data.body.custscores
+        this.$apply()
+      } else {
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none',
+          duration: 2000
+        })
+      }
+    }
   }
 }
 </script>

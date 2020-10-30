@@ -76,6 +76,15 @@ export default class ShopAddAddress extends wepy.page {
         })
         return
       }
+      let patrn = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>《》/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？ ]")
+      if (patrn.test(this.addr_des)) {// 如果包含特殊字符返回false
+        wx.showToast({
+          title: '请填写正确的地址',
+          icon: 'none',
+          duration: 2000
+        })
+        return
+      }
       const res = await http.post(__getApi._newAddr, {
         id: this.id,
         username: this.user_phone,

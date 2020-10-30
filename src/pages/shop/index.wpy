@@ -1,5 +1,6 @@
 <template>
-<view class="page">
+<view class="page bg__white">
+  <view style="background: #FFF;">
   <view class="search weui-flex">
     <view class="weui-search-bar__form" style="line-height: 60rpx; background: #FFFFFF; border-radius: 60rpx; border:1px solid #EFEFEF;">
       <view class="weui-search-bar__box">
@@ -10,6 +11,7 @@
     <navigator url="./car">
       <image class="car" src="/images/icon/car.png" />
     </navigator>
+  </view>
   </view>
   <view class="banner">
     <swiper indicator-dots="{{indicatorDots}}" circular="{{true}}" style="height:181px;border-radius:8px;" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
@@ -25,7 +27,8 @@
       <view class="nav">最受欢迎排行榜</view>
       <view class="more"></view>
     </view>
-    <scroll-view scroll-x style="width:100%; white-space: nowrap;" bindscroll="scroll">
+    <scroll-view scroll-x class="scroll" style="width:100%; white-space: nowrap;" bindscroll="scroll">
+      <view style="padding:3px">
       <view @tap="toNewsDls" data-id="{{product.skuid}}" class="single-product" wx:for="{{scrollList}}" wx:key="index" wx:for-index="index" wx:for-item="product">
         <view class="img">
           <image style="height:100%;width:100%;border-radius: 8px 8px 0 0;" src="{{product.img_add ? 'http://39.96.94.221:8088/filepool'+ product.img_add : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFill" />
@@ -36,9 +39,10 @@
           <view style="color: #E94300;">{{product.redeem}}积分</view>
         </view>
       </view>
+      </view>
     </scroll-view>
   </view>
-
+  <view class="all">全部商品</view>
   <view class="tabs weui-flex" style="justify-content:space-between;">
     <block wx:for="{{tabs}}" wx:key="index" wx:for-index="index" wx:for-item="item">
       <view @tap="chgTab" data-index="{{index}}" class="tab" style="{{tabIndex == index ? 'color:#0078DD' : ''}}">{{item}}</view>
@@ -185,16 +189,20 @@ export default class ShopIndex extends wepy.page {
 .product-recommended {
   margin: 0 16px 4px 16px;
 }
-
+::-webkit-scrollbar { 
+  width: 0; 
+  height: 0; 
+  color: transparent; 
+} 
 .single-product {
-  margin-right: 6px;
+  margin-right: 10px;
   display: inline-block;
-  width: 110px;
+  width: 140px;
   border-radius: 8px;
-  background: #fff;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
   .img {
     border-radius: 8px 8px 0 0;
-    width: 110px;
+    width: 140px;
     height: 110px
   }
 
@@ -215,7 +223,13 @@ export default class ShopIndex extends wepy.page {
     padding: 0 10px;
   }
 }
-
+.all {
+  margin-top: 20px;
+  margin-left: 16px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #333333;
+}
 .list {
   margin: 0 16px;
 
@@ -224,6 +238,7 @@ export default class ShopIndex extends wepy.page {
     width: 48%;
     background: #fff;
     border-radius: 8px;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
     .title {
       overflow: hidden;
       text-overflow: ellipsis;
@@ -239,8 +254,7 @@ export default class ShopIndex extends wepy.page {
 }
 
 .top {
-  margin: 10px 0 14px 0;
-
+  margin: 10px 0 8px 0;
   .nav {
     font-size: 18px;
     font-weight: 500;
@@ -256,8 +270,6 @@ export default class ShopIndex extends wepy.page {
 
 .page {
   min-height: 100vh;
-  background: #efefef;
-  // background: white;
   padding-bottom: 34px;
 }
 
@@ -275,14 +287,14 @@ export default class ShopIndex extends wepy.page {
 }
 
 .banner {
-  margin: 8px 16px 10px 16px;
+  background: #FFF;
+  padding: 8px 16px 10px 16px;
   height: 181px;
-  border-radius: 8px;
+  // border-radius: 8px;
 }
 
 .tabs {
-  margin: 10px 15px;
-
+  margin: 6px 15px 0 15px;
   .tab {
     color: #333333;
     font-size: 16px;
