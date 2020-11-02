@@ -1,0 +1,303 @@
+<template>
+  <view class="page page__bd bg">
+    <view class="module-box">
+      <view class="addr">
+        <view @tap="toChooseAddr" class="item">
+          <view wx:if="{{addr.name}}" class="weui-flex">
+            <!-- <view class="img"></view> -->
+            <view class="rflex weui-flex">
+              <view class="title">{{addr.name}} <text
+                  style="font-size: 14px;color: #999999;font-weight: 400;">{{addr.phone}}</text></view>
+              <view class="address">{{addr.address}}</view>
+            </view>
+          </view>
+          <view wx:else class="weui-flex">
+            <image class="add-icon" src="/images/icon/add.png" />
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="module-box">
+      <view class="weui-flex flex-warp">
+        <view class="name">品名：</view>
+        <view class="weui-flex__item">{{productName}}</view>
+      </view>
+      <view class="weui-flex flex-warp">
+        <view class="name">单价：</view>
+        <view class="weui-flex__item">{{productPrice}}元/kg</view>
+      </view>
+      <view class="weui-flex flex-warp">
+        <view class="name">数量：</view>
+        <view class="weui-flex__item">
+          <view class="buy-num weui-flex">
+            <text class="icon-text icon-text-left" @tap="reduce">-</text>
+            <input type="number" class="input-text" bindblur="getInputNum" maxlength="6" value="{{qty}}" />
+            <text class="icon-text icon-text-right" @tap="add">+</text>
+          </view>
+        </view>
+      </view>
+      <view class="weui-flex flex-warp">
+        <view class="name">订单备注：</view>
+        <view class="weui-flex__item">
+          <input type="text" class="input-desc" bindblur="getInput" value="{{desc}}" placeholder="选填" />
+        </view>
+      </view>
+      <view class="weui-flex flex-warp">
+        <view class="name"> </view>
+        <view class="weui-flex__item">
+          <text class="desc">总计：￥{{totalPrice}}元</text>
+        </view>
+      </view>
+    </view>
+    <button class="weui-btn" bindtap="getOrder">提交订单</button>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import {
+    __getApi
+  } from '../../config.js'
+  import http from '../../utils/Http'
+  import events from '../../utils/event'
+
+  export default class allType extends wepy.page {
+    config = {
+      navigationBarTitleText: '生物降解塑料'
+    }
+    data = {
+      token_access: '',
+      addressId: '',
+      addr: {},
+      addres: '',
+      productName: '',
+      productPrice: '',
+      qty: '',
+      desc: '',
+      totalPrice: ''
+    }
+    methods = {
+      toChooseAddr() {
+        events.addEvents('getBackAddr', this.getChooseAddr, this)
+        wx.navigateTo({
+          url: '/pages/shop/address?type=choose'
+        })
+      },
+      reduce() {
+        this.qty = Number(this.qty) >= 6 ? Number(this.qty) - 1 : 5
+        this.totalPrice = Number(this.productPrice) * Number(this.qty)
+        this.$apply()
+      },
+      add() {
+        this.qty = Number(this.qty) + 1
+        this.totalPrice = Number(this.productPrice) * Number(this.qty)
+        this.$apply()
+      },
+      getInputNum(e) {
+        if (Number(e.detail.value) && e.detail.value < 5) {
+          this.qty = 5
+          wx.showToast({
+            title: '最小购买数量为5KJ',
+            icon: 'none',
+            duration: 500
+          })
+        } else if (Number(e.detail.value) && e.detail.value >= 5) {
+          this.qty = e.detail.value
+        } else {
+          this.qty = 5
+          wx.showToast({
+            title: '请输入正确的数字',
+            icon: 'none',
+            duration: 500
+          })
+        }
+        this.totalPrice = Number(this.productPrice) * Number(this.qty)
+        this.$apply()
+      },
+      getInput(e) {
+        this.desc = e.detail.value
+      },
+      async getOrder() {
+        if (!this.addressId) {
+          wx.showToast({
+            title: '请填写地址信息！',
+            icon: 'none',
+            duration: 2000
+          })
+          return
+        }
+        const res = await http.post(__getApi._newOrder, {
+          token_access: this.token_access,
+          productPrice: this.productPrice,
+          productName: this.productName,
+          qty: this.qty,
+          note: this.desc,
+          addressId: this.addressId
+        })
+        // const res = await http.post(__getApi._newOrder, {
+        //   token_access: this.token_access,
+        //   productPrice: 0.01,
+        //   productName: this.productName,
+        //   qty: 1,
+        //   note: this.desc,
+        //   addressId: this.addressId
+        // })
+        if (res.false) return
+        // wepy.navigateTo({
+        //   url: '/pages/activity/buy-success?name=' + this.productName + '&price=' + this.productPrice +
+        //     '&count=' + this.qty + '&address=' + this.addr.address + '&phone=' + this.addr.phone
+        // })
+        this.requestPayment(res)
+      }
+    }
+    requestPayment(res) {
+      const that = this
+      wx.requestPayment({
+        timeStamp: res.data.timeStamp,
+        nonceStr: res.data.nonceStr,
+        package: res.data.package,
+        signType: res.data.signType,
+        paySign: res.data.paySign,
+        success(res) {
+          console.log('小程序支付成功')
+          wepy.navigateTo({
+            url: '/pages/activity/buy-success?name=' + that.productName + '&price=' + that.productPrice +
+              '&count=' + that.qty + '&address=' + that.addr.address + '&phone=' + that.addr.phone
+          })
+        },
+        fail(res) {
+          console.log('小程序支付失败')
+          wepy.showToast({
+            title: '小程序支付失败!',
+            icon: 'none',
+            duration: 1000
+          })
+        }
+      })
+    }
+    async onLoad(options) {
+      this.token_access = this.$parent.globalData.token_access || ''
+      if (!this.token_access) {
+        wepy.navigateTo({
+          url: '/pages/user/getUserInfo'
+        })
+      }
+      this.productName = options.name || 'PLA聚乳酸'
+      this.productPrice = options.price || '24'
+      this.qty = options.count || '5'
+      this.totalPrice = Number(this.productPrice) * Number(this.qty)
+    }
+    getChooseAddr(addr) {
+      this.addr = addr
+      this.addressId = addr.id
+      this.addres = `${addr.sheng.split('_')[0]},${addr.shi.split('_')[0]},${addr.qu.split('_')[0]}`
+      this.$apply()
+    }
+  }
+
+</script>
+
+<style lang="less">
+  .module-box {
+    background: #ffffff;
+    border-radius: 40rpx;
+    padding: 30rpx;
+    margin: 40rpx;
+
+    .flex-warp {
+      align-items: center;
+      margin: 40rpx 10rpx;
+    }
+
+    .weui-flex__item {
+      text-align: right;
+    }
+  }
+
+  .addr {
+    .add-icon {
+      margin: 0 auto;
+      width: 25px;
+      height: 25px;
+    }
+
+    .item {
+      margin-bottom: 10px;
+      padding: 18px 10px;
+      background: white;
+      border-radius: 13px;
+
+      .img {
+        min-width: 48px;
+        width: 48px;
+        height: 48px;
+        background: #000;
+        border-radius: 50%;
+      }
+
+      .rflex {
+        margin-left: 10px;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .title {
+          font-size: 16px;
+          color: #333;
+          font-weight: 500;
+        }
+
+        .address {
+          color: #333333;
+          ;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .buy-num {
+    justify-content: flex-end;
+
+    .icon-text {
+      width: 44rpx;
+      height: 60rpx;
+      padding: 0 16rpx;
+      text-align: center;
+      color: #cccccc;
+      border: 1px solid #cccccc;
+    }
+
+    .icon-text-left {
+      border-radius: 60rpx 0 0 60rpx;
+    }
+
+    .icon-text-right {
+      border-radius: 0 60rpx 60rpx 0;
+    }
+
+    .input-text {
+      width: 120rpx;
+      height: 60rpx;
+      background: #ffffff;
+      text-align: center;
+      // color: #0040b5;
+      border-top: 1px solid #cccccc;
+      border-bottom: 1px solid #cccccc;
+    }
+  }
+
+  .weui-btn {
+    position: absolute;
+    bottom: 60rpx;
+    left: 50%;
+    color: #fff;
+    font-size: 36rpx;
+    background: -webkit-linear-gradient(top, #FC9600, #F75D00);
+    background: -o-linear-gradient(top, #FC9600, #F75D00);
+    background: linear-gradient(to bottom, #FC9600, #F75D00);
+    padding: 0 80rpx;
+    border-radius: 90rpx;
+    margin-left: -152rpx;
+  }
+
+</style>

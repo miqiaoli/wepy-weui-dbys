@@ -75,7 +75,7 @@ export default class NewsDls extends wepy.page {
   config = {
     navigationBarTitleText: '文章详情页',
     usingComponents: {
-      "rich-parse": "../../rich-parse/rich-parse"
+      'rich-parse': '../../rich-parse/rich-parse'
     }
   }
   data = {
@@ -88,7 +88,7 @@ export default class NewsDls extends wepy.page {
     commit: '',
     showFocus: false,
     user: null,
-    token_access: '',
+    token_access: ''
   }
   methods = {
     async bindGetUserInfo(e) {
@@ -97,18 +97,18 @@ export default class NewsDls extends wepy.page {
         url: __getApi._getUnionID,
         data: {
           token_access: self.token_access,
-  　　　　 encryptedData: e.detail.encryptedData,
-  　　　　 iv: e.detail.iv,
+          　　　　 encryptedData: e.detail.encryptedData,
+          　　　　 iv: e.detail.iv
         }
       })
       const userInfo = res.data.data
       wepy.setStorage({
-        key: "user_info",
+        key: 'user_info',
         data: JSON.stringify(userInfo)
-      });
+      })
       this.user = userInfo
       this.showFocus = true
-      this.$parent.$updateGlobalData("user_info", JSON.stringify(userInfo));
+      this.$parent.$updateGlobalData('user_info', JSON.stringify(userInfo))
     },
     showComment(e) {
       this.showFocus = true
@@ -126,13 +126,12 @@ export default class NewsDls extends wepy.page {
           icon: 'none',
           duration: 2000
         })
-        return
       } else {
         // 请求接口,返回提示
         const res = await http.post(__getApi._toCommit, {
-          contentId:  this.id,
+          contentId: this.id,
           content: val,
-          openId: this.user.openId,
+          openId: this.user.openId
         })
         if (res.meta.success) {
           this.commit = ''
@@ -143,7 +142,7 @@ export default class NewsDls extends wepy.page {
           })
           setTimeout(() => {
             self.showFocus = false
-          }, 2000);
+          }, 2000)
         }
       }
     },
@@ -165,7 +164,7 @@ export default class NewsDls extends wepy.page {
       wx.navigateTo({
         url: `./news?id=${id}`
       })
-    },
+    }
   }
   async getList() {
     const res = await http.get('https://www.otimes.com/front/weixin/getArticle.dbys?count=1&offset=0')
@@ -194,7 +193,7 @@ export default class NewsDls extends wepy.page {
     }
   }
   async getCodeei() {
-    const login = await wepy.login();
+    const login = await wepy.login()
     const res = await wepy.request({
       url: __getApi._getPrivacyToken,
       data: {

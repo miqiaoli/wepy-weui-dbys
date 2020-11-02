@@ -1,6 +1,6 @@
-const host = 'https://www.otimes.com/front'
+// const host = 'https://www.otimes.com/front'
 // const host = 'http://admin.blxf.vip/front'
-// const host = 'https://www.dbys.top/front'
+const host = 'https://www.dbys.top/front'
 // const imgHost = 'https://www.dbys.top' // 测试图片地址
 const imgHost = 'https://www.otimes.com'
 const socketHost = 'wss://www.otimes.com' // websocket地址
@@ -188,11 +188,11 @@ export const __getApi = {
   _doCollection: `${host}/rise/collect.dbys`,
   _getRiceDetails: `${host}/rise/particulars.dbys`,
   _getRiceNews: `${host}/rise/sentimentList.dbys`,
-  _getAnnouncementList:`${host}/rise/announcementList.dbys`, // 获得企业的法院公告列表
-  _getAnnualReportList:`${host}//rise/annualReport.dbys.dbys`, // 获得企业年报列表
+  _getAnnouncementList: `${host}/rise/announcementList.dbys`, // 获得企业的法院公告列表
+  _getAnnualReportList: `${host}//rise/annualReport.dbys.dbys`, // 获得企业年报列表
 
   // 交易票据物流信息
-  _getOrderList: `${host}/orderb/erpddList.dbys`, //订单列表
+  _getOrderList: `${host}/orderb/erpddList.dbys`, // 订单列表
   _getOrderView: `${host}/orderb/checkht.dbys`, // 合同查看
   _getOrderDownload: `${host}/orderb/downloadht.dbys`, // 合同下载
   _getInvoiceList: `${host}/orderb/erpReceivList.dbys`, // 票据互联票据列表
@@ -272,8 +272,7 @@ export const __getApi = {
   _updateBase: `${host}/orderb/upPersonnel.dbys`, // 修改基本信息
   _updateBack: `${host}/orderb/upMarchinfo.dbys`, // 返程信息
 
-
-  //扫描二维码确认收票功能
+  // 扫描二维码确认收票功能
   _getPhone: `${host}/wxapp/getPhone.dbys`, // 授权获取手机号解密
   _getfeedback: `${host}/orderb/feedback.dbys`, // 上报手机号和备注信息
   _getreceive: `${host}/orderb/receive.dbys`, // 上报手机号和备注信息
@@ -310,6 +309,11 @@ export const __getApi = {
   _getAddrList: `${host}/outsource/addressList.dbys`,
   _getAddrDes: `${host}/outsource/addressDetail.dbys`,
   _delAddr: `${host}/outsource/deleteAddress.dbys`,
+
+  // H5活动页
+  _newOrder: `${host}/m/order.dbys`,   // 下单
+  _feedback: `${host}/resourcemap/feedback.dbys`   // 个人信息上报
+
 }
 
 export default {
