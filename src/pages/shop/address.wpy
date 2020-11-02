@@ -8,7 +8,7 @@
   <view class="list">
     <block wx:for="{{list}}" wx:key="id" wx:for-index="index" wx:for-item="item">
       <view class="item weui-flex">
-        <view class="img"></view>
+        <!-- <view class="img"></view> -->
         <view @tap="toDes" data-id="{{item.id}}" data-index="{{index}}" class="rflex weui-flex weui-flex__item">
           <view class="title">{{item.name}} <text style="color: #999999;font-weight: 400;">{{item.phone}}</text></view>
           <view class="address">{{item.address}}</view>

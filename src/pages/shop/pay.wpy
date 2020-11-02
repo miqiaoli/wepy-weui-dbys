@@ -3,7 +3,7 @@
   <view class="addr">
     <view @tap="toChooseAddr" class="item">
       <view wx:if="{{addr.name}}" class="weui-flex">
-        <view class="img"></view>
+        <!-- <view class="img"></view> -->
         <view class="rflex weui-flex">
           <view class="title">{{addr.name}} <text style="font-size: 14px;color: #999999;font-weight: 400;">{{addr.phone}}</text></view>
           <view class="address">{{addr.address}}</view>

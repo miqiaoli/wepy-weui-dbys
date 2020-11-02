@@ -14,7 +14,7 @@
     <textarea bindinput="input('addr_des')" value="{{addr_des}}" class="textarea" maxlength="-1" placeholder-style="font-size: 14px; color: #999999;" placeholder="详细地址：如道路、门牌号、小区、楼栋号、单元室等" rows="8"></textarea>
   </view>
   <view class="item" style="border-bottom:0;margin-top: 50px;">
-    <button class="weui-btn" type="primary" @tap="newAddr">确定</button>
+    <button class="btn weui-btn" type="primary" @tap="newAddr">确定</button>
   </view>
   <view wx:if="{{!isCity}}" class="citys" catchtouchmove='preventTouchMove'>
     <view class="inner_box">
@@ -220,6 +220,10 @@ export default class ShopAddAddress extends wepy.page {
 </script>
 
 <style lang="less" scoped>
+.btn {
+  background: linear-gradient(180deg, #FC9600 0%, #F75D00 100%);
+  color: #ffffff;
+}
 .item {
   align-items: center;
   font-size: 14px;

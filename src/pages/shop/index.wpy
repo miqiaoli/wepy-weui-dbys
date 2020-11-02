@@ -28,7 +28,7 @@
       <view class="more"></view>
     </view>
     <scroll-view scroll-x class="scroll" style="width:100%; white-space: nowrap;" bindscroll="scroll">
-      <view style="padding:3px">
+      <view style="padding-top:4px;padding-left:4px;padding-bottom:10px">
       <view @tap="toNewsDls" data-id="{{product.skuid}}" class="single-product" wx:for="{{scrollList}}" wx:key="index" wx:for-index="index" wx:for-item="product">
         <view class="img">
           <image style="height:100%;width:100%;border-radius: 8px 8px 0 0;" src="{{product.img_add ? 'http://39.96.94.221:8088/filepool'+ product.img_add : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFill" />
@@ -43,10 +43,17 @@
     </scroll-view>
   </view>
   <view class="all">全部商品</view>
-  <view class="tabs weui-flex" style="justify-content:space-between;">
+  <!-- <view class="tabs weui-flex" style="justify-content:space-between;">
     <block wx:for="{{tabs}}" wx:key="index" wx:for-index="index" wx:for-item="item">
       <view @tap="chgTab" data-index="{{index}}" class="tab" style="{{tabIndex == index ? 'color:#0078DD' : ''}}">{{item}}</view>
     </block>
+  </view> -->
+  <view style="margin: 2px 15px 0 15px;">
+    <scroll-view scroll-x class="tabs" style="width:100%; white-space: nowrap;">
+      <block wx:for="{{tabs}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+        <view @tap="chgTab" data-index="{{index}}" class="tab" style="{{tabIndex == index ? 'color:#0078DD' : ''}}">{{item}}</view>
+      </block>
+    </scroll-view>
   </view>
   <view class="list weui-flex" style="flex-wrap:wrap;justify-content:space-between;">
     <view class="item" @tap="toNewsDls" data-id="{{item.skuid}}" wx:for="{{list}}" wx:key="index" wx:for-index="index" wx:for-item="item">
@@ -88,6 +95,7 @@ export default class ShopIndex extends wepy.page {
 
     tabIndex: 0,
     tabs: ['发布时间降序', '发布时间升序', '积分降序', '积分升序'],
+    // tabs: ['仅看我能兑换', '发布时间降序', '发布时间升序', '积分降序', '积分升序'],
     token_access: '',
     user: null,
     page_num: 1,
@@ -95,6 +103,9 @@ export default class ShopIndex extends wepy.page {
     sortname: 1,
     list: [],
     hasNextPage: false,
+    score: -1,
+    scoresoptmax: 9999,
+    user_phone: '',
   };
 
   methods = {
@@ -116,17 +127,37 @@ export default class ShopIndex extends wepy.page {
     chgTab(e) {
       const index = e.currentTarget.dataset.index
       this.tabIndex = index
-      this.sortname = index + 1
       this.page_num = 1
+      this.sortname = index + 1
       this.list = []
+      // if (index == 0 && this.score < 0) {
+      //   this.getScore()
+      //   return
+      // } 
+      // if (index == 0) {
+      //   this.sortname = 1
+      //   this.scoresoptmax = this.score
+      // } else {
+      //   this.scoresoptmax = 999
+      // }
       this.getList()
+      // if (index == 0 && this.score > 0) {
+      //   this.scoresoptmax = this.score
+      //   this.sortname = 1
+      //   this.getList()
+        
+      // } else {
+      //   this.getList()
+      // }
     },
   }
   onLoad() {
     this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : null
+    this.user_phone = this.$parent.globalData.user_phone ? this.$parent.globalData.user_phone : ''
     this.getList()
     this.getScroll()
     this.getADList()
+    this.$apply()
   }
   // banner图
   async getADList() {
@@ -161,17 +192,50 @@ export default class ShopIndex extends wepy.page {
       ptype_id: 0,
       sortname: this.sortname,
       Scoresoptmin: 0,
-      Scoresoptmax: 9999,
+      Scoresoptmax: encodeURI(encodeURI(this.scoresoptmax)),
       pageno: this.page_num,
       pagesize: this.page_size,
       token_access: this.token_access,
     })
     if (res.meta.success) {
-      this.list = [...this.list, ...res.data.body.goodslist]
-      if (res.data.body.goodslist.length >= this.page_size) {
-        this.hasNextPage = true
+      if (res.data.success == '0000') {
+        this.list = [...this.list, ...res.data.body.goodslist]
+        if (res.data.body.goodslist.length >= this.page_size) {
+          this.hasNextPage = true
+        }
+        this.$apply()
+      } else {
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none',
+          duration: 2000
+        })
       }
-      this.$apply()
+    }
+  }
+  // 获取积分
+  async getScore() {
+    const res = await http.get(__getApi._getShopList, {
+      serverName: 'TRADE_CMS_SCORE_LIST',
+      username: this.user_phone,
+      pageno: 1,
+      pagesize: 15,
+      token_access: this.token_access,
+    })
+    if (res.meta.success) {
+      if (res.data.success == '0000') {
+        this.scoresoptmax = Number(res.data.body.custscores)
+        this.score = Number(res.data.body.custscores)
+        this.sortname = 1
+        this.getList()
+        this.$apply()
+      } else {
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none',
+          duration: 2000
+        })
+      }
     }
   }
   onPullDownRefresh() {}
@@ -190,6 +254,7 @@ export default class ShopIndex extends wepy.page {
   margin: 0 16px 4px 16px;
 }
 ::-webkit-scrollbar { 
+  display: none;
   width: 0; 
   height: 0; 
   color: transparent; 
@@ -224,7 +289,7 @@ export default class ShopIndex extends wepy.page {
   }
 }
 .all {
-  margin-top: 20px;
+  margin-top: 2px;
   margin-left: 16px;
   font-size: 18px;
   font-weight: 500;
@@ -254,7 +319,7 @@ export default class ShopIndex extends wepy.page {
 }
 
 .top {
-  margin: 10px 0 8px 0;
+  margin: 8px 0 8px 0;
   .nav {
     font-size: 18px;
     font-weight: 500;
@@ -288,17 +353,22 @@ export default class ShopIndex extends wepy.page {
 
 .banner {
   background: #FFF;
-  padding: 8px 16px 10px 16px;
+  padding: 8px 16px 8px 16px;
   height: 181px;
   // border-radius: 8px;
 }
 
 .tabs {
-  margin: 6px 15px 0 15px;
+  // margin: 6px 15px 0 15px;
   .tab {
+    display: inline-block;
+    padding-right: 20px;
     color: #333333;
     font-size: 16px;
     font-weight: 400;
+    &:last-child {
+      padding-right: 0;
+    }
   }
 }
 
