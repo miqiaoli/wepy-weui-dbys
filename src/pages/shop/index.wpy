@@ -36,7 +36,7 @@
         <view class="sub-title">{{product.skuname}}</view>
         <view class="weui-flex" style="margin-bottom: 4px;justify-content: space-between;font-size:10px; padding: 0 10px;">
           <view style="color: #999999;">{{product.amount}}人已购</view>
-          <view style="color: #E94300;">{{product.redeem}}积分</view>
+          <view style="color: #E94300;font-weight: 500;">{{product.redeem}}积分</view>
         </view>
       </view>
       </view>
@@ -93,9 +93,9 @@ export default class ShopIndex extends wepy.page {
     swipers: [],
     keyword: '',
 
-    tabIndex: 0,
-    tabs: ['发布时间降序', '发布时间升序', '积分降序', '积分升序'],
-    // tabs: ['仅看我能兑换', '发布时间降序', '发布时间升序', '积分降序', '积分升序'],
+    tabIndex: 1,
+    // tabs: ['发布时间降序', '发布时间升序', '积分降序', '积分升序'],
+    tabs: ['仅看我能兑换', '发布时间降序', '发布时间升序', '积分降序', '积分升序'],
     token_access: '',
     user: null,
     page_num: 1,
@@ -128,18 +128,18 @@ export default class ShopIndex extends wepy.page {
       const index = e.currentTarget.dataset.index
       this.tabIndex = index
       this.page_num = 1
-      this.sortname = index + 1
+      this.sortname = index
       this.list = []
-      // if (index == 0 && this.score < 0) {
-      //   this.getScore()
-      //   return
-      // } 
-      // if (index == 0) {
-      //   this.sortname = 1
-      //   this.scoresoptmax = this.score
-      // } else {
-      //   this.scoresoptmax = 999
-      // }
+      if (index == 0 && this.score < 0) {
+        this.getScore()
+        return
+      } 
+      if (index == 0) {
+        this.sortname = 1
+        this.scoresoptmax = this.score
+      } else {
+        this.scoresoptmax = 9999
+      }
       this.getList()
       // if (index == 0 && this.score > 0) {
       //   this.scoresoptmax = this.score
@@ -192,7 +192,7 @@ export default class ShopIndex extends wepy.page {
       ptype_id: 0,
       sortname: this.sortname,
       Scoresoptmin: 0,
-      Scoresoptmax: encodeURI(encodeURI(this.scoresoptmax)),
+      Scoresoptmax: this.scoresoptmax,
       pageno: this.page_num,
       pagesize: this.page_size,
       token_access: this.token_access,
