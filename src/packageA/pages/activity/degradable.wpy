@@ -1,17 +1,18 @@
 <template>
   <view class="page page__bd bg">
     <view class="module-box weui-flex">
-      <image src="/images/degradable/1.png" mode="widthFix" alt="">
+      <image wx:if="{{imgHost}}" src="{{imgHost}}/onlineimg/activity/1.png" mode="widthFix"
+        alt="">
         <view class="weui-flex__item"></view>
     </view>
     <view class="module-box">
-      <image src="/images/degradable/2.png" mode="widthFix" alt="">
+      <image wx:if="{{imgHost}}" src="{{imgHost}}/onlineimg/activity/2.png" mode="widthFix" alt="">
     </view>
     <view class="module-box">
-      <image src="/images/degradable/3.png" mode="widthFix" alt="">
+      <image wx:if="{{imgHost}}" src="{{imgHost}}/onlineimg/activity/3.png" mode="widthFix" alt="">
     </view>
     <view class="module-box">
-      <image src="/images/degradable/4.png" mode="widthFix" alt="">
+      <image wx:if="{{imgHost}}" src="{{imgHost}}/onlineimg/activity/4.png" mode="widthFix" alt="">
         <view class="buy-box weui-flex">
           <view class="txt">样品{{price[0]}}元/kg</view>
           <view class="buy-num weui-flex">
@@ -25,7 +26,7 @@
         </view>
     </view>
     <view class="module-box">
-      <image src="/images/degradable/5.png" mode="widthFix" alt="">
+      <image wx:if="{{imgHost}}" src="{{imgHost}}/onlineimg/activity/5.png" mode="widthFix" alt="">
         <view class="buy-box weui-flex">
           <view class="txt">样品{{price[1]}}元/kg</view>
           <view class="buy-num weui-flex">
@@ -39,7 +40,7 @@
         </view>
     </view>
     <view class="module-box">
-      <image src="/images/degradable/6.png" mode="widthFix" alt="">
+      <image wx:if="{{imgHost}}" src="{{imgHost}}/onlineimg/activity/6.png" mode="widthFix" alt="">
         <view class="buy-box weui-flex">
           <view class="txt">样品{{price[2]}}元/kg</view>
           <view class="buy-num weui-flex">
@@ -53,7 +54,7 @@
         </view>
     </view>
     <view class="module-box">
-      <image src="/images/degradable/7.png" mode="widthFix" alt="">
+      <image wx:if="{{imgHost}}" src="{{imgHost}}/onlineimg/activity/7.png" mode="widthFix" alt="">
         <view class="buy-box weui-flex">
           <view class="txt">样品{{price[3]}}元/kg</view>
           <view class="buy-num weui-flex">
@@ -67,7 +68,7 @@
         </view>
     </view>
     <view class="module-box">
-      <image src="/images/degradable/8.png" mode="widthFix" alt="">
+      <image wx:if="{{imgHost}}" src="{{imgHost}}/onlineimg/activity/8.png" mode="widthFix" alt="">
         <view class="buy-box buy-box1 weui-flex">
           <view class="txt">样品{{price[4]}}元/kg</view>
           <view class="buy-num weui-flex">
@@ -81,7 +82,7 @@
         </view>
     </view>
     <view class="module-box">
-      <image class="title" src="/images/degradable/cp.png" mode="widthFix" alt="">
+      <image wx:if="{{imgHost}}" class="title" src="{{imgHost}}/onlineimg/activity/cp.png" mode="widthFix" alt="">
         <view class="box">
           <form class="form" bindsubmit="loginBtnClick">
             <view class="ipt-box">
@@ -115,7 +116,7 @@
                     <text>网址：www.otimes.com</text>
                 </view>
             </view>
-            <image class="code" src="/images/degradable/code.jpg" mode="widthFix" alt="">
+            <image wx:if="{{imgHost}}" class="code" src="{{imgHost}}/onlineimg/activity/code.jpg" mode="widthFix" alt="">
         </view>
     </view>
   </view>
@@ -125,9 +126,9 @@
   import wepy from 'wepy'
   import {
     __getApi
-  } from '../../config.js'
-  import base from '../../mixins/base'
-  import http from '../../utils/Http'
+  } from '../../../config.js'
+  import base from '../../../mixins/base'
+  import http from '../../../utils/Http'
 
   export default class allType extends wepy.page {
     mixins = [base];
@@ -135,6 +136,7 @@
       navigationBarTitleText: '生物降解塑料'
     }
     data = {
+      imgHost: __getApi.imgHost,
       buyNumber: [5, 5, 5, 5, 5],
       price: [36.5, 24, 23, 24, 38],
       name: ['PLA聚乳酸', 'PBAT A20', 'PBAT A05', 'PBS TH801T', 'PBS TH803S'],
@@ -222,13 +224,13 @@
     onShareAppMessage(e) {
       return {
         title: '第八元素生物降解塑料样品购买，PLA, PBAT, PBS',
-        path: `/pages/activity/degradable`
+        path: `/packageA/pages/activity/degradable`
       }
     }
     onShareTimeline(e) {
       return {
         title: '第八元素生物降解塑料样品购买，PLA, PBAT, PBS',
-        path: `/pages/activity/degradable`
+        path: `/packageA/pages/activity/degradable`
       }
     }
   }

@@ -57,9 +57,9 @@
   import wepy from 'wepy'
   import {
     __getApi
-  } from '../../config.js'
-  import http from '../../utils/Http'
-  import events from '../../utils/event'
+  } from '../../../config.js'
+  import http from '../../../utils/Http'
+  import events from '../../../utils/event'
 
   export default class allType extends wepy.page {
     config = {
@@ -74,7 +74,8 @@
       productPrice: '',
       qty: '',
       desc: '',
-      totalPrice: ''
+      totalPrice: '',
+      is_first_action: true // 防止多次提交
     }
     methods = {
       toChooseAddr() {
@@ -126,6 +127,8 @@
           })
           return
         }
+        if (!this.is_first_action) return
+        this.is_first_action = false
         const res = await http.post(__getApi._newOrder, {
           token_access: this.token_access,
           productPrice: this.productPrice,
@@ -134,6 +137,7 @@
           note: this.desc,
           addressId: this.addressId
         })
+
         // const res = await http.post(__getApi._newOrder, {
         //   token_access: this.token_access,
         //   productPrice: 0.01,
@@ -143,10 +147,7 @@
         //   addressId: this.addressId
         // })
         if (res.false) return
-        // wepy.navigateTo({
-        //   url: '/pages/activity/buy-success?name=' + this.productName + '&price=' + this.productPrice +
-        //     '&count=' + this.qty + '&address=' + this.addr.address + '&phone=' + this.addr.phone
-        // })
+
         this.requestPayment(res)
       }
     }
@@ -160,13 +161,17 @@
         paySign: res.data.paySign,
         success(res) {
           console.log('小程序支付成功')
+          that.is_first_action = true
           wepy.navigateTo({
-            url: '/pages/activity/buy-success?name=' + that.productName + '&price=' + that.productPrice +
-              '&count=' + that.qty + '&address=' + that.addr.address + '&phone=' + that.addr.phone
+            url: '/packageA/pages/activity/buy-success?name=' + that.productName + '&price=' + that
+              .productPrice +
+              '&count=' + that.qty + '&address=' + that.addr.address + '&phone=' + that.addr.phone +
+              '&desc=' + that.desc
           })
         },
         fail(res) {
           console.log('小程序支付失败')
+          that.is_first_action = true
           wepy.showToast({
             title: '小程序支付失败!',
             icon: 'none',

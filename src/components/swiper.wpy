@@ -49,7 +49,7 @@ export default class SearchBar extends wepy.component {
       type: [Boolean, String],
       default: true,
       coerce(v) {
-        return typeof v === 'string' ? JSON.parse(v) : v;
+        return typeof v === 'string' ? JSON.parse(v) : v
       }
     },
     vertical: {
@@ -95,7 +95,7 @@ export default class SearchBar extends wepy.component {
         wx.navigateTo({
           url: '/pages/tmp/outer?link=' + link
         })
-      } else if (link.startsWith('/pages')) {
+      } else if (link.startsWith('/pages') || link.startsWith('/packageA')) {
         wx.navigateTo({
           url: link
         })

@@ -32,7 +32,7 @@
       <view class="text">请先截图保存订单信息</view>
       <view class="text">扫码添加客服微信并发送截图</view>
       <view class="text">确认样品信息及查询快递单号</view>
-      <image src="/images/degradable/wx-code.png" mode="widthFix" alt="">
+      <image wx:if="{{imgHost}}" src="{{imgHost}}/onlineimg/activity/wx-code.png" mode="widthFix" alt="">
     </view>
   </view>
 </template>
@@ -41,21 +41,23 @@
   import wepy from 'wepy'
   import {
     __getApi
-  } from '../../config.js'
-  import http from '../../utils/Http'
-  import events from '../../utils/event'
+  } from '../../../config.js'
+  import http from '../../../utils/Http'
+  import events from '../../../utils/event'
 
   export default class allType extends wepy.page {
     config = {
       navigationBarTitleText: '生物降解塑料'
     }
     data = {
+      imgHost: __getApi.imgHost,
       token_access: '',
       productName: '',
       productPrice: '',
       qty: '',
       phone: '',
-      address: ''
+      address: '',
+      desc: ''
     }
     methods = {
   
@@ -67,6 +69,7 @@
       this.qty = options.count
       this.address = options.address
       this.phone = options.phone
+      this.desc = options.desc
       this.totalPrice = Number(this.productPrice) * Number(this.qty)
     }
   }

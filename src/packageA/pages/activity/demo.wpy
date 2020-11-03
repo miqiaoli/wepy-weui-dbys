@@ -1,0 +1,18 @@
+<template>
+  <view class="page page__bd bg">111111</view>
+</template>
+<script>
+  import wepy from 'wepy'
+
+  export default class allType extends wepy.page {
+    config = {
+      navigationBarTitleText: '生物降解塑料'
+    }
+    data = {}
+    methods = {
+
+    }
+    onLoad() {}
+  }
+
+</script>

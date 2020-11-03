@@ -231,7 +231,7 @@ export default class pageIndex extends wepy.page {
     sliderOffset: 0,
     sliderLeft: 0,
     hotNewsList: [],
-    niuren: '',
+    niuren: ''
   };
 
   methods = {
@@ -249,7 +249,7 @@ export default class pageIndex extends wepy.page {
       wx.navigateTo({
         url: `/pages/group/news?id=${id}`
       })
-    },
+    }
   };
 
   onReady() {
@@ -374,7 +374,7 @@ export default class pageIndex extends wepy.page {
     const res = await http.get(__getApi._getHotNews, {
       type_id: 16,
       page_id: 1,
-      page_limit: 4,
+      page_limit: 4
     })
     if (res.meta.success) {
       let list = []
@@ -385,7 +385,7 @@ export default class pageIndex extends wepy.page {
           element['typeImg'] = 'https://www.otimes.com' + element['typeImg']
         }
         list.push(element)
-      });
+      })
       this.hotNewsList = list
       this.$apply()
     }
