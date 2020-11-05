@@ -64,6 +64,9 @@
         <view class="" style="color: #E94300;font-weight: 500;">{{item.redeem}}积分</view>
       </view>
     </view>
+    <view wx:if="{{list.length <= 0}}" class="weui-loadmore weui-loadmore_line">
+      <text class="weui-loadmore__tips">暂无数据</text>
+    </view>
   </view>
 </view>
 </template>
@@ -131,25 +134,15 @@ export default class ShopIndex extends wepy.page {
       this.page_num = 1
       this.sortname = index
       this.list = []
-      if (index == 0 && this.score < 0) {
-        this.getScore()
-        return
-      } 
+      this.$apply()
       if (index == 0) {
         this.sortname = 1
-        this.scoresoptmax = this.score
+        this.getScore()
+        // this.scoresoptmax = this.score
       } else {
         this.scoresoptmax = 9999
+        this.getList()
       }
-      this.getList()
-      // if (index == 0 && this.score > 0) {
-      //   this.scoresoptmax = this.score
-      //   this.sortname = 1
-      //   this.getList()
-        
-      // } else {
-      //   this.getList()
-      // }
     },
   }
   onLoad() {
@@ -228,8 +221,8 @@ export default class ShopIndex extends wepy.page {
         this.scoresoptmax = Number(res.data.body.custscores)
         this.score = Number(res.data.body.custscores)
         this.sortname = 1
-        this.getList()
         this.$apply()
+        this.getList()
       } else {
         wx.showToast({
           title: res.data.msg,
@@ -241,7 +234,7 @@ export default class ShopIndex extends wepy.page {
   }
   onPullDownRefresh() {}
   onReachBottom() {
-    if (this.hasNextPage) {
+    if (this.hasNextPage && this.list.length >= this.page_num * 15) {
       ++this.page_num
       this.getList()
       this.$apply()

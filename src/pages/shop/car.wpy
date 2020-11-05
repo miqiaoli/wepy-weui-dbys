@@ -213,12 +213,12 @@ export default class ShopCar extends wepy.page {
 
 <style lang="less" scoped>
 .page {
-  margin-bottom: 100px;
+  // margin-bottom: 100px;
 }
 
 .list {
   margin: 10px 16px 10px 16px;
-
+  padding-bottom: 100px;
   .item {
     margin-bottom: 10px;
     padding: 28px 10px;
