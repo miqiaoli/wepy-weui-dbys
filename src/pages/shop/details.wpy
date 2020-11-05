@@ -52,7 +52,7 @@ export default class ShopDetails extends wepy.page {
     duration: 500,
     swipers: [],
     token_access: '',
-    imgHost: 'http://39.96.94.221:8088/filepool',
+    imgHost: 'https://www.otimes.com/filepool',
     user: null,
     details: {},
     user_phone: '',

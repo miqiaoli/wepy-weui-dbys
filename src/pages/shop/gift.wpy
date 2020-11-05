@@ -13,7 +13,7 @@
       <block wx:for="{{item.goodslist}}" wx:key="skuid" wx:for-index="index" wx:for-item="i">
         <view class="item">
           <view class="weui-flex">
-            <image class="img" src="{{i.img ? 'http://39.96.94.221:8088/filepool'+ i.img : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" />
+            <image class="img" src="{{i.img ? imgHost+i.img : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" />
             <view class="rflex weui-flex weui-flex__item">
               <view class="">
                 <view class="title">{{i.skuname}}</view>
@@ -43,6 +43,7 @@ export default class ShopGift extends wepy.page {
     navigationBarTitleText: '我的礼品',
   }
   data = {
+    imgHost: 'https://www.otimes.com/filepool',
     token_access: '',
     user: null,
     page_num: 1,

@@ -4,7 +4,7 @@
     <block wx:for="{{list}}" wx:key="id" wx:for-index="index" wx:for-item="item">
       <view class="item weui-flex" style="align-items:center;">
         <icon data-index="{{index}}" @tap="choose" color="{{item.choosed ? 'red' : ''}}" type="{{item.choosed ? 'success' : 'circle'}}" size="20"></icon>
-        <image class="img" src="{{item.img ? 'http://39.96.94.221:8088/filepool'+ item.img : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" />
+        <image class="img" src="{{item.img ? imgHost+item.img : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" />
         <view class="rflex">
           <view class="title">{{item.skuname}}</view>
           <view class="weui-flex" style="justify-content: space-between;align-items: flex-end;">
@@ -43,6 +43,7 @@ export default class ShopCar extends wepy.page {
   }
 
   data = {
+    imgHost: 'https://www.otimes.com/filepool',
     isIpx: false,
     token_access: '',
     user: null,
