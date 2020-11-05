@@ -302,6 +302,7 @@ export const __getApi = {
 
   // 积分商城
   _getShopList: `${host}/outsource/goodsList.dbys`, // 商品列表 serverName
+  _checkPass: `${host}/outsource/goodsList2.dbys`,
 
   // 地址
   _getCities: `${host}/registup/getcitis.dbys`,

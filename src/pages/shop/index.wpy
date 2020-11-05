@@ -163,7 +163,7 @@ export default class ShopIndex extends wepy.page {
   // banner图
   async getADList() {
     const res = await http.get(__getApi._getADList, {
-      ad_Model_id: 11 // 16
+      ad_Model_id: 18 // 11
     })
     if (res.false) return
     this.swipers = res.data.reverse()
