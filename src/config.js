@@ -313,7 +313,9 @@ export const __getApi = {
 
   // H5活动页
   _newOrder: `${host}/m/order.dbys`,   // 下单
-  _feedback: `${host}/resourcemap/feedback.dbys`   // 个人信息上报
+  _feedback: `${host}/resourcemap/feedback.dbys`,   // 个人信息上报
+
+  _getQrcode: `${host}/m/qrcode/createQrCode.dbys`, // 生成小程序二维码
 
 }
 
