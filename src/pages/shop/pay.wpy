@@ -29,8 +29,8 @@
     <view class="total weui-flex__item">
       共{{num}}件 合计：<text style="color:#E94300;">{{score}}积分</text>
     </view>
-    <view @tap="pay" class="btn">提交订单</view>
-    <!-- <view catchtap='showInputLayer' class="btn">提交订单</view> -->
+    <!-- <view @tap="pay" class="btn">提交订单</view> -->
+    <view catchtap='showInputLayer' class="btn">提交订单</view>
   </view>
   <view wx:if='{{showPayPwdInput}}'>
     <view class='bg_layer'></view>
@@ -46,15 +46,8 @@
         </view>
         <view class="weui-flex" style="align-items:center;margin:0 auto 15px auto;width:690rpx;">
           <view style="width:200rpx; text-align:center;">支付密码</view>
-          <input class="weui-flex__item input" maxlength='6' password type='number' value="{{password}}" bindinput="getValue('password')" placeholder="请输入支付密码" />
+          <input class="weui-flex__item input" maxlength='6' password type='number' value="{{password}}" bindinput="getValue('password')" placeholder="请输入6位支付密码" />
         </view>
-        <!-- <view class='input_row' catchtap='getFocus'>
-            <view class='pwd_item' wx:for='{{6}}' wx:key='item' wx:for-index='i'>
-                <text wx:if='{{pwdVal.length>i}}'></text>
-            </view>
-        </view> -->
-        <!-- <view class='forget_pwd' catchtap='hidePayLayer'>忘记密码</view> -->
-        <!-- <input class='input_control' password type='number' focus='{{payFocus}}' bindinput='inputPwd' maxlength='6'/> -->
     </view>
   </view>
 </view>
@@ -84,7 +77,6 @@ export default class ShopPay extends wepy.page {
     user_phone: '',
     custscores: 0,
     showPayPwdInput: false,  //是否展示密码输入层
-    pwdVal: '',  //输入的密码
     payFocus: false, //文本框焦点
     code: '',
     password: '',
@@ -121,9 +113,6 @@ export default class ShopPay extends wepy.page {
     },
     chgValidateCode() {
       this.cookieAndCode()
-    },
-    getFocus(){
-      this.payFocus = true;
     },
     async pay(e) {
       if (!this.addr.name) {
@@ -201,7 +190,6 @@ export default class ShopPay extends wepy.page {
         this.$apply()
       }
     }
-    // this.cookieAndCode()
   }
   async payLoop(item) {
     const res = await http.get(__getApi._getShopList, {
@@ -278,23 +266,6 @@ export default class ShopPay extends wepy.page {
     }
   }
   async checkPass() {
-    // if (!this.addr.name) {
-    //   wx.showToast({
-    //     title: '请选择地址',
-    //     icon: 'none',
-    //     duration: 2000
-    //   })
-    //   return
-    // }
-    // if (this.custscores < this.score) {
-    //   wx.showToast({
-    //     title: '你的积分不足',
-    //     icon: 'none',
-    //     duration: 2000
-    //   })
-    //   return
-    // }
-    console.log(this.password, this.code, this.cookie)
     let signa = Pwdmd5(String(this.password), String(this.code), this.cookie)
     const res = await http.get(__getApi._checkPass, {
       serverName: 'TRADE_CMS_SCORE_PASSWORD_VERIFY',
@@ -305,7 +276,7 @@ export default class ShopPay extends wepy.page {
     if (res.meta.success) {
       if (res.data.success == '0000') {
         // 成功后支付接口
-        // this.pay2()
+        this.pay2()
       } else {
         wx.showToast({
           title: res.data.msg,
@@ -317,24 +288,32 @@ export default class ShopPay extends wepy.page {
   }
   // 显示支付密码输入层
   showInputLayer() {
+    if (!this.addr.name) {
+      wx.showToast({
+        title: '请选择地址',
+        icon: 'none',
+        duration: 2000
+      })
+      return
+    }
+    if (this.custscores < this.score) {
+      wx.showToast({
+        title: '你的积分不足',
+        icon: 'none',
+        duration: 2000
+      })
+      return
+    }
+    this.cookieAndCode()
     this.showPayPwdInput = true;
     this.payFocus = true;
   }
   // 隐藏支付密码输入层
   hidePayLayer(){
-    var val = this.pwdVal;
     this.showPayPwdInput = false;
     this.payFocus = false;
     this.password = '';
-    this.pwdVal = '';
-  }
-  // 输入密码监听
-  inputPwd(e){
-    this.pwdVal = e.detail.value;
-    if (e.detail.value.length >= 6){
-      this.checkPass(e.detail.value)
-      this.hidePayLayer();
-    }
+    this.code = ''
   }
 }
 </script>
@@ -449,7 +428,6 @@ export default class ShopPay extends wepy.page {
   height: auto;
 }
 .input {
-  // margin-top: 20rpx;
   padding-left: 30rpx;
   margin-right: 30rpx;
   background: #F9F9F9;
@@ -457,18 +435,13 @@ export default class ShopPay extends wepy.page {
   line-height: 80rpx;
   border-radius: 8rpx;
 }
-
-.btn_pay{
-  margin: 100rpx auto; width: 600rpx; height: 100rpx; line-height: 100rpx; border-radius: 100rpx;
-  background-color: #d3a95a; color: #fff; font-size: 36rpx; text-align: center; 
-}
 /* 支付密码css start */
 .bg_layer{
   position: fixed; left: 0; top: 0; bottom: 0; right: 0;
   background-color: rgba(0, 0, 0, 0.6); z-index: 9998;
 }
 .input_main{
-    position: fixed; left: 0; bottom: 500rpx; width: 100%; 
+    position: fixed; left: 0; bottom: 350px; width: 100%; 
     // height: 394rpx;
     background-color: #fff; z-index: 9999;
 }
