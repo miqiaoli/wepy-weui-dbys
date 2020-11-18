@@ -17,7 +17,7 @@
       <view class="">兑换量{{details.amount}}</view>
     </view>
   </view>
-  <view style="padding: 10px 16px; border-top:4px solid #efefef;">
+  <view style="margin-bottom: 60px; padding: 10px 16px; border-top:4px solid #efefef;">
     <view class="title">商品描述</view>
     <rich-parse content="{{ details.goodsdesc }}" type="html" />
   </view>

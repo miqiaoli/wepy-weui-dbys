@@ -102,6 +102,122 @@ export default class Video extends wepy.page {
     showShareBool: false,
   }
   methods = {
+    async saveImageToPhotos() {
+      console.log('URL:', this.finalImg)
+      wx.saveImageToPhotosAlbum({
+        filePath: this.finalImg,
+        success: () => {
+          wx.showToast({
+            icon: 'success',
+            title: '海报保存成功，去分享',
+            duration: 2000,
+          })
+        },
+        fail: () => {
+          wx.showToast({
+            icon: 'none',
+            title: '保存失败，请稍后重试',
+          })
+          wx.authorize({
+            scope: 'scope.writePhotosAlbum',
+            success: () => {
+                
+            },
+            fail() {
+              wx.showToast({
+                icon: 'none',
+                title: '请设置允许访问相册',
+                duration: 2000,
+              })
+            }
+          })
+        }
+      })
+      return
+
+      wx.openSetting({
+        success: (res) => {
+          if (res.authSetting['scope.writePhotosAlbum'] === true) {
+            wx.saveImageToPhotosAlbum({
+              filePath: this.finalImg,
+              success: () => {
+                wx.showToast({
+                  icon: 'success',
+                  title: '海报保存成功，去分享',
+                  duration: 2000,
+                })
+              },
+              fail: () => {
+                wx.showToast({
+                  icon: 'none',
+                  title: '保存失败，请稍后重试',
+                  duration: 2000,
+                })
+              }
+            })
+          }
+        }
+      })
+      
+      wx.getSetting({
+        success: (res) => {
+          console.log(res);
+          if (!res.authSetting['scope.writePhotosAlbum']) {
+            wx.authorize({
+              scope: 'scope.writePhotosAlbum',
+              success: () => {
+                wx.saveImageToPhotosAlbum({
+                  filePath: this.finalImg,
+                  success: () => {
+                    wx.showToast({
+                      icon: 'success',
+                      title: '海报保存成功，去分享',
+                      duration: 2000,
+                    })
+                  },
+                  fail: () => {
+                    wx.showToast({
+                      icon: 'none',
+                      title: '保存失败，请稍后重试',
+                      duration: 2000,
+                    })
+                  }
+                })
+              },
+              fail() {
+                wx.showToast({
+                  icon: 'none',
+                  title: '请设置允许访问相册',
+                  duration: 2000,
+                })
+              }
+            })
+          } else {
+            wx.saveImageToPhotosAlbum({
+              filePath: this.finalImg,
+              success: () => {
+                wx.showToast({
+                  icon: 'success',
+                  title: '海报保存成功，去分享',
+                  duration: 2000,
+                })
+              },
+              fail: () => {
+                wx.showToast({
+                  icon: 'none',
+                  title: '保存失败，请稍后重试',
+                  duration: 2000,
+                })
+              }
+            })
+          }
+        },
+        file(err) {
+          console.log(err)
+        }
+      })
+
+    },
     hideLayer() {
       this.showShareBool = false
     },
@@ -242,7 +358,6 @@ export default class Video extends wepy.page {
                 self.showShareBool = true
                 self.$apply()
                 wx.hideLoading()
-                // self.saveImageToPhotos(res.tempFilePath)
                 wx.showToast({
                   title: '海报生成成功',
                 })
@@ -257,29 +372,7 @@ export default class Video extends wepy.page {
           })
         } else {
           console.log(res.tempFilePath, 'saveImageToPhotos')
-          // this.saveImageToPhotos(res.tempFilePath)
         }
-      }
-    })
-  }
-  saveImageToPhotos() {
-  // saveImageToPhotos(file) {
-    wx.saveImageToPhotosAlbum({
-      filePath: this.finalImg,
-      // filePath: file,
-      success: () => {
-        wx.showToast({
-          icon: 'success',
-          title: '海报保存成功，去分享',
-          duration: 2000,
-        })
-      },
-      fail: () => {
-        wx.showToast({
-          icon: 'none',
-          title: '保存失败，请稍后重试',
-          duration: 2000,
-        })
       }
     })
   }
