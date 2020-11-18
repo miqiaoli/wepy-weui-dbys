@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 <template>
   <view class="page page__bd bg">
     <view class="module-box weui-flex">
@@ -14,70 +15,70 @@
     <view class="module-box">
       <image wx:if="{{imgHost}}" src="{{imgHost}}/onlineimg/activity/4.png" mode="widthFix" alt="">
         <view class="buy-box weui-flex">
-          <view class="txt">样品{{price[0]}}元/kg</view>
+          <view class="txt">样品{{productList[0].productPrice}}元/kg</view>
           <view class="buy-num weui-flex">
             <text class="icon-text icon-text-left" @tap="reduce" data-index=0>-</text>
             <input type="number" class="input-text" bindblur="getInputNum" data-index=0 maxlength="6"
               value="{{buyNumber[0]}}" />
             <text class="icon-text icon-text-right" @tap="add" data-index=0>+</text>
           </view>
-          <button class="weui-btn" size="mini" bindtap="buy" data-name="{{name[0]}}" data-price="{{price[0]}}"
+          <button class="weui-btn" size="mini" bindtap="buy" data-name="{{name[0]}}" data-price="{{productList[0].productPrice}}"
             data-count="{{buyNumber[0]}}">购买</button>
         </view>
     </view>
     <view class="module-box">
       <image wx:if="{{imgHost}}" src="{{imgHost}}/onlineimg/activity/5.png" mode="widthFix" alt="">
         <view class="buy-box weui-flex">
-          <view class="txt">样品{{price[1]}}元/kg</view>
+          <view class="txt">样品{{productList[1].productPrice}}元/kg</view>
           <view class="buy-num weui-flex">
             <text class="icon-text icon-text-left" @tap="reduce" data-index=1>-</text>
             <input type="number" class="input-text" bindblur="getInputNum" data-index=1 maxlength="6"
               value="{{buyNumber[1]}}" />
             <text class="icon-text icon-text-right" @tap="add" data-index=1>+</text>
           </view>
-          <button class="weui-btn" size="mini" bindtap="buy" data-name="{{name[1]}}" data-price="{{price[1]}}"
+          <button class="weui-btn" size="mini" bindtap="buy" data-name="{{name[1]}}" data-price="{{productList[1].productPrice}}"
             data-count="{{buyNumber[1]}}">购买</button>
         </view>
     </view>
     <view class="module-box">
       <image wx:if="{{imgHost}}" src="{{imgHost}}/onlineimg/activity/6.png" mode="widthFix" alt="">
         <view class="buy-box weui-flex">
-          <view class="txt">样品{{price[2]}}元/kg</view>
+          <view class="txt">样品{{productList[2].productPrice}}元/kg</view>
           <view class="buy-num weui-flex">
             <text class="icon-text icon-text-left" @tap="reduce" data-index=2>-</text>
             <input type="number" class="input-text" bindblur="getInputNum" data-index=2 maxlength="6"
               value="{{buyNumber[2]}}" />
             <text class="icon-text icon-text-right" @tap="add" data-index=2>+</text>
           </view>
-          <button class="weui-btn" size="mini" bindtap="buy" data-name="{{name[2]}}" data-price="{{price[2]}}"
+          <button class="weui-btn" size="mini" bindtap="buy" data-name="{{name[2]}}" data-price="{{productList[2].productPrice}}"
             data-count="{{buyNumber[2]}}">购买</button>
         </view>
     </view>
     <view class="module-box">
       <image wx:if="{{imgHost}}" src="{{imgHost}}/onlineimg/activity/7.png" mode="widthFix" alt="">
         <view class="buy-box weui-flex">
-          <view class="txt">样品{{price[3]}}元/kg</view>
+          <view class="txt">样品{{productList[3].productPrice}}元/kg</view>
           <view class="buy-num weui-flex">
             <text class="icon-text icon-text-left" @tap="reduce" data-index=3>-</text>
             <input type="number" class="input-text" bindblur="getInputNum" data-index=3 maxlength="6"
               value="{{buyNumber[3]}}" />
             <text class="icon-text icon-text-right" @tap="add" data-index=3>+</text>
           </view>
-          <button class="weui-btn" size="mini" bindtap="buy" data-name="{{name[3]}}" data-price="{{price[3]}}"
+          <button class="weui-btn" size="mini" bindtap="buy" data-name="{{name[3]}}" data-price="{{productList[3].productPrice}}"
             data-count="{{buyNumber[3]}}">购买</button>
         </view>
     </view>
     <view class="module-box">
       <image wx:if="{{imgHost}}" src="{{imgHost}}/onlineimg/activity/8.png" mode="widthFix" alt="">
         <view class="buy-box buy-box1 weui-flex">
-          <view class="txt">样品{{price[4]}}元/kg</view>
+          <view class="txt">样品{{productList[4].productPrice}}元/kg</view>
           <view class="buy-num weui-flex">
             <text class="icon-text icon-text-left" @tap="reduce" data-index=4>-</text>
             <input type="number" class="input-text" bindblur="getInputNum" data-index=4 maxlength="6"
               value="{{buyNumber[4]}}" />
             <text class="icon-text icon-text-right" @tap="add" data-index=4>+</text>
           </view>
-          <button class="weui-btn" size="mini" bindtap="buy" data-name="{{name[4]}}" data-price="{{price[4]}}"
+          <button class="weui-btn" size="mini" bindtap="buy" data-name="{{name[4]}}" data-price="{{productList[4].productPrice}}"
             data-count="{{buyNumber[4]}}">购买</button>
         </view>
     </view>
@@ -138,11 +139,12 @@
     data = {
       imgHost: __getApi.imgHost,
       buyNumber: [5, 5, 5, 5, 5],
-      price: [36.5, 24, 23, 24, 38],
+      // price: [36.5, 24, 23, 24, 38],
       name: ['PLA聚乳酸', 'PBAT A20', 'PBAT A05', 'PBS TH801T', 'PBS TH803S'],
       username: '',
       phone: '',
-      desc: ''
+      desc: '',
+      productList: []
     }
     methods = {
       reduce(e) {
@@ -211,15 +213,20 @@
           content: e.detail.value.desc,
           id: 1
         })
-        console.log(res)
 
         if (res.false) return
-
         this.$alert('温馨提示', '信息提交成功，24小时内会有专人联系您，请耐心等待！')
       }
     }
     onLoad() {
       this.token_access = this.$parent.globalData.token_access
+      this.activityProPrice()
+    }
+    async activityProPrice() {
+      const res = await http.get(__getApi._activityProPrice)
+
+      if (res.false) return
+      this.productList = res.data
     }
     onShareAppMessage(e) {
       return {
