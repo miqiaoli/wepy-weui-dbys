@@ -313,7 +313,8 @@ export const __getApi = {
 
   // H5活动页
   _newOrder: `${host}/m/order.dbys`,   // 下单
-  _feedback: `${host}/resourcemap/feedback.dbys`   // 个人信息上报
+  _feedback: `${host}/resourcemap/feedback.dbys`,   // 个人信息上报
+  _activityProPrice: `${host}/m/product/list.dbys`   // 可降解样料价格
 
 }
 
