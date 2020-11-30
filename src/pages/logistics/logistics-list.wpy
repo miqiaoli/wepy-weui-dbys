@@ -41,6 +41,10 @@
         <view class="title">执行总价</view>
         <view class="weui-flex__item">{{single.exePrice}}元</view>
       </view>
+      <view class="weui-flex row">
+        <view class="title" style="width: 160rpx;">到货确认人</view>
+        <view class="weui-flex__item">{{single.confirmMan || '暂无'}}</view>
+      </view>
       <view class="weui-flex ">
         <view class="title weui-flex__item">
           <text class="tags tags-status-color" wx:if="{{single.status == 3}}">状态：配送中</text>
