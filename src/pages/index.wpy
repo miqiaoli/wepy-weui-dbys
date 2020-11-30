@@ -124,13 +124,9 @@
   <view @tap="toList" style="margin:10px;height:100px;">
     <image style="height:100%;width:100%;border-radius: 5px;" src="{{niuren}}" mode="aspectFill" />
   </view>
-  <view class="hot-news">
-    <!-- <view class="top weui-flex" style="justify-content: space-between; margin-bottom: 0;">
-      <view class="nav">热门文章</view>
-      <view @tap="toList" data-tag="2" class="more">更多>></view>
-    </view> -->
+  <view class="" style="margin: 0 10px;padding:0 10px;box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.1);border-radius: 4px;">
     <view @tap="toPlay" data-id="{{play.id}}" class="single-course" wx:for="{{replayList}}" wx:key="index" wx:for-index="index" wx:for-item="play">
-      <view class="" style="padding-top: 10px;height: 122px;width: 100%;border-radius:8px;">
+      <view class="" style="height: 122px;width: 100%;border-radius:8px;">
         <image style="width:100%;height:100%;border-radius: 8px;" src="{{play.typeImg ? imgHost+play.typeImg : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFill" />
       </view>
       <view class="sub-title">{{play.title}}</view>
@@ -142,6 +138,12 @@
         </view>
       </view>
     </view>
+  </view>
+  <view class="hot-news">
+    <!-- <view class="top weui-flex" style="justify-content: space-between; margin-bottom: 0;">
+      <view class="nav">热门文章</view>
+      <view @tap="toList" data-tag="2" class="more">更多>></view>
+    </view> -->
     <view @tap="toNewsDls" data-id="{{news.id}}" wx:for="{{hotNewsList}}" wx:key="index" wx:for-index="index" wx:for-item="news" class="single-news weui-flex" style="justify-content: space-between;">
       <view class="weui-flex__item left-flex">
         <view class="sub-title">{{news.title}}</view>
@@ -442,7 +444,12 @@ export default class pageIndex extends wepy.page {
   
 }
 .single-course {
-    margin: 10px 0 6px 0;
+  border-bottom: 1px solid #EFEFEF;
+  padding: 10px 0;
+    &:last-child {
+      border-bottom: 0;
+    }
+    // margin: 10px 0 6px 0;
     .img {
       height: 122px;
       width: 100%;

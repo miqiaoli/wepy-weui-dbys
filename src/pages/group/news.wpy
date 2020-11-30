@@ -1,5 +1,5 @@
 <template>
-<view wx:if="{{productDetails.article_title.title}}" class="page page__bd bg__white">
+<!--<view wx:if="{{productDetails.article_title.title}}" class="page page__bd bg__white">
     <view class="weui-article">
       <view class="weui-article__h1">{{productDetails.article_title.title}}</view>
       <view class="weui-media-box__info">
@@ -58,7 +58,8 @@
       <view class="comment-text">{{item.content}}</view>
     </view>
   </view>
-</view>
+</view>-->
+<web-view src="{{link}}"></web-view>
 </template>
 
 <script>
@@ -88,7 +89,8 @@ export default class NewsDls extends wepy.page {
     commit: '',
     showFocus: false,
     user: null,
-    token_access: ''
+    token_access: '',
+    link: ''
   }
   methods = {
     async bindGetUserInfo(e) {
@@ -178,9 +180,10 @@ export default class NewsDls extends wepy.page {
       id: this.id
     })
     if (res.false) return
-    this.productDetails = res.data
-    this.textContent = res.data.article_content
-    this.commons = res.data.commons
+    // this.productDetails = res.data
+    // this.textContent = res.data.article_content
+    // this.commons = res.data.commons
+    this.link = decodeURIComponent('https:'+res.data.article_title.originUrl.split(':')[1])
     this.$apply()
   }
   onLoad(options) {
@@ -188,9 +191,9 @@ export default class NewsDls extends wepy.page {
     this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : ''
     this.$apply()
     this.getNewsDetails()
-    if (!this.user) {
-      this.getCodeei()
-    }
+    // if (!this.user) {
+    //   this.getCodeei()
+    // }
   }
   async getCodeei() {
     const login = await wepy.login()
