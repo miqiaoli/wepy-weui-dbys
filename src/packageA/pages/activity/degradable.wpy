@@ -227,6 +227,7 @@
 
       if (res.false) return
       this.productList = res.data
+      this.$apply()
     }
     onShareAppMessage(e) {
       return {
