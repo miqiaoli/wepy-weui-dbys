@@ -2338,9 +2338,9 @@ inherits@~2.0.1:
   integrity sha1-D6LGT5MpF8NDOg3tVTY6rjdBa3w=
 
 ini@^1.3.4, ini@~1.3.0:
-  version "1.3.5"
-  resolved "https://registry.npm.taobao.org/ini/download/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
-  integrity sha1-7uJfVtscnsYIXgwid4CD9Zar+Sc=
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.7.tgz#a09363e1911972ea16d7a8851005d84cf09a9a84"
+  integrity sha512-iKpRpXP+CrP2jyrxvg1kMUpXDyRUFDWurxbnVT1vQPx+Wz9uCYsMIqYuSBLV+PAaZG/d7kRLKRFc9oDMsH+mFQ==
 
 inquirer@^0.12.0:
   version "0.12.0"
@@ -4338,10 +4338,10 @@ wepy-eslint@^1.5.2:
   version "1.5.2"
   resolved "http://registry.npm.taobao.org/wepy-eslint/download/wepy-eslint-1.5.2.tgz#6ef4225e08c1d9457c9cfcb1631d086992c5466b"
 
-wepy-plugin-imagemin@^1.5.2:
+wepy-plugin-imagemin@^1.5.3:
   version "1.5.3"
-  resolved "https://registry.npm.taobao.org/wepy-plugin-imagemin/download/wepy-plugin-imagemin-1.5.3.tgz#deca510d4c4ff98b5be3891926e885d82b7d9d1c"
-  integrity sha1-3spRDUxP+Ytb44kZJuiF2Ct9nRw=
+  resolved "https://registry.yarnpkg.com/wepy-plugin-imagemin/-/wepy-plugin-imagemin-1.5.3.tgz#deca510d4c4ff98b5be3891926e885d82b7d9d1c"
+  integrity sha512-rIeets+d+nt/By1eWPGnoKwozDCuN36WS3Lz8q1UO5NAwzzqESw9rBAU1eluvR2wiAW2G7QJ3Ih38hNNlj6DQQ==
   dependencies:
     imagemin "^5.2.2"
     imagemin-mozjpeg "^6.0.0"
