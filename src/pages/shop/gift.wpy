@@ -13,14 +13,14 @@
       <block wx:for="{{item.goodslist}}" wx:key="skuid" wx:for-index="index" wx:for-item="i">
         <view class="item">
           <view class="weui-flex">
-            <image class="img" src="{{i.img ? 'http://39.96.94.221:8088/filepool'+ i.img : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" />
+            <image class="img" src="{{i.img ? imgHost+i.img : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" />
             <view class="rflex weui-flex weui-flex__item">
               <view class="">
                 <view class="title">{{i.skuname}}</view>
                 <view class="time">{{item.buy_time}}</view>
               </view>
               <view class="weui-flex" style="justify-content: space-between;align-items: flex-end;">
-                <view class="" style="color: #999999;font-size: 14px;">{{i.redeem}}积分x{{i.buy_number}}</view>
+                <view class="" style="color: #999999;font-size: 10px;"><text style="font-size:12px;">{{i.redeem * i.buy_number}}积分</text>={{i.redeem}}积分x{{i.buy_number}}</view>
                 <view @tap="tobuy" data-id="{{i.skuid}}" class="btn">再次购买</view>
               </view>
             </view>
@@ -43,6 +43,7 @@ export default class ShopGift extends wepy.page {
     navigationBarTitleText: '我的礼品',
   }
   data = {
+    imgHost: 'https://www.otimes.com/filepool',
     token_access: '',
     user: null,
     page_num: 1,

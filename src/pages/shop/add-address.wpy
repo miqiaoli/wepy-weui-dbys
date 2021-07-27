@@ -1,20 +1,20 @@
 <template>
 <view class="page bg__white">
   <view class="item weui-flex"><text style="color:#0077DB;">*</text>
-    <input class="weui-flex__item" bindinput="input('username')" value="{{username}}" placeholder="收货人" />
+    <input class="input weui-flex__item" bindinput="input('username')" value="{{username}}" placeholder="收货人" />
   </view>
   <view class="item weui-flex"><text style="color:#0077DB;">*</text>
-    <input class="weui-flex__item" bindinput="input('phone')" value="{{phone}}" placeholder="手机号码" />
+    <input class="input weui-flex__item" bindinput="input('phone')" value="{{phone}}" placeholder="手机号码" />
   </view>
-  <view class="weui-flex">
-    <view class="item weui-flex__item" bindtap="riseModel"><text style="color:#0077DB;">*</text>{{chooseCitys ? chooseCitys : '所在地区'}}</view>
+  <view class="item weui-flex" style="padding: 14px 0;">
+    <view class="weui-flex__item" bindtap="riseModel"><text style="color:#0077DB;">*</text>{{chooseCitys ? chooseCitys : '所在地区'}}</view>
     <view class="weui-cell__ft weui-cell__ft_in-access"></view>
   </view>
-  <view class="item weui-flex"><text style="color:#0077DB;">*</text>
+  <view class="item weui-flex" style="align-items: start;padding-top: 10px;"><text style="color:#0077DB;">*</text>
     <textarea bindinput="input('addr_des')" value="{{addr_des}}" class="textarea" maxlength="-1" placeholder-style="font-size: 14px; color: #999999;" placeholder="详细地址：如道路、门牌号、小区、楼栋号、单元室等" rows="8"></textarea>
   </view>
-  <view class="item">
-    <button class="weui-btn" type="primary" @tap="newAddr">确定</button>
+  <view class="item" style="border-bottom:0;margin-top: 50px;">
+    <button class="btn weui-btn" type="primary" @tap="newAddr">确定</button>
   </view>
   <view wx:if="{{!isCity}}" class="citys" catchtouchmove='preventTouchMove'>
     <view class="inner_box">
@@ -71,6 +71,15 @@ export default class ShopAddAddress extends wepy.page {
       if (!this.username || !this.phone || !this.addr_des || !this.chooseCitys) {
         wx.showToast({
           title: '请将信息填写完整',
+          icon: 'none',
+          duration: 2000
+        })
+        return
+      }
+      let patrn = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>《》/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？ ]")
+      if (patrn.test(this.addr_des)) {// 如果包含特殊字符返回false
+        wx.showToast({
+          title: '请填写正确的地址',
           icon: 'none',
           duration: 2000
         })
@@ -211,12 +220,21 @@ export default class ShopAddAddress extends wepy.page {
 </script>
 
 <style lang="less" scoped>
+.btn {
+  background: linear-gradient(180deg, #FC9600 0%, #F75D00 100%);
+  color: #ffffff;
+}
 .item {
+  align-items: center;
   font-size: 14px;
   border-bottom: 1px solid #EFEFEF;
-  padding: 8px 0;
+  // padding: 10px 0;
 }
+.input {
+  height: 50px;
+  line-height: 50px;
 
+}
 .textarea {
   width: 100%;
   height: 80px;

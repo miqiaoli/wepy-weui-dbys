@@ -3,7 +3,7 @@
   <view class="addr">
     <view @tap="toChooseAddr" class="item">
       <view wx:if="{{addr.name}}" class="weui-flex">
-        <view class="img"></view>
+        <!-- <view class="img"></view> -->
         <view class="rflex weui-flex">
           <view class="title">{{addr.name}} <text style="font-size: 14px;color: #999999;font-weight: 400;">{{addr.phone}}</text></view>
           <view class="address">{{addr.address}}</view>
@@ -17,7 +17,7 @@
   <view class="list">
     <block wx:for="{{list}}" wx:key="id" wx:for-index="index" wx:for-item="item">
       <view class="item weui-flex">
-        <image class="img" src="{{item.img ? 'http://39.96.94.221:8088/filepool'+ item.img : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" />
+        <image class="img" src="{{item.img ? imgHost+item.img : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" />
         <view class="rflex weui-flex">
           <view class="title">{{item.skuname}}</view>
           <view class="d">{{item.redeem}}积分<text style="padding-left:5px;color: #999999;font-size: 14px;">x{{item.buy_number}}</text></view>
@@ -29,7 +29,26 @@
     <view class="total weui-flex__item">
       共{{num}}件 合计：<text style="color:#E94300;">{{score}}积分</text>
     </view>
-    <view @tap="pay" class="btn">提交订单</view>
+    <!-- <view @tap="pay" class="btn">提交订单</view> -->
+    <view catchtap='showInputLayer' class="btn">提交订单</view>
+  </view>
+  <view wx:if='{{showPayPwdInput}}'>
+    <view class='bg_layer'></view>
+    <view class='input_main'>
+        <view class='input_title'>
+            <view class='input_back' catchtap='hidePayLayer'><text></text></view>
+            <text>输入验证码和支付密码</text>
+        </view>
+        <view class='input_tip'><text>使用积分支付需要验证身份，验证通过后才可进行支付。</text></view>
+        <view class="weui-flex" style="margin:0 auto 15px auto;width:690rpx;">
+          <image class="validate" src="{{url}}" @tap="chgValidateCode" />
+          <input class="weui-flex__item input" focus='{{payFocus}}' maxlength='4' type='number' value="{{code}}" bindinput="getValue('code')" placeholder="请输入验证码" />
+        </view>
+        <view class="weui-flex" style="align-items:center;margin:0 auto 15px auto;width:690rpx;">
+          <view style="width:200rpx; text-align:center;">支付密码</view>
+          <input class="weui-flex__item input" maxlength='6' password type='number' value="{{password}}" bindinput="getValue('password')" placeholder="请输入6位支付密码" />
+        </view>
+    </view>
   </view>
 </view>
 </template>
@@ -41,11 +60,13 @@ import {
 } from '../../config.js'
 import http from '../../utils/Http'
 import events from '../../utils/event'
+import Pwdmd5 from '../../utils/pwdmd'
 export default class ShopPay extends wepy.page {
   config = {
     navigationBarTitleText: '确认订单',
   }
   data = {
+    imgHost: 'https://www.otimes.com/filepool',
     token_access: '',
     user: null,
     addr: {},
@@ -54,6 +75,13 @@ export default class ShopPay extends wepy.page {
     num: 0,
     addres: '',
     user_phone: '',
+    custscores: 0,
+    showPayPwdInput: false,  //是否展示密码输入层
+    payFocus: false, //文本框焦点
+    code: '',
+    password: '',
+    cookie: '',
+    url: '',
   }
   methods = {
     toChooseAddr() {
@@ -62,10 +90,42 @@ export default class ShopPay extends wepy.page {
         url: './address?type=choose',
       })
     },
+    getValue(val, e) {
+      this[val] = e.detail.value
+      if (val == 'password' && e.detail.value.length >= 6 ) {
+        if (this.code.length >=4) {
+          this.checkPass()
+          this.hidePayLayer();
+        } else {
+          wx.showToast({
+            title: '请输入验证码',
+            icon: 'none',
+            duration: 2000
+          })
+        }
+      }
+      if (val == 'code' && e.detail.value.length >= 4) {
+        if (this.password.length >=6) {
+          this.checkPass()
+          this.hidePayLayer();
+        }
+      }
+    },
+    chgValidateCode() {
+      this.cookieAndCode()
+    },
     async pay(e) {
       if (!this.addr.name) {
         wx.showToast({
           title: '请选择地址',
+          icon: 'none',
+          duration: 2000
+        })
+        return
+      }
+      if (this.custscores < this.score) {
+        wx.showToast({
+          title: '你的积分不足',
           icon: 'none',
           duration: 2000
         })
@@ -90,14 +150,11 @@ export default class ShopPay extends wepy.page {
           })
         }, 800)
       }
-
     },
   }
   async onLoad(e) {
     this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : null
     this.token_access = this.$parent.globalData.token_access || ''
-    // const eventChannel = this.$scope.getOpenerEventChannel()
-    // const eventChannel = this.$wx.getOpenerEventChannel()
     this.user_phone = this.$parent.globalData.user_phone ? this.$parent.globalData.user_phone : ''
     if (!this.$parent.globalData.user_phone) {
       const resModal = await wepy.showModal({
@@ -111,6 +168,7 @@ export default class ShopPay extends wepy.page {
         })
       }
     } else {
+      this.getList()
       if (e.id) {
         this.score = e.redeem
         this.num = 1
@@ -132,18 +190,16 @@ export default class ShopPay extends wepy.page {
         this.$apply()
       }
     }
-
   }
   async payLoop(item) {
     const res = await http.get(__getApi._getShopList, {
       token_access: this.token_access,
       serverName: 'TRADE_CMS_SCORE_GOODS_ORDER',
-      username: this.user_phone,
-      linkman: this.addr.name,
-      linkman_tel: this.addr.phone,
+      username: encodeURI(encodeURI(this.user_phone)),
+      linkman: encodeURI(encodeURI(this.addr.name)),
+      linkman_tel: encodeURI(encodeURI(this.addr.phone)),
       addres: this.addres,
-      minute_addres: this.addr.address,
-
+      minute_addres: encodeURI(encodeURI(this.addr.address)),
       skuid: item.skuid,
       buy_number: item.buy_number,
       redeem: item.redeem,
@@ -151,10 +207,113 @@ export default class ShopPay extends wepy.page {
       state: 2,
     })
   }
+  async cookieAndCode() {
+    const res = await http.get(__getApi._getCodeAndCookie, {
+      token_access: this.token_access
+    })
+    if (res.false) return
+    if (res.meta.success) {
+      this.url = res.data.img_path
+      this.cookie = res.data.yss
+      this.$apply()
+    }
+  }
+  async pay2() {
+    let self = this
+    // 循环提交支付
+    let index = 0
+    this.list.forEach(item => {
+      index++;
+      self.payLoop(item)
+    })
+    if (index >= this.list.length) {
+      wx.showToast({
+        title: '支付完成',
+        icon: 'success',
+        duration: 2000
+      })
+      setTimeout(() => {
+        wx.redirectTo({
+          url: './gift'
+        })
+      }, 800)
+    }
+  }
   getChooseAddr(addr) {
     this.addr = addr
     this.addres = `${addr.sheng.split('_')[0]},${addr.shi.split('_')[0]},${addr.qu.split('_')[0]}`
     this.$apply()
+  }
+  async getList() {
+    const res = await http.get(__getApi._getShopList, {
+      serverName: 'TRADE_CMS_SCORE_LIST',
+      username: this.user_phone,
+      pageno: 1,
+      pagesize: 15,
+      token_access: this.token_access,
+    })
+    if (res.meta.success) {
+      if (res.data.success == '0000') {
+        this.custscores = res.data.body.custscores
+        this.$apply()
+      } else {
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none',
+          duration: 2000
+        })
+      }
+    }
+  }
+  async checkPass() {
+    let signa = Pwdmd5(String(this.password), String(this.code), this.cookie)
+    const res = await http.get(__getApi._checkPass, {
+      serverName: 'TRADE_CMS_SCORE_PASSWORD_VERIFY',
+      username: this.user_phone,
+      password: signa,
+      yss: this.cookie,
+    })
+    if (res.meta.success) {
+      if (res.data.success == '0000') {
+        // 成功后支付接口
+        this.pay2()
+      } else {
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none',
+          duration: 2000
+        })
+      }
+    }
+  }
+  // 显示支付密码输入层
+  showInputLayer() {
+    if (!this.addr.name) {
+      wx.showToast({
+        title: '请选择地址',
+        icon: 'none',
+        duration: 2000
+      })
+      return
+    }
+    if (this.custscores < this.score) {
+      wx.showToast({
+        title: '你的积分不足',
+        icon: 'none',
+        duration: 2000
+      })
+      return
+    }
+    this.cookieAndCode()
+    this.showPayPwdInput = true;
+    this.payFocus = true;
+  }
+  // 隐藏支付密码输入层
+  hidePayLayer(){
+    this.showPayPwdInput = false;
+    this.payFocus = false;
+    this.password = '';
+    this.code = ''
   }
 }
 </script>
@@ -223,7 +382,7 @@ export default class ShopPay extends wepy.page {
       margin-left: 10px;
       flex-direction: column;
       justify-content: space-between;
-
+      flex: 1;
       .title {
         font-size: 14px;
         color: #333;
@@ -262,5 +421,70 @@ export default class ShopPay extends wepy.page {
     background: linear-gradient(180deg, #FC9600 0%, #F75D00 100%);
     border-radius: 20px;
   }
+}
+
+.validate {
+  width: 200rpx;
+  height: auto;
+}
+.input {
+  padding-left: 30rpx;
+  margin-right: 30rpx;
+  background: #F9F9F9;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 8rpx;
+}
+/* 支付密码css start */
+.bg_layer{
+  position: fixed; left: 0; top: 0; bottom: 0; right: 0;
+  background-color: rgba(0, 0, 0, 0.6); z-index: 9998;
+}
+.input_main{
+    position: fixed; left: 0; bottom: 350px; width: 100%; 
+    // height: 394rpx;
+    background-color: #fff; z-index: 9999;
+}
+.input_title{
+    width: 100%; height: 90rpx; line-height: 90rpx; text-align: center; 
+    font-size: 32rpx; border-bottom: 1rpx solid #e2e2e2;
+}
+.input_back{
+    position: absolute; left: 0; top: 0;
+    width: 80rpx; height: 90rpx; display: flex; justify-content: center; align-items: center;
+}
+.input_back text{
+  width: 20rpx;
+  height: 20rpx;
+  background-color: white;
+  border: 1rpx solid #aaa;
+  border-width: 5rpx 0 0 5rpx;
+  transform: rotate(-45deg);
+}
+
+.input_tip{  margin: 30rpx; font-size: 24rpx; color: #888; }
+
+/* 密码掩码模拟 */
+.input_row{
+  width: 690rpx; margin: 0 auto; height: 98rpx; position: relative;
+  display: flex; align-items: center; border: 1rpx solid #e2e2e2; border-radius: 20rpx;
+}
+.input_row .pwd_item{
+  flex: 1; display: flex; align-items: center; justify-content: center; 
+  height: 100%; border-right: 1rpx solid #e2e2e2; position: relative;
+}
+.pwd_item:nth-last-of-type(1) { border-right: 0; } 
+.pwd_item text { 
+  width: 30rpx; height: 30rpx; border-radius: 30rpx; background-color: #555;
+}
+
+
+.forget_pwd{ 
+  float: right; margin: 30rpx; width: 100rpx; text-align: right; font-size: 24rpx; color: #ff7800;
+}
+
+/* 文本输入框位置: 设置到左边隐藏 */
+.input_control { 
+  position: relative; left: -300rpx; bottom: 0; width: 100rpx; height: 100rpx;
 }
 </style>

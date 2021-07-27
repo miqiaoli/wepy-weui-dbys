@@ -63,7 +63,7 @@ export default class ShopIntegral extends wepy.page {
     if (res.meta.success) {
       if (res.data.success == '0000') {
         this.list = [...this.list, ...res.data.body.detailedlist]
-        if (res.data.body.goodslist.length >= this.page_size) {
+        if (res.data.body.detailedlist.length >= this.page_size) {
           this.hasNextPage = true
         }
         this.$apply()

@@ -12,8 +12,23 @@
    ></video>
    <view class="title">{{title}}</view>
    <view class="weui-flex" 
-    style="margin: 0 15px;font-size: 10px;font-weight: 400;color: #666666;">
-    2020-08-23 <text style="padding-left:10px;">{{views}}次播放</text></view>
+    style="align-items:center;margin: 4px 15px 0 15px;font-size: 10px;font-weight: 400;color: #666666;">
+    <view class="weui-flex__item">
+      {{date}} <text style="padding-left:10px;">{{views}}次播放</text>
+    </view>
+    <image wx:if="{{shareImg}}" @tap="showShare" style="width:20px; height:20px;" src="/images/share_icon.png" />
+  </view>
+  <view wx:if="{{showShareBool}}">
+    <view catchtap='hideLayer' class='bg_layer'></view>
+    <view class="share">
+      <view class="weui-flex">
+        <view style="width:48px"></view>
+        <image @tap="saveImageToPhotos" src="{{finalImg}}" style="width:158px;height:280px;" mode="aspectFit" />
+        <image @tap="saveImageToPhotos" style="margin-top:10px;margin-right:10px;width:38px;height:24px;" src="/images/download.png" />
+      </view>
+      <view style="margin:10px 0;font-weight:500;text-align:center;font-size:16px;color:#666666;">点击保存活动海报进行分享</view>
+    </view>
+  </view>
    <view class="weui-article__section" style="margin: 0 15px;">
     <view class="weui-article__p">
       <rich-parse content="{{ content }}" type="html" />
@@ -45,6 +60,7 @@
       <view class="comment-text">{{item.content}}</view>
     </view>
   </view>
+  <canvas canvas-id="canvas" class="canvas" />
 </view>
 </template>
 
@@ -67,6 +83,7 @@ export default class Video extends wepy.page {
     mute: true,
     title: '',
     commons: [],
+    date: '',
     views: 0,
     autoplay: false,
     playGesture: true,
@@ -78,8 +95,136 @@ export default class Video extends wepy.page {
     commit: '',
     user: null,
     token_access: '',
+    showShareImg: false,
+    finalImg: '',
+    shareImg: '',
+    qrcode: '',
+    showShareBool: false,
   }
   methods = {
+    async saveImageToPhotos() {
+      console.log('URL:', this.finalImg)
+      wx.saveImageToPhotosAlbum({
+        filePath: this.finalImg,
+        success: () => {
+          wx.showToast({
+            icon: 'success',
+            title: '海报保存成功，去分享',
+            duration: 2000,
+          })
+        },
+        fail: () => {
+          wx.showToast({
+            icon: 'none',
+            title: '保存失败，请稍后重试',
+          })
+          wx.authorize({
+            scope: 'scope.writePhotosAlbum',
+            success: () => {
+                
+            },
+            fail() {
+              wx.showToast({
+                icon: 'none',
+                title: '请设置允许访问相册',
+                duration: 2000,
+              })
+            }
+          })
+        }
+      })
+      return
+
+      wx.openSetting({
+        success: (res) => {
+          if (res.authSetting['scope.writePhotosAlbum'] === true) {
+            wx.saveImageToPhotosAlbum({
+              filePath: this.finalImg,
+              success: () => {
+                wx.showToast({
+                  icon: 'success',
+                  title: '海报保存成功，去分享',
+                  duration: 2000,
+                })
+              },
+              fail: () => {
+                wx.showToast({
+                  icon: 'none',
+                  title: '保存失败，请稍后重试',
+                  duration: 2000,
+                })
+              }
+            })
+          }
+        }
+      })
+      
+      wx.getSetting({
+        success: (res) => {
+          console.log(res);
+          if (!res.authSetting['scope.writePhotosAlbum']) {
+            wx.authorize({
+              scope: 'scope.writePhotosAlbum',
+              success: () => {
+                wx.saveImageToPhotosAlbum({
+                  filePath: this.finalImg,
+                  success: () => {
+                    wx.showToast({
+                      icon: 'success',
+                      title: '海报保存成功，去分享',
+                      duration: 2000,
+                    })
+                  },
+                  fail: () => {
+                    wx.showToast({
+                      icon: 'none',
+                      title: '保存失败，请稍后重试',
+                      duration: 2000,
+                    })
+                  }
+                })
+              },
+              fail() {
+                wx.showToast({
+                  icon: 'none',
+                  title: '请设置允许访问相册',
+                  duration: 2000,
+                })
+              }
+            })
+          } else {
+            wx.saveImageToPhotosAlbum({
+              filePath: this.finalImg,
+              success: () => {
+                wx.showToast({
+                  icon: 'success',
+                  title: '海报保存成功，去分享',
+                  duration: 2000,
+                })
+              },
+              fail: () => {
+                wx.showToast({
+                  icon: 'none',
+                  title: '保存失败，请稍后重试',
+                  duration: 2000,
+                })
+              }
+            })
+          }
+        },
+        file(err) {
+          console.log(err)
+        }
+      })
+
+    },
+    hideLayer() {
+      this.showShareBool = false
+    },
+    // 海报分享
+    showShare() {
+      this.saveImage(this.shareImg, this.qrcode)
+    },
     async bindGetUserInfo(e) {
       const self = this
       const res = await wepy.request({
@@ -144,11 +289,20 @@ export default class Video extends wepy.page {
       }, 500)
     },
   };
-  onLoad(e) {
+  async onLoad(e) {
+    // const setting = await wx.getSetting({withSubscriptions: true,})
     this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : ''
-    this.id = e.id
-    this.$apply()
+    if (e.scene) {
+      console.log(decodeURIComponent(e.scene), ': 扫码参数')
+      this.id = decodeURIComponent(e.scene)
+      this.getQrcode(decodeURIComponent(e.scene))
+    }
+    if (e.id) {
+      this.getQrcode(e.id)
+      this.id = e.id
+    }
     this.getVideo()
+    this.$apply()
     if (!this.user) {
       this.getCodeei()
     }
@@ -165,12 +319,71 @@ export default class Video extends wepy.page {
     this.token_access = res.data.data.token_access
     this.$apply()
   }
+  async getQrcode(id) {
+    wx.downloadFile({
+      url: `${__getApi._getQrcode}?page=pages/group/video&width=430&auto_color=true&scene=${id}&is_hyaline=false`,
+      success: (res) => {
+        this.qrcode = res.tempFilePath
+        this.$apply()
+      }
+    })
+  }
+  /**
+   * img 海报图
+   * qrcode 二维码
+   */
+  saveImage(img, qrcode) {
+    let self = this
+    wx.showLoading({
+      title: '海报生成中',
+    })
+    // 需要将网络图片下载转为零时文件在画图
+    wx.downloadFile({
+      url: img,
+      success: (res) => {
+        if (qrcode) {
+          // 开始绘图
+          const ctx = wx.createCanvasContext('canvas')
+          ctx.drawImage(res.tempFilePath, 0, 0, 750, 1334)
+          ctx.save() 
+          // 开始绘制
+          ctx.drawImage(qrcode, 750/2-120/2, 1334+10, 120, 120)
+          ctx.draw(false, function() {
+            wx.canvasToTempFilePath({
+              canvasId: 'canvas',
+              success: (res) => {
+                let canvasToTempFilePath = res.tempFilePath
+                console.log(res.tempFilePath, 'canvasToTempFilePath')
+                self.finalImg = res.tempFilePath
+                self.showShareBool = true
+                self.$apply()
+                wx.hideLoading()
+                wx.showToast({
+                  title: '海报生成成功',
+                })
+              },
+              fail: () => {
+                wx.hideLoading()
+                wx.showToast({
+                  title: '海报生成失败',
+                })
+              }
+            })
+          })
+        } else {
+          console.log(res.tempFilePath, 'saveImageToPhotos')
+        }
+      }
+    })
+  }
   async getVideo() {
     const res = await http.post(__getApi._getSelfVideoDetails, {
       id: this.id,
     })
     if (res.meta.success) {
+      this.shareImg = res.data.sharePoster ? this.imgHost + res.data.sharePoster : ''
       this.content = res.data.content
+      this.date = res.data.date
       this.src =  this.imgHost + res.data.mediaPath
       this.title = res.data.title
       this.views = res.data.views
@@ -195,6 +408,25 @@ export default class Video extends wepy.page {
 
 <style lang="less" scoped>
 @base-gap: 20rpx;
+.share {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  z-index: 999;
+}
+.bg_layer{
+  position: fixed; left: 0; top: 0; bottom: 0; right: 0;
+  background-color: rgba(0, 0, 0, 0.6); z-index: 99;
+}
+.canvas {
+  position: absolute;
+  top: -10000px;
+  left: 10000px;
+  width:750px;height:1484px;
+
+}
 .video {
   width: 100%;
 }

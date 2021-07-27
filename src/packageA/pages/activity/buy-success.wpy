@@ -1,0 +1,191 @@
+<template>
+  <view class="page page__bd bg">
+    <view class="module-box">
+      <view class="weui-flex flex-warp">
+        <view class="name">手机号：</view>
+        <view class="weui-flex__item">{{phone}}</view>
+      </view>
+      <view class="weui-flex flex-warp">
+        <view class="name">品名：</view>
+        <view class="weui-flex__item">{{productName}}</view>
+      </view>
+      <view class="weui-flex flex-warp">
+        <view class="name">单价：</view>
+        <view class="weui-flex__item">{{productPrice}}元/kg</view>
+      </view>
+      <view class="weui-flex flex-warp">
+        <view class="name">数量：</view>
+        <view class="weui-flex__item">{{qty}}kg</view>
+      </view>
+      <view class="weui-flex flex-warp">
+        <view class="name">订单备注：</view>
+        <view class="weui-flex__item">{{desc}}</view>
+      </view>
+      <view class="weui-flex flex-warp">
+        <view class="name">地址：</view>
+        <view class="weui-flex__item">
+          <text class="desc">{{address}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="module-box">
+      <view class="text">请先截图保存订单信息</view>
+      <view class="text">扫码添加客服微信并发送截图</view>
+      <view class="text">确认样品信息及查询快递单号</view>
+      <image wx:if="{{imgHost}}" src="{{imgHost}}/onlineimg/activity/wx-code.png" mode="widthFix" alt="">
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import {
+    __getApi
+  } from '../../../config.js'
+  import http from '../../../utils/Http'
+  import events from '../../../utils/event'
+
+  export default class allType extends wepy.page {
+    config = {
+      navigationBarTitleText: '生物降解塑料'
+    }
+    data = {
+      imgHost: __getApi.imgHost,
+      token_access: '',
+      productName: '',
+      productPrice: '',
+      qty: '',
+      phone: '',
+      address: '',
+      desc: ''
+    }
+    methods = {
+  
+    }
+    async onLoad(options) {
+      this.token_access = this.$parent.globalData.token_access || ''
+      this.productName = options.name
+      this.productPrice = options.price
+      this.qty = options.count
+      this.address = options.address
+      this.phone = options.phone
+      this.desc = options.desc
+      this.totalPrice = Number(this.productPrice) * Number(this.qty)
+    }
+  }
+
+</script>
+
+<style lang="less">
+  .module-box {
+    background: #ffffff;
+    border-radius: 40rpx;
+    padding: 30rpx;
+    margin: 40rpx;
+
+    .flex-warp {
+      align-items: center;
+      margin: 20rpx 10rpx;
+    }
+
+    .weui-flex__item {
+      text-align: right;
+    }
+
+    .text {
+      text-align: center;
+      font-size: 36rpx;
+      font-weight: bold;
+    }
+    image {
+      width: 100%;
+    }
+  }
+
+  .addr {
+    .add-icon {
+      margin: 0 auto;
+      width: 25px;
+      height: 25px;
+    }
+
+    .item {
+      margin-bottom: 10px;
+      padding: 18px 10px;
+      background: white;
+      border-radius: 13px;
+
+      .img {
+        min-width: 48px;
+        width: 48px;
+        height: 48px;
+        background: #000;
+        border-radius: 50%;
+      }
+
+      .rflex {
+        margin-left: 10px;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .title {
+          font-size: 16px;
+          color: #333;
+          font-weight: 500;
+        }
+
+        .address {
+          color: #333333;
+          ;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .buy-num {
+    justify-content: flex-end;
+
+    .icon-text {
+      width: 44rpx;
+      height: 60rpx;
+      padding: 0 16rpx;
+      text-align: center;
+      color: #cccccc;
+      border: 1px solid #cccccc;
+    }
+
+    .icon-text-left {
+      border-radius: 60rpx 0 0 60rpx;
+    }
+
+    .icon-text-right {
+      border-radius: 0 60rpx 60rpx 0;
+    }
+
+    .input-text {
+      width: 120rpx;
+      height: 60rpx;
+      background: #ffffff;
+      text-align: center;
+      // color: #0040b5;
+      border-top: 1px solid #cccccc;
+      border-bottom: 1px solid #cccccc;
+    }
+  }
+
+  .weui-btn {
+    position: absolute;
+    bottom: 60rpx;
+    left: 50%;
+    color: #fff;
+    font-size: 36rpx;
+    background: -webkit-linear-gradient(top, #FC9600, #F75D00);
+    background: -o-linear-gradient(top, #FC9600, #F75D00);
+    background: linear-gradient(to bottom, #FC9600, #F75D00);
+    padding: 0 80rpx;
+    border-radius: 90rpx;
+    margin-left: -152rpx;
+  }
+
+</style>

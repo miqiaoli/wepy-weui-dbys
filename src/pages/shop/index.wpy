@@ -1,60 +1,170 @@
 <template>
-<view class="page">
-  <view class="search weui-flex">
-    <view class="weui-search-bar__form" style="line-height: 60rpx; background: #FFFFFF; border-radius: 60rpx; border:1px solid #EFEFEF;">
-      <view class="weui-search-bar__box">
-        <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
-        <input type="text" class="weui-search-bar__input" style="height: 60rpx;line-height: 60rpx; text-align: left;" placeholder="请输入关键字搜索" bindconfirm="search" confirm-type="search" value="{{keyword}}" />
+  <view class="page bg__white">
+    <view style="background: #FFF;">
+      <view class="search weui-flex">
+        <view
+          class="weui-search-bar__form"
+          style="line-height: 60rpx; background: #FFFFFF; border-radius: 60rpx; border:1px solid #EFEFEF;"
+        >
+          <view class="weui-search-bar__box">
+            <icon
+              class="weui-icon-search_in-box"
+              type="search"
+              size="14"
+            ></icon>
+            <input
+              type="text"
+              class="weui-search-bar__input"
+              style="height: 60rpx;line-height: 60rpx; text-align: left;"
+              placeholder="请输入关键字搜索"
+              bindconfirm="search"
+              confirm-type="search"
+              value="{{keyword}}"
+            />
+          </view>
+        </view>
+        <navigator url="./car">
+          <image
+            class="car"
+            src="/images/icon/car.png"
+          />
+        </navigator>
       </view>
     </view>
-    <navigator url="./car">
-      <image class="car" src="/images/icon/car.png" />
-    </navigator>
-  </view>
-  <view class="banner">
-    <swiper indicator-dots="{{indicatorDots}}" circular="{{true}}" style="min-height:200px;border-radius:8px;" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
-      <block wx:for="{{swipers}}" wx:key="id">
-        <swiper-item>
-          <image src="{{imgHost+item.image_url}}" style="width:100%;border-radius:8px;" mode="widthFix" />
-        </swiper-item>
-      </block>
-    </swiper>
-  </view>
-  <view class="product-recommended">
-    <view class="top weui-flex" style="justify-content: space-between;">
-      <view class="nav">最受欢迎排行榜</view>
-      <view class="more"></view>
+    <view class="banner">
+      <swiper
+        indicator-dots="{{indicatorDots}}"
+        circular="{{true}}"
+        style="height:181px;border-radius:8px;"
+        autoplay="{{autoplay}}"
+        interval="{{interval}}"
+        duration="{{duration}}"
+      >
+        <block
+          wx:for="{{swipers}}"
+          wx:key="id"
+        >
+          <swiper-item>
+            <image
+              src="{{imgHost+item.image_url}}"
+              style="width:100%;min-height:181px;height:181px;border-radius:8px;"
+              mode="widthFix"
+            />
+          </swiper-item>
+        </block>
+      </swiper>
     </view>
-    <scroll-view scroll-x style="width:100%; white-space: nowrap;" bindscroll="scroll">
-      <view @tap="toNewsDls" data-id="{{product.skuid}}" class="single-product" wx:for="{{scrollList}}" wx:key="index" wx:for-index="index" wx:for-item="product">
-        <view class="img">
-          <image style="height:100%;width:100%;" src="{{product.img_add ? 'http://39.96.94.221:8088/filepool'+ product.img_add : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFill" />
-        </view>
-        <view class="sub-title">{{product.skuname}}</view>
-        <view class="weui-flex" style="justify-content: space-between;font-size:10px; padding: 0 2px;">
-          <view style="color: #999999;">{{product.amount}}人已购</view>
-          <view style="color: #E94300;">{{product.redeem}}积分</view>
-        </view>
+    <view class="product-recommended">
+      <view
+        class="top weui-flex"
+        style="justify-content: space-between;"
+      >
+        <view class="nav">最受欢迎排行榜</view>
+        <view class="more"></view>
       </view>
-    </scroll-view>
-  </view>
-
-  <view class="tabs weui-flex" style="justify-content:space-between;">
+      <scroll-view
+        scroll-x
+        class="scroll"
+        style="width:100%; white-space: nowrap;"
+        bindscroll="scroll"
+      >
+        <view style="padding-top:4px;padding-left:4px;padding-bottom:10px">
+          <view
+            @tap="toNewsDls"
+            data-id="{{product.skuid}}"
+            class="single-product"
+            wx:for="{{scrollList}}"
+            wx:key="index"
+            wx:for-index="index"
+            wx:for-item="product"
+          >
+            <view class="img">
+              <image
+                style="height:100%;width:100%;border-radius: 8px 8px 0 0;"
+                src="{{product.img_add ? slhost+product.img_add : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}"
+                mode="aspectFill"
+              />
+            </view>
+            <view class="sub-title">{{product.skuname}}</view>
+            <view
+              class="weui-flex"
+              style="margin-bottom: 4px;justify-content: space-between;font-size:10px; padding: 0 10px;"
+            >
+              <view style="color: #999999;">{{product.amount}}人已购</view>
+              <view style="color: #E94300;font-weight: 500;">{{product.redeem}}积分</view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+    <view class="all">全部商品</view>
+    <!-- <view class="tabs weui-flex" style="justify-content:space-between;">
     <block wx:for="{{tabs}}" wx:key="index" wx:for-index="index" wx:for-item="item">
       <view @tap="chgTab" data-index="{{index}}" class="tab" style="{{tabIndex == index ? 'color:#0078DD' : ''}}">{{item}}</view>
     </block>
-  </view>
-  <view class="list weui-flex" style="flex-wrap:wrap;justify-content:space-between;">
-    <view class="item" @tap="toNewsDls" data-id="{{item.skuid}}" wx:for="{{list}}" wx:key="index" wx:for-index="index" wx:for-item="item">
-      <image style="height:166px;width:100%;" src="{{item.img_add ? 'http://39.96.94.221:8088/filepool'+ item.img_add : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}" mode="aspectFill" />
-      <view class="title">{{item.skuname}}</view>
-      <view class="weui-flex" style="font-size: 10px;">
-        <view class="weui-flex__item" style="color: #999999;">{{item.amount}}人已购</view>
-        <view class="" style="color: #E94300;font-weight: 500;">{{item.redeem}}积分</view>
+  </view> -->
+    <view style="margin: 2px 15px 0 15px;">
+      <scroll-view
+        scroll-x
+        class="tabs"
+        style="width:100%; white-space: nowrap;"
+      >
+        <block
+          wx:for="{{tabs}}"
+          wx:key="index"
+          wx:for-index="index"
+          wx:for-item="item"
+        >
+          <view
+            @tap="chgTab"
+            data-index="{{index}}"
+            class="tab"
+            style="{{tabIndex == index ? 'color:#0078DD' : ''}}"
+          >{{item}}</view>
+        </block>
+      </scroll-view>
+    </view>
+    <view
+      class="list weui-flex"
+      style="flex-wrap:wrap;justify-content:space-between;"
+    >
+      <view
+        class="item"
+        @tap="toNewsDls"
+        data-id="{{item.skuid}}"
+        wx:for="{{list}}"
+        wx:key="index"
+        wx:for-index="index"
+        wx:for-item="item"
+      >
+        <image
+          style="height:166px;width:100%;border-radius: 8px 8px 0 0;"
+          src="{{item.img_add ? slhost+item.img_add : 'https://www.otimes.com/u/cms/www/202002/141734510dho.png'}}"
+          mode="aspectFill"
+        />
+        <view class="title">{{item.skuname}}</view>
+        <view
+          class="weui-flex"
+          style="margin-bottom: 4px;font-size: 10px;padding: 0 10px;"
+        >
+          <view
+            class="weui-flex__item"
+            style="color: #999999;"
+          >{{item.amount}}人已购</view>
+          <view
+            class=""
+            style="color: #E94300;font-weight: 500;"
+          >{{item.redeem}}积分</view>
+        </view>
+      </view>
+      <view
+        wx:if="{{list.length <= 0}}"
+        class="weui-loadmore weui-loadmore_line"
+      >
+        <text class="weui-loadmore__tips">暂无数据</text>
       </view>
     </view>
   </view>
-</view>
 </template>
 
 <script>
@@ -69,6 +179,7 @@ export default class ShopIndex extends wepy.page {
     navigationBarTitleText: '积分商城',
   };
   data = {
+    slhost: 'https://www.otimes.com/filepool',
     background: ['demo-text-1', 'demo-text-2', 'demo-text-3'],
     indicatorDots: false,
     vertical: false,
@@ -82,8 +193,9 @@ export default class ShopIndex extends wepy.page {
     swipers: [],
     keyword: '',
 
-    tabIndex: 0,
-    tabs: ['发布时间降序', '发布时间升序', '积分降序', '积分升序'],
+    tabIndex: 1,
+    // tabs: ['发布时间降序', '发布时间升序', '积分降序', '积分升序'],
+    tabs: ['仅看我能兑换', '发布时间降序', '发布时间升序', '积分降序', '积分升序'],
     token_access: '',
     user: null,
     page_num: 1,
@@ -91,6 +203,9 @@ export default class ShopIndex extends wepy.page {
     sortname: 1,
     list: [],
     hasNextPage: false,
+    score: -1,
+    scoresoptmax: 9999,
+    user_phone: '',
   };
 
   methods = {
@@ -112,22 +227,32 @@ export default class ShopIndex extends wepy.page {
     chgTab(e) {
       const index = e.currentTarget.dataset.index
       this.tabIndex = index
-      this.sortname = index + 1
       this.page_num = 1
+      this.sortname = index
       this.list = []
-      this.getList()
+      this.$apply()
+      if (index == 0) {
+        this.sortname = 1
+        this.getScore()
+        // this.scoresoptmax = this.score
+      } else {
+        this.scoresoptmax = 9999
+        this.getList()
+      }
     },
   }
   onLoad() {
     this.user = this.$parent.globalData.user_info ? JSON.parse(this.$parent.globalData.user_info) : null
+    this.user_phone = this.$parent.globalData.user_phone ? this.$parent.globalData.user_phone : ''
     this.getList()
     this.getScroll()
     this.getADList()
+    this.$apply()
   }
   // banner图
   async getADList() {
     const res = await http.get(__getApi._getADList, {
-      ad_Model_id: 11 // 16
+      ad_Model_id: 18 // 11
     })
     if (res.false) return
     this.swipers = res.data.reverse()
@@ -157,144 +282,209 @@ export default class ShopIndex extends wepy.page {
       ptype_id: 0,
       sortname: this.sortname,
       Scoresoptmin: 0,
-      Scoresoptmax: 9999,
+      Scoresoptmax: this.scoresoptmax,
       pageno: this.page_num,
       pagesize: this.page_size,
       token_access: this.token_access,
     })
     if (res.meta.success) {
-      this.list = [...this.list, ...res.data.body.goodslist]
-      if (res.data.body.goodslist.length >= this.page_size) {
-        this.hasNextPage = true
+      if (res.data.success == '0000') {
+        this.list = [...this.list, ...res.data.body.goodslist]
+        if (res.data.body.goodslist.length >= this.page_size) {
+          this.hasNextPage = true
+        }
+        this.$apply()
+      } else {
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none',
+          duration: 2000
+        })
       }
-      this.$apply()
+    }
+  }
+  // 获取积分
+  async getScore() {
+    const res = await http.get(__getApi._getShopList, {
+      serverName: 'TRADE_CMS_SCORE_LIST',
+      username: this.user_phone,
+      pageno: 1,
+      pagesize: 15,
+      token_access: this.token_access,
+    })
+    if (res.meta.success) {
+      if (res.data.success == '0000') {
+        this.scoresoptmax = Number(res.data.body.custscores)
+        this.score = Number(res.data.body.custscores)
+        this.sortname = 1
+        this.$apply()
+        this.getList()
+      } else {
+        wx.showToast({
+          title: res.data.msg,
+          icon: 'none',
+          duration: 2000
+        })
+      }
     }
   }
   onPullDownRefresh() {}
   onReachBottom() {
-    if (this.hasNextPage) {
+    if (this.hasNextPage && this.list.length >= this.page_num * 15) {
       ++this.page_num
       this.getList()
       this.$apply()
+    }
+  }
+  onShareAppMessage(e) {
+    return {
+      title: '积分商城',
+      path: `/pages/shop/index`
+    }
+  }
+  onShareTimeline(e) {
+    return {
+      title: '积分商城',
+      path: `/pages/shop/index`
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.product-recommended {
-  margin: 0 16px 4px 16px;
-}
-
-.single-product {
-  margin-right: 6px;
-  display: inline-block;
-  width: 110px;
-
-  .img {
-    width: 110px;
-    height: 110px
+  .product-recommended {
+    margin: 0 16px 4px 16px;
   }
-
-  .sub-title {
-    padding: 0 2px;
-    word-break: break-all;
-    white-space: pre-wrap;
-    white-space: wrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    color: #333333;
-    font-size: 14px;
-    font-weight: 500;
-    height: 44px;
+  ::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+    color: transparent;
   }
-}
+  .single-product {
+    margin-right: 10px;
+    display: inline-block;
+    width: 140px;
+    border-radius: 8px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+    .img {
+      border-radius: 8px 8px 0 0;
+      width: 140px;
+      height: 110px;
+    }
 
-.list {
-  margin: 0 16px;
-
-  .item {
-    margin-top: 10px;
-    width: 48%;
-
-    .title {
+    .sub-title {
+      padding: 0 2px;
+      word-break: break-all;
+      white-space: pre-wrap;
+      white-space: wrap;
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       color: #333333;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 500;
+      height: 44px;
+      padding: 0 10px;
     }
   }
-}
-
-.top {
-  margin: 10px 0 14px 0;
-
-  .nav {
+  .all {
+    margin-top: 2px;
+    margin-left: 16px;
     font-size: 18px;
     font-weight: 500;
     color: #333333;
   }
+  .list {
+    margin: 0 16px;
 
-  .more {
-    color: #302424;
-    font-weight: 400;
-    font-size: 16px;
+    .item {
+      margin-top: 10px;
+      width: 48%;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+      .title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        color: #333333;
+        font-size: 16px;
+        padding: 0 10px;
+        font-weight: 500;
+      }
+    }
   }
-}
 
-.page {
-  min-height: 100vh;
-  background: white;
-  padding-bottom: 34px;
-}
+  .top {
+    margin: 8px 0 8px 0;
+    .nav {
+      font-size: 18px;
+      font-weight: 500;
+      color: #333333;
+    }
 
-.search {
-  margin: 0px 16px;
-  padding-top: 10px;
-  height: 30px;
-}
-
-.car {
-  margin-left: 10px;
-  margin-top: 2px;
-  width: 25px;
-  height: 25px;
-}
-
-.banner {
-  margin: 8px 16px 10px 16px;
-  // height: 180px;
-  border-radius: 8px;
-}
-
-.tabs {
-  margin: 10px 15px;
-
-  .tab {
-    color: #333333;
-    font-size: 16px;
-    font-weight: 400;
+    .more {
+      color: #302424;
+      font-weight: 400;
+      font-size: 16px;
+    }
   }
-}
 
-.scroll-view_H {
-  white-space: nowrap;
-}
+  .page {
+    min-height: 100vh;
+    padding-bottom: 34px;
+  }
 
-.scroll-view-item {
-  height: 300rpx;
-}
+  .search {
+    margin: 0px 16px;
+    padding-top: 10px;
+    height: 30px;
+  }
 
-.scroll-view-item_H {
-  display: inline-block;
-  width: 100%;
-  height: 300rpx;
-}
+  .car {
+    margin-left: 10px;
+    margin-top: 2px;
+    width: 25px;
+    height: 25px;
+  }
+
+  .banner {
+    background: #fff;
+    padding: 8px 16px 8px 16px;
+    height: 181px;
+    // border-radius: 8px;
+  }
+
+  .tabs {
+    // margin: 6px 15px 0 15px;
+    .tab {
+      display: inline-block;
+      padding-right: 16px;
+      color: #333333;
+      font-size: 16px;
+      font-weight: 400;
+      &:last-child {
+        padding-right: 0;
+      }
+    }
+  }
+
+  .scroll-view_H {
+    white-space: nowrap;
+  }
+
+  .scroll-view-item {
+    height: 300rpx;
+  }
+
+  .scroll-view-item_H {
+    display: inline-block;
+    width: 100%;
+    height: 300rpx;
+  }
 </style>

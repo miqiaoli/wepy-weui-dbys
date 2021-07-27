@@ -1,140 +1,150 @@
 <script>
-import wepy from 'wepy'
-import {
-  __getApi
-} from './config.js'
-import 'wepy-async-function'
+  import wepy from 'wepy'
+  import {
+    __getApi
+  } from './config.js'
+  import 'wepy-async-function'
 
-export default class extends wepy.app {
-  config = {
-    pages: [
-      'pages/index',
-      'pages/shop/index',
-      'pages/shop/address',
-      'pages/shop/add-address',
-      'pages/shop/details',
-      'pages/shop/car',
-      'pages/shop/pay',
-      'pages/shop/about',
-      'pages/shop/gift',
-      'pages/shop/rule',
-      'pages/shop/integral',
+  export default class extends wepy.app {
+    config = {
+      pages: [
+        'pages/index',
+        'pages/shop/index',
+        'pages/shop/address',
+        'pages/shop/add-address',
+        'pages/shop/details',
+        'pages/shop/car',
+        'pages/shop/pay',
+        'pages/shop/about',
+        'pages/shop/gift',
+        'pages/shop/rule',
+        'pages/shop/integral',
 
-      'pages/group/index',
-      'pages/group/list',
-      'pages/group/news',
-      'pages/group/video',
+        'pages/group/index',
+        'pages/group/list',
+        'pages/group/news',
+        'pages/group/video',
 
-      'pages/qrcode',
-      'pages/about/info',
-      'pages/about/index',
+        'pages/qrcode',
+        'pages/about/info',
+        'pages/about/index',
 
-      'pages/order/goods-list',
-      'pages/order/goods-details',
-      'pages/order/note-detail',
-      'pages/order/note-details',
-      'pages/order/list',
-      'pages/order/note-list',
-      'pages/rice/list',
-      'pages/rice/details',
+        'pages/order/goods-list',
+        'pages/order/goods-details',
+        'pages/order/note-detail',
+        'pages/order/note-details',
+        'pages/order/list',
+        'pages/order/note-list',
+        'pages/rice/list',
+        'pages/rice/details',
 
-      'pages/logistics/logistics-update',
-      'pages/logistics/index',
-      'pages/logistics/driver-list',
-      'pages/logistics/logistics-list',
-      'pages/logistics/logistics-input',
-      'pages/logistics/car-list',
-      'pages/logistics/logistics-details',
+        'pages/logistics/logistics-update',
+        'pages/logistics/index',
+        'pages/logistics/driver-list',
+        'pages/logistics/logistics-list',
+        'pages/logistics/logistics-input',
+        'pages/logistics/car-list',
+        'pages/logistics/logistics-details',
 
-      'pages/tmp/outer',
-      'pages/tmp/todolist',
+        'pages/tmp/outer',
+        'pages/tmp/todolist',
 
-      'pages/transaction/buy/list', //我的平台-销售订单管理
-      'pages/transaction/buy/iccard',
-      'pages/transaction/todo/list', //我的平台-进货单管理
-      'pages/transaction/contract/list', //我的平台-合同管理
-      'pages/transaction/shelf/list', //我的平台-挂牌管理
-      'pages/transaction/shelf/success',
-      'pages/transaction/shelf/details',
-      'pages/transaction/buy/details',
-      'pages/transaction/talk/list', //我的平台-洽谈管理
-      'pages/transaction/talk/talk',
-      'pages/transaction/talk/details',
+        'pages/transaction/buy/list', // 我的平台-销售订单管理
+        'pages/transaction/buy/iccard',
+        'pages/transaction/todo/list', // 我的平台-进货单管理
+        'pages/transaction/contract/list', // 我的平台-合同管理
+        'pages/transaction/shelf/list', // 我的平台-挂牌管理
+        'pages/transaction/shelf/success',
+        'pages/transaction/shelf/details',
+        'pages/transaction/buy/details',
+        'pages/transaction/talk/list', // 我的平台-洽谈管理
+        'pages/transaction/talk/talk',
+        'pages/transaction/talk/details',
 
-      'pages/fish/list',
-      'pages/fish/details',
-      'pages/product/list',
-      'pages/product/filter',
-      'pages/product/details',
-      'pages/information/list',
-      'pages/information/details',
-      'pages/news/list',
-      'pages/news-details',
-      'pages/database/list',
-      'pages/database/details',
+        'pages/fish/list',
+        'pages/fish/details',
+        'pages/product/list',
+        'pages/product/filter',
+        'pages/product/details',
+        'pages/information/list',
+        'pages/information/details',
+        'pages/news/list',
+        'pages/news-details',
+        'pages/database/list',
+        'pages/database/details',
 
-      'pages/mine/report',
-      'pages/mine/inforlist',
-      'pages/mine/new',
-      'pages/mine/about-us',
-      'pages/user/check-phone',
-      'pages/customize/list',
-      'pages/customize/new',
-      'pages/customize/infoList',
-      'pages/search/searchbar',
-      'pages/search/list',
-      'pages/user/login',
-      'pages/user/registered',
-      'pages/user/forget-password',
-      'pages/user/registration-agreement',
-      'pages/other/lab-share',
-      'pages/other/trade-list',
-      'pages/other/chart-list',
-      'pages/other/chart-filter',
-      'pages/other/chart-compare',
+        'pages/mine/report',
+        'pages/mine/inforlist',
+        'pages/mine/new',
+        'pages/mine/about-us',
+        'pages/user/check-phone',
+        'pages/customize/list',
+        'pages/customize/new',
+        'pages/customize/infoList',
+        'pages/search/searchbar',
+        'pages/search/list',
+        'pages/user/login',
+        'pages/user/registered',
+        'pages/user/forget-password',
+        'pages/user/registration-agreement',
+        'pages/other/lab-share',
+        'pages/other/trade-list',
+        'pages/other/chart-list',
+        'pages/other/chart-filter',
+        'pages/other/chart-compare',
 
-      'pages/company/list',
-      'pages/company/collections',
-      'pages/company/details',
-      'pages/company/alltype',
-      'pages/company/error',
+        'pages/company/list',
+        'pages/company/collections',
+        'pages/company/details',
+        'pages/company/alltype',
+        'pages/company/error',
 
-      'pages/overseas/list',
-      'pages/overseas/details',
+        'pages/overseas/list',
+        'pages/overseas/details',
 
-      'pages/user/getUserInfo',
-      'pages/other/chart-price',
+        'pages/user/getUserInfo',
+        'pages/other/chart-price'
 
-    ],
-    permission: {
-      "scope.userLocation": {
-        "desc": "你的位置信息将用于对附近的早稻商家进行排序"
-      }
-    },
-    window: {
-      navigationBarTitleText: '第八元素',
-      navigationBarTextStyle: 'black',
-      navigationBarBackgroundColor: '#FFFFFF',
-      backgroundColor: '#eaeaea',
-      backgroundTextStyle: 'light'
-    },
-    tabBar: {
-      color: '#AEADAD',
-      selectedColor: '#6A7EEE',
-      backgroundColor: '#fff',
-      borderStyle: 'black',
-      list: [{
+      ],
+      subPackages: [{
+        root: 'packageA',
+        name: 'packageA',
+        pages: [
+          'pages/activity/degradable',
+          'pages/activity/buy',
+          'pages/activity/buy-success',
+          'pages/activity/demo'
+        ]
+      }],
+      permission: {
+        'scope.userLocation': {
+          'desc': '你的位置信息将用于对附近的早稻商家进行排序'
+        }
+      },
+      window: {
+        navigationBarTitleText: '第八元素',
+        navigationBarTextStyle: 'black',
+        navigationBarBackgroundColor: '#FFFFFF',
+        backgroundColor: '#eaeaea',
+        backgroundTextStyle: 'light'
+      },
+      tabBar: {
+        color: '#AEADAD',
+        selectedColor: '#6A7EEE',
+        backgroundColor: '#fff',
+        borderStyle: 'black',
+        list: [{
           pagePath: 'pages/index',
           selectedIconPath: '/images/tabbars/home_HL.png',
           iconPath: '/images/tabbars/home.png',
           text: '首页'
         },
-        // {
-        //   pagePath: 'pages/fish/list',
-        //   selectedIconPath: '/images/tabbars/information_HL.png',
-        //   iconPath: '/images/tabbars/information.png',
-        //   text: '鱼塘信息'
-        // },
+          // {
+          //   pagePath: 'pages/fish/list',
+          //   selectedIconPath: '/images/tabbars/information_HL.png',
+          //   iconPath: '/images/tabbars/information.png',
+          //   text: '鱼塘信息'
+          // },
         {
           pagePath: 'pages/logistics/index',
           selectedIconPath: '/images/tabbars/order_HL.png',
@@ -153,99 +163,101 @@ export default class extends wepy.app {
           iconPath: '/images/tabbars/mime.png',
           text: '我的'
         }
-      ]
-    },
-    networkTimeout: {
-      request: 5000,
-      downloadFile: 10000
-    },
-    debug: true
-  }
-
-  globalData = {
-    user: null,
-    token_access: '',
-    user_phone: '',
-    inforType: 0,
-    historySearch: [],
-    riceTypes: [],
-    user_info: null,
-  }
-
-  constructor() {
-    super()
-    this.use('requestfix')
-    this.use('promisify')
-  }
-
-  onLoad() {
-
-  }
-  onShow(options) {
-    this.$updateGlobalData('token_access', wepy.getStorageSync('token_access') || '')
-    this.$updateGlobalData('user_phone', wepy.getStorageSync('user_phone') || '')
-    this.$updateGlobalData('user_info', wepy.getStorageSync('user_info') || '')
-  }
-  onHide(options) {
-    wx.setStorage({
-      key: 'historySearch',
-      data: this.globalData.historySearch
-    })
-  }
-
-  /* ============= 工具方法（app没法用mixins，就再写一遍了） ============= */
-  isObject(item) {
-    return typeof item === 'object' && !this.isArray(item)
-  }
-  isArray(item) {
-    return Object.prototype.toString.apply(item) === '[object Array]'
-  }
-  isUndefined(item) {
-    return typeof item === 'undefined'
-  }
-
-  /* ========================= 更新缓存信息 ======================== */
-  $updateGlobalData(name, obj) {
-    // 校验: globalData
-    if (!this.globalData) return
-    // 校验: 操作字段
-    if (typeof name !== 'string' || name === '') return {}
-    // 取已有信息
-    const info = this.globalData[name] || {}
-    // 更新缓存
-    if (obj && this.isObject(obj)) {
-      // Object合并第一层
-      this.globalData[name] = Object.assign({}, info, obj)
-    } else if (!this.isUndefined(obj)) {
-      // 其他非undefined数据直接覆盖
-      this.globalData[name] = obj
+        ]
+      },
+      networkTimeout: {
+        request: 5000,
+        downloadFile: 10000
+      },
+      debug: true
     }
-    this.$apply && this.$apply()
-    console.info(`[${obj ? 'UPDATE' : 'GET'} GlobalData ${name}]:`, this.globalData[name])
-    return this.globalData[name]
+
+    globalData = {
+      user: null,
+      token_access: '',
+      user_phone: '',
+      inforType: 0,
+      historySearch: [],
+      riceTypes: [],
+      user_info: null
+    }
+
+    constructor() {
+      super()
+      this.use('requestfix')
+      this.use('promisify')
+    }
+
+    onLoad() {
+
+    }
+    onShow(options) {
+      this.$updateGlobalData('token_access', wepy.getStorageSync('token_access') || '')
+      this.$updateGlobalData('user_phone', wepy.getStorageSync('user_phone') || '')
+      this.$updateGlobalData('user_info', wepy.getStorageSync('user_info') || '')
+    }
+    onHide(options) {
+      wx.setStorage({
+        key: 'historySearch',
+        data: this.globalData.historySearch
+      })
+    }
+
+    /* ============= 工具方法（app没法用mixins，就再写一遍了） ============= */
+    isObject(item) {
+      return typeof item === 'object' && !this.isArray(item)
+    }
+    isArray(item) {
+      return Object.prototype.toString.apply(item) === '[object Array]'
+    }
+    isUndefined(item) {
+      return typeof item === 'undefined'
+    }
+
+    /* ========================= 更新缓存信息 ======================== */
+    $updateGlobalData(name, obj) {
+      // 校验: globalData
+      if (!this.globalData) return
+      // 校验: 操作字段
+      if (typeof name !== 'string' || name === '') return {}
+      // 取已有信息
+      const info = this.globalData[name] || {}
+      // 更新缓存
+      if (obj && this.isObject(obj)) {
+        // Object合并第一层
+        this.globalData[name] = Object.assign({}, info, obj)
+      } else if (!this.isUndefined(obj)) {
+        // 其他非undefined数据直接覆盖
+        this.globalData[name] = obj
+      }
+      this.$apply && this.$apply()
+      console.info(`[${obj ? 'UPDATE' : 'GET'} GlobalData ${name}]:`, this.globalData[name])
+      return this.globalData[name]
+    }
   }
-}
+
 </script>
 
 <style lang="less">
-@import "./styles/weui/index.less";
-@import "./styles/custom/index.less";
+  @import "./styles/weui/index.less";
+  @import "./styles/custom/index.less";
 
-.page {
-  min-height: 100vh;
-  font-size: 34rpx;
-}
+  .page {
+    min-height: 100vh;
+    font-size: 34rpx;
+  }
 
-.page__bd {
-  padding-bottom: 20rpx;
-}
+  .page__bd {
+    padding-bottom: 20rpx;
+  }
 
-.page__bd_spacing {
-  padding-left: 24rpx;
-  padding-right: 24rpx;
-}
+  .page__bd_spacing {
+    padding-left: 24rpx;
+    padding-right: 24rpx;
+  }
 
-.weui-media-box__info {
-  margin-top: 16rpx;
-}
+  .weui-media-box__info {
+    margin-top: 16rpx;
+  }
+
 </style>

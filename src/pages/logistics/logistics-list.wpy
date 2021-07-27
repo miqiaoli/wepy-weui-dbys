@@ -4,7 +4,8 @@
   <tabs :tabs="tabs" :index.sync="index"></tabs>
   <backIndex></backIndex>
   <view class="list">
-    <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id" data-status="{{single.status}}" data-commission_num="{{single.commission_num}}" @tap="goto">
+    <view class="single" wx:for="{{list}}" wx:for-item="single" wx:key="id">
+      <view data-status="{{single.status}}" data-commission_num="{{single.commission_num}}" @tap="goto">
       <view class="weui-flex row">
         <view class="title">物流单号</view>
         <view class="weui-flex__item">{{single.commission_num}}</view>
@@ -41,6 +42,11 @@
         <view class="title">执行总价</view>
         <view class="weui-flex__item">{{single.exePrice}}元</view>
       </view>
+      <view class="weui-flex row">
+        <view class="title" style="width: 160rpx;">到货确认人</view>
+        <view class="weui-flex__item">{{single.confirmMan || '暂无'}}</view>
+      </view>
+      </view>
       <view class="weui-flex ">
         <view class="title weui-flex__item">
           <text class="tags tags-status-color" wx:if="{{single.status == 3}}">状态：配送中</text>
@@ -48,6 +54,7 @@
           <text class="tags tags-status-success" wx:if="{{single.status == 4}}">状态：已完成</text>
           <text class="tags tags-status-todo" wx:if="{{single.status < 0 }}">状态：状态异常</text>
         </view>
+        <view wx:if="{{single.deliveryNote}}" @tap="showImg" data-url="https://www.otimes.com{{single.deliveryNote}}.jpg" class="tags" style="color:00B9E7;border: 1px solid #00B9E7;">查看送货单</view>
       </view>
     </view>
 
@@ -87,6 +94,7 @@ export default class logisticsList extends wepy.page {
       m1: filter
     }
   data = {
+    preImg: false,
     index: 0,
     value: '', // 搜索
     token_access: '',
@@ -111,6 +119,51 @@ export default class logisticsList extends wepy.page {
     }],
   }
   methods = {
+    showImg(e) {
+      this.preImg = true
+      wx.previewImage({
+        current: e.currentTarget.dataset.url, // 当前显示图片的http链接
+        urls: [e.currentTarget.dataset.url] // 需要预览的图片http链接列表
+      })
+      // return 
+      // let url = e.currentTarget.dataset.url
+      // wx.downloadFile({
+      //   url: img,
+      //   success: (res) => {
+      //     res.tempFilePath
+      //   }
+      // })
+      // wx.saveImageToPhotosAlbum({
+      //   filePath: url,
+      //   success: () => {
+      //     wx.showToast({
+      //       icon: 'success',
+      //       title: '海报保存成功，去分享',
+      //       duration: 2000,
+      //     })
+      //   },
+      //   fail: (e) => {
+      //     console.log(e)
+      //     wx.showToast({
+      //       icon: 'none',
+      //       title: '保存失败，请稍后重试',
+      //     })
+      //     wx.authorize({
+      //       scope: 'scope.writePhotosAlbum',
+      //       success: () => {
+                
+      //       },
+      //       fail() {
+      //         wx.showToast({
+      //           icon: 'none',
+      //           title: '请设置允许访问相册',
+      //           duration: 2000,
+      //         })
+      //       }
+      //     })
+      //   }
+      // })
+    },
     goto(e) {
       const commission_num = e.currentTarget.dataset.commission_num
       const status = e.currentTarget.dataset.status
@@ -131,6 +184,10 @@ export default class logisticsList extends wepy.page {
 
   }
   onShow(e) {
+    if (this.preImg) {
+      this.preImg = false
+      return
+    }
     this.start = 1
     this.list = []
     this.getLogisticsList()
