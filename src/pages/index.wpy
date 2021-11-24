@@ -429,10 +429,10 @@ export default class pageIndex extends wepy.page {
     this.sliderOffset =
       (this.windowWidth - 30) / this.tabs.length * this.activeIndex
 
-    this.col1Img = 'http://dbys.afacode.top/index-col1.png?' + Math.random()
-    this.col2Img = 'http://dbys.afacode.top/index-col2.png?' + Math.random()
-    this.type1Img = 'http://dbys.afacode.top/index-plastic.png?' + Math.random()
-    this.type2Img = 'http://dbys.afacode.top/index-recycled.png?' + Math.random()
+    this.col1Img = 'http://imgs.otimes.com/index-col1.png?' + Math.random()
+    this.col2Img = 'http://imgs.otimes.com/index-col2.png?' + Math.random()
+    this.type1Img = 'http://imgs.otimes.com/index-plastic.png?' + Math.random()
+    this.type2Img = 'http://imgs.otimes.com/index-recycled.png?' + Math.random()
     // this.niuren = 'http://dbys.afacode.top/niuren.png?' + Math.random()
   }
   // 初始化页面数据
