@@ -1,4 +1,25 @@
 <template>
+<view>
+  <web-view wx:if="{{link}}" src="{{link}}"></web-view>
+  <view class="page page__bd bg__white" wx:else>
+    <view class="weui-article">
+      <view class="weui-article__h1">{{productDetails.article_title.title}}</view>
+      <view class="weui-media-box__info">
+        <view class="weui-media-box__info__meta">作者：{{productDetails.article_title.author || '小八'}}</view>
+        <view class="weui-media-box__info__meta">{{productDetails.article_title.date}}</view>
+      </view>
+      <view class="weui-article__section">
+        <view class="weui-article__p">
+          <rich-parse content="{{ textContent }}" type="html" />
+        </view>
+      </view>
+      <view class="author">
+        <image class="avatar" src="/images/author.png" />
+        <view class="username">{{productDetails.article_title.author || '小八'}}</view>
+      </view>
+    </view>
+  </view>
+</view>
 <!--<view wx:if="{{productDetails.article_title.title}}" class="page page__bd bg__white">
     <view class="weui-article">
       <view class="weui-article__h1">{{productDetails.article_title.title}}</view>
@@ -24,7 +45,7 @@
       <view @tap="toNewsDls" data-id="{{news.id}}" wx:for="{{hotNewsList}}" wx:key="id" wx:for-index="i" wx:for-item="news" class="single-news weui-flex" style="justify-content: space-between;">
         <view class="weui-flex__item left-flex">
           <view class="sub-title">{{news.title}}</view>
-          <view class="" style="font-size:12px;font-weight:500;color:#333333;">{{news.author || '未知'}} 
+          <view class="" style="font-size:12px;font-weight:500;color:#333333;">{{news.author || '未知'}}
             <text style="margin-left:10px;color:#666666;">{{news.date}}</text>
           </view>
         </view>
@@ -34,8 +55,8 @@
     </view>
   <view wx:if="{{showFocus}}" class="fix-bootom weui-flex">
     <view class="weui-flex__item">
-      <input 
-        class="input weui-search-bar__form weui-icon-search" 
+      <input
+        class="input weui-search-bar__form weui-icon-search"
         placeholder="评论"
         type="text"
         value="{{commit}}"
@@ -50,7 +71,7 @@
     <view class="weui-flex" style="justify-content: space-between; margin-bottom: 10px;font-size:12px;">
       <view class="weui-flex__item" style="color:#999;">精选评论</view>
       <view wx:if="{{user}}" @tap="showComment" class="" style="padding:0 8px;color:#333;">评论</view>
-      <button wx:else open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo" 
+      <button wx:else open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo"
         style="padding:0 8px;color:#333;font-size:12px;background-color: #efefef;">评论</button>
     </view>
     <view class="weui-flex" style="margin-bottom:20px;" wx:for="{{commons}}" wx:key="index" wx:for-index="index" wx:for-item="item">
@@ -59,7 +80,6 @@
     </view>
   </view>
 </view>-->
-<web-view src="{{link}}"></web-view>
 </template>
 
 <script>
@@ -180,10 +200,10 @@ export default class NewsDls extends wepy.page {
       id: this.id
     })
     if (res.false) return
-    // this.productDetails = res.data
-    // this.textContent = res.data.article_content
+    this.productDetails = res.data
+    this.textContent = res.data.article_content
     // this.commons = res.data.commons
-    this.link = decodeURIComponent('https:'+res.data.article_title.originUrl.split(':')[1])
+    this.link = res.data.article_title.originUrl ? decodeURIComponent('https:'+res.data.article_title.originUrl.split(':')[1]) : ''
     this.$apply()
   }
   onLoad(options) {
@@ -234,7 +254,7 @@ export default class NewsDls extends wepy.page {
 .author {
   text-align: center;
   .avatar {
-    height: 60px; 
+    height: 60px;
     width:60px;
     // background: #D8D8D8;
     // border-radius: 50%;
