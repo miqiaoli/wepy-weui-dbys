@@ -4,9 +4,3 @@
   color: #666;
   line-height: 1.8;
 }
-
-.rich-parse-th{
-  width: 116rpx !important;
-  display: flex !important;
-  justify-content: center !important;
-}

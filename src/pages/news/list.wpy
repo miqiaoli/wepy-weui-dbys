@@ -15,10 +15,9 @@
           <block wx:if="{{itemJ.items.length > 0}}">
             <view class="weui-panel weui-panel_access">
               <view class="weui-panel__bd">
-                <wxs src="../../utils/indexOf.wxs" module="imgUrl"></wxs>
                 <navigator wx:for="{{itemJ.items}}" wx:for-item="itemI" wx:for-index="idx" wx:key="id" url="/pages/news-details?id={{itemI.id}}" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
                   <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-                    <image class="weui-media-box__thumb" src="{{imgUrl.indexOf(itemI.typeImg) ? (imgHost + itemI.typeImg) : itemI.typeImg}}" />
+                    <image class="weui-media-box__thumb" src="{{imgHost + itemI.typeImg}}" />
                   </view>
                   <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
                     <view class="weui-media-box__title">{{itemI.title}}</view>
@@ -56,8 +55,10 @@
       </block>
     </view>
   </view>
+
 </view>
 </template>
+
 <script>
 import wepy from 'wepy'
 import {
@@ -84,7 +85,7 @@ export default class NewsList extends wepy.page {
     noList: false,
     loading: true,
     tabs: ["环球热点", "现货价格", "上游价格", "期货价格"],
-    tabsId: [16, 14, 13, 15],
+    tabsId: [7, 14, 13, 15],
     activeIndex: 0,
     sliderOffset: 0,
     sliderLeft: 0,
@@ -107,13 +108,13 @@ export default class NewsList extends wepy.page {
       this.sliderOffset = e.currentTarget.offsetLeft
       this.activeIndex = e.currentTarget.id
       this.start = 1
+
       this.getList(this.tabsId[this.activeIndex])
     }
   }
   async getList(id) {
     if (this.start === 1) {
       this.lists[this.activeIndex].items = []
-      console.log(this.lists[this.activeIndex])
     }
     const res = await http.get(__getApi._getNewsList, {
       type_id: id,

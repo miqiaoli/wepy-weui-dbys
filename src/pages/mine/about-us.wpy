@@ -11,7 +11,7 @@
         </view>
       </view>
       <view class="box no-border">
-        <view class="introduction">元素周期表中的第八号元素——氧，代表绿色和环保，孕育生命与希望，"第八元素-OTIMES"由此而来。经国家工商总局核准，第八元素于 2016 年正式成立。平台依托行业背景和资源优势，以通用塑料、工程材料等大宗商品为主要交易品种，向广大中小企业提供在线交易、金融服务、仓储物流、信息资讯、特色云等综合服务。</view>
+        <view>元素周期表中的第八号元素——氧，代表绿色和环保，孕育生命与希望，"第八元素-OTIMES"由此而来。经国家工商总局核准，第八元素于2016年正式成立。平台依托行业背景和资源优势，以塑料原料、改性塑料、助剂、再生塑料等大宗商品为主要交易品种，向广大中小企业提供在线交易、金融服务、仓储物流、技术检测、信息资讯、特色云等综合服务。</view>
       </view>
     </view>
   </view>
@@ -150,11 +150,6 @@ export default class AboutUs extends wepy.page {
 }
 .no-border {
     border-bottom: none;
-}
-
-.introduction{
-  text-align: justify;
-  text-justify: inter-ideograph;
 }
 .weui-media-box__desc {
     font-size: 20rpx;
