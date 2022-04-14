@@ -68,6 +68,7 @@ import base from '../../mixins/base'
 import http from '../../utils/Http'
 import listStates from '../../components/listStates'
 
+
 const sliderWidth = 93;
 export default class NewsList extends wepy.page {
   mixins = [base]
