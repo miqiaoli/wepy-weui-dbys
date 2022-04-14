@@ -1,6 +1,6 @@
 <template>
 <view class="login page bg__white">
-  <image class="login-bg" src="/images/login-bg.png" />
+  <image class="login-bg" src="/images/login-bg-new.jpg" />
   <view class="page__bd page__bd_spacing">
     <form class="form" bindsubmit="loginBtnClick">
       <view class="weui-cells__title">用户名</view>
